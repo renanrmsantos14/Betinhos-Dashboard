@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Betinhos · Dashboard do Gestor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+/* ===== RESET & VARIÁVEIS ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2f5;
+  --surf:#ffffff;
+  --surf2:#f8f9fb;
+  --b1:#e8eaed;
+  --b2:#d0d3d9;
+  --t1:#0f1117;
+  --t2:#4a5068;
+  --t3:#8a91a8;
+  --blue:#1a6cf5;
+  --blue-l:#eef3ff;
+  --blue-d:#1254cc;
+  --blue-g:linear-gradient(135deg,#1a6cf5,#4f94ff);
+  --teal:#0a9396;
+  --teal-l:#e0f7f7;
+  --purple:#6c4fd8;
+  --purple-l:#f0ecff;
+  --orange:#e07000;
+  --orange-l:#fff4e6;
+  --green:#1a7a40;
+  --green-l:#e6f7ed;
+  --red:#c0392b;
+  --red-l:#fdecea;
+  --yellow:#8a6200;
+  --yellow-l:#fff8e1;
+  --gold:#c9a227;
+  --r6:6px;--r8:8px;--r12:12px;--r16:16px;
+  --s1:0 1px 4px rgba(0,0,0,.06);
+  --s2:0 4px 16px rgba(0,0,0,.08);
+  --s3:0 12px 40px rgba(0,0,0,.12);
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --topbar-h:52px;
+}
+body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+.topbar{height:var(--topbar-h);background:var(--surf);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:300;box-shadow:0 1px 0 var(--b1),var(--s1);}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{width:36px;height:36px;border-radius:50%;background:transparent;display:grid;place-items:center;box-shadow:0 2px 8px rgba(26,108,245,.35);overflow:hidden;border:2px solid white;}
+.tb-logo img{width:100%;height:100%;object-fit:cover;display:block;}
+.tb-name{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.tb-sub{font-size:11px;color:var(--t3);font-weight:500}
+.tb-right{display:flex;align-items:center;gap:8px}
+.env-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;}
+.env-prod{background:#e6f7ed;color:#1a7a40;border:1px solid #a3d9b8}
+.env-dev{background:#fff8e1;color:#8a6200;border:1px solid #f0d080}
+.env-local{background:var(--blue-l);color:var(--blue);border:1px solid #b3ccff}
+.ts{font-size:11px;color:var(--t3);font-weight:500}
+.btn-ic{width:34px;height:34px;display:grid;place-items:center;background:transparent;border:1px solid var(--b1);border-radius:var(--r8);color:var(--t2);cursor:pointer;font-size:16px;transition:all .15s;}
+.btn-ic:hover{background:var(--bg);border-color:var(--b2);color:var(--t1)}
+.btn-ic:disabled{opacity:.4;cursor:not-allowed}
+.btn-ic.spin svg,.btn-ic.spin{animation:spinI .8s linear infinite}
+@keyframes spinI{to{transform:rotate(360deg)}}
+.shell{display:flex;height:calc(100vh - var(--topbar-h))}
+.sidebar{width:220px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow-y:auto;padding:8px 0 16px;}
+.sb-section{padding:14px 16px 5px;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 12px;margin:1px 8px;border-radius:var(--r8);font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .12s;user-select:none;}
+.sb-item:hover{background:var(--bg);color:var(--t1)}
+.sb-item.act{background:var(--blue-l);color:var(--blue);font-weight:700}
+.sb-item.act .sb-icon{filter:none}
+.sb-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0;opacity:.75}
+.sb-item.act .sb-icon{opacity:1}
+.sb-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--b1);color:var(--t2);padding:1px 7px;border-radius:20px;min-width:22px;text-align:center;transition:all .2s;}
+.sb-item.act .sb-badge{background:rgba(26,108,245,.15);color:var(--blue)}
+.sb-badge.warn{background:#fff4e6;color:var(--orange)}
+.sb-badge.danger{background:var(--red-l);color:var(--red)}
+.sb-div{height:1px;background:var(--b1);margin:6px 12px}
+.content{flex:1;overflow-y:auto;padding:20px;background:var(--bg)}
+.fbar{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);padding:14px 16px;display:flex;flex-direction:column;gap:10px;margin-bottom:18px;box-shadow:var(--s1);}
+.quick-filters{display:flex;gap:6px;flex-wrap:wrap}
+.btn-qf{font-size:12px;height:30px;padding:0 13px;white-space:nowrap;border:1.5px solid var(--b1);border-radius:var(--r8);background:var(--surf);color:var(--t2);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s;}
+.btn-qf:hover{background:var(--bg);border-color:var(--b2);color:var(--t1)}
+.btn-qf.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 8px rgba(26,108,245,.28);}
+.filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg label{font-size:10px;font-weight:700;color:var(--t3);text-transform:none;letter-spacing:.06em;}
+.fg input{height:32px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 10px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--t1);background:var(--surf);outline:none;transition:border-color .15s,box-shadow .15s;}
+.fg input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,108,245,.12)}
+.ms-wrap{position:relative;min-width:160px}
+.ms-btn{height:32px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 30px 0 10px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--t1);background:var(--surf);cursor:pointer;display:flex;align-items:center;transition:border-color .15s;white-space:nowrap;overflow:hidden;}
+.ms-btn:hover{border-color:var(--blue)}
+.ms-btn.open{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,108,245,.12)}
+.ms-btn::after{content:'▾';position:absolute;right:10px;font-size:10px;color:var(--t3)}
+.sel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:6px;flex-shrink:0}
+.ms-dd{display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surf);border:1.5px solid var(--b1);border-radius:var(--r12);box-shadow:var(--s3);z-index:200;max-height:280px;overflow-y:auto;min-width:100%;padding:6px;}
+.ms-dd.open{display:block;animation:ddIn .12s ease}
+@keyframes ddIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ms-search{width:100%;padding:6px 8px;margin-bottom:6px;border:1.5px solid var(--b1);border-radius:var(--r6);font-family:var(--font);font-size:12px;outline:none;transition:border-color .15s;}
+.ms-search:focus{border-color:var(--blue);}
+.ms-dd label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--r6);cursor:pointer;font-size:12px;font-weight:500;transition:background .1s;}
+.ms-dd label:hover{background:var(--bg)}
+.ms-dd input[type=checkbox]{accent-color:var(--blue);width:13px;height:13px;cursor:pointer;margin:0;}
+.ms-actions{display:flex;gap:6px;padding:6px 8px;border-top:1px solid var(--b1);margin-top:4px}
+.ms-actions button{flex:1;font-size:11px;font-weight:600;padding:4px;border:1.5px solid var(--b1);border-radius:var(--r6);background:var(--surf);cursor:pointer;color:var(--t2);font-family:var(--font);transition:all .1s}
+.ms-actions button:hover{background:var(--bg);border-color:var(--blue);color:var(--blue)}
+.fa{display:flex;gap:6px;align-items:flex-end;margin-left:auto}
+.btn{height:32px;border:none;border-radius:var(--r8);padding:0 16px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.01em}
+.btn-p{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(26,108,245,.28)}.btn-p:hover{background:var(--blue-d);box-shadow:0 3px 12px rgba(26,108,245,.38)}
+.btn-s{background:var(--surf);color:var(--t2);border:1.5px solid var(--b1)}.btn-s:hover{background:var(--bg);border-color:var(--b2)}
+.alert{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:var(--r12);font-size:13px;margin-bottom:16px;font-weight:500}
+.al-err{background:var(--red-l);border:1px solid #f0b0aa;color:var(--red)}
+.al-warn{background:var(--yellow-l);border:1px solid #f0d080;color:var(--yellow)}
+.al-info{background:var(--blue-l);border:1px solid #b3ccff;color:var(--blue)}
+.kpi-row{display:grid;gap:12px;margin-bottom:14px}
+.kpi-5{grid-template-columns:repeat(5,1fr)}
+.kpi-4{grid-template-columns:repeat(4,1fr)}
+.kpi-3{grid-template-columns:repeat(3,1fr)}
+.kpi{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);padding:16px;box-shadow:var(--s1);position:relative;overflow:hidden;transition:box-shadow .25s,transform .2s;cursor:default;}
+.kpi:hover{box-shadow:var(--s2);transform:translateY(-3px)}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r12) var(--r12) 0 0}
+.kpi-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.kpi-val{font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.1;color:var(--t1)}
+.kpi-val.sm{font-size:17px;font-weight:700}
+.kpi-delta{font-size:11px;margin-top:5px;display:flex;flex-direction:column;gap:2px;font-weight:600;}
+.kpi-delta-row{display:flex;align-items:center;gap:8px;}
+.du{color:var(--green)}.dd{color:var(--red)}.dn{color:var(--t3)}
+.cgrid{display:grid;gap:12px;margin-bottom:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g1{grid-template-columns:1fr}
+.cc{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);padding:14px 16px;box-shadow:var(--s1);transition:box-shadow .2s}
+.cc:hover{box-shadow:var(--s2)}
+.cc-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.cc-title{font-size:13px;font-weight:700;color:var(--t1)}
+.cc-sub{font-size:10px;color:var(--t3);margin-top:2px;font-weight:500}
+.cc-kv{font-size:15px;font-weight:800;color:var(--t1);text-align:right}
+.cc-kl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;text-align:right;font-weight:600}
+.inline-indicators{display:flex;gap:20px;margin:8px 0 4px;}
+.indicator-item{display:flex;align-items:baseline;gap:6px;}
+.indicator-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;}
+.indicator-value{font-size:13px;font-weight:700;}
+.indicator-delta{font-size:10px;margin-left:4px;}
+.tc{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);box-shadow:var(--s1);overflow:hidden;margin-bottom:14px}
+.tc-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--b1);gap:10px;flex-wrap:wrap}
+.tc-title{font-size:13px;font-weight:700;color:var(--t1)}
+.tc-meta{font-size:11px;color:var(--t3);font-weight:500}
+.tc-search{height:30px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 10px;font-size:12px;font-family:var(--font);font-weight:500;outline:none;transition:border-color .15s;min-width:180px;color:var(--t1);}
+.tc-search:focus{border-color:var(--blue)}
+.tc-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--surf2);color:var(--t3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:9px 14px;text-align:left;border-bottom:1px solid var(--b1);white-space:nowrap;position:sticky;top:0;cursor:pointer;user-select:none;transition:background .12s;}
+thead th:hover{background:var(--bg);color:var(--t1)}
+thead th.sa::after{content:' ↑';color:var(--blue)}
+thead th.sd::after{content:' ↓';color:var(--blue)}
+tbody tr{border-bottom:1px solid var(--b1);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--blue-l)}
+td{padding:9px 14px;color:var(--t1);white-space:nowrap;font-weight:500}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+td.dim{color:var(--t3);font-size:11px;font-weight:400}
+td.em{font-weight:700}
+td.c{text-align:center}
+.rn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:800;background:var(--bg);color:var(--t3)}
+.rn.r1{background:var(--yellow-l);color:var(--yellow)}
+.rn.r2{background:#f0f0f2;color:#555}
+.rn.r3{background:var(--orange-l);color:var(--orange)}
+.bd{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.prg{display:flex;align-items:center;gap:8px}
+.prg-bg{flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;min-width:60px}
+.prg-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.prg-pct{font-size:11px;color:var(--t3);min-width:30px;text-align:right;font-weight:600}
+.empty{text-align:center;padding:48px 20px;color:var(--t3)}
+.ei{font-size:36px;margin-bottom:8px}
+.em-msg{font-size:13px;font-weight:600}
+.ov{display:none;position:fixed;inset:0;background:rgba(240,242,245,.85);backdrop-filter:blur(4px);z-index:500;place-items:center}
+.ov.on{display:grid}
+.ov-box{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r16);padding:32px 48px;box-shadow:var(--s3);display:flex;flex-direction:column;align-items:center;gap:16px;}
+.ring{width:38px;height:38px;border-radius:50%;border:3px solid var(--b1);border-top-color:var(--blue);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ring-lbl{font-size:13px;color:var(--t2);font-weight:600}
+.page{display:none;animation:fadeIn .25s ease}.page.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:1200px){.kpi-5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:960px){.kpi-5,.kpi-4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.sidebar{display:none}}
+@media(max-width:540px){.kpi-5,.kpi-4,.kpi-3{grid-template-columns:1fr}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--t3)}
+</style>
+</head>
+<body>
+
+<div class="ov" id="ov">
+  <div class="ov-box">
+    <div class="ring"></div>
+    <div class="ring-lbl" id="ovLbl">Carregando…</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="tb-brand">
+    <div class="tb-logo"><img src="https://org23b93544.crm2.dynamics.com/WebResources/cr40f_LogoBetinhosB" alt="Logo"></div>
+    <div><div class="tb-name">Betinhos</div><div class="tb-sub">Dashboard do Gestor</div></div>
+  </div>
+  <div class="tb-right">
+    <span class="ts" id="ts"></span>
+    <span class="env-pill" id="envPill">—</span>
+    <button class="btn-ic" id="btnRef" onclick="loadAll()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M3 16l2.1 2.7A9 9 0 0 0 21 12"/></svg></button>
+  </div>
+</div>
+
+<div class="shell">
+<div class="sidebar">
+  <div class="sb-section">Operações</div>
+  <div class="sb-item act" onclick="nav('resumo',this)"><span class="sb-icon">📊</span>Resumo<span class="sb-badge" id="nbSrv">—</span></div>
+  <div class="sb-item" onclick="nav('servicos',this)"><span class="sb-icon">🗓</span>Serviços<span class="sb-badge" id="nbSrv2">—</span></div>
+  <div class="sb-item" onclick="nav('faturamento',this)"><span class="sb-icon">💰</span>Faturamento</div>
+  <div class="sb-item" onclick="nav('pagantes',this)"><span class="sb-icon">💳</span>Pagamentos<span class="sb-badge" id="nbPag">—</span></div>
+  <div class="sb-div"></div>
+  <div class="sb-section">Frota & Equipe</div>
+  <div class="sb-item" onclick="nav('frota',this)"><span class="sb-icon">🚘</span>Frota<span class="sb-badge" id="nbFrota">—</span></div>
+  <div class="sb-item" onclick="nav('motoristas',this)"><span class="sb-icon">👨‍✈️</span>Motoristas<span class="sb-badge" id="nbMot">—</span></div>
+  <div class="sb-item" onclick="nav('manutencoes',this)"><span class="sb-icon">🔧</span>Manutenções<span class="sb-badge warn" id="nbMan">—</span></div>
+  <div class="sb-item" onclick="nav('multas',this)"><span class="sb-icon">⚠️</span>Multas<span class="sb-badge danger" id="nbMul">—</span></div>
+  <div class="sb-item" onclick="nav('trocas',this)"><span class="sb-icon">🔄</span>Trocas<span class="sb-badge" id="nbTrc">—</span></div>
+  <div class="sb-div"></div>
+  <div class="sb-section">Marketing</div>
+  <div class="sb-item" onclick="nav('marketing',this)"><span class="sb-icon">📣</span>Marketing<span class="sb-badge" id="nbMkt">—</span></div>
+</div>
+
+<div class="content">
+  <div id="alertArea"></div>
+  <div class="fbar">
+    <div class="quick-filters">
+      <button class="btn-qf" onclick="quickFilter('hoje',this)">Hoje</button>
+      <button class="btn-qf" onclick="quickFilter('ult7',this)">Últ. 7 dias</button>
+      <button class="btn-qf" onclick="quickFilter('ult30',this)">Últ. 30 dias</button>
+      <button class="btn-qf" onclick="quickFilter('esteMes',this)">Este mês</button>
+      <button class="btn-qf" onclick="quickFilter('mesAnt',this)">Mês anterior</button>
+      <button class="btn-qf active" onclick="quickFilter('esteAno',this)">Este ano</button>
+      <button class="btn-qf" onclick="quickFilter('anoAnt',this)">Ano anterior</button>
+    </div>
+    <div class="filter-row">
+      <div class="fg"><label>Início</label><input type="date" id="fS"></div>
+      <div class="fg"><label>Fim</label><input type="date" id="fE"></div>
+      <div class="fg"><label>Status</label><div class="ms-wrap" id="msSt"><div class="ms-btn" id="msSt-btn" onclick="toggleMS('msSt')">Todos status</div><div class="ms-dd" id="msSt-dd"></div></div></div>
+      <div class="fg"><label>Cliente</label><div class="ms-wrap" id="msCl"><div class="ms-btn" id="msCl-btn" onclick="toggleMS('msCl')">Todos clientes</div><div class="ms-dd" id="msCl-dd"></div></div></div>
+      <div class="fg"><label>Motorista</label><div class="ms-wrap" id="msMo"><div class="ms-btn" id="msMo-btn" onclick="toggleMS('msMo')">Todos motoristas</div><div class="ms-dd" id="msMo-dd"></div></div></div>
+      <div class="fg"><label>Tipo veículo</label><div class="ms-wrap" id="msTp"><div class="ms-btn" id="msTp-btn" onclick="toggleMS('msTp')">Todos tipos</div><div class="ms-dd" id="msTp-dd"></div></div></div>
+      <div class="fa"><button class="btn btn-p" onclick="applyF()">Aplicar</button><button class="btn btn-s" onclick="clearF()">Limpar</button></div>
+    </div>
+  </div>
+
+<!-- ========== PAGE RESUMO ========== -->
+<div class="page on" id="page-resumo">
+  <div class="kpi-row kpi-5">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Serviços no período</div><div class="kpi-val" id="kSrv">—</div><div class="kpi-delta" id="kSrvD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-lbl">Faturamento</div><div class="kpi-val sm" id="kFat">—</div><div class="kpi-delta" id="kFatD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">Ticket Médio</div><div class="kpi-val sm" id="kTk">—</div><div class="kpi-delta" id="kTkD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#e07000,#f59532)"></div><div class="kpi-lbl">Manutenções</div><div class="kpi-val" id="kMan">—</div><div class="kpi-delta" id="kManD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-lbl">Multas</div><div class="kpi-val" id="kMul">—</div><div class="kpi-delta" id="kMulD"></div></div>
+  </div>
+  <div class="kpi-row kpi-4">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Concluídos s/ Valor</div><div class="kpi-val" id="kSemVal">—</div><div class="kpi-delta" id="kSemValD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">A Receber</div><div class="kpi-val sm" id="kPPend">—</div><div class="kpi-delta" id="kPPendD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">CNH Próx./Vencida</div><div class="kpi-val" id="kCnhW">—</div><div class="kpi-delta" id="kCnhWD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a6cf5,#4f94ff)"></div><div class="kpi-lbl">Frota Ativa</div><div class="kpi-val" id="kFrotaAtiva">—</div><div class="kpi-delta" id="kFrotaAtivaD"></div></div>
+  </div>
+
+  <!-- Total Produzido (altura reduzida) -->
+  <div class="cc">
+    <div class="cc-hdr"><div><div class="cc-title">Total Produzido</div></div><div style="text-align:right"><div class="inline-indicators" id="indicatorsLM_LY_META"></div></div></div>
+    <canvas id="cTotalProd" height="100"></canvas>
+  </div>
+
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Ticket Médio mensal</div><div class="cc-sub" id="sub_tm"></div></div><div><div class="cc-kv" id="v_tm">—</div><div class="cc-kl">média</div></div></div><canvas id="cTicketMedio" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Status dos serviços</div></div></div><canvas id="cSt" height="100"></canvas></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Custo frota (manutenções)</div></div><div><div class="cc-kv" id="v_cf">—</div><div class="cc-kl">total</div></div></div><canvas id="cCF" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Top 10 clientes — volume</div></div></div><canvas id="cTC" height="120"></canvas></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Top 10 clientes — faturamento</div></div></div><canvas id="cTCF" height="120"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Serviços por motorista</div><div class="cc-sub" id="sub_mm"></div></div></div><canvas id="cMM" height="100"></canvas></div>
+  </div>
+</div>
+
+<!-- ========== PAGE SERVIÇOS ========== -->
+<div class="page" id="page-servicos">
+  <div class="kpi-row kpi-4">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Total</div><div class="kpi-val" id="sT">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Concluídos</div><div class="kpi-val" id="sCon">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Pendentes/Prog.</div><div class="kpi-val" id="sPen">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-lbl">Cancelados</div><div class="kpi-val" id="sCan">—</div></div>
+  </div>
+  <div class="kpi-row kpi-3">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">Ticket Médio</div><div class="kpi-val sm" id="sTk">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Sem Valor</div><div class="kpi-val" id="sSemVal">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-lbl">Faturamento total</div><div class="kpi-val sm" id="sFat">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Total de Serviços por Tipo</div></div><canvas id="cServicosTipo" height="150"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por tipo de veículo</div></div><canvas id="cTipoVei" height="100"></canvas></div>
+  </div>
+  <div class="tc">
+    <div class="tc-bar"><div><div class="tc-title">Todos os serviços</div><div class="tc-meta" id="metaSrv"></div></div><input class="tc-search" placeholder="Buscar cliente ou motorista…" oninput="srchReg(this.value)"></div>
+    <div class="tc-wrap"><table><thead><tr><th onclick="srt('tbSrv','data',this)">Data/Hora</th><th onclick="srt('tbSrv','cliente',this)">Cliente</th><th onclick="srt('tbSrv','motorista',this)">Motorista</th><th onclick="srt('tbSrv','tipo',this)">Tipo serviço</th><th onclick="srt('tbSrv','veiculo',this)">Tipo veículo</th><th onclick="srt('tbSrv','status',this)">Status</th><th onclick="srt('tbSrv','fatStatus',this)">Fat. status</th><th onclick="srt('tbSrv','valor',this)" style="text-align:right">Valor</th></tr></thead><tbody id="tbSrv"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ========== DEMAIS ABAS ========== -->
+<div class="page" id="page-faturamento">
+  <div class="kpi-row kpi-4">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-lbl">Faturamento total</div><div class="kpi-val sm" id="fT">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Ticket médio</div><div class="kpi-val sm" id="fTk">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Maior serviço</div><div class="kpi-val sm" id="fMax">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">Clientes ativos</div><div class="kpi-val" id="fCli">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Faturamento mensal</div></div><canvas id="cFM2" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Status de faturamento</div></div><canvas id="cFatSt" height="100"></canvas></div>
+  </div>
+  <div class="tc">
+    <div class="tc-bar"><div><div class="tc-title">Faturamento por cliente</div><div class="tc-meta" id="metaFat"></div></div><input class="tc-search" placeholder="Buscar cliente…" oninput="srchTbl('tbFat',this.value,'nome')"></div>
+    <div class="tc-wrap"><table><thead><tr><th>#</th><th>Cliente</th><th>Serviços</th><th>Faturamento</th><th>Ticket médio</th><th>Participação</th></tr></thead><tbody id="tbFat"></tbody></table></div>
+  </div>
+</div>
+
+<div class="page" id="page-pagantes">
+  <div class="kpi-row kpi-3">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Registros</div><div class="kpi-val" id="pQtd">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por forma de pagamento</div></div><canvas id="cForma" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Status dos pagamentos</div></div><canvas id="cPagSt" height="100"></canvas></div>
+  </div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Registros de pagamento</div><div class="tc-meta" id="metaPag"></div></div><div class="tc-wrap"><table><thead><tr><th>Status</th><th>Forma</th><th>Valor</th></tr></thead><tbody id="tbPag"></tbody></table></div></div>
+</div>
+
+<div class="page" id="page-frota">
+  <div class="kpi-row kpi-4">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Total</div><div class="kpi-val" id="vTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Disponíveis</div><div class="kpi-val" id="vDisp">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">Blindados</div><div class="kpi-val" id="vBlin">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#e07000,#f59532)"></div><div class="kpi-lbl">Em manutenção</div><div class="kpi-val" id="vMan">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Status da frota</div></div><canvas id="cFrotaSt" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por marca</div></div><canvas id="cFrotaMarca" height="100"></canvas></div>
+  </div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Veículos</div><div class="tc-meta" id="metaFrota"></div><input class="tc-search" placeholder="Buscar placa ou modelo…" oninput="srchTbl('tbFrota',this.value,'placa')"></div><div class="tc-wrap"><table><thead><tr><th>Placa</th><th>Marca</th><th>Modelo</th><th>Ano</th><th>Blindado</th><th>Status</th></tr></thead><tbody id="tbFrota"></tbody></table></div></div>
+</div>
+
+<div class="page" id="page-motoristas">
+  <div class="kpi-row kpi-3">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Total motoristas</div><div class="kpi-val" id="mTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-lbl">CNH vencida/próx.</div><div class="kpi-val" id="mCnh">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-lbl">Serviços no período</div><div class="kpi-val" id="mSrv">—</div></div>
+  </div>
+  <div class="cgrid g1"><div class="cc"><div class="cc-hdr"><div class="cc-title">Serviços por motorista por mês</div></div><canvas id="cMotMes" height="100"></canvas></div></div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Ranking de motoristas</div><div class="tc-meta" id="metaMot"></div><input class="tc-search" placeholder="Buscar motorista…" oninput="srchTbl('tbMot',this.value,'nome')"></div><div class="tc-wrap"><table><thead><tr><th>#</th><th>Motorista</th><th>Função</th><th>Serviços</th><th>Faturamento</th><th>Ticket médio</th><th>Validade CNH</th><th>Participação</th></tr></thead><tbody id="tbMot"></tbody></table></div></div>
+</div>
+
+<div class="page" id="page-manutencoes">
+  <div class="kpi-row kpi-4">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#e07000,#f59532)"></div><div class="kpi-lbl">Total</div><div class="kpi-val" id="manTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-lbl">Custo total</div><div class="kpi-val sm" id="manCusto">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Em andamento</div><div class="kpi-val" id="manAnd">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Custo médio</div><div class="kpi-val sm" id="manMed">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Custo por mês</div></div><canvas id="cManMes" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por tipo de reparo</div></div><canvas id="cManTipo" height="100"></canvas></div>
+  </div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Histórico</div><div class="tc-meta" id="metaMan"></div></div><div class="tc-wrap"><table><thead><tr><th>Data</th><th>Placa</th><th>Tipo reparo</th><th>Status</th><th>Custo</th></tr></thead><tbody id="tbMan"></tbody></table></div></div>
+</div>
+
+<div class="page" id="page-multas">
+  <div class="kpi-row kpi-3">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-lbl">Total multas</div><div class="kpi-val" id="mulTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Pendentes</div><div class="kpi-val" id="mulPen">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Resolvidas</div><div class="kpi-val" id="mulRes">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por status</div></div><canvas id="cMulSt" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por motorista</div></div><canvas id="cMulMot" height="100"></canvas></div>
+  </div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Registro de multas</div><div class="tc-meta" id="metaMul"></div></div><div class="tc-wrap"><table><thead><tr><th>Data/Hora</th><th>Motorista</th><th>Placa</th><th>Status</th></tr></thead><tbody id="tbMul"></tbody></table></div></div>
+</div>
+
+<div class="page" id="page-trocas">
+  <div class="kpi-row kpi-3">
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Total trocas</div><div class="kpi-val" id="trcTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Pendentes</div><div class="kpi-val" id="trcPen">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Concluídas</div><div class="kpi-val" id="trcCon">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Status das trocas</div></div><canvas id="cTrcSt" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por tipo de troca</div></div><canvas id="cTrcTp" height="100"></canvas></div>
+  </div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Histórico de trocas</div><div class="tc-meta" id="metaTrc"></div></div><div class="tc-wrap"><table><thead><tr><th>Data/Hora</th><th>Tipo</th><th>Status</th></tr></thead><tbody id="tbTrc"></tbody></table></div></div>
+</div>
+
+<div class="page" id="page-marketing">
+  <div class="kpi-row kpi-3">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">Total publicações</div><div class="kpi-val" id="mktTot">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">Publicadas</div><div class="kpi-val" id="mktPub">—</div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Em produção</div><div class="kpi-val" id="mktProd">—</div></div>
+  </div>
+  <div class="cgrid g2">
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por categoria</div></div><canvas id="cMktCat" height="100"></canvas></div>
+    <div class="cc"><div class="cc-hdr"><div class="cc-title">Por status</div></div><canvas id="cMktSt" height="100"></canvas></div>
+  </div>
+  <div class="tc"><div class="tc-bar"><div class="tc-title">Publicações</div><div class="tc-meta" id="metaMkt"></div></div><div class="tc-wrap"><table><thead><tr><th>Data publicação</th><th>Categoria</th><th>Status</th></tr></thead><tbody id="tbMkt"></tbody></table></div></div>
+</div>
+
+</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// DADOS HARDCODED
+// ════════════════════════════════════════════
+const fat2023 = [148127.05, 218779.86, 344114.51, 280122.75, 363727.08, 298182.52, 282676.23, 434144.06, 314675.09, 365644.26, 366559.39, 281865.47];
+const fat2024 = [213816.57, 301775.60, 431967.33, 375306.13, 368946.60, 351496.37, 296388.78, 476702.85, 401841.79, 553994.72, 413078.59, 330595.71];
+const fat2025 = [336469.65, 454025.84, 519102.26, 490267.63, 627708.67, 458813.70, 450734.61, 426814.08, 419071.97, 434559.40, 421781.78, 438377.83];
+
+// ════════════════════════════════════════════
+// CONFIGURAÇÕES DO DATAVERSE
+// ════════════════════════════════════════════
+const ENVS={
+  'orgf261ae8e':{label:'PROD',url:'https://orgf261ae8e.crm2.dynamics.com',cls:'env-prod'},
+  'org23b93544':{label:'DEV', url:'https://org23b93544.crm2.dynamics.com',cls:'env-dev'}
+};
+let BASE='';
+const API=()=>`${BASE}/api/data/v9.2`;
+
+function makeHeaders(wantAnno,wantPage){
+  const h=new Headers({'Accept':'application/json','OData-MaxVersion':'4.0','OData-Version':'4.0'});
+  if(wantAnno)h.append('Prefer','odata.include-annotations="*"');
+  if(wantPage)h.append('Prefer','odata.maxpagesize=5000');
+  return h;
+}
+
+const T={
+  reservas:'cr40f_reservadeveculoses',
+  precos:'cr40f_composicaodeprecoses',
+  manutencoes:'cr40f_manutencoeses',
+  multas:'cr40f_multases',
+  trocas:'cr40f_trocasdecarros',
+  pagantes:'cr40f_paganteses',
+  veiculos:'cr40f_veiculoses',
+  funcionarios:'cr40f_funcionarioses',
+  marketing:'new_marketings'
+};
+const F={
+  res:{id:'cr40f_reservadeveculosid',data:'cr40f_dataehorriodesada',status:'cr40f_status',fatStatus:'cr40f_statusdefaturamento',tipo:'cr40f_tipodoservico',veiTipo:'cr40f_tipodeveiculo',navMot:'cr40f_Motorista',navCli:'cr40f_Cliente',catItem:'new_categoriadoitem', lookupPreco:'_new_composicaodepreco_value'},
+  preco:{valorTotal:'new_valortotal',status:'new_status'},
+  man:{data:'cr40f_datamanutencao',valor:'cr40f_valor',status:'cr40f_status',tipo:'cr40f_tipodoreparo',veiculo:'cr40f_placa_carro'},
+  mul:{data:'cr40f_dataehorario',mot:'cr40f_motorista',placa:'cr40f_placa',status:'cr40f_status'},
+  trc:{data:'cr40f_dataehorariodatroca',status:'cr40f_statusdatroca',tipo:'new_tipodetroca'},
+  pag:{status:'cr40f_status',valor:'cr40f_valor',forma:'cr40f_formadepagamento'},
+  vei:{placa:'cr40f_placa',marca:'cr40f_marca',modelo:'cr40f_modelo',status:'cr40f_statusdoveiculo',blindado:'cr40f_blindado',ano:'cr40f_anodefabricacao'},
+  fun:{nome:'cr40f_nomecompleto',funcao:'cr40f_funcao',cnh:'cr40f_validadedacnh',apelido:'new_apelido'},
+  mkt:{status:'new_status',cat:'new_categoria',data:'new_datadepublicacao'}
+};
+
+let DB={reservas:[],precos:[],manutencoes:[],multas:[],trocas:[],pagantes:[],veiculos:[],funcionarios:[],marketing:[]};
+let VW={reservas:[]};
+let charts={},sparks={},srtSt={},tblCache={};
+let msState={St:[],Cl:[],Mo:[],Tp:[]};
+let funcMapGlobal = new Map();
+
+// ════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════
+const brl=v=>v==null?'—':Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const brlS=v=>{if(v==null)return'—';if(v>=1e6)return'R$\u00a0'+(v/1e6).toFixed(2)+'M';if(v>=1e3)return'R$\u00a0'+(v/1e3).toFixed(1)+'k';return brl(v)};
+const fmtDt=v=>v?new Date(v).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+const fmtD=v=>v?new Date(v).toLocaleDateString('pt-BR'):'—';
+const pct=(v,t)=>t?Math.round((v/t)*100):0;
+
+function mK(v){
+  if(!v)return null;
+  const d=new Date(v);
+  const utcDate=new Date(d.getTime()-(3*60*60*1000));
+  return`${utcDate.getFullYear()}-${String(utcDate.getMonth()+1).padStart(2,'0')}`;
+}
+const mL=k=>{
+  if(!k)return'—';
+  const[y,m]=k.split('-');
+  const date=new Date(parseInt(y),parseInt(m)-1,1);
+  return date.toLocaleString('pt-BR',{month:'short',year:'2-digit'}).replace('.','');
+};
+const fv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+const sumV=a=>a.reduce((s,r)=>s+(r._valor||0),0);
+function grp(arr,fn){const m={};for(const r of arr){const k=fn(r)??'__null__';(m[k]=m[k]||[]).push(r)}return m}
+function mKeys(byM){return Object.keys(byM).filter(k=>k!=='__null__').sort((a,b)=>a.localeCompare(b));}
+const trunc=(s,n=22)=>s&&s.length>n?s.substring(0,n)+'…':s||'—';
+const stL=s=>s.toLowerCase();
+
+// ════════════════════════════════════════════
+// REGRA GLOBAL: Dados Dataverse pré-2026 suprimidos
+// ════════════════════════════════════════════
+function isDataverseDisabled(){
+  const end = document.getElementById('fE').value;
+  if (!end) return false;
+  const endDate = new Date(end + 'T23:59:59-03:00');
+  const limitDate = new Date('2026-01-01T00:00:00-03:00');
+  return endDate < limitDate;
+}
+
+// ════════════════════════════════════════════
+// FETCH
+// ════════════════════════════════════════════
+async function fetchAll(url){
+  let res=[],next=url;
+  while(next){
+    const r=await fetch(next,{credentials:'same-origin',headers:makeHeaders(true,true)});
+    if(!r.ok){const t=await r.text();let msg=`HTTP ${r.status}`;try{const j=JSON.parse(t);msg=j?.error?.message||msg}catch(e){}throw new Error(msg);}
+    const j=await r.json();
+    res=res.concat(j.value||[]);
+    next=j['@odata.nextLink']||null;
+  }
+  return res;
+}
+
+// ════════════════════════════════════════════
+// ENV DETECTION
+// ════════════════════════════════════════════
+function detectEnv(){
+  const h=window.location.hostname;
+  for(const[k,e] of Object.entries(ENVS)){
+    if(h.includes(k)){
+      BASE=e.url;
+      const p=document.getElementById('envPill');
+      p.textContent=e.label;p.className='env-pill '+e.cls;
+      return;
+    }
+  }
+  BASE=window.location.origin;
+  const p=document.getElementById('envPill');
+  p.textContent='LOCAL';p.className='env-pill env-local';
+}
+
+// ════════════════════════════════════════════
+// LOAD
+// ════════════════════════════════════════════
+async function loadAll(){
+  clearAlerts();setLoading(true,'Iniciando carga…');
+  const btn=document.getElementById('btnRef');
+  btn.disabled=true;btn.classList.add('spin');
+  try{
+    await Promise.all([
+      loadReservas(),loadPrecos(),loadManutencoes(),
+      loadMultas(),loadTrocas(),loadPagantes(),
+      loadVeiculos(),loadFuncionarios(),loadMarketing()
+    ]);
+    buildFuncMap();
+    enrichReservas();
+    populateFilters();
+    quickFilter('esteAno',document.querySelector('.btn-qf.active'));
+    const now=new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    document.getElementById('ts').textContent=`Atualizado ${now}`;
+  }catch(e){
+    showAlert('err',`<strong>Erro ao carregar dados:</strong> ${e.message}`);
+    console.error(e);
+  }finally{
+    setLoading(false);
+    btn.disabled=false;btn.classList.remove('spin');
+  }
+}
+
+async function loadReservas(){
+  setLoading(true,'Carregando serviços…');
+  const sel=[F.res.id,F.res.data,F.res.status,F.res.fatStatus,F.res.tipo,F.res.veiTipo,F.res.catItem,F.res.lookupPreco].join(',');
+  const exp=[`${F.res.navMot}($select=${F.fun.nome},${F.fun.apelido})`,`${F.res.navCli}($select=cr40f_nomedocliente)`].join(',');
+  DB.reservas=await fetchAll(`${API()}/${T.reservas}?$select=${sel}&$expand=${exp}&$orderby=${F.res.data} desc`);
+}
+async function loadPrecos(){
+  const sel=[`cr40f_composicaodeprecosid`,F.preco.valorTotal,F.preco.status].join(',');
+  DB.precos=await fetchAll(`${API()}/${T.precos}?$select=${sel}`);
+}
+async function loadManutencoes(){ DB.manutencoes=await fetchAll(`${API()}/${T.manutencoes}?$select=${F.man.data},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`); }
+async function loadMultas(){ DB.multas=await fetchAll(`${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.mot}_value,_${F.mul.placa}_value&$orderby=${F.mul.data} desc`); }
+async function loadTrocas(){ DB.trocas=await fetchAll(`${API()}/${T.trocas}?$select=${F.trc.data},${F.trc.status},${F.trc.tipo}&$orderby=${F.trc.data} desc`); }
+async function loadPagantes(){ DB.pagantes=await fetchAll(`${API()}/${T.pagantes}?$select=${F.pag.status},${F.pag.valor},${F.pag.forma}`); }
+async function loadVeiculos(){ DB.veiculos=await fetchAll(`${API()}/${T.veiculos}?$select=${F.vei.placa},${F.vei.marca},${F.vei.modelo},${F.vei.status},${F.vei.blindado},${F.vei.ano}`); }
+async function loadFuncionarios(){ DB.funcionarios=await fetchAll(`${API()}/${T.funcionarios}?$select=${F.fun.nome},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido}`); }
+async function loadMarketing(){ DB.marketing=await fetchAll(`${API()}/${T.marketing}?$select=${F.mkt.status},${F.mkt.cat},${F.mkt.data}&$orderby=${F.mkt.data} desc`); }
+
+function buildFuncMap(){
+  funcMapGlobal.clear();
+  for (const f of DB.funcionarios) {
+    const nome = f[F.fun.nome] || '';
+    const apelido = f[F.fun.apelido] || nome;
+    const id = f['cr40f_funcionariosid'];
+    if (id) funcMapGlobal.set(id.toLowerCase(), apelido);
+    funcMapGlobal.set(nome.toLowerCase(), apelido);
+  }
+}
+
+function enrichReservas(){
+  const precoMap=new Map();
+  for(const p of DB.precos){
+    const id=p['cr40f_composicaodeprecosid']?.toLowerCase();
+    if(id){ const valor=parseFloat(p[F.preco.valorTotal])||0; precoMap.set(id, valor); }
+  }
+  DB.reservas=DB.reservas.map(r=>{
+    const valor=precoMap.get((r[F.res.lookupPreco]||'').toLowerCase())||0;
+    const nomeMot = r[F.res.navMot]?.[F.fun.nome] || 'Sem motorista';
+    const motDisplay = funcMapGlobal.get(nomeMot.toLowerCase()) || nomeMot;
+    return{
+      ...r,
+      _id:(r[F.res.id]||'').toLowerCase(),
+      _mot: motDisplay,
+      _cli:r[F.res.navCli]?.cr40f_nomedocliente||'Sem cliente',
+      _stL:String(fv(r,F.res.status)||'Sem status'),
+      _fatStL:String(fv(r,F.res.fatStatus)||'—'),
+      _tipoL:String(fv(r,F.res.tipo)||'—'),
+      _veiL:String(fv(r,F.res.veiTipo)||'—'),
+      _valor:valor,
+      _ts:r[F.res.data]?new Date(r[F.res.data]).getTime():0,
+    };
+  });
+}
+
+// ════════════════════════════════════════════
+// FILTERS
+// ════════════════════════════════════════════
+function populateFilters(){
+  const setMS=(id,vals,ph)=>{
+    const btn=document.getElementById(`${id}-btn`);
+    const dd=document.getElementById(`${id}-dd`);
+    btn.textContent=ph;
+    msState[id.replace('ms','')]=[];
+    const unique=[...new Set(vals.filter(Boolean))].sort();
+    dd.innerHTML=`
+      <input type="text" class="ms-search" placeholder="🔍 Filtrar opções…" oninput="filterMSOptions('${id}', this.value)">
+      <div class="ms-options-container" id="${id}-options">
+        ${unique.map(v=>`<label><input type="checkbox" value="${v.replace(/"/g,'&quot;')}" onchange="msToggle('${id}','${v.replace(/'/g,"\\'").replace(/"/g,'\\"')}')"><span>${v}</span></label>`).join('')}
+      </div>
+      <div class="ms-actions">
+        <button onclick="msSelectAll('${id}',true)">Todos</button>
+        <button onclick="msSelectAll('${id}',false)">Nenhum</button>
+      </div>
+    `;
+  };
+  setMS('msSt',DB.reservas.map(r=>r._stL),'Todos status');
+  setMS('msCl',DB.reservas.map(r=>r._cli),'Todos clientes');
+  setMS('msMo',DB.reservas.map(r=>r._mot),'Todos motoristas');
+  setMS('msTp',DB.reservas.map(r=>r._veiL),'Todos tipos');
+}
+function filterMSOptions(id, query){
+  const container = document.getElementById(`${id}-options`);
+  if(!container) return;
+  const labels = container.querySelectorAll('label');
+  const lowerQ = query.toLowerCase();
+  labels.forEach(lbl => {
+    const span = lbl.querySelector('span');
+    const text = span.textContent.toLowerCase();
+    lbl.style.display = text.includes(lowerQ) ? 'flex' : 'none';
+  });
+}
+function toggleMS(id){
+  const dd=document.getElementById(`${id}-dd`);
+  const btn=document.getElementById(`${id}-btn`);
+  const isOpen=dd.classList.contains('open');
+  document.querySelectorAll('.ms-dd').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.ms-btn').forEach(b=>b.classList.remove('open'));
+  if(!isOpen){
+    dd.classList.add('open');
+    btn.classList.add('open');
+    const inp = dd.querySelector('.ms-search');
+    if(inp) setTimeout(()=>inp.focus(), 50);
+  }
+}
+function msToggle(id,val){
+  const key=id.replace('ms','');
+  const state=msState[key];
+  const idx=state.indexOf(val);
+  if(idx>-1)state.splice(idx,1);else state.push(val);
+  updateMSButton(id);
+}
+function msSelectAll(id,sel){
+  const key=id.replace('ms','');
+  const dd=document.getElementById(`${id}-dd`);
+  const opts=dd.querySelectorAll('.ms-options-container input[type=checkbox]');
+  if(sel){
+    msState[key]=[...new Set([...opts].map(o=>o.value))];
+    opts.forEach(o=>o.checked=true);
+  }else{
+    msState[key]=[];
+    opts.forEach(o=>o.checked=false);
+  }
+  updateMSButton(id);
+}
+function updateMSButton(id){
+  const key=id.replace('ms','');
+  const state=msState[key];
+  const btn=document.getElementById(`${id}-btn`);
+  const ph={'msSt':'Todos status','msCl':'Todos clientes','msMo':'Todos motoristas','msTp':'Todos tipos'};
+  if(state.length===0) btn.innerHTML=ph[id];
+  else btn.innerHTML=`${ph[id]} <span class="sel-count">${state.length}</span>`;
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.ms-wrap')){
+    document.querySelectorAll('.ms-dd').forEach(d=>d.classList.remove('open'));
+    document.querySelectorAll('.ms-btn').forEach(b=>b.classList.remove('open'));
+  }
+});
+
+function applyF(){
+  document.querySelectorAll('.ms-dd').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.ms-btn').forEach(b=>b.classList.remove('open'));
+  const dS=document.getElementById('fS').value;
+  const dE=document.getElementById('fE').value;
+  let d=[...DB.reservas];
+  if(dS)d=d.filter(r=>r[F.res.data]&&r[F.res.data]>=new Date(dS+'T00:00:00-03:00').toISOString());
+  if(dE)d=d.filter(r=>r[F.res.data]&&r[F.res.data]<=new Date(dE+'T23:59:59-03:00').toISOString());
+  if(msState.St.length>0)d=d.filter(r=>msState.St.includes(r._stL));
+  if(msState.Cl.length>0)d=d.filter(r=>msState.Cl.includes(r._cli));
+  if(msState.Mo.length>0)d=d.filter(r=>msState.Mo.includes(r._mot));
+  if(msState.Tp.length>0)d=d.filter(r=>msState.Tp.includes(r._veiL));
+  VW.reservas=d;tblCache={};
+  renderAll();
+}
+function clearF(){
+  ['fS','fE'].forEach(x=>document.getElementById(x).value='');
+  msState={St:[],Cl:[],Mo:[],Tp:[]};
+  ['msSt','msCl','msMo','msTp'].forEach(id=>{
+    const btn=document.getElementById(`${id}-btn`);
+    btn.innerHTML={'msSt':'Todos status','msCl':'Todos clientes','msMo':'Todos motoristas','msTp':'Todos tipos'}[id];
+    const dd = document.getElementById(`${id}-dd`);
+    dd.querySelectorAll('input[type=checkbox]').forEach(i=>i.checked=false);
+    const search = dd.querySelector('.ms-search');
+    if(search) { search.value = ''; filterMSOptions(id, ''); }
+  });
+  document.querySelectorAll('.btn-qf').forEach(b=>b.classList.remove('active'));
+  VW.reservas=[...DB.reservas];tblCache={};
+  renderAll();
+}
+function quickFilter(period,btnEl){
+  document.querySelectorAll('.btn-qf').forEach(b=>b.classList.remove('active'));
+  if(btnEl)btnEl.classList.add('active');
+  const now=new Date();
+  const nowBR=new Date(now.getTime()-(3*60*60*1000));
+  const y=nowBR.getFullYear(),m=nowBR.getMonth();
+  let sDate='',eDate=nowBR.toISOString().split('T')[0];
+  switch(period){
+    case 'hoje':sDate=eDate;break;
+    case 'ult7':{const d=new Date(nowBR);d.setDate(d.getDate()-6);sDate=d.toISOString().split('T')[0];}break;
+    case 'ult30':{const d=new Date(nowBR);d.setDate(d.getDate()-29);sDate=d.toISOString().split('T')[0];}break;
+    case 'esteMes':sDate=`${y}-${String(m+1).padStart(2,'0')}-01`;break;
+    case 'mesAnt':{const s=new Date(y,m-1,1),e=new Date(y,m,0);sDate=s.toISOString().split('T')[0];eDate=e.toISOString().split('T')[0];}break;
+    case 'esteAno':sDate=`${y}-01-01`;break;
+    case 'anoAnt':sDate=`${y-1}-01-01`;eDate=`${y-1}-12-31`;break;
+  }
+  document.getElementById('fS').value=sDate;
+  document.getElementById('fE').value=eDate;
+  applyF();
+}
+
+// ════════════════════════════════════════════
+// META INTELIGENTE
+// ════════════════════════════════════════════
+function calcularMetaMensal(ano, mes){
+  const hist = [];
+  if (ano >= 2023) hist.push(fat2023[mes]);
+  if (ano >= 2024) hist.push(fat2024[mes]);
+  if (ano >= 2025) hist.push(fat2025[mes]);
+  const pesos = [0.1, 0.4, 0.5];
+  let soma=0, pesoTotal=0;
+  for(let i=0;i<hist.length;i++){
+    soma += hist[i] * pesos[i];
+    pesoTotal += pesos[i];
+  }
+  const base = pesoTotal ? soma / pesoTotal : 0;
+  return base * 1.13;
+}
+function getMetaParaPeriodo(startStr, endStr){
+  if (!startStr || !endStr) return 0;
+  const start = new Date(startStr + 'T00:00:00-03:00');
+  const end = new Date(endStr + 'T23:59:59-03:00');
+  const startMonth = start.getMonth();
+  const startYear = start.getFullYear();
+  const endMonth = end.getMonth();
+  const endYear = end.getFullYear();
+  if (startYear === endYear && startMonth === endMonth) {
+    return calcularMetaMensal(startYear, startMonth);
+  } else {
+    let meta = 0;
+    let current = new Date(start);
+    while (current <= end) {
+      const year = current.getFullYear();
+      const month = current.getMonth();
+      meta += calcularMetaMensal(year, month);
+      current.setMonth(current.getMonth() + 1);
+    }
+    return meta;
+  }
+}
+
+// ════════════════════════════════════════════
+// FUNÇÕES AUXILIARES PARA DADOS HARDCODED
+// ════════════════════════════════════════════
+function getFilteredMonthlyData(yearArray, year, startDateStr, endDateStr){
+  const months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+  const result = [];
+  for(let i=0; i<12; i++){
+    const monthStr = months[i];
+    const dateStr = `${year}-${monthStr}-15`;
+    const date = new Date(dateStr + 'T12:00:00-03:00');
+    let include = true;
+    if(startDateStr){
+      const start = new Date(startDateStr + 'T00:00:00-03:00');
+      if(date < start) include = false;
+    }
+    if(endDateStr){
+      const end = new Date(endDateStr + 'T23:59:59-03:00');
+      if(date > end) include = false;
+    }
+    result.push(include ? yearArray[i] : null);
+  }
+  return result;
+}
+function getTotalForPeriod(yearArray, year, startDateStr, endDateStr){
+  const filtered = getFilteredMonthlyData(yearArray, year, startDateStr, endDateStr);
+  return filtered.reduce((sum, val) => sum + (val || 0), 0);
+}
+
+// ════════════════════════════════════════════
+// RENDER PRINCIPAL
+// ════════════════════════════════════════════
+Chart.register(ChartDataLabels);
+const PAL=['#1a6cf5','#0a9396','#6c4fd8','#e07000','#1a7a40','#c9a227','#c0392b','#004e8c','#00b294','#c239b3'];
+
+function renderAll(){
+  const dvDisabled = isDataverseDisabled();
+  const rv = dvDisabled ? [] : VW.reservas;
+  const fat = sumV(rv);
+  const byM = grp(rv, r => mK(r[F.res.data]));
+  const mks = mKeys(byM);
+  const mls = mks.map(mL);
+
+  // Badges
+  document.getElementById('nbSrv').textContent = rv.length;
+  document.getElementById('nbSrv2').textContent = rv.length;
+  document.getElementById('nbPag').textContent = dvDisabled ? 0 : DB.pagantes.length;
+  document.getElementById('nbFrota').textContent = dvDisabled ? 0 : DB.veiculos.length;
+  document.getElementById('nbMot').textContent = dvDisabled ? 0 : DB.funcionarios.length;
+  document.getElementById('nbMan').textContent = dvDisabled ? 0 : DB.manutencoes.length;
+  document.getElementById('nbMul').textContent = dvDisabled ? 0 : DB.multas.length;
+  document.getElementById('nbTrc').textContent = dvDisabled ? 0 : DB.trocas.length;
+  document.getElementById('nbMkt').textContent = dvDisabled ? 0 : DB.marketing.length;
+
+  const isConc = r => stL(r._stL).includes('conclu')||stL(r._stL).includes('realiz')||stL(r._stL).includes('finaliz');
+  const conclServices = rv.filter(isConc);
+  const semValor = conclServices.filter(r=>!r._valor||r._valor===0);
+  const pendentes = rv.filter(r=>stL(r._stL).includes('pend')||stL(r._stL).includes('progr')||stL(r._stL).includes('solicit')||stL(r._stL).includes('aprova')||stL(r._stL).includes('program'));
+  const cancelados = rv.filter(r=>stL(r._stL).includes('cancel')||stL(r._stL).includes('recus'));
+
+  const start = document.getElementById('fS').value;
+  const end = document.getElementById('fE').value;
+  const now = new Date();
+  const brNow = new Date(now.getTime() - (3*60*60*1000));
+  const currentYear = brNow.getFullYear();
+  const currentMonth = brNow.getMonth();
+  const lmYear = currentMonth === 0 ? currentYear-1 : currentYear;
+  const lmMonth = currentMonth === 0 ? 11 : currentMonth-1;
+  const lyYear = currentYear-1;
+  const lmValue = (lmYear === 2025) ? fat2025[lmMonth] : (lmYear === 2024 ? fat2024[lmMonth] : (lmYear === 2023 ? fat2023[lmMonth] : 0));
+  const lyValue = getTotalForPeriod(fat2025, 2025, start, end);
+
+  const formatKpiDelta = (cur, prev, label) => {
+    if (prev === undefined || prev === null) return '';
+    const diff = cur - prev;
+    const pctVal = prev === 0 ? (cur > 0 ? 100 : 0) : Math.round((diff / prev) * 100);
+    const up = diff >= 0;
+    const absStr = brlS(Math.abs(diff));
+    return `<span class="${up?'du':'dd'}">${up?'▲':'▼'} ${absStr} (${pctVal}%)</span> <span class="dn">${label}</span>`;
+  };
+
+  // KPIs
+  set('kSrv', dvDisabled ? '—' : rv.length.toLocaleString('pt-BR'));
+  document.getElementById('kSrvD').innerHTML = dvDisabled ? '' : `${formatKpiDelta(rv.length, lmValue, 'LM')}<br>${formatKpiDelta(rv.length, lyValue, 'LY')}`;
+  set('kFat', dvDisabled ? '—' : brlS(fat));
+  document.getElementById('kFatD').innerHTML = dvDisabled ? '' : `${formatKpiDelta(fat, lmValue, 'LM')}<br>${formatKpiDelta(fat, lyValue, 'LY')}`;
+  const curTk = rv.length ? fat/rv.length : 0;
+  set('kTk', dvDisabled ? '—' : brl(curTk));
+  document.getElementById('kTkD').innerHTML = dvDisabled ? '' : `LM: ${brlS(lmValue)} | LY: ${brlS(lyValue)}`;
+  set('kMan', dvDisabled ? '—' : DB.manutencoes.length);
+  const custoTotal = dvDisabled ? 0 : DB.manutencoes.reduce((s,r)=>s+(parseFloat(r[F.man.valor])||0),0);
+  document.getElementById('kManD').innerHTML = dvDisabled ? '' : `Custo: ${brlS(custoTotal)}`;
+  set('kMul', dvDisabled ? '—' : DB.multas.length);
+  const mulFv2=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const mulPen2 = DB.multas.filter(r=>stL(String(mulFv2(r,F.mul.status)||'')).includes('pend')||stL(String(mulFv2(r,F.mul.status)||'')).includes('indicad'));
+  document.getElementById('kMulD').innerHTML = dvDisabled ? '' : `${mulPen2.length} pendentes`;
+  set('kSemVal', dvDisabled ? '—' : semValor.length);
+  document.getElementById('kSemValD').innerHTML = dvDisabled ? '' : `${semValor.length} sem preço`;
+  const aReceber = dvDisabled ? 0 : DB.precos.filter(p=>!stL(String(fv(p,F.preco.status)||'')).includes('pago')).reduce((s,p)=>s+(parseFloat(p[F.preco.valorTotal])||0),0);
+  set('kPPend', dvDisabled ? '—' : brlS(aReceber));
+  document.getElementById('kPPendD').innerHTML = dvDisabled ? '' : `Total a receber`;
+  const cnhWarn = DB.funcionarios.filter(r=>{if(!r[F.fun.cnh])return true;return(new Date(r[F.fun.cnh])-new Date())/(1000*60*60*24)<90;});
+  set('kCnhW', dvDisabled ? '—' : cnhWarn.length);
+  document.getElementById('kCnhWD').innerHTML = dvDisabled ? '' : (cnhWarn.length?`<span class="dd">${cnhWarn.length} atenção</span>`:`<span class="du">OK</span>`);
+  const veiAtivos = DB.veiculos.filter(r=>stL(String(fv(r,F.vei.status)||'')).includes('dispon')||stL(String(fv(r,F.vei.status)||'')).includes('ativo')).length;
+  set('kFrotaAtiva', dvDisabled ? '—' : veiAtivos);
+  document.getElementById('kFrotaAtivaD').innerHTML = dvDisabled ? '' : `Total: ${DB.veiculos.length}`;
+
+  // Total Produzido
+  const monthsLabels = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const data2023 = getFilteredMonthlyData(fat2023, 2023, start, end);
+  const data2024 = getFilteredMonthlyData(fat2024, 2024, start, end);
+  const data2025 = getFilteredMonthlyData(fat2025, 2025, start, end);
+  const validIndices = [];
+  for(let i=0;i<12;i++) if(data2023[i]!==null || data2024[i]!==null || data2025[i]!==null) validIndices.push(i);
+  const displayLabels = validIndices.map(i=>monthsLabels[i]);
+  const series2023 = validIndices.map(i=>data2023[i]);
+  const series2024 = validIndices.map(i=>data2024[i]);
+  const series2025 = validIndices.map(i=>data2025[i]);
+  mkChart('cTotalProd', {
+    type: 'line',
+    data: {
+      labels: displayLabels,
+      datasets: [
+        { label: '2023', data: series2023, borderColor: '#c9a227', backgroundColor: 'rgba(201,162,39,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: '2024', data: series2024, borderColor: '#1a6cf5', backgroundColor: 'rgba(26,108,245,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: '2025', data: series2025, borderColor: '#1a7a40', backgroundColor: 'rgba(26,122,64,0.15)', fill: true, tension: 0.3, pointRadius: 2 }
+      ]
+    },
+    options: opts0({ noLegend: false, yBrl: true, datalabels: false })
+  });
+
+  const meta = getMetaParaPeriodo(start, end);
+  const accumulated = dvDisabled ? 0 : fat;
+  const metaProgress = meta ? (accumulated / meta * 100) : 0;
+  const lyDelta = lyValue ? ((accumulated - lyValue)/lyValue*100) : 0;
+  const lmDelta = lmValue ? ((accumulated - lmValue)/lmValue*100) : 0;
+  document.getElementById('indicatorsLM_LY_META').innerHTML = `
+    <div class="indicator-item"><span class="indicator-label">LM</span><span class="indicator-value">${brlS(lmValue)}</span><span class="indicator-delta ${lmDelta>=0?'du':'dd'}">${lmDelta>=0?'▲':'▼'} ${Math.abs(lmDelta).toFixed(1)}%</span></div>
+    <div class="indicator-item"><span class="indicator-label">LY</span><span class="indicator-value">${brlS(lyValue)}</span><span class="indicator-delta ${lyDelta>=0?'du':'dd'}">${lyDelta>=0?'▲':'▼'} ${Math.abs(lyDelta).toFixed(1)}%</span></div>
+    <div class="indicator-item"><span class="indicator-label">META</span><span class="indicator-value">${brlS(meta)}</span><span class="indicator-delta ${accumulated>=meta?'du':'dd'}">${accumulated>=meta?'▲':'▼'} ${metaProgress.toFixed(1)}%</span></div>
+  `;
+
+  // Ticket Médio mensal
+  const ticketMedioMensal = mks.map(k => { const md = byM[k]; return md.length ? sumV(md)/md.length : 0; });
+  mkChart('cTicketMedio', { type:'bar', data:{ labels: mls, datasets:[{ label:'Ticket Médio', data: ticketMedioMensal, backgroundColor:'#6c4fd8', borderRadius:5 }] }, options: opts0({ noLegend:true, yBrl:true }) });
+  set('sub_tm', dvDisabled ? '—' : `${mks.length} meses`);
+  set('v_tm', dvDisabled ? '—' : brl(curTk));
+
+  // Status dos serviços
+  const bySt = grp(rv, r=>r._stL);
+  const stKeys = Object.keys(bySt).filter(k=>k!=='__null__').sort((a,b)=>bySt[b].length-bySt[a].length);
+  mkChart('cSt', { type:'bar', data:{ labels: stKeys.map(k=>trunc(k,16)), datasets:[{ label:'Qtd', data: stKeys.map(k=>bySt[k].length), backgroundColor:PAL, borderRadius:5 }] }, options: opts0({ noLegend:true, hBar:true }) });
+
+  // Custo frota
+  const manByM = grp(dvDisabled?[]:DB.manutencoes, r=>mK(r[F.man.data]));
+  const manMks = mKeys(manByM);
+  set('v_cf', dvDisabled?'—':brlS(custoTotal));
+  mkChart('cCF', { type:'bar', data:{ labels: manMks.map(mL), datasets:[{ label:'Custo R$', data: manMks.map(k=>manByM[k].reduce((s,r)=>s+(parseFloat(r[F.man.valor])||0),0)), backgroundColor:'#e07000' }] }, options: opts0({ noLegend:true, yBrl:true }) });
+
+  // Top clientes
+  const byCli = grp(rv, r=>r._cli);
+  const top10v = Object.entries(byCli).sort((a,b)=>b[1].length-a[1].length).slice(0,10);
+  mkChart('cTC', { type:'bar', data:{ labels: top10v.map(([k])=>trunc(k)), datasets:[{ data: top10v.map(([,v])=>v.length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  const top10f = Object.entries(byCli).sort((a,b)=>sumV(b[1])-sumV(a[1])).slice(0,10);
+  mkChart('cTCF', { type:'bar', data:{ labels: top10f.map(([k])=>trunc(k)), datasets:[{ data: top10f.map(([,v])=>sumV(v)), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true, xBrl:true }) });
+
+  // Motoristas
+  const mots = [...new Set(rv.map(r=>r._mot))].filter(m=>m!=='Sem motorista');
+  set('sub_mm', dvDisabled?'—':`${mots.length} motoristas`);
+  mkChart('cMM', { type:'bar', data:{ labels: mls, datasets: mots.map((m,i)=>({ label:trunc(m,16), data: mks.map(k=>(byM[k]||[]).filter(r=>r._mot===m).length), backgroundColor:PAL[i%PAL.length], stack:'m' })) }, options: opts0({ legendRight:true }) });
+
+  // ===== PÁGINA SERVIÇOS =====
+  set('sT', dvDisabled?'—':rv.length.toLocaleString('pt-BR'));
+  set('sCon', dvDisabled?'—':conclServices.length);
+  set('sPen', dvDisabled?'—':pendentes.length);
+  set('sCan', dvDisabled?'—':cancelados.length);
+  set('sTk', dvDisabled?'—':brl(curTk));
+  set('sSemVal', dvDisabled?'—':semValor.length);
+  set('sFat', dvDisabled?'—':brlS(fat));
+  const byTipo = grp(rv, r=>r._tipoL);
+  const tipoKeys = Object.keys(byTipo).filter(k=>k!=='__null__').sort((a,b)=>byTipo[b].length-byTipo[a].length);
+  const totalServicos = rv.length;
+  const tipoData = tipoKeys.map(k => ({ label: k, count: byTipo[k].length, pct: totalServicos ? (byTipo[k].length/totalServicos*100).toFixed(1) : '0.0' }));
+  mkChart('cServicosTipo', { type:'bar', data:{ labels: tipoData.map(d=>`${d.label} (${d.pct}%)`), datasets:[{ data: tipoData.map(d=>d.count), backgroundColor:PAL, borderRadius:5 }] }, options: opts0({ noLegend:true, hBar:true }) });
+  const byVei = grp(rv, r=>r._veiL);
+  const vK = Object.keys(byVei).filter(k=>k!=='__null__').sort((a,b)=>byVei[b].length-byVei[a].length);
+  mkChart('cTipoVei', { type:'bar', data:{ labels: vK.map(k=>trunc(k,16)), datasets:[{ data: vK.map(k=>byVei[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  tblCache.tbSrv = rv;
+  set('metaSrv', dvDisabled ? '—' : `${rv.length.toLocaleString('pt-BR')} registros`);
+  renderSrvTable(rv);
+
+  // Demais abas
+  renderFaturamento(dvDisabled, rv, fat, curTk, mks, mls, byM, byCli);
+  renderPagamentos(dvDisabled, aReceber);
+  renderFrota(dvDisabled);
+  renderMotoristas(dvDisabled, rv, fat, mks, mls, byM);
+  renderManutencoes(dvDisabled, custoTotal, manByM, manMks);
+  renderMultas(dvDisabled);
+  renderTrocas(dvDisabled);
+  renderMarketing(dvDisabled);
+}
+
+// Funções de renderização das outras abas (implementação funcional)
+function renderFaturamento(dvDisabled, rv, fat, curTk, mks, mls, byM, byCli){
+  set('fT', dvDisabled?'—':brlS(fat));
+  set('fTk', dvDisabled?'—':brlS(curTk));
+  const maxVal = rv.length ? Math.max(...rv.map(r=>r._valor)) : 0;
+  set('fMax', dvDisabled?'—':brlS(maxVal));
+  const cliAtivos = new Set(rv.map(r=>r._cli).filter(x=>x!=='Sem cliente')).size;
+  set('fCli', dvDisabled?'—':cliAtivos);
+  mkChart('cFM2', { type:'line', data:{ labels: mls, datasets:[{ label:'Fat.', data: mks.map(k=>sumV(byM[k])), borderColor:'#0a9396', backgroundColor:'rgba(10,147,150,.08)', fill:true, tension:0.45, pointRadius:0 }] }, options: opts0({ noLegend:true, yBrl:true }) });
+  const byFatSt = grp(rv, r=>r._fatStL);
+  const fsK = Object.keys(byFatSt).filter(k=>k!=='__null__').sort((a,b)=>byFatSt[b].length-byFatSt[a].length);
+  mkChart('cFatSt', { type:'bar', data:{ labels: fsK.map(k=>trunc(k,16)), datasets:[{ data: fsK.map(k=>byFatSt[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  const cliRows = Object.entries(byCli).map(([n,v])=>({nome:n,qtd:v.length,fat:sumV(v),ticket:v.length?sumV(v)/v.length:0})).sort((a,b)=>b.fat-a.fat);
+  tblCache.tbFat = cliRows;
+  set('metaFat', dvDisabled?'—':`${cliRows.length} clientes`);
+  renderSumTable('tbFat', cliRows, fat);
+}
+function renderPagamentos(dvDisabled, aReceber){
+  const pags = dvDisabled ? [] : DB.pagantes;
+  const pgFv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const pagReceb = pags.filter(r=>stL(String(pgFv(r,F.pag.status)||'')).includes('pago')||stL(String(pgFv(r,F.pag.status)||'')).includes('receb'));
+  set('pTot', dvDisabled?'—':brlS(pagReceb.reduce((s,r)=>s+(parseFloat(r[F.pag.valor])||0),0)));
+  set('pPend', dvDisabled?'—':brlS(aReceber));
+  set('pQtd', dvDisabled?'—':pags.length);
+  const byForma = grp(pags, r=>String(pgFv(r,F.pag.forma)||'—'));
+  const byPagSt = grp(pags, r=>String(pgFv(r,F.pag.status)||'—'));
+  const fmK = Object.keys(byForma).filter(k=>k!=='__null__').sort((a,b)=>byForma[b].length-byForma[a].length);
+  const psK = Object.keys(byPagSt).filter(k=>k!=='__null__').sort((a,b)=>byPagSt[b].length-byPagSt[a].length);
+  mkChart('cForma', { type:'bar', data:{ labels: fmK.map(k=>trunc(k,16)), datasets:[{ data: fmK.map(k=>byForma[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  mkChart('cPagSt', { type:'bar', data:{ labels: psK.map(k=>trunc(k,16)), datasets:[{ data: psK.map(k=>byPagSt[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  set('metaPag', dvDisabled?'—':`${pags.length} registros`);
+  document.getElementById('tbPag').innerHTML = pags.slice(0,300).map(r=>`<tr><td>${badge(String(pgFv(r,F.pag.status)||'—'))}</td><td>${String(pgFv(r,F.pag.forma)||'—')}</td><td class="r em">${brl(parseFloat(r[F.pag.valor])||0)}</td></tr>`).join('')||emptyRow(3);
+}
+function renderFrota(dvDisabled){
+  const vei = dvDisabled ? [] : DB.veiculos;
+  const vFv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const disp = vei.filter(r=>stL(String(vFv(r,F.vei.status)||'')).includes('dispon')||stL(String(vFv(r,F.vei.status)||'')).includes('ativo')||stL(String(vFv(r,F.vei.status)||'')).includes('livre'));
+  const blin = vei.filter(r=>r[F.vei.blindado]===true||r[F.vei.blindado]==='true'||r[F.vei.blindado]===1);
+  const vManF = vei.filter(r=>stL(String(vFv(r,F.vei.status)||'')).includes('manut'));
+  set('vTot', dvDisabled?'—':vei.length); set('vDisp', dvDisabled?'—':disp.length); set('vBlin', dvDisabled?'—':blin.length); set('vMan', dvDisabled?'—':vManF.length);
+  const byVSt = grp(vei, r=>String(vFv(r,F.vei.status)||'—'));
+  const byMarca = grp(vei, r=>r[F.vei.marca]||'—');
+  const vsK = Object.keys(byVSt).filter(k=>k!=='__null__').sort((a,b)=>byVSt[b].length-byVSt[a].length);
+  const mkK = Object.keys(byMarca).filter(k=>k!=='__null__').sort((a,b)=>byMarca[b].length-byMarca[a].length);
+  mkChart('cFrotaSt', { type:'bar', data:{ labels: vsK.map(k=>trunc(k,16)), datasets:[{ data: vsK.map(k=>byVSt[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  mkChart('cFrotaMarca', { type:'bar', data:{ labels: mkK, datasets:[{ data: mkK.map(k=>byMarca[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true }) });
+  tblCache.tbFrota = vei.map(r=>({placa:r[F.vei.placa]||'—',marca:r[F.vei.marca]||'—',modelo:r[F.vei.modelo]||'—',ano:r[F.vei.ano]||'—',blindado:r[F.vei.blindado],status:String(vFv(r,F.vei.status)||'—')}));
+  set('metaFrota', dvDisabled?'—':`${vei.length} veículos`);
+  renderFrotaTable(tblCache.tbFrota);
+}
+function renderMotoristas(dvDisabled, rv, fat, mks, mls, byM){
+  set('mTot', dvDisabled?'—':DB.funcionarios.length);
+  const cnhWarn = DB.funcionarios.filter(r=>{if(!r[F.fun.cnh])return true;return(new Date(r[F.fun.cnh])-new Date())/(1000*60*60*24)<90;});
+  set('mCnh', dvDisabled?'—':cnhWarn.length);
+  set('mSrv', dvDisabled?'—':rv.length);
+  const mots = [...new Set(rv.map(r=>r._mot))].filter(m=>m!=='Sem motorista');
+  mkChart('cMotMes', { type:'bar', data:{ labels: mls, datasets: mots.map((m,i)=>({ label:trunc(m,16), data: mks.map(k=>(byM[k]||[]).filter(r=>r._mot===m).length), backgroundColor:PAL[i%PAL.length], stack:'m' })) }, options: opts0({ legendRight:true }) });
+  const motRows = DB.funcionarios.map(f=>{ const apelido=f[F.fun.apelido]||''; const nome=apelido||f[F.fun.nome]||'—'; const srvs=rv.filter(r=>r._mot===nome); return{nome,funcao:f[F.fun.funcao]||'—',qtd:srvs.length,fat:sumV(srvs),ticket:srvs.length?sumV(srvs)/srvs.length:0,cnh:f[F.fun.cnh]}; }).sort((a,b)=>b.qtd-a.qtd);
+  tblCache.tbMot = motRows;
+  set('metaMot', dvDisabled?'—':`${DB.funcionarios.length} motoristas`);
+  renderMotTable(motRows, fat);
+}
+function renderManutencoes(dvDisabled, custoTotal, manByM, manMks){
+  const mans = dvDisabled ? [] : DB.manutencoes;
+  const manFv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const manAnd = mans.filter(r=>stL(String(manFv(r,F.man.status)||'')).includes('andamento')||stL(String(manFv(r,F.man.status)||'')).includes('aberto')||stL(String(manFv(r,F.man.status)||'')).includes('pend'));
+  set('manTot', dvDisabled?'—':mans.length);
+  set('manCusto', dvDisabled?'—':brlS(custoTotal));
+  set('manAnd', dvDisabled?'—':manAnd.length);
+  set('manMed', dvDisabled?'—':brlS(mans.length?custoTotal/mans.length:0));
+  mkChart('cManMes', { type:'bar', data:{ labels: manMks.map(mL), datasets:[{ data: manMks.map(k=>manByM[k].reduce((s,r)=>s+(parseFloat(r[F.man.valor])||0),0)), backgroundColor:'#e07000' }] }, options: opts0({ noLegend:true, yBrl:true }) });
+  const byManTp = grp(mans, r=>String(manFv(r,F.man.tipo)||'—'));
+  const mtK = Object.keys(byManTp).filter(k=>k!=='__null__').sort((a,b)=>byManTp[b].length-byManTp[a].length);
+  mkChart('cManTipo', { type:'bar', data:{ labels: mtK.map(k=>trunc(k,16)), datasets:[{ data: mtK.map(k=>byManTp[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  set('metaMan', dvDisabled?'—':`${mans.length} registros`);
+  document.getElementById('tbMan').innerHTML = mans.slice(0,300).map(r=>`<tr><td class="dim">${fmtD(r[F.man.data])}</td><td class="em">${r[`_${F.man.veiculo}_value@OData.Community.Display.V1.FormattedValue`]||'—'}</td><td>${String(manFv(r,F.man.tipo)||'—')}</td><td>${badge(String(manFv(r,F.man.status)||'—'))}</td><td class="r em">${brl(parseFloat(r[F.man.valor])||0)}</td></tr>`).join('')||emptyRow(5);
+}
+function renderMultas(dvDisabled){
+  const muls = dvDisabled ? [] : DB.multas;
+  const mulFv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const mulPen = muls.filter(r=>stL(String(mulFv(r,F.mul.status)||'')).includes('pend')||stL(String(mulFv(r,F.mul.status)||'')).includes('indicad'));
+  const mulRes = muls.filter(r=>stL(String(mulFv(r,F.mul.status)||'')).includes('pago')||stL(String(mulFv(r,F.mul.status)||'')).includes('resolvid')||stL(String(mulFv(r,F.mul.status)||'')).includes('conclu'));
+  set('mulTot', dvDisabled?'—':muls.length); set('mulPen', dvDisabled?'—':mulPen.length); set('mulRes', dvDisabled?'—':mulRes.length);
+  const byMulSt = grp(muls, r=>String(mulFv(r,F.mul.status)||'—'));
+  const byMulMot = grp(muls, r=>{ const motId = r[`_${F.mul.mot}_value`]; const motName = r[`_${F.mul.mot}_value@OData.Community.Display.V1.FormattedValue`]||'—'; return funcMapGlobal.get(String(motId)?.toLowerCase()) || motName; });
+  const msK = Object.keys(byMulSt).filter(k=>k!=='__null__').sort((a,b)=>byMulSt[b].length-byMulSt[a].length);
+  const mmK = Object.keys(byMulMot).filter(k=>k!=='__null__').sort((a,b)=>byMulMot[b].length-byMulMot[a].length).slice(0,10);
+  mkChart('cMulSt', { type:'bar', data:{ labels: msK.map(k=>trunc(k,16)), datasets:[{ data: msK.map(k=>byMulSt[k].length), backgroundColor:'#c0392b' }] }, options: opts0({ noLegend:true, hBar:true }) });
+  mkChart('cMulMot', { type:'bar', data:{ labels: mmK.map(k=>trunc(k)), datasets:[{ data: mmK.map(k=>byMulMot[k].length), backgroundColor:'#c0392b' }] }, options: opts0({ noLegend:true, hBar:true }) });
+  set('metaMul', dvDisabled?'—':`${muls.length} registros`);
+  document.getElementById('tbMul').innerHTML = muls.slice(0,300).map(r=>{ const motId = r[`_${F.mul.mot}_value`]; const motName = r[`_${F.mul.mot}_value@OData.Community.Display.V1.FormattedValue`]||'—'; const motDisplay = funcMapGlobal.get(String(motId)?.toLowerCase()) || motName; return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`]||'—'}</td><td>${badge(String(mulFv(r,F.mul.status)||'—'))}</td></tr>`; }).join('')||emptyRow(4);
+}
+function renderTrocas(dvDisabled){
+  const trcs = dvDisabled ? [] : DB.trocas;
+  const trcFv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const trcPen = trcs.filter(r=>stL(String(trcFv(r,F.trc.status)||'')).includes('pend')||stL(String(trcFv(r,F.trc.status)||'')).includes('aguard'));
+  const trcCon = trcs.filter(r=>stL(String(trcFv(r,F.trc.status)||'')).includes('conclu')||stL(String(trcFv(r,F.trc.status)||'')).includes('realiz'));
+  set('trcTot', dvDisabled?'—':trcs.length); set('trcPen', dvDisabled?'—':trcPen.length); set('trcCon', dvDisabled?'—':trcCon.length);
+  const byTrcSt = grp(trcs, r=>String(trcFv(r,F.trc.status)||'—'));
+  const byTrcTp = grp(trcs, r=>String(trcFv(r,F.trc.tipo)||'—'));
+  const tsK = Object.keys(byTrcSt).filter(k=>k!=='__null__').sort((a,b)=>byTrcSt[b].length-byTrcSt[a].length);
+  const ttK = Object.keys(byTrcTp).filter(k=>k!=='__null__').sort((a,b)=>byTrcTp[b].length-byTrcTp[a].length);
+  mkChart('cTrcSt', { type:'bar', data:{ labels: tsK.map(k=>trunc(k,16)), datasets:[{ data: tsK.map(k=>byTrcSt[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  mkChart('cTrcTp', { type:'bar', data:{ labels: ttK.map(k=>trunc(k,16)), datasets:[{ data: ttK.map(k=>byTrcTp[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  set('metaTrc', dvDisabled?'—':`${trcs.length} registros`);
+  document.getElementById('tbTrc').innerHTML = trcs.slice(0,200).map(r=>`<tr><td class="dim">${fmtDt(r[F.trc.data])}</td><td>${String(trcFv(r,F.trc.tipo)||'—')}</td><td>${badge(String(trcFv(r,F.trc.status)||'—'))}</td></tr>`).join('')||emptyRow(3);
+}
+function renderMarketing(dvDisabled){
+  const mkts = dvDisabled ? [] : DB.marketing;
+  const mktFv=(r,f)=>r[`${f}@OData.Community.Display.V1.FormattedValue`]??r[f];
+  const mktPub = mkts.filter(r=>stL(String(mktFv(r,F.mkt.status)||'')).includes('public')||stL(String(mktFv(r,F.mkt.status)||'')).includes('ativo'));
+  const mktProd = mkts.filter(r=>stL(String(mktFv(r,F.mkt.status)||'')).includes('produc')||stL(String(mktFv(r,F.mkt.status)||'')).includes('pend')||stL(String(mktFv(r,F.mkt.status)||'')).includes('rascunho'));
+  set('mktTot', dvDisabled?'—':mkts.length); set('mktPub', dvDisabled?'—':mktPub.length); set('mktProd', dvDisabled?'—':mktProd.length);
+  const byMktCat = grp(mkts, r=>String(mktFv(r,F.mkt.cat)||'—'));
+  const byMktSt = grp(mkts, r=>String(mktFv(r,F.mkt.status)||'—'));
+  const mcK = Object.keys(byMktCat).filter(k=>k!=='__null__').sort((a,b)=>byMktCat[b].length-byMktCat[a].length);
+  const msKm = Object.keys(byMktSt).filter(k=>k!=='__null__').sort((a,b)=>byMktSt[b].length-byMktSt[a].length);
+  mkChart('cMktCat', { type:'bar', data:{ labels: mcK.map(k=>trunc(k,16)), datasets:[{ data: mcK.map(k=>byMktCat[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  mkChart('cMktSt', { type:'bar', data:{ labels: msKm.map(k=>trunc(k,16)), datasets:[{ data: msKm.map(k=>byMktSt[k].length), backgroundColor:PAL }] }, options: opts0({ noLegend:true, hBar:true }) });
+  set('metaMkt', dvDisabled?'—':`${mkts.length} publicações`);
+  document.getElementById('tbMkt').innerHTML = mkts.slice(0,200).map(r=>`<tr><td class="dim">${fmtD(r[F.mkt.data])}</td><td>${String(mktFv(r,F.mkt.cat)||'—')}</td><td>${badge(String(mktFv(r,F.mkt.status)||'—'))}</td></tr>`).join('')||emptyRow(3);
+}
+
+// ════════════════════════════════════════════
+// CHART HELPERS
+// ════════════════════════════════════════════
+const FONT={family:"'Plus Jakarta Sans',system-ui,sans-serif"};
+function opts0({noLegend,yBrl,xBrl,hBar,legendRight,datalabels=true}={}){
+  let baseOpts = {
+    responsive:true, maintainAspectRatio:true, animation:{duration:400},
+    plugins:{
+      legend:{display:!noLegend, position:legendRight?'right':'top', labels:{color:'#4a5068',font:{...FONT,size:11},boxWidth:10,boxHeight:10,padding:12}},
+      tooltip:{backgroundColor:'#0f1117',titleColor:'#ffffff',bodyColor:'#a0a8c0',borderColor:'#2a2d3a',borderWidth:1,padding:12,cornerRadius:8,titleFont:{...FONT,weight:'700',size:12},bodyFont:{...FONT,size:11},callbacks:yBrl||xBrl?{label:c=>brl(c.raw)}:{}},
+      datalabels: datalabels ? {
+        anchor:hBar?'end':'end', align:hBar?'right':'top', offset:4, color:'#4a5068', font:{...FONT,size:9,weight:'600'},
+        formatter:(value)=>{ if(value===0)return''; if(yBrl||xBrl)return brlS(value); if(value>=1000)return (value/1000).toFixed(1)+'k'; return value.toLocaleString('pt-BR'); }
+      } : { display: false }
+    },
+    scales:{
+      x:{ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:xBrl?v=>brlS(v):undefined},grid:{color:'#f0f2f5',drawBorder:false}},
+      y:{ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:yBrl?v=>brlS(v):undefined},grid:{color:'#f0f2f5',drawBorder:false},beginAtZero:true}
+    }
+  };
+  if(hBar){
+    baseOpts.indexAxis='y';
+    baseOpts.scales.y={type:'category',ticks:{color:'#8a91a8',font:{...FONT,size:10}},grid:{display:false}};
+    baseOpts.scales.x={ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:xBrl?v=>brlS(v):undefined},grid:{color:'#f0f2f5'},beginAtZero:true};
+  }
+  return baseOpts;
+}
+function mkChart(id,cfg){ const el=document.getElementById(id); if(!el)return; if(charts[id])charts[id].destroy(); charts[id]=new Chart(el,cfg); }
+
+// ════════════════════════════════════════════
+// TABLE RENDERERS
+// ════════════════════════════════════════════
+function renderSrvTable(rows){
+  document.getElementById('tbSrv').innerHTML = rows.slice(0,500).map(r=>`<tr>
+    <td class="dim">${fmtDt(r[F.res.data])}</td><td class="em">${r._cli}</td><td>${r._mot}</td>
+    <td class="dim">${r._tipoL}</td><td class="dim">${r._veiL}</td><td>${badge(r._stL)}</td><td>${badge(r._fatStL)}</td>
+    <td class="r em">${r._valor?brl(r._valor):'<span class="dim">—</span>'}</td>
+  </tr>`).join('')||emptyRow(8);
+}
+function renderSumTable(id,rows,totalFat){
+  document.getElementById(id).innerHTML = rows.map((r,i)=>`<tr>
+    <td><span class="rn ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</span></td>
+    <td class="em">${r.nome}</td><td class="r">${r.qtd.toLocaleString('pt-BR')}</td>
+    <td class="r em">${brl(r.fat)}</td><td class="r dim">${brl(r.ticket)}</td>
+    <td><div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${totalFat?Math.min(100,Math.round((r.fat/totalFat)*100)):0}%;background:${PAL[i%PAL.length]}"></div></div><span class="prg-pct">${totalFat?Math.round((r.fat/totalFat)*100):0}%</span></div></td>
+  </tr>`).join('')||emptyRow(6);
+}
+function renderFrotaTable(rows){
+  document.getElementById('tbFrota').innerHTML = rows.map(r=>`<tr>
+    <td class="em">${r.placa}</td><td>${r.marca}</td><td>${r.modelo}</td><td class="dim">${r.ano}</td>
+    <td class="c">${r.blindado===true||r.blindado==='true'||r.blindado===1?'🛡️ Sim':'—'}</td><td>${badge(r.status)}</td>
+  </tr>`).join('')||emptyRow(6);
+}
+function renderMotTable(rows,totalFat){
+  const hoje=new Date();
+  document.getElementById('tbMot').innerHTML = rows.map((r,i)=>{
+    let cnhCls='dim',cnhTxt='—';
+    if(r.cnh){ const d=new Date(r.cnh); const diff=(d-hoje)/(1000*60*60*24); cnhTxt=fmtD(r.cnh); if(diff<0)cnhCls='em" style="color:var(--red)'; else if(diff<90)cnhCls='em" style="color:var(--yellow)'; }
+    return`<tr>
+      <td><span class="rn ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</span></td>
+      <td class="em">${r.nome}</td><td class="dim">${r.funcao}</td><td class="r">${r.qtd.toLocaleString('pt-BR')}</td>
+      <td class="r em">${brl(r.fat)}</td><td class="r dim">${brl(r.ticket)}</td><td class="${cnhCls}">${cnhTxt}</td>
+      <td><div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${totalFat?Math.min(100,Math.round((r.fat/totalFat)*100)):0}%;background:var(--blue)"></div></div><span class="prg-pct">${totalFat?Math.round((r.fat/totalFat)*100):0}%</span></div></td>
+    </tr>`;
+  }).join('')||emptyRow(8);
+}
+
+// ════════════════════════════════════════════
+// TABLE SORT + SEARCH
+// ════════════════════════════════════════════
+function srt(tbId,field,th){
+  th.closest('thead').querySelectorAll('th').forEach(t=>t.classList.remove('sa','sd'));
+  const key=tbId+field;const asc=srtSt[key]!==true;srtSt[key]=asc;
+  th.classList.add(asc?'sa':'sd');
+  const fat=sumV(VW.reservas);
+  const sortFn=(a,b,f)=>typeof a[f]==='string'?(asc?a[f].localeCompare(b[f]):b[f].localeCompare(a[f])):(asc?a[f]-b[f]:b[f]-a[f]);
+  if(tbId==='tbFat'){let r=[...(tblCache.tbFat||[])];r.sort((a,b)=>sortFn(a,b,field));renderSumTable('tbFat',r,fat);}
+  if(tbId==='tbMot'){let r=[...(tblCache.tbMot||[])];r.sort((a,b)=>{if(field==='cnh'){const a2=a.cnh?new Date(a.cnh).getTime():0,b2=b.cnh?new Date(b.cnh).getTime():0;return asc?a2-b2:b2-a2;}return sortFn(a,b,field);});renderMotTable(r,fat);}
+  if(tbId==='tbSrv'){const fm={data:'_ts',cliente:'_cli',motorista:'_mot',tipo:'_tipoL',veiculo:'_veiL',status:'_stL',fatStatus:'_fatStL',valor:'_valor'};const f=fm[field]||field;let r=[...(tblCache.tbSrv||VW.reservas)];r.sort((a,b)=>sortFn(a,b,f));tblCache.tbSrv=r;renderSrvTable(r);}
+  if(tbId==='tbFrota'){let r=[...(tblCache.tbFrota||[])];r.sort((a,b)=>sortFn(a,b,field));renderFrotaTable(r);}
+}
+function srchReg(q){
+  const lq=(q||'').toLowerCase();
+  const rows=VW.reservas.filter(r=>!lq||r._cli.toLowerCase().includes(lq)||r._mot.toLowerCase().includes(lq));
+  tblCache.tbSrv=rows;renderSrvTable(rows);
+}
+function srchTbl(id,q,field){
+  const lq=(q||'').toLowerCase();const fat=sumV(VW.reservas);
+  if(id==='tbFat'){const r=(tblCache.tbFat||[]).filter(r=>!lq||r.nome.toLowerCase().includes(lq));renderSumTable('tbFat',r,fat);}
+  if(id==='tbMot'){const r=(tblCache.tbMot||[]).filter(r=>!lq||r.nome.toLowerCase().includes(lq));renderMotTable(r,fat);}
+  if(id==='tbFrota'){const r=(tblCache.tbFrota||[]).filter(r=>!lq||r.placa.toLowerCase().includes(lq)||r.modelo.toLowerCase().includes(lq));renderFrotaTable(r);}
+}
+
+// ════════════════════════════════════════════
+// UI HELPERS
+// ════════════════════════════════════════════
+function badge(s){
+  if(!s||s==='—')return'<span class="dim">—</span>';
+  const k=s.toLowerCase();
+  let bg,c;
+  if(k.includes('cancel')||k.includes('recus')||k.includes('vencid')||k.includes('irregular')){bg='var(--red-l)';c='var(--red)'}
+  else if(k.includes('conclu')||k.includes('realiz')||k.includes('finaliz')||k.includes('pago')||k.includes('receb')||k.includes('public')||k.includes('ativo')){bg='var(--green-l)';c='var(--green)'}
+  else if(k.includes('andamento')||k.includes('execu')||k.includes('transit')){bg='var(--blue-l)';c='var(--blue)'}
+  else if(k.includes('pend')||k.includes('aguard')||k.includes('solicit')||k.includes('aprova')||k.includes('indicad')||k.includes('program')){bg='var(--yellow-l)';c='var(--yellow)'}
+  else if(k.includes('manut')){bg='var(--orange-l)';c='var(--orange)'}
+  else{bg='var(--bg)';c='var(--t2)'}
+  return`<span class="bd" style="background:${bg};color:${c}"><span class="dot" style="background:${c}"></span>${s}</span>`;
+}
+function nav(id,el){
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('act'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  el.classList.add('act');
+  document.getElementById('page-'+id).classList.add('on');
+}
+function set(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+function setLoading(on,msg){
+  document.getElementById('ov').classList.toggle('on',on);
+  if(msg)document.getElementById('ovLbl').textContent=msg;
+}
+function showAlert(type,html){
+  document.getElementById('alertArea').innerHTML=`<div class="alert al-${type}"><span>${type==='err'?'⚠️':'ℹ️'}</span><div>${html}</div></div>`;
+}
+function clearAlerts(){document.getElementById('alertArea').innerHTML='';}
+function emptyRow(n){return`<tr><td colspan="${n}"><div class="empty"><div class="ei">📭</div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+detectEnv();
+loadAll();
+</script>
+</body>
+</html>
