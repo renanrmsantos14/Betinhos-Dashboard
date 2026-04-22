@@ -82,14 +82,14 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px
 .btn-qf{font-size:12px;height:30px;padding:0 13px;white-space:nowrap;border:1.5px solid var(--b1);border-radius:var(--r8);background:var(--surf);color:var(--t2);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s;}
 .btn-qf:hover{background:var(--bg);border-color:var(--b2);color:var(--t1)}
 .btn-qf.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 8px rgba(26,108,245,.28);}
-.filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
-.fg{display:flex;flex-direction:column;gap:3px}
-.fg label{font-size:10px;font-weight:700;color:var(--t3);text-transform:none;letter-spacing:.06em;}
-.fg input{height:32px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 10px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--t1);background:var(--surf);outline:none;transition:border-color .15s,box-shadow .15s;}
+.filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;padding:8px 0;}
+.fg{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.fg label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
+.fg input{height:36px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 12px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--t1);background:var(--surf);outline:none;transition:border-color .15s,box-shadow .15s;}
 .fg input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,108,245,.12)}
-.ms-wrap{position:relative;min-width:160px}
-.ms-btn{height:32px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 30px 0 10px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--t1);background:var(--surf);cursor:pointer;display:flex;align-items:center;transition:border-color .15s;white-space:nowrap;overflow:hidden;}
-.ms-btn:hover{border-color:var(--blue)}
+.ms-wrap{position:relative;min-width:180px;flex-shrink:0}
+.ms-btn{height:36px;border:1.5px solid var(--b1);border-radius:var(--r8);padding:0 30px 0 12px;font-family:var(--font);font-size:12px;font-weight:500;color:var(--t1);background:var(--surf);cursor:pointer;display:flex;align-items:center;transition:all .15s;white-space:nowrap;overflow:hidden;}
+.ms-btn:hover{border-color:var(--blue);background:var(--bg)}
 .ms-btn.open{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,108,245,.12)}
 .ms-btn::after{content:'▾';position:absolute;right:10px;font-size:10px;color:var(--t3)}
 .sel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:6px;flex-shrink:0}
@@ -272,11 +272,18 @@ td.c{text-align:center}
     <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a6cf5,#4f94ff)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Frota Ativa</div><div class="kpi-val" id="kFrotaAtiva">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kFrotaAtivaD"></div></div></div></div>
   </div>
 
-  <!-- Total Produzido (altura reduzida) -->
-  <div class="cc" style="max-height:200px;">
-    <div class="cc-hdr"><div><div class="cc-title">Total Produzido</div></div></div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0 16px 10px;"><div></div><div class="inline-indicators" id="indicatorsLM_LY_META"></div></div>
-    <canvas id="cTotalProd" height="60"></canvas>
+  <!-- Total Produzido com 4 Cards -->
+  <div class="kpi-row kpi-4" style="margin-bottom:14px;">
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Total Produzido</div><div class="kpi-val" id="kTotalProd">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kTotalProdD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a6cf5,#4f94ff)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">LY (Ano Anterior)</div><div class="kpi-val sm" id="kLY">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kLYD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">LM (Mês Anterior)</div><div class="kpi-val sm" id="kLM">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kLMD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">META (Período)</div><div class="kpi-val sm" id="kMeta">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kMetaD"></div></div></div></div>
+  </div>
+
+  <!-- Gráfico Total Produzido -->
+  <div class="cc">
+    <div class="cc-hdr"><div><div class="cc-title">Evolução Mensal</div></div></div>
+    <canvas id="cTotalProd" height="100"></canvas>
   </div>
 
   <div class="cgrid g2">
@@ -794,37 +801,43 @@ function quickFilter(period,btnEl){
 // ════════════════════════════════════════════
 function calcularMetaMensal(ano, mes){
   const hist = [];
-  // Usar dados diretamente das variáveis globais
+  // Coletar dados históricos dos 3 últimos anos
   if (ano === 2023 && typeof fat2023 !== 'undefined') hist.push(fat2023[mes]);
-  else if (ano === 2024 && typeof fat2024 !== 'undefined') hist.push(fat2024[mes]);
-  else if (ano === 2025 && typeof fat2025 !== 'undefined') hist.push(fat2025[mes]);
-  else if (ano >= 2026) {
+  if (ano === 2024 && typeof fat2024 !== 'undefined') hist.push(fat2024[mes]);
+  if (ano === 2025 && typeof fat2025 !== 'undefined') hist.push(fat2025[mes]);
+  if (ano >= 2026) {
     const generated = generateYearData(ano);
     if (generated && mes < generated.length) hist.push(generated[mes]);
   }
-  const pesos = [0.1, 0.4, 0.5];
-  let soma=0, pesoTotal=0;
-  for(let i=0;i<hist.length;i++){
-    soma += hist[i] * pesos[i];
-    pesoTotal += pesos[i];
-  }
-  const base = pesoTotal ? soma / pesoTotal : 0;
-  return base * 1.13;
+
+  if (hist.length === 0) return 0;
+
+  // Calcular média simples do histórico
+  const media = hist.reduce((a, b) => a + b, 0) / hist.length;
+  // Aplicar crescimento de 13% e arredondar
+  return Math.round(media * 1.13);
 }
 function getMetaParaPeriodo(startStr, endStr){
   if (!startStr || !endStr) return 0;
+
   const start = new Date(startStr + 'T00:00:00-03:00');
   const end = new Date(endStr + 'T23:59:59-03:00');
   const startMonth = start.getMonth();
   const startYear = start.getFullYear();
   const endMonth = end.getMonth();
   const endYear = end.getFullYear();
+
+  let meta = 0;
+
   if (startYear === endYear && startMonth === endMonth) {
+    // Mesmo mês - retorna a meta mensal
     return calcularMetaMensal(startYear, startMonth);
   } else {
-    let meta = 0;
-    let current = new Date(start);
-    while (current <= end) {
+    // Múltiplos meses - soma as metas mensais
+    let current = new Date(startYear, startMonth, 1);
+    const endDate = new Date(endYear, endMonth, 1);
+
+    while (current <= endDate) {
       const year = current.getFullYear();
       const month = current.getMonth();
       meta += calcularMetaMensal(year, month);
@@ -901,8 +914,7 @@ function renderAll(){
   const currentMonth = brNow.getMonth();
   const lmYear = currentMonth === 0 ? currentYear-1 : currentYear;
   const lmMonth = currentMonth === 0 ? 11 : currentMonth-1;
-  const lyYear = currentYear-1;
-  
+
   // Mapeamento dinâmico dos anos - usar variáveis locais diretamente
   const yearDataMap = {
     2023: typeof fat2023 !== 'undefined' ? fat2023 : [],
@@ -910,14 +922,33 @@ function renderAll(){
     2025: typeof fat2025 !== 'undefined' ? fat2025 : []
   };
   // Gerar dados para anos futuros se necessário
-  for (let y = 2026; y <= Math.max(currentYear, lmYear, lyYear) + 1; y++) {
+  for (let y = 2026; y <= currentYear + 1; y++) {
     yearDataMap[y] = generateYearData(y);
   }
-  console.log('yearDataMap:', Object.keys(yearDataMap), 'currentYear:', currentYear, 'lmYear:', lmYear, 'lyYear:', lyYear);
-  
+
   const lmValue = (yearDataMap[lmYear] || [])[lmMonth] || 0;
-  const lyValue = getTotalForPeriod(yearDataMap[lyYear] || [], lyYear, start, end);
-  console.log('LM:', lmYear, lmMonth, '=>', lmValue, 'LY:', lyYear, '=>', lyValue);
+
+  // LY deve comparar o período atual com o mesmo período do ano anterior
+  let lyValue = 0;
+  if (start && end) {
+    const startDate = new Date(start + 'T00:00:00-03:00');
+    const endDate = new Date(end + 'T23:59:59-03:00');
+    const startYear = startDate.getFullYear();
+    const startMonth = startDate.getMonth();
+    const startDay = startDate.getDate();
+    const endDay = endDate.getDate();
+
+    // Mesma data no ano anterior
+    const lyStartDate = new Date(startYear - 1, startMonth, startDay);
+    const lyEndDate = new Date(startYear - 1, endDate.getMonth(), endDay);
+    const lyStartStr = lyStartDate.toISOString().split('T')[0];
+    const lyEndStr = lyEndDate.toISOString().split('T')[0];
+
+    lyValue = getTotalForPeriod(yearDataMap[startYear - 1] || [], startYear - 1, lyStartStr, lyEndStr);
+  } else {
+    // Se não há filtro, comparar o ano completo
+    lyValue = getTotalForPeriod(yearDataMap[currentYear - 1] || [], currentYear - 1, null, null);
+  }
 
   const formatKpiDelta = (cur, prev, label) => {
     if (prev === undefined || prev === null) return '';
@@ -960,40 +991,50 @@ function renderAll(){
   const year1 = currentYear;       // Ano atual
   const year2 = currentYear - 1;   // Último ano completo
   const year3 = currentYear - 2;   // Ano anterior ao último
-  
+
   const dataYear3 = getFilteredMonthlyData(yearDataMap[year3] || [], year3, start, end);
   const dataYear2 = getFilteredMonthlyData(yearDataMap[year2] || [], year2, start, end);
   const dataYear1 = getFilteredMonthlyData(yearDataMap[year1] || [], year1, start, end);
-  
+
   const validIndices = [];
   for(let i=0;i<12;i++) if(dataYear3[i]!==null || dataYear2[i]!==null || dataYear1[i]!==null) validIndices.push(i);
-  const displayLabels = validIndices.map(i=>monthsLabels[i]);
-  const seriesYear3 = validIndices.map(i=>dataYear3[i]);
-  const seriesYear2 = validIndices.map(i=>dataYear2[i]);
-  const seriesYear1 = validIndices.map(i=>dataYear1[i]);
-  
+  const displayLabels = validIndices.length > 0 ? validIndices.map(i=>monthsLabels[i]) : monthsLabels;
+  const seriesYear3 = validIndices.length > 0 ? validIndices.map(i=>dataYear3[i]) : dataYear3;
+  const seriesYear2 = validIndices.length > 0 ? validIndices.map(i=>dataYear2[i]) : dataYear2;
+  const seriesYear1 = validIndices.length > 0 ? validIndices.map(i=>dataYear1[i]) : dataYear1;
+
   mkChart('cTotalProd', {
     type: 'line',
     data: {
       labels: displayLabels,
       datasets: [
-        { label: String(year3), data: seriesYear3, borderColor: '#c9a227', backgroundColor: 'rgba(201,162,39,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
-        { label: String(year2), data: seriesYear2, borderColor: '#1a6cf5', backgroundColor: 'rgba(26,108,245,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
-        { label: String(year1), data: seriesYear1, borderColor: '#1a7a40', backgroundColor: 'rgba(26,122,64,0.15)', fill: true, tension: 0.3, pointRadius: 2 }
+        { label: String(year3), data: seriesYear3, borderColor: '#c9a227', backgroundColor: 'rgba(201,162,39,0.1)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#c9a227' },
+        { label: String(year2), data: seriesYear2, borderColor: '#1a6cf5', backgroundColor: 'rgba(26,108,245,0.1)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#1a6cf5' },
+        { label: String(year1), data: seriesYear1, borderColor: '#1a7a40', backgroundColor: 'rgba(26,122,64,0.1)', fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#1a7a40' }
       ]
     },
     options: opts0({ noLegend: false, yBrl: true, datalabels: false })
   });
 
+  // Cards de Total Produzido
   const meta = getMetaParaPeriodo(start, end);
   const accumulated = dvDisabled ? 0 : fat;
+  const totalDelta = lyValue ? ((accumulated - lyValue)/lyValue*100) : 0;
   const metaProgress = meta ? (accumulated / meta * 100) : 0;
   const lyDelta = lyValue ? ((accumulated - lyValue)/lyValue*100) : 0;
   const lmDelta = lmValue ? ((accumulated - lmValue)/lmValue*100) : 0;
-  document.getElementById('indicatorsLM_LY_META').innerHTML = `
-    <div class="indicator-item"><span class="indicator-label">LM</span><span class="indicator-value">${brlS(lmValue)}</span><span class="indicator-delta ${lmDelta>=0?'du':'dd'}">${lmDelta>=0?'▲':'▼'} ${Math.abs(lmDelta).toFixed(1)}%</span></div>
-    <div class="indicator-item"><span class="indicator-label">LY</span><span class="indicator-value">${brlS(lyValue)}</span><span class="indicator-delta ${lyDelta>=0?'du':'dd'}">${lyDelta>=0?'▲':'▼'} ${Math.abs(lyDelta).toFixed(1)}%</span></div>
-  `;
+
+  set('kTotalProd', dvDisabled ? '—' : brlS(accumulated));
+  document.getElementById('kTotalProdD').innerHTML = dvDisabled ? '' : `<span class="${totalDelta>=0?'du':'dd'}">${totalDelta>=0?'▲':'▼'} ${Math.abs(totalDelta).toFixed(1)}% vs LY</span>`;
+
+  set('kLY', dvDisabled ? '—' : brlS(lyValue));
+  document.getElementById('kLYD').innerHTML = dvDisabled ? '' : `<span class="${lyDelta>=0?'du':'dd'}">${lyDelta>=0?'▲':'▼'} ${Math.abs(lyDelta).toFixed(1)}%</span>`;
+
+  set('kLM', dvDisabled ? '—' : brlS(lmValue));
+  document.getElementById('kLMD').innerHTML = dvDisabled ? '' : `<span class="${lmDelta>=0?'du':'dd'}">${lmDelta>=0?'▲':'▼'} ${Math.abs(lmDelta).toFixed(1)}%</span>`;
+
+  set('kMeta', dvDisabled ? '—' : brlS(meta));
+  document.getElementById('kMetaD').innerHTML = dvDisabled ? '' : `<span class="${metaProgress>=100?'du':'dd'}">${metaProgress.toFixed(0)}% realizado</span>`;
 
   // Ticket Médio mensal
   const ticketMedioMensal = mks.map(k => { const md = byM[k]; return md.length ? sumV(md)/md.length : 0; });
@@ -1190,18 +1231,35 @@ function opts0({noLegend,yBrl,xBrl,hBar,legendRight,datalabels=true}={}){
       tooltip:{backgroundColor:'#0f1117',titleColor:'#ffffff',bodyColor:'#a0a8c0',borderColor:'#2a2d3a',borderWidth:1,padding:12,cornerRadius:8,titleFont:{...FONT,weight:'700',size:12},bodyFont:{...FONT,size:11},callbacks:yBrl||xBrl?{label:c=>brl(c.raw)}:{}},
       datalabels: datalabels ? {
         anchor:hBar?'end':'end', align:hBar?'right':'top', offset:4, color:'#4a5068', font:{...FONT,size:9,weight:'600'},
-        formatter:(value)=>{ if(value===0)return''; if(yBrl||xBrl)return brlS(value); if(value>=1000)return (value/1000).toFixed(1)+'k'; return value.toLocaleString('pt-BR'); }
+        formatter:(value)=>{ if(value===0||value===null||value===undefined)return''; if(yBrl||xBrl)return brlS(value); if(value>=1000)return (value/1000).toFixed(1)+'k'; return value.toLocaleString('pt-BR'); }
       } : { display: false }
     },
     scales:{
-      x:{ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:xBrl?v=>brlS(v):undefined},grid:{color:'#f0f2f5',drawBorder:false}},
-      y:{ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:yBrl?v=>brlS(v):undefined},grid:{color:'#f0f2f5',drawBorder:false},beginAtZero:true}
+      x:{
+        type:'linear',
+        ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:xBrl?v=>brlS(v):undefined},
+        grid:{color:'#f0f2f5',drawBorder:false}
+      },
+      y:{
+        ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:yBrl?v=>brlS(v):undefined},
+        grid:{color:'#f0f2f5',drawBorder:false},
+        beginAtZero:true
+      }
     }
   };
   if(hBar){
     baseOpts.indexAxis='y';
-    baseOpts.scales.y={type:'category',ticks:{color:'#8a91a8',font:{...FONT,size:10}},grid:{display:false}};
-    baseOpts.scales.x={ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:xBrl?v=>brlS(v):undefined},grid:{color:'#f0f2f5'},beginAtZero:true};
+    baseOpts.scales.y={
+      type:'category',
+      ticks:{color:'#8a91a8',font:{...FONT,size:10}},
+      grid:{display:false}
+    };
+    baseOpts.scales.x={
+      type:'linear',
+      ticks:{color:'#8a91a8',font:{...FONT,size:10},callback:xBrl?v=>brlS(v):undefined},
+      grid:{color:'#f0f2f5'},
+      beginAtZero:true
+    };
   }
   return baseOpts;
 }
