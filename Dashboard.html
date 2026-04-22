@@ -116,13 +116,16 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px
 .kpi-5{grid-template-columns:repeat(5,1fr)}
 .kpi-4{grid-template-columns:repeat(4,1fr)}
 .kpi-3{grid-template-columns:repeat(3,1fr)}
-.kpi{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);padding:16px;box-shadow:var(--s1);position:relative;overflow:hidden;transition:box-shadow .25s,transform .2s;cursor:default;}
+.kpi{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);padding:16px;box-shadow:var(--s1);position:relative;overflow:hidden;transition:box-shadow .25s,transform .2s;cursor:default;display:flex;flex-direction:column;}
 .kpi:hover{box-shadow:var(--s2);transform:translateY(-3px)}
 .kpi-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r12) var(--r12) 0 0}
+.kpi-main{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.kpi-left{flex:1;}
 .kpi-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
 .kpi-val{font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.1;color:var(--t1)}
 .kpi-val.sm{font-size:17px;font-weight:700}
-.kpi-delta{font-size:11px;margin-top:5px;display:flex;flex-direction:column;gap:2px;font-weight:600;}
+.kpi-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:80px;}
+.kpi-delta{font-size:11px;display:flex;flex-direction:column;gap:2px;font-weight:600;}
 .kpi-delta-row{display:flex;align-items:center;gap:8px;}
 .du{color:var(--green)}.dd{color:var(--red)}.dn{color:var(--t3)}
 .cgrid{display:grid;gap:12px;margin-bottom:12px}
@@ -135,7 +138,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px
 .cc-sub{font-size:10px;color:var(--t3);margin-top:2px;font-weight:500}
 .cc-kv{font-size:15px;font-weight:800;color:var(--t1);text-align:right}
 .cc-kl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;text-align:right;font-weight:600}
-.inline-indicators{display:flex;gap:20px;margin:8px 0 4px;}
+.inline-indicators{display:flex;flex-direction:column;gap:4px;margin:8px 0 4px;align-items:flex-end;}
 .indicator-item{display:flex;align-items:baseline;gap:6px;}
 .indicator-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;}
 .indicator-value{font-size:13px;font-weight:700;}
@@ -256,23 +259,24 @@ td.c{text-align:center}
 <!-- ========== PAGE RESUMO ========== -->
 <div class="page on" id="page-resumo">
   <div class="kpi-row kpi-5">
-    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Serviços no período</div><div class="kpi-val" id="kSrv">—</div><div class="kpi-delta" id="kSrvD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-lbl">Faturamento</div><div class="kpi-val sm" id="kFat">—</div><div class="kpi-delta" id="kFatD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">Ticket Médio</div><div class="kpi-val sm" id="kTk">—</div><div class="kpi-delta" id="kTkD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#e07000,#f59532)"></div><div class="kpi-lbl">Manutenções</div><div class="kpi-val" id="kMan">—</div><div class="kpi-delta" id="kManD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-lbl">Multas</div><div class="kpi-val" id="kMul">—</div><div class="kpi-delta" id="kMulD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Serviços no período</div><div class="kpi-val" id="kSrv">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kSrvD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#0a9396,#3dbdc1)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Faturamento</div><div class="kpi-val sm" id="kFat">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kFatD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Ticket Médio</div><div class="kpi-val sm" id="kTk">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kTkD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#e07000,#f59532)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Manutenções</div><div class="kpi-val" id="kMan">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kManD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#c0392b,#e05a4e)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Multas</div><div class="kpi-val" id="kMul">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kMulD"></div></div></div></div>
   </div>
   <div class="kpi-row kpi-4">
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-lbl">Concluídos s/ Valor</div><div class="kpi-val" id="kSemVal">—</div><div class="kpi-delta" id="kSemValD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-lbl">A Receber</div><div class="kpi-val sm" id="kPPend">—</div><div class="kpi-delta" id="kPPendD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-lbl">CNH Próx./Vencida</div><div class="kpi-val" id="kCnhW">—</div><div class="kpi-delta" id="kCnhWD"></div></div>
-    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a6cf5,#4f94ff)"></div><div class="kpi-lbl">Frota Ativa</div><div class="kpi-val" id="kFrotaAtiva">—</div><div class="kpi-delta" id="kFrotaAtivaD"></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#8a6200,#c9a227)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Concluídos s/ Valor</div><div class="kpi-val" id="kSemVal">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a7a40,#2ecc71)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">A Receber</div><div class="kpi-val sm" id="kPPend">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kPPendD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#6c4fd8,#9b7df0)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CNH Próx./Vencida</div><div class="kpi-val" id="kCnhW">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kCnhWD"></div></div></div></div>
+    <div class="kpi"><div class="kpi-accent" style="background:linear-gradient(135deg,#1a6cf5,#4f94ff)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Frota Ativa</div><div class="kpi-val" id="kFrotaAtiva">—</div></div><div class="kpi-right"><div class="kpi-delta" id="kFrotaAtivaD"></div></div></div></div>
   </div>
 
   <!-- Total Produzido (altura reduzida) -->
-  <div class="cc">
-    <div class="cc-hdr"><div><div class="cc-title">Total Produzido</div></div><div style="text-align:right"><div class="inline-indicators" id="indicatorsLM_LY_META"></div></div></div>
-    <canvas id="cTotalProd" height="100"></canvas>
+  <div class="cc" style="max-height:200px;">
+    <div class="cc-hdr"><div><div class="cc-title">Total Produzido</div></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0 16px 10px;"><div></div><div class="inline-indicators" id="indicatorsLM_LY_META"></div></div>
+    <canvas id="cTotalProd" height="60"></canvas>
   </div>
 
   <div class="cgrid g2">
@@ -875,8 +879,16 @@ function renderAll(){
   const lmYear = currentMonth === 0 ? currentYear-1 : currentYear;
   const lmMonth = currentMonth === 0 ? 11 : currentMonth-1;
   const lyYear = currentYear-1;
-  const lmValue = (lmYear === 2025) ? fat2025[lmMonth] : (lmYear === 2024 ? fat2024[lmMonth] : (lmYear === 2023 ? fat2023[lmMonth] : 0));
-  const lyValue = getTotalForPeriod(fat2025, 2025, start, end);
+  
+  // Mapeamento dos arrays hardcoded para os anos dinâmicos
+  const yearDataMap = {
+    2023: fat2023,
+    2024: fat2024,
+    2025: fat2025
+  };
+  
+  const lmValue = (yearDataMap[lmYear] || [])[lmMonth] || 0;
+  const lyValue = getTotalForPeriod(yearDataMap[lyYear] || [], lyYear, start, end);
 
   const formatKpiDelta = (cur, prev, label) => {
     if (prev === undefined || prev === null) return '';
@@ -914,25 +926,39 @@ function renderAll(){
   set('kFrotaAtiva', dvDisabled ? '—' : veiAtivos);
   document.getElementById('kFrotaAtivaD').innerHTML = dvDisabled ? '' : `Total: ${DB.veiculos.length}`;
 
-  // Total Produzido
+  // Total Produzido - usando ano atual, anterior e penúltimo
   const monthsLabels = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const data2023 = getFilteredMonthlyData(fat2023, 2023, start, end);
-  const data2024 = getFilteredMonthlyData(fat2024, 2024, start, end);
-  const data2025 = getFilteredMonthlyData(fat2025, 2025, start, end);
+  const currentYear = new Date().getFullYear();
+  const year1 = currentYear;       // Ano atual
+  const year2 = currentYear - 1;   // Último ano completo
+  const year3 = currentYear - 2;   // Ano anterior ao último
+  
+  // Mapeamento dos arrays hardcoded para os anos dinâmicos
+  const yearDataMap = {
+    2023: fat2023,
+    2024: fat2024,
+    2025: fat2025
+  };
+  
+  const dataYear3 = getFilteredMonthlyData(yearDataMap[year3] || [], year3, start, end);
+  const dataYear2 = getFilteredMonthlyData(yearDataMap[year2] || [], year2, start, end);
+  const dataYear1 = getFilteredMonthlyData(yearDataMap[year1] || [], year1, start, end);
+  
   const validIndices = [];
-  for(let i=0;i<12;i++) if(data2023[i]!==null || data2024[i]!==null || data2025[i]!==null) validIndices.push(i);
+  for(let i=0;i<12;i++) if(dataYear3[i]!==null || dataYear2[i]!==null || dataYear1[i]!==null) validIndices.push(i);
   const displayLabels = validIndices.map(i=>monthsLabels[i]);
-  const series2023 = validIndices.map(i=>data2023[i]);
-  const series2024 = validIndices.map(i=>data2024[i]);
-  const series2025 = validIndices.map(i=>data2025[i]);
+  const seriesYear3 = validIndices.map(i=>dataYear3[i]);
+  const seriesYear2 = validIndices.map(i=>dataYear2[i]);
+  const seriesYear1 = validIndices.map(i=>dataYear1[i]);
+  
   mkChart('cTotalProd', {
     type: 'line',
     data: {
       labels: displayLabels,
       datasets: [
-        { label: '2023', data: series2023, borderColor: '#c9a227', backgroundColor: 'rgba(201,162,39,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
-        { label: '2024', data: series2024, borderColor: '#1a6cf5', backgroundColor: 'rgba(26,108,245,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
-        { label: '2025', data: series2025, borderColor: '#1a7a40', backgroundColor: 'rgba(26,122,64,0.15)', fill: true, tension: 0.3, pointRadius: 2 }
+        { label: String(year3), data: seriesYear3, borderColor: '#c9a227', backgroundColor: 'rgba(201,162,39,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: String(year2), data: seriesYear2, borderColor: '#1a6cf5', backgroundColor: 'rgba(26,108,245,0.15)', fill: true, tension: 0.3, pointRadius: 2 },
+        { label: String(year1), data: seriesYear1, borderColor: '#1a7a40', backgroundColor: 'rgba(26,122,64,0.15)', fill: true, tension: 0.3, pointRadius: 2 }
       ]
     },
     options: opts0({ noLegend: false, yBrl: true, datalabels: false })
@@ -946,7 +972,6 @@ function renderAll(){
   document.getElementById('indicatorsLM_LY_META').innerHTML = `
     <div class="indicator-item"><span class="indicator-label">LM</span><span class="indicator-value">${brlS(lmValue)}</span><span class="indicator-delta ${lmDelta>=0?'du':'dd'}">${lmDelta>=0?'▲':'▼'} ${Math.abs(lmDelta).toFixed(1)}%</span></div>
     <div class="indicator-item"><span class="indicator-label">LY</span><span class="indicator-value">${brlS(lyValue)}</span><span class="indicator-delta ${lyDelta>=0?'du':'dd'}">${lyDelta>=0?'▲':'▼'} ${Math.abs(lyDelta).toFixed(1)}%</span></div>
-    <div class="indicator-item"><span class="indicator-label">META</span><span class="indicator-value">${brlS(meta)}</span><span class="indicator-delta ${accumulated>=meta?'du':'dd'}">${accumulated>=meta?'▲':'▼'} ${metaProgress.toFixed(1)}%</span></div>
   `;
 
   // Ticket Médio mensal
