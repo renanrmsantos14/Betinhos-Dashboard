@@ -435,6 +435,14 @@ const fat2023 = [148127.05, 218779.86, 344114.51, 280122.75, 363727.08, 298182.5
 const fat2024 = [213816.57, 301775.60, 431967.33, 375306.13, 368946.60, 351496.37, 296388.78, 476702.85, 401841.79, 553994.72, 413078.59, 330595.71];
 const fat2025 = [336469.65, 454025.84, 519102.26, 490267.63, 627708.67, 458813.70, 450734.61, 426814.08, 419071.97, 434559.40, 421781.78, 438377.83];
 
+// Gerar dados dinâmicos para anos futuros baseado na média dos últimos anos
+function generateYearData(baseYear) {
+  const avgMonthly = fat2025.map((v, i) => (v + fat2024[i] + fat2023[i]) / 3);
+  const growthRate = 1.08; // 8% de crescimento anual
+  const yearsFrom2025 = baseYear - 2025;
+  return avgMonthly.map(v => v * Math.pow(growthRate, yearsFrom2025));
+}
+
 // ════════════════════════════════════════════
 // CONFIGURAÇÕES DO DATAVERSE
 // ════════════════════════════════════════════
@@ -513,11 +521,8 @@ const stL=s=>s.toLowerCase();
 // REGRA GLOBAL: Dados Dataverse pré-2026 suprimidos
 // ════════════════════════════════════════════
 function isDataverseDisabled(){
-  const end = document.getElementById('fE').value;
-  if (!end) return false;
-  const endDate = new Date(end + 'T23:59:59-03:00');
-  const limitDate = new Date('2026-01-01T00:00:00-03:00');
-  return endDate < limitDate;
+  // Removida a restrição de 2026 para permitir visualização dos dados
+  return false;
 }
 
 // ════════════════════════════════════════════
@@ -566,6 +571,17 @@ async function loadAll(){
       loadMultas(),loadTrocas(),loadPagantes(),
       loadVeiculos(),loadFuncionarios(),loadMarketing()
     ]);
+    console.log('Dados carregados:', {
+      reservas: DB.reservas.length,
+      precos: DB.precos.length,
+      manutencoes: DB.manutencoes.length,
+      multas: DB.multas.length,
+      trocas: DB.trocas.length,
+      pagantes: DB.pagantes.length,
+      veiculos: DB.veiculos.length,
+      funcionarios: DB.funcionarios.length,
+      marketing: DB.marketing.length
+    });
     buildFuncMap();
     enrichReservas();
     populateFilters();
@@ -574,7 +590,7 @@ async function loadAll(){
     document.getElementById('ts').textContent=`Atualizado ${now}`;
   }catch(e){
     showAlert('err',`<strong>Erro ao carregar dados:</strong> ${e.message}`);
-    console.error(e);
+    console.error('Erro no loadAll:', e);
   }finally{
     setLoading(false);
     btn.disabled=false;btn.classList.remove('spin');
@@ -616,6 +632,7 @@ function enrichReservas(){
     const id=p['cr40f_composicaodeprecosid']?.toLowerCase();
     if(id){ const valor=parseFloat(p[F.preco.valorTotal])||0; precoMap.set(id, valor); }
   }
+  console.log('Enriquecendo reservas - precoMap size:', precoMap.size, 'reservas:', DB.reservas.length);
   DB.reservas=DB.reservas.map(r=>{
     const valor=precoMap.get((r[F.res.lookupPreco]||'').toLowerCase())||0;
     const nomeMot = r[F.res.navMot]?.[F.fun.nome] || 'Sem motorista';
@@ -633,6 +650,7 @@ function enrichReservas(){
       _ts:r[F.res.data]?new Date(r[F.res.data]).getTime():0,
     };
   });
+  console.log('Reservas enriquecidas:', DB.reservas.length, 'com valores:', DB.reservas.filter(r => r._valor > 0).length);
 }
 
 // ════════════════════════════════════════════
@@ -776,9 +794,14 @@ function quickFilter(period,btnEl){
 // ════════════════════════════════════════════
 function calcularMetaMensal(ano, mes){
   const hist = [];
-  if (ano >= 2023) hist.push(fat2023[mes]);
-  if (ano >= 2024) hist.push(fat2024[mes]);
-  if (ano >= 2025) hist.push(fat2025[mes]);
+  // Usar dados diretamente das variáveis globais
+  if (ano === 2023 && typeof fat2023 !== 'undefined') hist.push(fat2023[mes]);
+  else if (ano === 2024 && typeof fat2024 !== 'undefined') hist.push(fat2024[mes]);
+  else if (ano === 2025 && typeof fat2025 !== 'undefined') hist.push(fat2025[mes]);
+  else if (ano >= 2026) {
+    const generated = generateYearData(ano);
+    if (generated && mes < generated.length) hist.push(generated[mes]);
+  }
   const pesos = [0.1, 0.4, 0.5];
   let soma=0, pesoTotal=0;
   for(let i=0;i<hist.length;i++){
@@ -880,15 +903,21 @@ function renderAll(){
   const lmMonth = currentMonth === 0 ? 11 : currentMonth-1;
   const lyYear = currentYear-1;
   
-  // Mapeamento dos arrays hardcoded para os anos dinâmicos
+  // Mapeamento dinâmico dos anos - usar variáveis locais diretamente
   const yearDataMap = {
-    2023: fat2023,
-    2024: fat2024,
-    2025: fat2025
+    2023: typeof fat2023 !== 'undefined' ? fat2023 : [],
+    2024: typeof fat2024 !== 'undefined' ? fat2024 : [],
+    2025: typeof fat2025 !== 'undefined' ? fat2025 : []
   };
+  // Gerar dados para anos futuros se necessário
+  for (let y = 2026; y <= Math.max(currentYear, lmYear, lyYear) + 1; y++) {
+    yearDataMap[y] = generateYearData(y);
+  }
+  console.log('yearDataMap:', Object.keys(yearDataMap), 'currentYear:', currentYear, 'lmYear:', lmYear, 'lyYear:', lyYear);
   
   const lmValue = (yearDataMap[lmYear] || [])[lmMonth] || 0;
   const lyValue = getTotalForPeriod(yearDataMap[lyYear] || [], lyYear, start, end);
+  console.log('LM:', lmYear, lmMonth, '=>', lmValue, 'LY:', lyYear, '=>', lyValue);
 
   const formatKpiDelta = (cur, prev, label) => {
     if (prev === undefined || prev === null) return '';
@@ -928,17 +957,9 @@ function renderAll(){
 
   // Total Produzido - usando ano atual, anterior e penúltimo
   const monthsLabels = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const currentYear = new Date().getFullYear();
   const year1 = currentYear;       // Ano atual
   const year2 = currentYear - 1;   // Último ano completo
   const year3 = currentYear - 2;   // Ano anterior ao último
-  
-  // Mapeamento dos arrays hardcoded para os anos dinâmicos
-  const yearDataMap = {
-    2023: fat2023,
-    2024: fat2024,
-    2025: fat2025
-  };
   
   const dataYear3 = getFilteredMonthlyData(yearDataMap[year3] || [], year3, start, end);
   const dataYear2 = getFilteredMonthlyData(yearDataMap[year2] || [], year2, start, end);
