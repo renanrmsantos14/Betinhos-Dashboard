@@ -124,9 +124,15 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px
 .kpi-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
 .kpi-val{font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.1;color:var(--t1)}
 .kpi-val.sm{font-size:17px;font-weight:700}
-.kpi-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:80px;}
-.kpi-delta{font-size:11px;display:flex;flex-direction:column;gap:2px;font-weight:600;}
-.kpi-delta-row{display:flex;align-items:center;gap:8px;}
+.kpi-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:90px;}
+.kpi-delta{display:flex;flex-direction:column;gap:4px;}
+.kpi-delta-row{display:flex;align-items:center;gap:6px;}
+.badge-kpi{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid;}
+.badge-lm{background:var(--teal-l);color:var(--teal);border-color:var(--teal);}
+.badge-ly{background:var(--purple-l);color:var(--purple);border-color:var(--purple);}
+.badge-meta{background:var(--orange-l);color:var(--orange);border-color:var(--orange);}
+.badge-val{font-weight:800;font-size:11px;}
+.badge-delta{font-size:9px;font-weight:700;}
 .du{color:var(--green)}.dd{color:var(--red)}.dn{color:var(--t3)}
 .cgrid{display:grid;gap:12px;margin-bottom:12px}
 .g2{grid-template-columns:1fr 1fr}
@@ -139,10 +145,6 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px
 .cc-kv{font-size:15px;font-weight:800;color:var(--t1);text-align:right}
 .cc-kl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;text-align:right;font-weight:600}
 .inline-indicators{display:flex;flex-direction:column;gap:4px;margin:8px 0 4px;align-items:flex-end;}
-.indicator-item{display:flex;align-items:baseline;gap:6px;}
-.indicator-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;}
-.indicator-value{font-size:13px;font-weight:700;}
-.indicator-delta{font-size:10px;margin-left:4px;}
 .tc{background:var(--surf);border:1px solid var(--b1);border-radius:var(--r12);box-shadow:var(--s1);overflow:hidden;margin-bottom:14px}
 .tc-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--b1);gap:10px;flex-wrap:wrap}
 .tc-title{font-size:13px;font-weight:700;color:var(--t1)}
@@ -273,10 +275,10 @@ td.c{text-align:center}
   </div>
 
   <!-- Total Produzido (altura reduzida) -->
-  <div class="cc" style="max-height:200px;">
+  <div class="cc" style="max-height:180px;">
     <div class="cc-hdr"><div><div class="cc-title">Total Produzido</div></div></div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0 16px 10px;"><div></div><div class="inline-indicators" id="indicatorsLM_LY_META"></div></div>
-    <canvas id="cTotalProd" height="60"></canvas>
+    <canvas id="cTotalProd" height="50"></canvas>
   </div>
 
   <div class="cgrid g2">
@@ -919,23 +921,23 @@ function renderAll(){
   const lyValue = getTotalForPeriod(yearDataMap[lyYear] || [], lyYear, start, end);
   console.log('LM:', lmYear, lmMonth, '=>', lmValue, 'LY:', lyYear, '=>', lyValue);
 
-  const formatKpiDelta = (cur, prev, label) => {
-    if (prev === undefined || prev === null) return '';
+  const formatKpiBadge = (cur, prev, label, badgeClass) => {
+    if (prev === undefined || prev === null || prev === 0) return `<span class="badge-kpi ${badgeClass}"><span class="badge-val">—</span></span>`;
     const diff = cur - prev;
-    const pctVal = prev === 0 ? (cur > 0 ? 100 : 0) : Math.round((diff / prev) * 100);
+    const pctVal = prev === 0 ? (cur > 0 ? 100 : 0) : ((diff / prev) * 100);
     const up = diff >= 0;
-    const absStr = brlS(Math.abs(diff));
-    return `<span class="${up?'du':'dd'}">${up?'▲':'▼'} ${absStr} (${pctVal}%)</span> <span class="dn">${label}</span>`;
+    const absPct = Math.abs(pctVal).toFixed(1);
+    return `<span class="badge-kpi ${badgeClass}"><span class="badge-val">${brlS(prev)}</span><span class="badge-delta ${up?'du':'dd'}">${up?'▲':'▼'}${absPct}%</span></span>`;
   };
 
   // KPIs
   set('kSrv', dvDisabled ? '—' : rv.length.toLocaleString('pt-BR'));
-  document.getElementById('kSrvD').innerHTML = dvDisabled ? '' : `${formatKpiDelta(rv.length, lmValue, 'LM')}<br>${formatKpiDelta(rv.length, lyValue, 'LY')}`;
+  document.getElementById('kSrvD').innerHTML = dvDisabled ? '' : `${formatKpiBadge(rv.length, lmValue, 'LM', 'badge-lm')}${formatKpiBadge(rv.length, lyValue, 'LY', 'badge-ly')}`;
   set('kFat', dvDisabled ? '—' : brlS(fat));
-  document.getElementById('kFatD').innerHTML = dvDisabled ? '' : `${formatKpiDelta(fat, lmValue, 'LM')}<br>${formatKpiDelta(fat, lyValue, 'LY')}`;
+  document.getElementById('kFatD').innerHTML = dvDisabled ? '' : `${formatKpiBadge(fat, lmValue, 'LM', 'badge-lm')}${formatKpiBadge(fat, lyValue, 'LY', 'badge-ly')}`;
   const curTk = rv.length ? fat/rv.length : 0;
   set('kTk', dvDisabled ? '—' : brl(curTk));
-  document.getElementById('kTkD').innerHTML = dvDisabled ? '' : `LM: ${brlS(lmValue)} | LY: ${brlS(lyValue)}`;
+  document.getElementById('kTkD').innerHTML = dvDisabled ? '' : `${formatKpiBadge(curTk, lmValue, 'LM', 'badge-lm')}${formatKpiBadge(curTk, lyValue, 'LY', 'badge-ly')}`;
   set('kMan', dvDisabled ? '—' : DB.manutencoes.length);
   const custoTotal = dvDisabled ? 0 : DB.manutencoes.reduce((s,r)=>s+(parseFloat(r[F.man.valor])||0),0);
   document.getElementById('kManD').innerHTML = dvDisabled ? '' : `Custo: ${brlS(custoTotal)}`;
@@ -990,9 +992,17 @@ function renderAll(){
   const metaProgress = meta ? (accumulated / meta * 100) : 0;
   const lyDelta = lyValue ? ((accumulated - lyValue)/lyValue*100) : 0;
   const lmDelta = lmValue ? ((accumulated - lmValue)/lmValue*100) : 0;
+  
+  const formatBadgeInline = (label, value, delta, badgeClass) => {
+    const up = delta >= 0;
+    return `<span class="badge-kpi ${badgeClass}"><span class="badge-val">${brlS(value)}</span><span class="badge-delta ${up?'du':'dd'}">${up?'▲':'▼'}${Math.abs(delta).toFixed(1)}%</span></span>`;
+  };
+  
   document.getElementById('indicatorsLM_LY_META').innerHTML = `
-    <div class="indicator-item"><span class="indicator-label">LM</span><span class="indicator-value">${brlS(lmValue)}</span><span class="indicator-delta ${lmDelta>=0?'du':'dd'}">${lmDelta>=0?'▲':'▼'} ${Math.abs(lmDelta).toFixed(1)}%</span></div>
-    <div class="indicator-item"><span class="indicator-label">LY</span><span class="indicator-value">${brlS(lyValue)}</span><span class="indicator-delta ${lyDelta>=0?'du':'dd'}">${lyDelta>=0?'▲':'▼'} ${Math.abs(lyDelta).toFixed(1)}%</span></div>
+    <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+      ${formatBadgeInline('LM', lmValue, lmDelta, 'badge-lm')}
+      ${formatBadgeInline('LY', lyValue, lyDelta, 'badge-ly')}
+    </div>
   `;
 
   // Ticket Médio mensal
