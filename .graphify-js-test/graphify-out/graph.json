@@ -1,0 +1,40 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "a.js",
+      "file_type": "code",
+      "source_file": "a.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "a",
+      "community": 0,
+      "norm_label": "a.js"
+    },
+    {
+      "label": "x()",
+      "file_type": "code",
+      "source_file": "a.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "a_x",
+      "community": 0,
+      "norm_label": "x()"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "a.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "a",
+      "target": "a_x",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}

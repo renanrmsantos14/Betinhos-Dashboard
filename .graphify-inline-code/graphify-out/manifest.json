@@ -1,0 +1,12 @@
+{
+  "dashboard.inline.js": {
+    "mtime": 1783530611.594154,
+    "ast_hash": "86bde17768a1f3dd2aff79cbdaff9293",
+    "semantic_hash": "86bde17768a1f3dd2aff79cbdaff9293"
+  },
+  "dataverse-export-metadata-console.js": {
+    "mtime": 1780313278.2623847,
+    "ast_hash": "1370e8eb8fa6875f36d566c5d63972b7",
+    "semantic_hash": "1370e8eb8fa6875f36d566c5d63972b7"
+  }
+}

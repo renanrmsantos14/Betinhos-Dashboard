@@ -1,0 +1,276 @@
+{
+  "communities": {
+    "0": [
+      "dashboard_inline",
+      "dashboard_inline_badge",
+      "dashboard_inline_charthasdata",
+      "dashboard_inline_charts",
+      "dashboard_inline_db",
+      "dashboard_inline_detectenv",
+      "dashboard_inline_envs",
+      "dashboard_inline_f",
+      "dashboard_inline_fat2023",
+      "dashboard_inline_fat2024",
+      "dashboard_inline_fat2025",
+      "dashboard_inline_filtermsoptions",
+      "dashboard_inline_fmtd",
+      "dashboard_inline_fmtdt",
+      "dashboard_inline_font",
+      "dashboard_inline_funcmapglobal",
+      "dashboard_inline_indaterange",
+      "dashboard_inline_mk",
+      "dashboard_inline_mkeys",
+      "dashboard_inline_ml",
+      "dashboard_inline_monthslabelsall",
+      "dashboard_inline_msstate",
+      "dashboard_inline_nav",
+      "dashboard_inline_pal",
+      "dashboard_inline_passesactivefilters",
+      "dashboard_inline_pct",
+      "dashboard_inline_set",
+      "dashboard_inline_setexecalert",
+      "dashboard_inline_sparks",
+      "dashboard_inline_srtst",
+      "dashboard_inline_stl",
+      "dashboard_inline_t",
+      "dashboard_inline_tblcache",
+      "dashboard_inline_togglems",
+      "dashboard_inline_vw"
+    ],
+    "1": [
+      "dashboard_inline_brl",
+      "dashboard_inline_brls",
+      "dashboard_inline_clearf",
+      "dashboard_inline_emptyrow",
+      "dashboard_inline_ensureexecutivelayout",
+      "dashboard_inline_getfilteredmonthlydata",
+      "dashboard_inline_grp",
+      "dashboard_inline_html",
+      "dashboard_inline_isdataversedisabled",
+      "dashboard_inline_mkchart",
+      "dashboard_inline_mkspark",
+      "dashboard_inline_opts0",
+      "dashboard_inline_renderall",
+      "dashboard_inline_renderfaturamento",
+      "dashboard_inline_renderfrota",
+      "dashboard_inline_rendermanutencoes",
+      "dashboard_inline_rendermarketing",
+      "dashboard_inline_rendermotoristas",
+      "dashboard_inline_rendermultas",
+      "dashboard_inline_renderpagamentos",
+      "dashboard_inline_rendertrocas",
+      "dashboard_inline_setchartemptystate",
+      "dashboard_inline_trunc"
+    ],
+    "2": [
+      "dashboard_inline_api",
+      "dashboard_inline_buildfuncmap",
+      "dashboard_inline_clearalerts",
+      "dashboard_inline_fetchall",
+      "dashboard_inline_generatemockdata",
+      "dashboard_inline_loadall",
+      "dashboard_inline_loadfuncionarios",
+      "dashboard_inline_loadmanutencoes",
+      "dashboard_inline_loadmarketing",
+      "dashboard_inline_loadmultas",
+      "dashboard_inline_loadpagantes",
+      "dashboard_inline_loadprecos",
+      "dashboard_inline_loadreservas",
+      "dashboard_inline_loadtrocas",
+      "dashboard_inline_loadveiculos",
+      "dashboard_inline_makeheaders",
+      "dashboard_inline_populatefilters",
+      "dashboard_inline_setloading"
+    ],
+    "3": [
+      "dataverse_export_metadata_console",
+      "dataverse_export_metadata_console_exportmetadata",
+      "dataverse_export_metadata_console_getall",
+      "dataverse_export_metadata_console_getattributes",
+      "dataverse_export_metadata_console_getchoiceattributes",
+      "dataverse_export_metadata_console_getkeys",
+      "dataverse_export_metadata_console_getrelationships",
+      "dataverse_export_metadata_console_normalizeattribute",
+      "dataverse_export_metadata_console_normalizeentity",
+      "dataverse_export_metadata_console_normalizelabel",
+      "dataverse_export_metadata_console_normalizeoptions",
+      "dataverse_export_metadata_console_normalizerelationship",
+      "dataverse_export_metadata_console_pick",
+      "dataverse_export_metadata_console_request"
+    ],
+    "4": [
+      "dashboard_inline_clampdate",
+      "dashboard_inline_daysinmonth",
+      "dashboard_inline_getlyvalueandcount",
+      "dashboard_inline_getmetaparaperiodoproporcional",
+      "dashboard_inline_getperiodvalueandcount",
+      "dashboard_inline_gettotalforperiod",
+      "dashboard_inline_pad2",
+      "dashboard_inline_parsebrdate",
+      "dashboard_inline_sameperiodlastmonth",
+      "dashboard_inline_sameperiodlastyear",
+      "dashboard_inline_ymd"
+    ],
+    "5": [
+      "dashboard_inline_getlmvalueandcount",
+      "dashboard_inline_getmonthlydatafromdataverse",
+      "dashboard_inline_renderfrotatable",
+      "dashboard_inline_rendermottable",
+      "dashboard_inline_rendersrvtable",
+      "dashboard_inline_rendersumtable",
+      "dashboard_inline_srchreg",
+      "dashboard_inline_srchtbl",
+      "dashboard_inline_srt",
+      "dashboard_inline_sumv"
+    ],
+    "6": [
+      "dashboard_inline_calcularmetamensal",
+      "dashboard_inline_gethistoricalfat",
+      "dashboard_inline_getmetaparaperiodo"
+    ],
+    "7": [
+      "dashboard_inline_enrichreservas",
+      "dashboard_inline_fv",
+      "dashboard_inline_norml"
+    ],
+    "8": [
+      "dashboard_inline_msselectall",
+      "dashboard_inline_mstoggle",
+      "dashboard_inline_updatemsbutton"
+    ],
+    "9": [
+      "dashboard_inline_applyf",
+      "dashboard_inline_quickfilter"
+    ],
+    "10": [
+      "dashboard_inline_copytoclipboard",
+      "dashboard_inline_showalert"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05714285714285714,
+    "1": 0.2134387351778656,
+    "2": 0.2222222222222222,
+    "3": 0.32967032967032966,
+    "4": 0.2727272727272727,
+    "5": 0.26666666666666666,
+    "6": 0.6666666666666666,
+    "7": 0.6666666666666666,
+    "8": 0.6666666666666666,
+    "9": 1.0,
+    "10": 1.0
+  },
+  "gods": [
+    {
+      "id": "dashboard_inline_renderall",
+      "label": "renderAll()",
+      "degree": 32
+    },
+    {
+      "id": "dashboard_inline_loadall",
+      "label": "loadAll()",
+      "degree": 18
+    },
+    {
+      "id": "dashboard_inline_mkchart",
+      "label": "mkChart()",
+      "degree": 12
+    },
+    {
+      "id": "dashboard_inline_fetchall",
+      "label": "fetchAll()",
+      "degree": 11
+    },
+    {
+      "id": "dashboard_inline_api",
+      "label": "API()",
+      "degree": 10
+    },
+    {
+      "id": "dashboard_inline_opts0",
+      "label": "opts0()",
+      "degree": 10
+    },
+    {
+      "id": "dashboard_inline_emptyrow",
+      "label": "emptyRow()",
+      "degree": 10
+    },
+    {
+      "id": "dashboard_inline_grp",
+      "label": "grp()",
+      "degree": 9
+    },
+    {
+      "id": "dashboard_inline_sumv",
+      "label": "sumV()",
+      "degree": 8
+    },
+    {
+      "id": "dashboard_inline_renderfaturamento",
+      "label": "renderFaturamento()",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "getLYValueAndCount()",
+      "target": "sumV()",
+      "source_files": [
+        "dashboard.inline.js",
+        "dashboard.inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 5 \u2192 community 4"
+    },
+    {
+      "source": "renderAll()",
+      "target": "sumV()",
+      "source_files": [
+        "dashboard.inline.js",
+        "dashboard.inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 5 \u2192 community 1"
+    },
+    {
+      "source": "renderAll()",
+      "target": "mKeys()",
+      "source_files": [
+        "dashboard.inline.js",
+        "dashboard.inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 0 \u2192 community 1"
+    },
+    {
+      "source": "renderAll()",
+      "target": "samePeriodLastMonth()",
+      "source_files": [
+        "dashboard.inline.js",
+        "dashboard.inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 4 \u2192 community 1"
+    },
+    {
+      "source": "loadAll()",
+      "target": "enrichReservas()",
+      "source_files": [
+        "dashboard.inline.js",
+        "dashboard.inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 \u2192 community 7"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

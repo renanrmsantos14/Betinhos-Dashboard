@@ -1,0 +1,53 @@
+REVISÃO DO DASHBOARD
+ABA RESUMO:
+CRIAR um card KPI de recebimento (Recebido/(Produzido- em viagem - mensal);
+Como podemos fazer para trazer os resultados dos anos anteriores 2025?
+Manter essas opções de filtros
+Validar que os números abaixo estão corretos. Caso sim, mantê-los;
+Quando estamos com o filtro por “ano” ele ainda fica aparecendo o LM;
+Com o filtro por ano, está aparecendo um valor altíssimo a receber (430k) o que, é provável que esteja errado.
+Certificar que os valores estão corretos. Neste indicador, precisamos visualizar os pedidos que foram produzidos (Concluídos) e que ainda não fizemos o recebimento;
+Também faz parte deste indicador, multiplicar a quantidade de serviços “sem valor” pelo valor do ticket médio do ano;
+SEM VALOR: Favor manter exatamente como está (Aprovado)
+A RECEBER: Pode retirar pois há um indicador (card) acima com o mesmo valor.
+CNH: Entendo que seja a quantidade de CNH vencidas, com base na data atual. Caso seja
+isso, pode manter
+MULTAS:  Entendo que seja a quantidade de multas considerando o filtro (Data, mês, ano) e o 5% pendente, refere-se a multas que não foram indicadas ? Em aberto?
+SEM PREÇO: Não sei do que se trata esse card;
+SEM OP: Me mostre o que é calculado nesse indicador;
+SEM MOTORISTA: Entendo Que são os serviços que estão na geral e que, por algum motivo (errôneo) está sem motorista designado. Importante destacar que o sistema começou a ser utilizado em Abril de 2026 e o sistema da Tenaris trouxe alguns pedidos ao longo do ano! Então, precisamos garantir que ele calcule somente após 01/04/206.
+SEM CLIENTE: Entendo Que são os serviços que estão na geral e que, por algum motivo (errôneo) está sem motorista designado. Importante destacar que o sistema começou a ser utilizado em Abril de 2026 e o sistema da Tenaris trouxe alguns pedidos ao longo do ano! Então, precisamos garantir que ele calcule somente após 01/04/206.
+TOTAL PRODUZIDO: Pode manter esse card.
+Quando aplicamos o filtro para todos os anos, ele continua aparecendo o “LM” e está com o número do ano de 2026
+METE (VS) REALIZADO: Pode manter esse card mas gostaria que fosse em outro formato, próximo do exemplo abaixo:
+Meta [R$]  |  Alcançado [R$]  |   Participação
+TICKET MÉDIO – MENSAL: Apenas ajustar para que pareça o valor no gráfico;
+STATUS DOS SERVIÇOS e TOP CLIENTES (R$):  o CARD é necessário, eu apenas ajustaria para o formato do exemplo abaixo e pode aparecer apenas os 90%, certo de que 10% serão valores bem menores e estamos na aba de resumo.
+A ideia é ficar STATUS | QT DE SERVIÇOS | PARTICIPAÇÃO
+ABA SERVIÇOS:
+Os 7 cards abaixo podem ser otimizados em 1 ou 2 cards.
+Verificar o card “pendentes/prog”  pois o número está alto e acredito que esteja errado;
+TOTAL DE SERVIÇOS POR TIPO e POR TIPO DE VEÍCULO: Para os 2 graficos abaixo, gostaria manter o padrão
+DESTINO | % SOB QT | % SOB R$ | PARTICAPAÇÃO.
+EXCLUIR o card abaixo ou MUDAR para os passageiros que mais andaram com a Betinhos.
+ABA FATURAMENTOS:
+SUBSTITUIR o formato do Card para a opção abaixo
+Como são informações “menores”, gostei desse formato abaixo:
+MANTER os cards abaixo:
+CHECAR se os números estão corretos pois consta muitos pedidos como “pendente”;
+INCLUIR neste card (tabela) a % que a quantidade de serviço representa (bem simples), vide ideia em amarelo abaixo.
+Ex: (1) Johnson&Johnson | 1.017 (15%) | R$372.394,61 | R$366,17 | 29%
+ABA PAGAMENTOS:
+REUNIR com a Juliana para falar sobre os KPI;
+CRIAR um card que aponte qual o valor recebido via cartão de crédito (link ou maquina);
+REVISAR o card “A RECEBER” pois está um valor de R$434.000,00 a receber;
+REVISAR o card “REGISTROS” pois não sei do que se trata;
+EXCLUIR o card “registros de pagamento”
+CRIAR um card que aponte “nome e tempo de pagamento” para sabermos quanto tempo cada cliente leva (os atrasadinhos e os ponta firme);
+ABA DE FROTAS:
+EXCLUIR todos os cards atuais da aba de frotas;
+CRIAR cards sobre manutenção (Preventiva programada, Preventiva por condição, corretiva não critica, corretiva critica, conservação, avaria);
+CRIAR OS KPIS:
+ABA DE MULTAS
+Manter os “cards” que estão atualmente;
+Incluir um gráfico indicando qual o tipo de multa mais “recebida”
