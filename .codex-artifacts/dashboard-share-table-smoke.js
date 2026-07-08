@@ -33,9 +33,16 @@ const { chromium } = require("playwright");
   );
 
   const first = afterDesc[0] || [];
-  const hasQtyAbs = /%\s*\|\s*\d/.test(first[1] || "");
-  const hasMoneyAbs = /%\s*\|\s*R\$/.test(first[2] || "");
-  const hasParticipationAbs = /%\s*\|\s*R\$/.test(first[3] || "");
+  const splitCells = await page.$$eval("#tblServicosTipo tbody tr:first-child td", (tds) =>
+    tds.map((td) => ({
+      primary: td.querySelector(".metric-primary")?.textContent.trim() || "",
+      secondary: td.querySelector(".metric-secondary")?.textContent.trim() || "",
+      hasSplit: !!td.querySelector(".metric-split"),
+    })),
+  );
+  const hasQtyAbs = /%$/.test(splitCells[1]?.primary || "") && /\d/.test(splitCells[1]?.secondary || "");
+  const hasMoneyAbs = /%$/.test(splitCells[2]?.primary || "") && /^R\$/.test(splitCells[2]?.secondary || "");
+  const hasParticipationAbs = /%$/.test(splitCells[3]?.primary || "") && /^R\$/.test(splitCells[3]?.secondary || "");
   const descClass = await page.$eval("#tblServicosTipo thead th:nth-child(2)", (th) => th.className);
   const changed = JSON.stringify(afterDesc) !== JSON.stringify(afterAsc);
   await browser.close();
@@ -46,6 +53,7 @@ const { chromium } = require("playwright");
     hasQtyAbs,
     hasMoneyAbs,
     hasParticipationAbs,
+    splitCells,
     descClass,
     changed,
   };

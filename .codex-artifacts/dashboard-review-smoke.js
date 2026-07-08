@@ -47,7 +47,7 @@ const { chromium } = require("playwright");
         payInsight: txt("#paymentInsight"),
         frotaKpi: !![...document.querySelectorAll("#page-frota .tc-title")]
           .find((e) => e.textContent.includes("KPIs de manutencao")),
-        multaTipo: !!document.querySelector("#cMulTipo"),
+        multaTipo: !!document.querySelector("#tblMulTipo table"),
       };
     }, id);
   }

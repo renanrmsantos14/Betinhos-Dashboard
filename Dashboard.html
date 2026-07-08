@@ -55,6 +55,13 @@
         --s3: 0 12px 40px rgba(0, 0, 0, 0.12);
         --font: "Plus Jakarta Sans", system-ui, sans-serif;
         --topbar-h: 52px;
+        --page-gap: 16px;
+        --card-gap: 14px;
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+        --dur-fast: 120ms;
+        --dur-med: 280ms;
+        --dur-slow: 780ms;
       }
       body {
         background: var(--bg);
@@ -157,12 +164,19 @@
         color: var(--t2);
         cursor: pointer;
         font-size: 16px;
-        transition: all 0.15s;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          transform var(--dur-fast) var(--ease-out);
       }
       .btn-ic:hover {
         background: var(--bg);
         border-color: var(--b2);
         color: var(--t1);
+      }
+      .btn-ic:active {
+        transform: scale(0.96);
       }
       .btn-ic:disabled {
         opacity: 0.4;
@@ -210,12 +224,18 @@
         font-weight: 500;
         color: var(--t2);
         cursor: pointer;
-        transition: all 0.12s;
+        transition:
+          background-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          transform var(--dur-fast) var(--ease-out);
         user-select: none;
       }
       .sb-item:hover {
         background: var(--bg);
         color: var(--t1);
+      }
+      .sb-item:active {
+        transform: scale(0.985);
       }
       .sb-item.act {
         background: var(--blue-l);
@@ -245,7 +265,9 @@
         border-radius: 20px;
         min-width: 22px;
         text-align: center;
-        transition: all 0.2s;
+        transition:
+          background-color var(--dur-fast) ease,
+          color var(--dur-fast) ease;
       }
       .sb-item.act .sb-badge {
         background: rgba(26, 108, 245, 0.15);
@@ -298,7 +320,12 @@
         cursor: pointer;
         font-family: var(--font);
         font-weight: 600;
-        transition: all 0.15s;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          box-shadow var(--dur-med) var(--ease-out),
+          transform var(--dur-fast) var(--ease-out);
       }
       .btn-qf:hover {
         background: var(--bg);
@@ -310,6 +337,9 @@
         color: #fff;
         border-color: var(--blue);
         box-shadow: 0 2px 8px rgba(26, 108, 245, 0.28);
+      }
+      .btn-qf:active {
+        transform: scale(0.98);
       }
       .filter-row {
         display: flex;
@@ -368,7 +398,10 @@
         cursor: pointer;
         display: flex;
         align-items: center;
-        transition: all 0.15s;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          box-shadow var(--dur-med) var(--ease-out);
         white-space: nowrap;
         overflow: hidden;
       }
@@ -414,12 +447,12 @@
       }
       .ms-dd.open {
         display: block;
-        animation: ddIn 0.12s ease;
+        animation: ddIn var(--dur-med) var(--ease-out);
       }
       @keyframes ddIn {
         from {
           opacity: 0;
-          transform: translateY(-4px);
+          transform: translateY(-6px) scale(0.985);
         }
         to {
           opacity: 1;
@@ -479,7 +512,11 @@
         cursor: pointer;
         color: var(--t2);
         font-family: var(--font);
-        transition: all 0.1s;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          transform var(--dur-fast) var(--ease-out);
       }
       .ms-actions button:hover {
         background: var(--bg);
@@ -501,9 +538,17 @@
         font-size: 12px;
         font-weight: 700;
         cursor: pointer;
-        transition: all 0.15s;
+        transition:
+          background-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          box-shadow var(--dur-med) var(--ease-out),
+          transform var(--dur-fast) var(--ease-out);
         white-space: nowrap;
         letter-spacing: 0.01em;
+      }
+      .btn:active,
+      .ms-actions button:active {
+        transform: scale(0.98);
       }
       .btn-p {
         background: var(--blue);
@@ -555,8 +600,8 @@
       }
       .kpi-row {
         display: grid;
-        gap: 12px;
-        margin-bottom: 10px;
+        gap: var(--card-gap);
+        margin-bottom: 0;
       }
       .kpi-5 {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -582,8 +627,9 @@
         position: relative;
         overflow: hidden;
         transition:
-          box-shadow 0.25s,
-          transform 0.2s;
+          box-shadow var(--dur-med) var(--ease-out),
+          border-color var(--dur-med) ease,
+          transform 320ms var(--ease-out);
         cursor: default;
         display: flex;
         flex-direction: column;
@@ -606,9 +652,12 @@
       .kpi-tone-green { --kpi-color: #1a7a40; --kpi-soft: rgba(26,122,64,.12); }
       .kpi-tone-orange { --kpi-color: #e07000; --kpi-soft: rgba(224,112,0,.12); }
       .kpi-tone-red { --kpi-color: #c0392b; --kpi-soft: rgba(192,57,43,.12); }
-      .kpi:hover {
-        box-shadow: var(--s2);
-        transform: translateY(-2px);
+      @media (hover: hover) and (pointer: fine) {
+        .kpi:hover {
+          border-color: var(--b2);
+          box-shadow: var(--s2);
+          transform: translateY(-2px);
+        }
       }
       .kpi-accent {
         position: absolute;
@@ -808,8 +857,8 @@
       }
       .cgrid {
         display: grid;
-        gap: 10px;
-        margin-bottom: 10px;
+        gap: var(--card-gap);
+        margin-bottom: 0;
       }
       .g2 {
         grid-template-columns: 1fr 1fr;
@@ -823,11 +872,18 @@
         border-radius: var(--r12);
         padding: 14px 16px;
         box-shadow: var(--s1);
-        transition: box-shadow 0.2s;
+        transition:
+          box-shadow var(--dur-med) var(--ease-out),
+          border-color var(--dur-med) ease,
+          transform 320ms var(--ease-out);
         position: relative;
       }
-      .cc:hover {
-        box-shadow: var(--s2);
+      @media (hover: hover) and (pointer: fine) {
+        .cc:hover {
+          border-color: var(--b2);
+          box-shadow: var(--s2);
+          transform: translateY(-3px);
+        }
       }
       .chart-empty {
         position: absolute;
@@ -938,7 +994,7 @@
       .meta-progress-bar-inner {
         height: 100%;
         border-radius: 99px;
-        transition: width 0.6s ease;
+        transition: width var(--dur-slow) var(--ease-out);
       }
       .meta-kpi-pill {
         display: inline-flex;
@@ -1004,7 +1060,10 @@
         border-radius: var(--r12);
         box-shadow: var(--s1);
         overflow: hidden;
-        margin-bottom: 14px;
+        margin-bottom: 0;
+        transition:
+          box-shadow var(--dur-med) var(--ease-out),
+          border-color var(--dur-med) ease;
       }
       .tc-bar {
         display: flex;
@@ -1034,7 +1093,9 @@
         font-family: var(--font);
         font-weight: 500;
         outline: none;
-        transition: border-color 0.15s;
+        transition:
+          border-color var(--dur-fast) ease,
+          box-shadow var(--dur-med) var(--ease-out);
         min-width: 180px;
         color: var(--t1);
       }
@@ -1066,7 +1127,9 @@
         top: 0;
         cursor: pointer;
         user-select: none;
-        transition: background 0.12s;
+        transition:
+          background-color var(--dur-fast) ease,
+          color var(--dur-fast) ease;
       }
       thead th:hover {
         background: var(--bg);
@@ -1082,7 +1145,7 @@
       }
       tbody tr {
         border-bottom: 1px solid var(--b1);
-        transition: background 0.1s;
+        transition: background-color var(--dur-fast) ease;
       }
       tbody tr:last-child {
         border-bottom: none;
@@ -1167,7 +1230,7 @@
       .prg-fill {
         height: 100%;
         border-radius: 3px;
-        transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: width var(--dur-slow) var(--ease-out);
       }
       .prg-pct {
         font-size: 11px;
@@ -1254,19 +1317,55 @@
       }
       .page {
         display: none;
-        animation: fadeIn 0.25s ease;
       }
       .page.on {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        gap: var(--page-gap);
+        animation: pageIn 360ms var(--ease-out);
       }
-      @keyframes fadeIn {
+      .page.on > * {
+        animation: blockIn 560ms var(--ease-out) both;
+      }
+      .page.on > *:nth-child(1) { animation-delay: 20ms; }
+      .page.on > *:nth-child(2) { animation-delay: 70ms; }
+      .page.on > *:nth-child(3) { animation-delay: 120ms; }
+      .page.on > *:nth-child(4) { animation-delay: 170ms; }
+      .page.on > *:nth-child(5) { animation-delay: 220ms; }
+      .page.on > *:nth-child(n + 6) { animation-delay: 260ms; }
+      .page.on .cc,
+      .page.on .kpi,
+      .page.on .tc {
+        will-change: transform, opacity;
+      }
+      @keyframes pageIn {
         from {
           opacity: 0;
-          transform: translateY(6px);
+          transform: translateY(10px);
         }
         to {
           opacity: 1;
           transform: none;
+        }
+      }
+      @keyframes blockIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
         }
       }
       @media (max-width: 1200px) {
@@ -1772,7 +1871,7 @@
                 </div>
                 <div class="inline-indicators" id="ind_topVol"></div>
               </div>
-              <canvas id="cTC" height="75"></canvas>
+              <div id="tblTopVolResumo" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="cgrid g2">
@@ -1865,13 +1964,13 @@
               <div class="cc-hdr">
                 <div class="cc-title">Total de Serviços por Tipo</div>
               </div>
-              <canvas id="cServicosTipo" height="150"></canvas>
+              <div id="tblServicosTipo" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr">
                 <div class="cc-title">Por tipo de veículo</div>
               </div>
-              <canvas id="cTipoVei" height="100"></canvas>
+              <div id="tblTipoVei" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -1890,7 +1989,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th onclick="srt('tbSrv', 'data', this)">Data/Hora</th>
+                    <th class="sd" onclick="srt('tbSrv', 'data', this)">Data/Hora</th>
                     <th onclick="srt('tbSrv', 'cliente', this)">Cliente</th>
                     <th onclick="srt('tbSrv', 'motorista', this)">Motorista</th>
                     <th onclick="srt('tbSrv', 'tipo', this)">Tipo serviço</th>
@@ -1959,7 +2058,7 @@
               <div class="cc-hdr">
                 <div class="cc-title">Status de faturamento</div>
               </div>
-              <canvas id="cFatSt" height="100"></canvas>
+              <div id="tblFatStatus" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -2021,13 +2120,13 @@
               <div class="cc-hdr">
                 <div class="cc-title">Por forma de pagamento</div>
               </div>
-              <canvas id="cForma" height="100"></canvas>
+              <div id="tblFormaPag" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr">
                 <div class="cc-title">Status dos pagamentos</div>
               </div>
-              <canvas id="cPagSt" height="100"></canvas>
+              <div id="tblStatusPag" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -2087,11 +2186,11 @@
               <div class="cc-hdr">
                 <div class="cc-title">Status da frota</div>
               </div>
-              <canvas id="cFrotaSt" height="100"></canvas>
+              <div id="tblFrotaStatus" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr"><div class="cc-title">Por marca</div></div>
-              <canvas id="cFrotaMarca" height="100"></canvas>
+              <div id="tblFrotaMarca" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -2230,7 +2329,7 @@
               <div class="cc-hdr">
                 <div class="cc-title">Por tipo de reparo</div>
               </div>
-              <canvas id="cManTipo" height="100"></canvas>
+              <div id="tblManTipo" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -2285,13 +2384,13 @@
           <div class="cgrid g2">
             <div class="cc">
               <div class="cc-hdr"><div class="cc-title">Por status</div></div>
-              <canvas id="cMulSt" height="100"></canvas>
+              <div id="tblMulStatus" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr">
                 <div class="cc-title">Por motorista</div>
               </div>
-              <canvas id="cMulMot" height="100"></canvas>
+              <div id="tblMulMot" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -2344,13 +2443,13 @@
               <div class="cc-hdr">
                 <div class="cc-title">Status das trocas</div>
               </div>
-              <canvas id="cTrcSt" height="100"></canvas>
+              <div id="tblTrcStatus" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr">
                 <div class="cc-title">Por tipo de troca</div>
               </div>
-              <canvas id="cTrcTp" height="100"></canvas>
+              <div id="tblTrcTipo" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -2405,11 +2504,11 @@
               <div class="cc-hdr">
                 <div class="cc-title">Por categoria</div>
               </div>
-              <canvas id="cMktCat" height="100"></canvas>
+              <div id="tblMktCat" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr"><div class="cc-title">Por status</div></div>
-              <canvas id="cMktSt" height="100"></canvas>
+              <div id="tblMktStatus" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -3076,6 +3175,36 @@
         const pctText = `${Number(pctValue || 0).toFixed(1)}%`;
         return `<div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, Math.round(pctValue || 0))}%;background:${color}"></div></div><span class="prg-pct">${metricSplit(pctText, secondary, "r")}</span></div>`;
       }
+      function renderDistributionTable(targetId, rows, total, options = {}) {
+        const {
+          label = "Categoria",
+          countLabel = "Registros",
+          valueLabel = "Valor",
+          badgeLabels = false,
+          moneyValue = false,
+          participationByValue = false,
+          limit = 10,
+        } = options;
+        const tableRows = rows.slice(0, limit);
+        const hasValue = tableRows.some((r) => r.value !== undefined);
+        const partBase = participationByValue
+          ? rows.reduce((s, r) => s + Number(r.value || 0), 0)
+          : total;
+        const cols = hasValue ? 4 : 3;
+        html(targetId, `
+          <table><thead><tr><th>${label}</th><th class="r">${countLabel}</th>${hasValue ? `<th class="r">${valueLabel}</th>` : ""}<th>Participacao</th></tr></thead>
+          <tbody>${tableRows.map((r, i) => {
+            const qtd = Number(r.qtd || 0);
+            const value = Number(r.value || 0);
+            const partValue = participationByValue ? value : qtd;
+            const part = partBase ? (partValue / partBase) * 100 : 0;
+            const secondary = participationByValue && hasValue
+              ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
+              : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
+            return `<tr><td class="em">${badgeLabels ? badge(r.label) : trunc(r.label, 28)}</td><td class="r">${qtd.toLocaleString("pt-BR")}</td>${hasValue ? `<td class="r em">${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</td>` : ""}<td>${progressCell(part, secondary, PAL[i % PAL.length])}</td></tr>`;
+          }).join("") || emptyRow(cols)}</tbody></table>
+        `);
+      }
       function renderShareTable(targetId, rows, totalQtd, totalFat) {
         const el = document.getElementById(targetId);
         if (!el) return;
@@ -3194,6 +3323,20 @@
         tblFrotaUso: { col: 0, asc: true },
         tblStatusResumo: { col: 1, asc: false },
         tblTopFatResumo: { col: 1, asc: false },
+        tblTopVolResumo: { col: 1, asc: false },
+        tblFatStatus: { col: 1, asc: false },
+        tblFormaPag: { col: 2, asc: false },
+        tblStatusPag: { col: 2, asc: false },
+        tblFrotaStatus: { col: 1, asc: false },
+        tblFrotaMarca: { col: 1, asc: false },
+        tblManTipo: { col: 1, asc: false },
+        tblMulStatus: { col: 1, asc: false },
+        tblMulMot: { col: 1, asc: false },
+        tblMulTipo: { col: 1, asc: false },
+        tblTrcStatus: { col: 1, asc: false },
+        tblTrcTipo: { col: 1, asc: false },
+        tblMktCat: { col: 1, asc: false },
+        tblMktStatus: { col: 1, asc: false },
       };
       function tableSortKey(table) {
         return table.tBodies?.[0]?.id || table.closest("[id]")?.id || "table";
@@ -3245,8 +3388,9 @@
           const def = tableSortDefaults[key] || { col: 0, asc: true };
           const stKey = `dom:${key}`;
           const st = srtSt[stKey] || def;
+          if (ths.some((th) => th.hasAttribute("onclick"))) return;
           ths.forEach((th, i) => {
-            if (th.dataset.domSort === "1" || th.hasAttribute("onclick")) return;
+            if (th.dataset.domSort === "1") return;
             th.dataset.domSort = "1";
             th.addEventListener("click", () => {
               const prev = srtSt[stKey] || def;
@@ -3256,7 +3400,7 @@
             });
           });
           markTableSort(table, st.col, st.asc);
-          if (!table.dataset.defaultSorted && !ths.some((th) => th.hasAttribute("onclick"))) {
+          if (srtSt[stKey] || !table.dataset.defaultSorted) {
             sortDomTable(table, st.col, st.asc);
             table.dataset.defaultSorted = "1";
           }
@@ -4227,7 +4371,7 @@ const monthsLabelsAll = [
           table?.insertAdjacentHTML("beforebegin", `
             <div class="cc">
               <div class="cc-hdr"><div><div class="cc-title">Tipo de multa</div><div class="tc-meta" id="mulTipoNote"></div></div></div>
-              <canvas id="cMulTipo" height="100"></canvas>
+              <div id="tblMulTipo" class="metric-table-wrap"></div>
             </div>
           `);
           multas.dataset.reviewLayout = "1";
@@ -4867,16 +5011,12 @@ const monthsLabelsAll = [
             `<span class="badge-kpi badge-meta"><span class="bk-label">1°</span><span class="bk-val">${top10v[0][1].length}</span><span class="bk-pct">${t1vPct}%</span></span>` +
             (top10v.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2°</span><span class="bk-val">${top10v[1][1].length}</span><span class="bk-pct">${rv.length ? (top10v[1][1].length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
         }
-        mkChart("cTC", {
-          type: "bar",
-          data: {
-            labels: top10v.map(([k]) => trunc(k)),
-            datasets: [
-              { data: top10v.map(([, v]) => v.length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblTopVolResumo",
+          top10v.map(([label, rows]) => ({ label, qtd: rows.length })),
+          rv.length,
+          { label: "Cliente", countLabel: "Servicos" },
+        );
         const top10f = Object.entries(byCli)
           .sort((a, b) => sumV(b[1]) - sumV(a[1]))
           .slice(0, 10);
@@ -5068,16 +5208,12 @@ const monthsLabelsAll = [
         const fsK = Object.keys(byFatSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byFatSt[b].length - byFatSt[a].length);
-        mkChart("cFatSt", {
-          type: "bar",
-          data: {
-            labels: fsK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: fsK.map((k) => byFatSt[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblFatStatus",
+          fsK.map((k) => ({ label: k, qtd: byFatSt[k].length, value: sumV(byFatSt[k]) })),
+          rv.length,
+          { label: "Status", countLabel: "Servicos", valueLabel: "Faturamento", badgeLabels: true, moneyValue: true },
+        );
         const cliRows = Object.entries(byCli)
           .map(([n, v]) => ({
             nome: n,
@@ -5120,26 +5256,18 @@ const monthsLabelsAll = [
         const psK = Object.keys(byPagSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byPagSt[b].length - byPagSt[a].length);
-        mkChart("cForma", {
-          type: "bar",
-          data: {
-            labels: fmK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: fmK.map((k) => byForma[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
-        mkChart("cPagSt", {
-          type: "bar",
-          data: {
-            labels: psK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: psK.map((k) => byPagSt[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblFormaPag",
+          fmK.map((k) => ({ label: k, qtd: byForma[k].length, value: byForma[k].reduce((s, r) => s + paymentValue(r), 0) })),
+          pags.length,
+          { label: "Forma", countLabel: "Registros", valueLabel: "Valor", moneyValue: true, participationByValue: true },
+        );
+        renderDistributionTable(
+          "tblStatusPag",
+          psK.map((k) => ({ label: k, qtd: byPagSt[k].length, value: byPagSt[k].reduce((s, r) => s + paymentValue(r), 0) })),
+          pags.length,
+          { label: "Status", countLabel: "Registros", valueLabel: "Valor", badgeLabels: true, moneyValue: true, participationByValue: true },
+        );
         set("metaPag", dvDisabled ? "—" : `${pags.length} registros`);
         const tbPag = document.getElementById("tbPag");
         if (tbPag) tbPag.innerHTML =
@@ -5222,26 +5350,18 @@ const monthsLabelsAll = [
         const mkK = Object.keys(byMarca)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMarca[b].length - byMarca[a].length);
-        mkChart("cFrotaSt", {
-          type: "bar",
-          data: {
-            labels: vsK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: vsK.map((k) => byVSt[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
-        mkChart("cFrotaMarca", {
-          type: "bar",
-          data: {
-            labels: mkK,
-            datasets: [
-              { data: mkK.map((k) => byMarca[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true }),
-        });
+        renderDistributionTable(
+          "tblFrotaStatus",
+          vsK.map((k) => ({ label: k, qtd: byVSt[k].length })),
+          vei.length,
+          { label: "Status", countLabel: "Veiculos", badgeLabels: true },
+        );
+        renderDistributionTable(
+          "tblFrotaMarca",
+          mkK.map((k) => ({ label: k, qtd: byMarca[k].length })),
+          vei.length,
+          { label: "Marca", countLabel: "Veiculos" },
+        );
         tblCache.tbFrota = vei.map((r) => ({
           placa: r[F.vei.placa] || "—",
           marca: r[F.vei.marca] || "—",
@@ -5383,16 +5503,12 @@ const monthsLabelsAll = [
         const mtK = Object.keys(byManTp)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byManTp[b].length - byManTp[a].length);
-        mkChart("cManTipo", {
-          type: "bar",
-          data: {
-            labels: mtK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: mtK.map((k) => byManTp[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblManTipo",
+          mtK.map((k) => ({ label: k, qtd: byManTp[k].length, value: byManTp[k].reduce((s, r) => s + (parseFloat(r[F.man.valor]) || 0), 0) })),
+          mans.length,
+          { label: "Tipo", countLabel: "Registros", valueLabel: "Custo", moneyValue: true, participationByValue: true },
+        );
         set("metaMan", dvDisabled ? "—" : `${mans.length} registros`);
         document.getElementById("tbMan").innerHTML =
           mans
@@ -5437,46 +5553,25 @@ const monthsLabelsAll = [
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMulMot[b].length - byMulMot[a].length)
           .slice(0, 10);
-        mkChart("cMulSt", {
-          type: "bar",
-          data: {
-            labels: msK.map((k) => trunc(k, 16)),
-            datasets: [
-              {
-                data: msK.map((k) => byMulSt[k].length),
-                backgroundColor: "#c0392b",
-              },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
-        mkChart("cMulMot", {
-          type: "bar",
-          data: {
-            labels: mmK.map((k) => trunc(k)),
-            datasets: [
-              {
-                data: mmK.map((k) => byMulMot[k].length),
-                backgroundColor: "#c0392b",
-              },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblMulStatus",
+          msK.map((k) => ({ label: k, qtd: byMulSt[k].length })),
+          muls.length,
+          { label: "Status", countLabel: "Multas", badgeLabels: true },
+        );
+        renderDistributionTable(
+          "tblMulMot",
+          mmK.map((k) => ({ label: k, qtd: byMulMot[k].length })),
+          muls.length,
+          { label: "Motorista", countLabel: "Multas" },
+        );
         set("mulTipoNote", dvDisabled ? "" : "Campo de tipo/infracao nao esta no fetch atual; exibindo status como fallback.");
-        mkChart("cMulTipo", {
-          type: "bar",
-          data: {
-            labels: msK.map((k) => trunc(k, 16)),
-            datasets: [
-              {
-                data: msK.map((k) => byMulSt[k].length),
-                backgroundColor: PAL,
-              },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblMulTipo",
+          msK.map((k) => ({ label: k, qtd: byMulSt[k].length })),
+          muls.length,
+          { label: "Tipo/status", countLabel: "Multas", badgeLabels: true },
+        );
         set("metaMul", dvDisabled ? "—" : `${muls.length} registros`);
         document.getElementById("tbMul").innerHTML =
           muls
@@ -5518,26 +5613,18 @@ const monthsLabelsAll = [
         const ttK = Object.keys(byTrcTp)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byTrcTp[b].length - byTrcTp[a].length);
-        mkChart("cTrcSt", {
-          type: "bar",
-          data: {
-            labels: tsK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: tsK.map((k) => byTrcSt[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
-        mkChart("cTrcTp", {
-          type: "bar",
-          data: {
-            labels: ttK.map((k) => trunc(k, 16)),
-            datasets: [
-              { data: ttK.map((k) => byTrcTp[k].length), backgroundColor: PAL },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblTrcStatus",
+          tsK.map((k) => ({ label: k, qtd: byTrcSt[k].length })),
+          trcs.length,
+          { label: "Status", countLabel: "Trocas", badgeLabels: true },
+        );
+        renderDistributionTable(
+          "tblTrcTipo",
+          ttK.map((k) => ({ label: k, qtd: byTrcTp[k].length })),
+          trcs.length,
+          { label: "Tipo", countLabel: "Trocas" },
+        );
         set("metaTrc", dvDisabled ? "—" : `${trcs.length} registros`);
         document.getElementById("tbTrc").innerHTML =
           trcs
@@ -5574,32 +5661,18 @@ const monthsLabelsAll = [
         const msKm = Object.keys(byMktSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMktSt[b].length - byMktSt[a].length);
-        mkChart("cMktCat", {
-          type: "bar",
-          data: {
-            labels: mcK.map((k) => trunc(k, 16)),
-            datasets: [
-              {
-                data: mcK.map((k) => byMktCat[k].length),
-                backgroundColor: PAL,
-              },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
-        mkChart("cMktSt", {
-          type: "bar",
-          data: {
-            labels: msKm.map((k) => trunc(k, 16)),
-            datasets: [
-              {
-                data: msKm.map((k) => byMktSt[k].length),
-                backgroundColor: PAL,
-              },
-            ],
-          },
-          options: opts0({ noLegend: true, hBar: true }),
-        });
+        renderDistributionTable(
+          "tblMktCat",
+          mcK.map((k) => ({ label: k, qtd: byMktCat[k].length })),
+          mkts.length,
+          { label: "Categoria", countLabel: "Publicacoes" },
+        );
+        renderDistributionTable(
+          "tblMktStatus",
+          msKm.map((k) => ({ label: k, qtd: byMktSt[k].length })),
+          mkts.length,
+          { label: "Status", countLabel: "Publicacoes", badgeLabels: true },
+        );
         set("metaMkt", dvDisabled ? "—" : `${mkts.length} publicações`);
         document.getElementById("tbMkt").innerHTML =
           mkts
@@ -5626,7 +5699,11 @@ const monthsLabelsAll = [
         let baseOpts = {
           responsive: true,
           maintainAspectRatio: true,
-          animation: { duration: 400 },
+          animation: {
+            duration: 850,
+            easing: "easeOutQuart",
+            delay: (ctx) => (ctx.type === "data" ? Math.min(ctx.dataIndex * 35, 280) : 0),
+          },
           plugins: {
             legend: {
               display: !noLegend,
@@ -5759,7 +5836,7 @@ const monthsLabelsAll = [
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: { duration: 300 },
+            animation: { duration: 700, easing: "easeOutQuart" },
             plugins: {
               legend: { display: false },
               tooltip: { enabled: false },

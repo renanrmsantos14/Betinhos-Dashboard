@@ -1,38 +1,37 @@
 {
   "communities": {
     "0": [
-      "dashboard_script_badge",
-      "dashboard_script_brl",
-      "dashboard_script_brls",
-      "dashboard_script_emptyrow",
-      "dashboard_script_fmtd",
-      "dashboard_script_fmtdt",
-      "dashboard_script_grp",
+      "dashboard_script_buildownfleetusagerows",
+      "dashboard_script_enrichreservas",
+      "dashboard_script_ensureexecutivelayout",
+      "dashboard_script_fv",
+      "dashboard_script_getfilteredmonthlydata",
       "dashboard_script_html",
-      "dashboard_script_mkchart",
+      "dashboard_script_iscardpayment",
+      "dashboard_script_isdataversedisabled",
+      "dashboard_script_isownvehicle",
+      "dashboard_script_ispendingscheduledreservation",
+      "dashboard_script_isproducedreservation",
+      "dashboard_script_isreceivedpayment",
+      "dashboard_script_isreservableservice",
+      "dashboard_script_istravelreservation",
+      "dashboard_script_maintenancecategory",
+      "dashboard_script_mk",
+      "dashboard_script_mkeys",
       "dashboard_script_ml",
-      "dashboard_script_opts0",
-      "dashboard_script_renderfaturamento",
+      "dashboard_script_norml",
+      "dashboard_script_paymentop",
+      "dashboard_script_paymentvalue",
+      "dashboard_script_pct",
+      "dashboard_script_renderall",
       "dashboard_script_renderfleetusagerows",
       "dashboard_script_renderfrota",
-      "dashboard_script_renderfrotatable",
-      "dashboard_script_rendermanutencoes",
-      "dashboard_script_rendermarketing",
-      "dashboard_script_rendermotoristas",
-      "dashboard_script_rendermottable",
-      "dashboard_script_rendermultas",
-      "dashboard_script_renderpagamentos",
-      "dashboard_script_rendersrvtable",
-      "dashboard_script_rendersumtable",
-      "dashboard_script_rendertrocas",
-      "dashboard_script_srchtbl",
-      "dashboard_script_srt",
-      "dashboard_script_stl",
-      "dashboard_script_trunc"
+      "dashboard_script_rendermetriclines",
+      "dashboard_script_setexecalert",
+      "dashboard_script_takeuntilshare"
     ],
     "1": [
       "dashboard_script",
-      "dashboard_script_charthasdata",
       "dashboard_script_charts",
       "dashboard_script_db",
       "dashboard_script_detectenv",
@@ -52,31 +51,34 @@
       "dashboard_script_srchreg",
       "dashboard_script_srtst",
       "dashboard_script_t",
+      "dashboard_script_tablesortdefaults",
       "dashboard_script_tblcache",
       "dashboard_script_togglems",
       "dashboard_script_vw"
     ],
     "2": [
-      "dashboard_script_ensureexecutivelayout",
-      "dashboard_script_getfilteredmonthlydata",
-      "dashboard_script_getlmvalueandcount",
-      "dashboard_script_getlyvalueandcount",
-      "dashboard_script_getmonthlydatafromdataverse",
-      "dashboard_script_getperiodvalueandcount",
-      "dashboard_script_gettotalforperiod",
-      "dashboard_script_indaterange",
-      "dashboard_script_isdataversedisabled",
-      "dashboard_script_mk",
-      "dashboard_script_mkeys",
-      "dashboard_script_passesactivefilters",
-      "dashboard_script_paymentop",
-      "dashboard_script_paymentvalue",
-      "dashboard_script_pct",
-      "dashboard_script_renderall",
-      "dashboard_script_rendermetriclines",
-      "dashboard_script_setexecalert",
-      "dashboard_script_sumv",
-      "dashboard_script_takeuntilshare"
+      "dashboard_script_badge",
+      "dashboard_script_brl",
+      "dashboard_script_brls",
+      "dashboard_script_emptyrow",
+      "dashboard_script_fmtd",
+      "dashboard_script_fmtdt",
+      "dashboard_script_grp",
+      "dashboard_script_opts0",
+      "dashboard_script_renderdistributiontable",
+      "dashboard_script_renderfaturamento",
+      "dashboard_script_renderfrotatable",
+      "dashboard_script_rendermanutencoes",
+      "dashboard_script_rendermarketing",
+      "dashboard_script_rendermottable",
+      "dashboard_script_rendermultas",
+      "dashboard_script_renderpagamentos",
+      "dashboard_script_rendersrvtable",
+      "dashboard_script_rendersumtable",
+      "dashboard_script_rendertrocas",
+      "dashboard_script_srchtbl",
+      "dashboard_script_srt",
+      "dashboard_script_stl"
     ],
     "3": [
       "dashboard_script_api",
@@ -116,61 +118,68 @@
       "dashboard_script_ymd"
     ],
     "5": [
-      "dashboard_script_buildownfleetusagerows",
-      "dashboard_script_enrichreservas",
-      "dashboard_script_fv",
-      "dashboard_script_iscardpayment",
-      "dashboard_script_isownvehicle",
-      "dashboard_script_ispendingscheduledreservation",
-      "dashboard_script_isproducedreservation",
-      "dashboard_script_isreceivedpayment",
-      "dashboard_script_isreservableservice",
-      "dashboard_script_istravelreservation",
-      "dashboard_script_maintenancecategory",
-      "dashboard_script_norml"
-    ],
-    "6": [
+      "dashboard_script_charthasdata",
+      "dashboard_script_metricsplit",
+      "dashboard_script_mkchart",
+      "dashboard_script_mkspark",
+      "dashboard_script_progresscell",
+      "dashboard_script_rendermotoristas",
       "dashboard_script_rendersharetable",
+      "dashboard_script_setchartemptystate",
       "dashboard_script_sharesortclass",
       "dashboard_script_sharesortvalue",
-      "dashboard_script_srtshare"
+      "dashboard_script_srtshare",
+      "dashboard_script_trunc"
+    ],
+    "6": [
+      "dashboard_script_getlmvalueandcount",
+      "dashboard_script_getlyvalueandcount",
+      "dashboard_script_getmonthlydatafromdataverse",
+      "dashboard_script_getperiodvalueandcount",
+      "dashboard_script_gettotalforperiod",
+      "dashboard_script_indaterange",
+      "dashboard_script_passesactivefilters",
+      "dashboard_script_sumv"
     ],
     "7": [
+      "dashboard_script_enhancesortabletables",
+      "dashboard_script_marktablesort",
+      "dashboard_script_parsetablevalue",
+      "dashboard_script_sortdomtable",
+      "dashboard_script_tablesortkey"
+    ],
+    "8": [
       "dashboard_script_msselectall",
       "dashboard_script_mstoggle",
       "dashboard_script_updatemsbutton"
     ],
-    "8": [
+    "9": [
       "dashboard_script_applyf",
       "dashboard_script_quickfilter"
     ],
-    "9": [
+    "10": [
       "dashboard_script_clearf",
       "dashboard_script_filtermsoptions"
     ],
-    "10": [
+    "11": [
       "dashboard_script_copytoclipboard",
       "dashboard_script_showalert"
     ],
-    "11": [
+    "12": [
       "dashboard_script_ensurereviewlayouts",
       "dashboard_script_replacecanvaswithtable"
-    ],
-    "12": [
-      "dashboard_script_mkspark",
-      "dashboard_script_setchartemptystate"
     ]
   },
   "cohesion": {
-    "0": 0.2275132275132275,
+    "0": 0.1111111111111111,
     "1": 0.08333333333333333,
-    "2": 0.12105263157894737,
+    "2": 0.2813852813852814,
     "3": 0.2046783625730994,
     "4": 0.18681318681318682,
-    "5": 0.22727272727272727,
-    "6": 0.5,
-    "7": 0.6666666666666666,
-    "8": 1.0,
+    "5": 0.18181818181818182,
+    "6": 0.2857142857142857,
+    "7": 0.5,
+    "8": 0.6666666666666666,
     "9": 1.0,
     "10": 1.0,
     "11": 1.0,
@@ -180,7 +189,7 @@
     {
       "id": "dashboard_script_renderall",
       "label": "renderAll()",
-      "degree": 52
+      "degree": 55
     },
     {
       "id": "dashboard_script_loadall",
@@ -188,14 +197,14 @@
       "degree": 19
     },
     {
-      "id": "dashboard_script_renderpagamentos",
-      "label": "renderPagamentos()",
-      "degree": 14
+      "id": "dashboard_script_renderdistributiontable",
+      "label": "renderDistributionTable()",
+      "degree": 16
     },
     {
-      "id": "dashboard_script_renderfrota",
-      "label": "renderFrota()",
-      "degree": 13
+      "id": "dashboard_script_emptyrow",
+      "label": "emptyRow()",
+      "degree": 14
     },
     {
       "id": "dashboard_script_rendermanutencoes",
@@ -203,34 +212,34 @@
       "degree": 13
     },
     {
-      "id": "dashboard_script_emptyrow",
-      "label": "emptyRow()",
-      "degree": 13
-    },
-    {
-      "id": "dashboard_script_opts0",
-      "label": "opts0()",
+      "id": "dashboard_script_renderpagamentos",
+      "label": "renderPagamentos()",
       "degree": 12
     },
     {
-      "id": "dashboard_script_mkchart",
-      "label": "mkChart()",
-      "degree": 12
-    },
-    {
-      "id": "dashboard_script_trunc",
-      "label": "trunc()",
+      "id": "dashboard_script_brls",
+      "label": "brlS()",
       "degree": 11
     },
     {
       "id": "dashboard_script_norml",
       "label": "normL()",
       "degree": 11
+    },
+    {
+      "id": "dashboard_script_fetchall",
+      "label": "fetchAll()",
+      "degree": 11
+    },
+    {
+      "id": "dashboard_script_renderfrota",
+      "label": "renderFrota()",
+      "degree": 11
     }
   ],
   "surprises": [
     {
-      "source": "renderAll()",
+      "source": "renderManutencoes()",
       "target": "mL()",
       "source_files": [
         "dashboard-script.js",
@@ -241,28 +250,6 @@
       "note": "Bridges community 0 \u2192 community 2"
     },
     {
-      "source": "renderAll()",
-      "target": "isProducedReservation()",
-      "source_files": [
-        "dashboard-script.js",
-        "dashboard-script.js"
-      ],
-      "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 5 \u2192 community 2"
-    },
-    {
-      "source": "renderPagamentos()",
-      "target": "isReceivedPayment()",
-      "source_files": [
-        "dashboard-script.js",
-        "dashboard-script.js"
-      ],
-      "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 5 \u2192 community 0"
-    },
-    {
       "source": "renderShareTable()",
       "target": "brlS()",
       "source_files": [
@@ -271,18 +258,40 @@
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 0 \u2192 community 6"
+      "note": "Bridges community 2 \u2192 community 5"
     },
     {
-      "source": "buildOwnFleetUsageRows()",
-      "target": "ymd()",
+      "source": "renderAll()",
+      "target": "sumV()",
       "source_files": [
         "dashboard-script.js",
         "dashboard-script.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 4 \u2192 community 5"
+      "note": "Bridges community 6 \u2192 community 0"
+    },
+    {
+      "source": "renderFaturamento()",
+      "target": "sumV()",
+      "source_files": [
+        "dashboard-script.js",
+        "dashboard-script.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 6 \u2192 community 2"
+    },
+    {
+      "source": "renderMotoristas()",
+      "target": "sumV()",
+      "source_files": [
+        "dashboard-script.js",
+        "dashboard-script.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 6 \u2192 community 5"
     }
   ],
   "tokens": {

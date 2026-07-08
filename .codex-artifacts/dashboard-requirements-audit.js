@@ -66,8 +66,14 @@ function pass(name, detail = "") {
   checks.push((await exists("#tblTipoVei table")) ? pass("Servicos: tipo veiculo em tabela percentual") : fail("Servicos: tipo veiculo em tabela percentual", "tabela ausente"));
 
   await nav("faturamento");
-  const fatText = await q("#page-faturamento");
-  checks.push(/\(\d+%\)/.test(fatText) ? pass("Faturamento: percentual de quantidade aparece") : fail("Faturamento: percentual de quantidade aparece", "padrao (15%) nao encontrado"));
+  const fatMetricSplit = await page.$$eval("#tbFat .metric-split", (els) =>
+    els.some((el) => {
+      const primary = el.querySelector(".metric-primary")?.textContent.trim() || "";
+      const secondary = el.querySelector(".metric-secondary")?.textContent.trim() || "";
+      return /%$/.test(primary) && /\d/.test(secondary);
+    }),
+  ).catch(() => false);
+  checks.push(fatMetricSplit ? pass("Faturamento: percentual e valor absoluto aparecem") : fail("Faturamento: percentual e valor absoluto aparecem", "metric-split nao encontrado em #tbFat"));
 
   await nav("pagantes");
   const pagText = await q("#page-pagantes");
@@ -85,7 +91,7 @@ function pass(name, detail = "") {
 
   await nav("multas");
   const multasText = await q("#page-multas");
-  checks.push((await exists("#cMulTipo")) ? pass("Multas: grafico Tipo de multa existe") : fail("Multas: grafico Tipo de multa existe", "canvas ausente"));
+  checks.push((await exists("#tblMulTipo table")) ? pass("Multas: tipo de multa em tabela") : fail("Multas: tipo de multa em tabela", "tabela ausente"));
   checks.push(multasText.includes("Campo de tipo/infracao nao esta no fetch atual") ? pass("Multas: fallback de schema declarado") : fail("Multas: fallback de schema declarado", "nota ausente"));
 
   await browser.close();
