@@ -55,8 +55,14 @@
         --s3: 0 12px 40px rgba(0, 0, 0, 0.12);
         --font: "Plus Jakarta Sans", system-ui, sans-serif;
         --topbar-h: 52px;
-        --page-gap: 16px;
-        --card-gap: 14px;
+        --space-050: 4px;
+        --space-075: 6px;
+        --space-100: 8px;
+        --space-150: 12px;
+        --space-200: 16px;
+        --space-300: 24px;
+        --page-gap: var(--space-150);
+        --card-gap: var(--space-100);
         --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
         --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
         --dur-fast: 120ms;
@@ -296,12 +302,139 @@
         background: var(--surf);
         border: 1px solid var(--b1);
         border-radius: var(--r12);
-        padding: 14px 16px;
+        padding: 12px 16px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-bottom: 18px;
+        gap: 0;
+        margin-bottom: 0;
         box-shadow: var(--s1);
+      }
+      .filter-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-150);
+        min-height: 38px;
+      }
+      .filter-head-left {
+        display: flex;
+        align-items: center;
+        gap: var(--space-100);
+        min-width: 0;
+      }
+      .filter-toggle {
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r8);
+        background: var(--surf);
+        color: var(--t1);
+        font-family: var(--font);
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          box-shadow var(--dur-med) var(--ease-out),
+          transform var(--dur-fast) var(--ease-out);
+      }
+      .filter-toggle:hover {
+        background: var(--blue-l);
+        border-color: rgba(26, 108, 245, 0.28);
+        color: var(--blue);
+        box-shadow: 0 4px 14px rgba(26, 108, 245, 0.12);
+      }
+      .filter-toggle[aria-expanded="true"] {
+        background: var(--blue-l);
+        border-color: rgba(26, 108, 245, 0.32);
+        color: var(--blue);
+      }
+      .filter-toggle:active {
+        transform: scale(0.975);
+      }
+      .filter-icon,
+      .filter-chevron {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .filter-icon svg,
+      .filter-chevron svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+      .filter-count {
+        min-width: 18px;
+        height: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 6px;
+        border-radius: 999px;
+        background: var(--blue);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .filter-count.is-empty {
+        display: none;
+      }
+      .filter-chevron {
+        color: var(--t3);
+        transition: transform var(--dur-med) var(--ease-out);
+      }
+      .fbar.open .filter-chevron {
+        transform: rotate(180deg);
+      }
+      .filter-summary {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--t3);
+        font-size: 12px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .filter-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        transform: translateY(-4px);
+        transform-origin: top left;
+        transition:
+          grid-template-rows var(--dur-med) var(--ease-out),
+          opacity var(--dur-med) ease,
+          transform var(--dur-med) var(--ease-out),
+          margin-top var(--dur-med) var(--ease-out);
+        margin-top: 0;
+      }
+      .fbar.open .filter-body {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        transform: translateY(0);
+        margin-top: var(--space-150);
+      }
+      .filter-body-inner {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-150);
+      }
+      .fbar.open .filter-body-inner {
+        overflow: visible;
+      }
+      #alertArea:empty {
+        display: none;
       }
       .quick-filters {
         display: flex;
@@ -529,6 +662,16 @@
         align-items: flex-end;
         margin-left: auto;
       }
+      .btn svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .btn-s {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
       .btn {
         height: 32px;
         border: none;
@@ -571,11 +714,11 @@
       .alert {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
+        gap: var(--space-150);
         padding: 12px 16px;
         border-radius: var(--r12);
         font-size: 13px;
-        margin-bottom: 16px;
+        margin-bottom: 0;
         font-weight: 500;
       }
       .al-err {
@@ -743,8 +886,8 @@
       .exec-alerts {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin: 0 0 10px;
+        gap: var(--card-gap);
+        margin: 0;
       }
       .exec-alert {
         background: var(--surf);
@@ -1402,6 +1545,33 @@
         }
       }
       @media (max-width: 540px) {
+        .fbar {
+          padding: 10px;
+        }
+        .filter-head {
+          align-items: stretch;
+          flex-direction: column;
+          gap: var(--space-100);
+        }
+        .filter-head-left {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .filter-toggle {
+          justify-content: space-between;
+          width: 100%;
+        }
+        .filter-summary {
+          width: 100%;
+        }
+        .filter-row {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        .ms-wrap {
+          min-width: 0;
+          width: 100%;
+        }
         .kpi-6,
         .kpi-5,
         .kpi-4,
@@ -1569,7 +1739,35 @@
 
       <div class="content">
         <div id="alertArea"></div>
-        <div class="fbar">
+        <div class="fbar" id="filterPanel">
+          <div class="filter-head">
+            <div class="filter-head-left">
+              <button
+                type="button"
+                class="filter-toggle"
+                id="filterToggle"
+                aria-controls="filterPanelBody"
+                aria-expanded="false"
+                onclick="toggleFilterPanel()"
+              >
+                <span class="filter-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z"></path>
+                  </svg>
+                </span>
+                Filtros
+                <span class="filter-count is-empty" id="filterCount">0</span>
+                <span class="filter-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </span>
+              </button>
+              <div class="filter-summary" id="filterSummary">Nenhum filtro ativo</div>
+            </div>
+          </div>
+          <div class="filter-body" id="filterPanelBody">
+            <div class="filter-body-inner">
           <div class="quick-filters">
             <button class="btn-qf" onclick="quickFilter('hoje', this)">
               Hoje
@@ -1640,8 +1838,18 @@
               </div>
             </div>
             <div class="fa">
-              <button class="btn btn-p" onclick="applyF()">Aplicar</button
-              ><button class="btn btn-s" onclick="clearF()">Limpar</button>
+              <button class="btn btn-s" onclick="clearF()" title="Limpar filtros">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4h8v2"></path>
+                  <path d="M6 6l1 14h10l1-14"></path>
+                  <path d="M10 11v5"></path>
+                  <path d="M14 11v5"></path>
+                </svg>
+                Limpar
+              </button>
+            </div>
+          </div>
             </div>
           </div>
         </div>
@@ -2405,6 +2613,7 @@
                     <th>Data/Hora</th>
                     <th>Motorista</th>
                     <th>Placa</th>
+                    <th>Tipo</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -2643,6 +2852,13 @@
           "Ar Condicionado",
           "Troca de Óleo",
         ];
+        const tiposMulta = [
+          "Excesso de velocidade",
+          "Rodizio",
+          "Estacionamento irregular",
+          "Avanco de sinal",
+          "Uso de celular",
+        ];
         const tiposTroca = [
           "Troca Programada",
           "Quebra",
@@ -2793,6 +3009,7 @@
           mock.manutencoes.push({
             cr40f_manutencoesid: `mock-man-${i}`,
             cr40f_datamanutencao: dt(rand(0, 90)),
+            cr40f_datadaaprovacao: dt(rand(91, 120)),
             cr40f_valor: randF(200, 4500),
             cr40f_status: st,
             "cr40f_status@OData.Community.Display.V1.FormattedValue": st,
@@ -2807,11 +3024,14 @@
         // Multas
         for (let i = 0; i < 12; i++) {
           const st = r(["Pendente", "Pago", "Indicado"]);
+          const tipoMulta = r(tiposMulta);
           mock.multas.push({
             cr40f_multasesid: `mock-mul-${i}`,
             cr40f_dataehorario: dt(rand(0, 120)),
             cr40f_status: st,
             "cr40f_status@OData.Community.Display.V1.FormattedValue": st,
+            _cr40f_codigodainfracao_value: `mock-inf-${i % tiposMulta.length}`,
+            "_cr40f_codigodainfracao_value@OData.Community.Display.V1.FormattedValue": tipoMulta,
             _cr40f_motorista_value: `mock-func-${rand(0, 9)}`,
             "_cr40f_motorista_value@OData.Community.Display.V1.FormattedValue":
               r(motores),
@@ -2914,6 +3134,7 @@
         preco: { valorTotal: "new_valortotal", status: "new_status" },
         man: {
           data: "cr40f_datamanutencao",
+          aprovacao: "cr40f_datadaaprovacao",
           valor: "cr40f_valor",
           status: "cr40f_status",
           tipo: "cr40f_tipodoreparo",
@@ -2924,6 +3145,7 @@
           mot: "cr40f_motorista",
           placa: "cr40f_placa",
           status: "cr40f_status",
+          tipo: "cr40f_codigodainfracao",
         },
         trc: {
           data: "cr40f_dataehorariodatroca",
@@ -3142,6 +3364,20 @@
       };
       const paymentOp = (r) => String(r?.[F.pag.lookupOP] || "").toLowerCase();
       const paymentValue = (r) => parseFloat(r?.[F.pag.valor]) || 0;
+      const lookupValue = (r, lookupName) =>
+        r?.[`_${lookupName}_value@OData.Community.Display.V1.FormattedValue`] ||
+        r?.[`${lookupName}@OData.Community.Display.V1.FormattedValue`] ||
+        r?.[`${lookupName}name`] ||
+        r?.[`_${lookupName}_value`] ||
+        r?.[lookupName] ||
+        "";
+      const daysBetweenValues = (startValue, endValue) => {
+        if (!startValue || !endValue) return null;
+        const start = new Date(startValue);
+        const end = new Date(endValue);
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+        return Math.floor((end - start) / 86400000);
+      };
       const maintenanceCategory = (value) => {
         const k = normL(value);
         if (k.includes("avaria") || k.includes("sinistro") || k.includes("colis")) return "Avaria";
@@ -3151,6 +3387,68 @@
         if (k.includes("prevent") || k.includes("revis") || k.includes("oleo")) return "Preventiva programada";
         return "Corretiva nao critica";
       };
+      function maintenanceKpiRows(mans, manFv) {
+        const byCat = grp(mans, (r) => maintenanceCategory(manFv(r, F.man.tipo)));
+        const catRows = (cat) => byCat[cat] || [];
+        const prevProg = catRows("Preventiva programada");
+        const prevProgMeasured = prevProg.filter((r) => daysBetweenValues(r[F.man.aprovacao], r[F.man.data]) !== null);
+        const prevProgOk = prevProgMeasured.filter((r) => {
+          const days = daysBetweenValues(r[F.man.aprovacao], r[F.man.data]);
+          return days >= 0 && days <= 10;
+        }).length;
+        const prevProgPct = prevProgMeasured.length ? (prevProgOk / prevProgMeasured.length) * 100 : null;
+        const cond = catRows("Preventiva condicao");
+        const corrNaoCrit = catRows("Corretiva nao critica");
+        const corrCrit = catRows("Corretiva critica");
+        const conserv = catRows("Conservacao");
+        const avaria = catRows("Avaria");
+        const fmtPct = (v) => v == null ? "s/dado" : `${v.toFixed(1)}%`;
+        const coverage = (measured, total) => total ? `${measured}/${total}` : "0/0";
+        return [
+          {
+            categoria: "Preventiva programada",
+            resultado: metricSplit(fmtPct(prevProgPct), `${prevProgOk}/${prevProgMeasured.length || prevProg.length} ate 10 dias`),
+            meta: ">= 98%",
+            cobertura: coverage(prevProgMeasured.length, prevProg.length),
+            ok: prevProgPct == null ? null : prevProgPct >= 98,
+          },
+          {
+            categoria: "Preventiva por condicao",
+            resultado: metricSplit(cond.length.toLocaleString("pt-BR"), "sem campo de pane vinculada"),
+            meta: "0 panes",
+            cobertura: "tipo reparo",
+            ok: null,
+          },
+          {
+            categoria: "Corretiva nao critica",
+            resultado: corrNaoCrit.length.toLocaleString("pt-BR"),
+            meta: "<= 5 no mes",
+            cobertura: "tipo reparo",
+            ok: corrNaoCrit.length <= 5,
+          },
+          {
+            categoria: "Corretiva critica/emergencial",
+            resultado: corrCrit.length.toLocaleString("pt-BR"),
+            meta: "0 no mes",
+            cobertura: "tipo reparo",
+            ok: corrCrit.length === 0,
+          },
+          {
+            categoria: "Conservacao, conforto e imagem",
+            resultado: metricSplit(conserv.length.toLocaleString("pt-BR"), "sem campo de inspecao aprovada"),
+            meta: ">= 95%",
+            cobertura: "tipo reparo",
+            ok: null,
+          },
+          {
+            categoria: "Avaria ou sinistro preventavel",
+            resultado: avaria.length.toLocaleString("pt-BR"),
+            meta: "0 no mes",
+            cobertura: "tipo reparo",
+            ok: avaria.length === 0,
+          },
+        ];
+      }
       function renderMetricLines(rows) {
         return rows
           .map(([label, value]) => `<div class="metric-line"><span>${label}</span><b>${value}</b></div>`)
@@ -3587,12 +3885,12 @@ function detectEnv(){
       }
       async function loadManutencoes() {
         DB.manutencoes = await fetchAll(
-          `${API()}/${T.manutencoes}?$select=${F.man.data},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`,
+          `${API()}/${T.manutencoes}?$select=${F.man.data},${F.man.aprovacao},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`,
         );
       }
       async function loadMultas() {
         DB.multas = await fetchAll(
-          `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.mot}_value,_${F.mul.placa}_value&$orderby=${F.mul.data} desc`,
+          `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.tipo}_value,_${F.mul.mot}_value,_${F.mul.placa}_value&$orderby=${F.mul.data} desc`,
         );
       }
       async function loadTrocas() {
@@ -3766,6 +4064,7 @@ function detectEnv(){
         if (idx > -1) state.splice(idx, 1);
         else state.push(val);
         updateMSButton(id);
+        applyF(true);
       }
       function msSelectAll(id, sel) {
         const key = id.replace("ms", "");
@@ -3781,6 +4080,7 @@ function detectEnv(){
           opts.forEach((o) => (o.checked = false));
         }
         updateMSButton(id);
+        applyF(true);
       }
       function updateMSButton(id) {
         const key = id.replace("ms", "");
@@ -3795,25 +4095,69 @@ function detectEnv(){
         if (state.length === 0) btn.innerHTML = ph[id];
         else
           btn.innerHTML = `${ph[id]} <span class="sel-count">${state.length}</span>`;
+        updateFilterSummary();
       }
-      document.addEventListener("click", (e) => {
-        if (!e.target.closest(".ms-wrap")) {
-          document
-            .querySelectorAll(".ms-dd")
-            .forEach((d) => d.classList.remove("open"));
-          document
-            .querySelectorAll(".ms-btn")
-            .forEach((b) => b.classList.remove("open"));
-        }
-      });
-
-      function applyF() {
+      function closeMultiselects() {
         document
           .querySelectorAll(".ms-dd")
           .forEach((d) => d.classList.remove("open"));
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+      }
+      function toggleFilterPanel(forceOpen) {
+        const panel = document.getElementById("filterPanel");
+        const btn = document.getElementById("filterToggle");
+        if (!panel || !btn) return;
+        const open =
+          typeof forceOpen === "boolean"
+            ? forceOpen
+            : !panel.classList.contains("open");
+        panel.classList.toggle("open", open);
+        btn.setAttribute("aria-expanded", String(open));
+        if (!open) closeMultiselects();
+      }
+      function updateFilterSummary() {
+        const summary = document.getElementById("filterSummary");
+        const countEl = document.getElementById("filterCount");
+        if (!summary || !countEl) return;
+
+        const start = document.getElementById("fS")?.value || "";
+        const end = document.getElementById("fE")?.value || "";
+        const fmtFilterDate = (value) =>
+          value ? fmtD(`${value}T12:00:00-03:00`) : "...";
+        const parts = [];
+        let activeCount = 0;
+
+        if (start || end) {
+          activeCount += 1;
+          parts.push(`Periodo: ${fmtFilterDate(start)} ate ${fmtFilterDate(end)}`);
+        }
+
+        const labels = {
+          St: "status",
+          Cl: "clientes",
+          Mo: "motoristas",
+          Tp: "tipos",
+        };
+        Object.entries(msState).forEach(([key, values]) => {
+          if (!values.length) return;
+          activeCount += 1;
+          parts.push(`${values.length} ${labels[key]}`);
+        });
+
+        summary.textContent = parts.length ? parts.join(" | ") : "Nenhum filtro ativo";
+        countEl.textContent = activeCount;
+        countEl.classList.toggle("is-empty", activeCount === 0);
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".ms-wrap")) {
+          closeMultiselects();
+        }
+      });
+
+      function applyF(keepMultiselectOpen) {
+        if (!keepMultiselectOpen) closeMultiselects();
         const dS = document.getElementById("fS").value;
         const dE = document.getElementById("fE").value;
         let d = [...DB.reservas];
@@ -3840,8 +4184,10 @@ function detectEnv(){
         VW.reservas = d;
         tblCache = {};
         renderAll();
+        updateFilterSummary();
       }
       function clearF() {
+        closeMultiselects();
         ["fS", "fE"].forEach((x) => (document.getElementById(x).value = ""));
         msState = { St: [], Cl: [], Mo: [], Tp: [] };
         ["msSt", "msCl", "msMo", "msTp"].forEach((id) => {
@@ -3868,6 +4214,7 @@ function detectEnv(){
         VW.reservas = [...DB.reservas];
         tblCache = {};
         renderAll();
+        updateFilterSummary();
       }
       function quickFilter(period, btnEl) {
         document
@@ -4343,15 +4690,8 @@ const monthsLabelsAll = [
               <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
             </div>
             <div class="tc">
-              <div class="tc-bar"><div><div class="tc-title">KPIs de manutencao</div><div class="tc-meta">Metas solicitadas na revisao</div></div></div>
-              <div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>KPI principal</th><th>Meta mensal</th><th>Limite anual</th></tr></thead><tbody>
-                <tr><td>Preventiva programada</td><td>Manutencoes realizadas em ate 10 dias da solicitacao</td><td>&ge; 98%</td><td>&ge; 98%</td></tr>
-                <tr><td>Preventiva por condicao</td><td>Problemas que evoluiram para pane</td><td>0</td><td>Maximo 2% dos casos</td></tr>
-                <tr><td>Corretiva nao critica</td><td>Quantidade de ocorrencias</td><td>Maximo 5</td><td>Maximo 24</td></tr>
-                <tr><td>Corretiva critica/emergencial</td><td>Pane que deixou veiculo indisponivel</td><td>Meta 0</td><td>Maximo 3</td></tr>
-                <tr><td>Conservacao, conforto e imagem</td><td>Veiculos aprovados na inspecao</td><td>&ge; 95%</td><td>Media &ge; 95%</td></tr>
-                <tr><td>Avaria ou sinistro preventavel</td><td>Ocorrencias atribuidas a conducao/operacao</td><td>Meta 0</td><td>Maximo 2</td></tr>
-              </tbody></table></div>
+              <div class="tc-bar"><div><div class="tc-title">KPIs de manutencao</div><div class="tc-meta" id="metaFrotaKpis">Metas solicitadas na revisao</div></div></div>
+              <div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div>
             </div>
             <div class="kpi-row kpi-2">
               <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Frota propria - dias uteis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div>
@@ -5246,7 +5586,7 @@ const monthsLabelsAll = [
         set("pPend", dvDisabled ? "—" : brlS(resumo.aReceber || 0));
         set("pQtd", dvDisabled ? "—" : pags.length);
         set("pCartao", dvDisabled ? "—" : brlS(cartaoRecebido));
-        set("pPrazo", dvDisabled ? "—" : "Pendente");
+        set("pPrazo", dvDisabled ? "—" : "s/dado");
         html("paymentInsight", dvDisabled ? "" : "Para calcular nome e tempo de pagamento por cliente, falta incluir no fetch uma data de pagamento/baixa e, se existir, data de vencimento. Sem esse campo, qualquer ranking de atrasados seria falso.");
         const byForma = grp(pags, (r) => String(pgFv(r, F.pag.forma) || "—"));
         const byPagSt = grp(pags, (r) => String(pgFv(r, F.pag.status) || "—"));
@@ -5342,6 +5682,12 @@ const monthsLabelsAll = [
         ]));
         set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} carros proprios · media diaria por mes`);
         renderFleetUsageRows(usage.rows);
+        const kpiRows = dvDisabled ? [] : maintenanceKpiRows(VW.manutencoes, manFvInFrota);
+        set("metaFrotaKpis", dvDisabled ? "—" : `${VW.manutencoes.length} manutencoes no filtro atual`);
+        html("tblFrotaKpis", kpiRows.map((row) => {
+          const status = row.ok === null ? badge("Sem dado") : badge(row.ok ? "OK" : "Atencao");
+          return `<tr><td class="em">${row.categoria}</td><td class="r">${row.resultado}</td><td>${row.meta}</td><td>${metricSplit(row.cobertura, status)}</td></tr>`;
+        }).join("") || emptyRow(4));
         const byVSt = grp(vei, (r) => String(vFv(r, F.vei.status) || "—"));
         const byMarca = grp(vei, (r) => r[F.vei.marca] || "—");
         const vsK = Object.keys(byVSt)
@@ -5538,6 +5884,8 @@ const monthsLabelsAll = [
         set("mulPen", dvDisabled ? "—" : mulPen.length);
         set("mulRes", dvDisabled ? "—" : mulRes.length);
         const byMulSt = grp(muls, (r) => String(mulFv(r, F.mul.status) || "—"));
+        const multaTipo = (r) => String(lookupValue(r, F.mul.tipo) || "Sem tipo");
+        const byMulTipo = grp(muls, multaTipo);
         const byMulMot = grp(muls, (r) => {
           const motId = r[`_${F.mul.mot}_value`];
           const motName =
@@ -5553,6 +5901,10 @@ const monthsLabelsAll = [
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMulMot[b].length - byMulMot[a].length)
           .slice(0, 10);
+        const mtK = Object.keys(byMulTipo)
+          .filter((k) => k !== "__null__")
+          .sort((a, b) => byMulTipo[b].length - byMulTipo[a].length)
+          .slice(0, 10);
         renderDistributionTable(
           "tblMulStatus",
           msK.map((k) => ({ label: k, qtd: byMulSt[k].length })),
@@ -5565,12 +5917,12 @@ const monthsLabelsAll = [
           muls.length,
           { label: "Motorista", countLabel: "Multas" },
         );
-        set("mulTipoNote", dvDisabled ? "" : "Campo de tipo/infracao nao esta no fetch atual; exibindo status como fallback.");
+        set("mulTipoNote", dvDisabled ? "" : (mtK.length ? "Agrupado por codigo/descricao da infracao." : "Sem infracao no periodo filtrado."));
         renderDistributionTable(
           "tblMulTipo",
-          msK.map((k) => ({ label: k, qtd: byMulSt[k].length })),
+          mtK.map((k) => ({ label: k, qtd: byMulTipo[k].length })),
           muls.length,
-          { label: "Tipo/status", countLabel: "Multas", badgeLabels: true },
+          { label: "Tipo", countLabel: "Multas" },
         );
         set("metaMul", dvDisabled ? "—" : `${muls.length} registros`);
         document.getElementById("tbMul").innerHTML =
@@ -5584,9 +5936,9 @@ const monthsLabelsAll = [
                 ] || "—";
               const motDisplay =
                 funcMapGlobal.get(String(motId)?.toLowerCase()) || motName;
-              return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "—"}</td><td>${badge(String(mulFv(r, F.mul.status) || "—"))}</td></tr>`;
+              return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "—"}</td><td>${trunc(multaTipo(r), 28)}</td><td>${badge(String(mulFv(r, F.mul.status) || "—"))}</td></tr>`;
             })
-            .join("") || emptyRow(4);
+            .join("") || emptyRow(5);
       }
       function renderTrocas(dvDisabled) {
         const trcs = dvDisabled ? [] : VW.trocas;
@@ -6105,6 +6457,11 @@ const monthsLabelsAll = [
       // ════════════════════════════════════════════
       // INIT
       // ════════════════════════════════════════════
+      ["fS", "fE"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.addEventListener("change", () => applyF(true));
+      });
+      updateFilterSummary();
       detectEnv();
       loadAll();
     </script>
