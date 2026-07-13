@@ -61,8 +61,12 @@
         --space-150: 12px;
         --space-200: 16px;
         --space-300: 24px;
-        --page-gap: var(--space-150);
-        --card-gap: var(--space-100);
+        --control-gap: var(--space-100);
+        --card-gap: var(--space-150);
+        --section-gap: var(--space-200);
+        --page-gap: var(--section-gap);
+        --content-max: 1680px;
+        --surface-pad: clamp(14px, 1.4vw, 20px);
         --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
         --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
         --dur-fast: 120ms;
@@ -295,8 +299,16 @@
       .content {
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
+        padding: var(--space-300);
         background: var(--bg);
+        display: flex;
+        flex-direction: column;
+        gap: var(--section-gap);
+      }
+      .content > .fbar,
+      .content > .page {
+        width: min(100%, var(--content-max));
+        margin-inline: auto;
       }
       .fbar {
         position: relative;
@@ -304,7 +316,7 @@
         background: var(--surf);
         border: 1px solid var(--b1);
         border-radius: var(--r12);
-        padding: 12px 16px;
+        padding: var(--space-150) var(--surface-pad);
         display: flex;
         flex-direction: column;
         gap: 0;
@@ -790,27 +802,28 @@
         display: grid;
         gap: var(--card-gap);
         margin-bottom: 0;
+        grid-template-columns: repeat(var(--metric-columns, 4), minmax(0, 1fr));
       }
       .kpi-5 {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        --metric-columns: 5;
       }
       .kpi-6 {
-        grid-template-columns: repeat(auto-fit, minmax(164px, 1fr));
+        --metric-columns: 6;
       }
       .kpi-4 {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        --metric-columns: 4;
       }
       .kpi-3 {
-        grid-template-columns: repeat(3, 1fr);
+        --metric-columns: 3;
       }
       .kpi-2 {
-        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        --metric-columns: 2;
       }
       .kpi {
         background: var(--surf);
         border: 1px solid var(--b1);
         border-radius: var(--r12);
-        padding: 16px;
+        padding: var(--surface-pad);
         box-shadow: var(--s1);
         position: relative;
         overflow: hidden;
@@ -938,7 +951,7 @@
         background: var(--surf);
         border: 1px solid var(--b1);
         border-radius: var(--r12);
-        padding: 12px 14px;
+        padding: var(--space-150) var(--surface-pad);
         box-shadow: var(--s1);
         display: flex;
         align-items: center;
@@ -1058,7 +1071,7 @@
         background: var(--surf);
         border: 1px solid var(--b1);
         border-radius: var(--r12);
-        padding: 14px 16px;
+        padding: var(--surface-pad);
         box-shadow: var(--s1);
         transition:
           box-shadow var(--dur-med) var(--ease-out),
@@ -1095,8 +1108,8 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 10px;
-        padding-bottom: 8px;
+        margin-bottom: var(--space-150);
+        padding-bottom: var(--space-100);
         border-bottom: 1px solid var(--b1);
       }
       .cc-title {
@@ -1137,8 +1150,8 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 0 0 10px;
-        gap: 16px;
+        padding: 0 0 var(--space-150);
+        gap: var(--section-gap);
       }
       .cc-hdr2 .cc2-label {
         font-size: 10px;
@@ -1206,13 +1219,13 @@
       .meta-kpi-pills {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
-        gap: 8px;
-        padding: 0 16px 10px;
+        gap: var(--control-gap);
+        padding: 0 var(--surface-pad) var(--space-150);
       }
       .metric-list {
         display: grid;
-        gap: 6px;
-        margin-top: 10px;
+        gap: var(--space-075);
+        margin-top: var(--space-150);
       }
       .metric-line {
         display: flex;
@@ -1227,7 +1240,7 @@
         font-variant-numeric: tabular-nums;
       }
       .metric-table-wrap {
-        padding: 0 14px 14px;
+        padding: 0 var(--surface-pad) var(--surface-pad);
       }
       .metric-table-wrap table {
         font-size: 11px;
@@ -1237,7 +1250,7 @@
         cursor: default;
       }
       .metric-note {
-        padding: 0 14px 12px;
+        padding: 0 var(--surface-pad) var(--space-150);
         color: var(--t3);
         font-size: 11px;
         font-weight: 600;
@@ -1253,11 +1266,43 @@
           box-shadow var(--dur-med) var(--ease-out),
           border-color var(--dur-med) ease;
       }
+      .dashboard-section {
+        display: grid;
+        gap: var(--section-gap);
+      }
+      .dashboard-section--alerts {
+        gap: var(--card-gap);
+      }
+      .dashboard-section--alerts .section-label + .exec-alerts {
+        margin-top: calc(var(--control-gap) * -1);
+      }
+      .page > .kpi-row,
+      .page > .cgrid,
+      .page > .tc,
+      .dashboard-section > .kpi-row,
+      .dashboard-section > .cgrid,
+      .dashboard-section > .tc {
+        min-width: 0;
+      }
+      .section-label {
+        margin: 0;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .kpi,
+      .cc,
+      .tc,
+      .exec-alert {
+        border-color: var(--b1);
+      }
       .tc-bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 16px;
+        padding: var(--space-150) var(--surface-pad);
         border-bottom: 1px solid var(--b1);
         gap: 10px;
         flex-wrap: wrap;
@@ -1510,22 +1555,16 @@
         display: flex;
         flex-direction: column;
         gap: var(--page-gap);
-        animation: pageIn 360ms var(--ease-out);
       }
       .page.on > * {
-        animation: blockIn 560ms var(--ease-out) both;
+        animation: blockIn 220ms var(--ease-out) both;
       }
-      .page.on > *:nth-child(1) { animation-delay: 20ms; }
-      .page.on > *:nth-child(2) { animation-delay: 70ms; }
-      .page.on > *:nth-child(3) { animation-delay: 120ms; }
-      .page.on > *:nth-child(4) { animation-delay: 170ms; }
-      .page.on > *:nth-child(5) { animation-delay: 220ms; }
-      .page.on > *:nth-child(n + 6) { animation-delay: 260ms; }
-      .page.on .cc,
-      .page.on .kpi,
-      .page.on .tc {
-        will-change: transform, opacity;
-      }
+      .page.on > *:nth-child(1) { animation-delay: 0ms; }
+      .page.on > *:nth-child(2) { animation-delay: 40ms; }
+      .page.on > *:nth-child(3) { animation-delay: 80ms; }
+      .page.on > *:nth-child(4) { animation-delay: 120ms; }
+      .page.on > *:nth-child(5) { animation-delay: 160ms; }
+      .page.on > *:nth-child(n + 6) { animation-delay: 180ms; }
       @keyframes pageIn {
         from {
           opacity: 0;
@@ -1558,10 +1597,10 @@
       }
       @media (max-width: 1200px) {
         .kpi-6 {
-          grid-template-columns: repeat(auto-fit, minmax(188px, 1fr));
+          --metric-columns: 3;
         }
         .kpi-5 {
-          grid-template-columns: repeat(auto-fit, minmax(188px, 1fr));
+          --metric-columns: 3;
         }
         .exec-alerts {
           grid-template-columns: repeat(2, 1fr);
@@ -1580,7 +1619,7 @@
         .kpi-6,
         .kpi-5,
         .kpi-4 {
-          grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+          --metric-columns: 2;
         }
         .g2 {
           grid-template-columns: 1fr;
@@ -1590,6 +1629,9 @@
         }
       }
       @media (max-width: 540px) {
+        .content {
+          padding: var(--space-150);
+        }
         .fbar {
           padding: 10px;
         }
@@ -1631,7 +1673,7 @@
         .kpi-5,
         .kpi-4,
         .kpi-3 {
-          grid-template-columns: 1fr;
+          --metric-columns: 1;
         }
         .exec-alerts {
           grid-template-columns: 1fr;
@@ -1937,6 +1979,7 @@
 
         <!-- ========== PAGE RESUMO ========== -->
         <div class="page on" id="page-resumo">
+          <template id="legacy-resumo-kpis">
           <div class="kpi-row kpi-5">
             <div class="kpi">
               <div class="kpi-accent" style="background: var(--blue-g)"></div>
@@ -2074,6 +2117,24 @@
             </div>
           </div>
 
+          </template>
+          <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores executivos">
+            <div class="kpi-row kpi-6">
+              <div class="kpi executive kpi-tone-blue"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Faturamento</div><div class="kpi-val sm" id="kFat">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kFatD"></div></div></div><div class="kpi-spark"><canvas id="spFat"></canvas></div></div>
+              <div class="kpi executive kpi-tone-teal"><div class="kpi-accent" style="background: linear-gradient(135deg, #0a9396, #3dbdc1)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Servi&ccedil;os</div><div class="kpi-val" id="kSrv">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSrvD"></div></div></div><div class="kpi-spark"><canvas id="spSrv"></canvas></div></div>
+              <div class="kpi executive kpi-tone-purple"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Ticket m&eacute;dio</div><div class="kpi-val sm" id="kTk">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kTkD"></div></div></div><div class="kpi-spark"><canvas id="spTk"></canvas></div></div>
+              <div class="kpi executive kpi-tone-green"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="kPPend">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kPPendD"></div></div></div><div class="kpi-spark"><canvas id="spReceber"></canvas></div></div>
+              <div class="kpi executive kpi-tone-orange"><div class="kpi-accent" style="background: linear-gradient(135deg, #e07000, #f59532)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div><div class="kpi-spark"><canvas id="spSemValor"></canvas></div></div>
+              <div class="kpi executive kpi-tone-red"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div><div class="kpi-spark"><canvas id="spRecebPct"></canvas></div></div>
+            </div>
+          </section>
+          <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
+            <p class="section-label">Opera&ccedil;&atilde;o</p>
+            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div></div>
+            <p class="section-label">Qualidade dos dados</p>
+            <div class="exec-alerts"><div class="exec-alert" id="dqSemPreco"><div><strong>&mdash;</strong><span>Sem pre&ccedil;o</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
+          </section>
+          <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises executivas">
           <!-- Total Produzido -->
           <div class="cc">
             <div class="cc-hdr2">
@@ -2187,10 +2248,12 @@
               <canvas id="cMM" height="65"></canvas>
             </div>
           </div>
+          </section>
         </div>
 
         <!-- ========== PAGE SERVIÇOS ========== -->
         <div class="page" id="page-servicos">
+          <template id="legacy-servicos-kpis">
           <div class="kpi-row kpi-4">
             <div class="kpi">
               <div class="kpi-accent" style="background: var(--blue-g)"></div>
@@ -2248,6 +2311,14 @@
               <div class="kpi-val sm" id="sFat">—</div>
             </div>
           </div>
+          </template>
+          <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores de servi&ccedil;os">
+            <div class="kpi-row kpi-2">
+              <div class="kpi executive kpi-tone-blue"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Opera&ccedil;&atilde;o</div><div class="kpi-val" id="sOpTotal">&mdash;</div></div></div><div class="metric-list" id="sOpMix"></div></div>
+              <div class="kpi executive kpi-tone-green"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Financeiro</div><div class="kpi-val sm" id="sFinTotal">&mdash;</div></div></div><div class="metric-list" id="sFinMix"></div></div>
+            </div>
+          </section>
+          <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de servi&ccedil;os">
           <div class="cgrid g2">
             <div class="cc">
               <div class="cc-hdr">
@@ -2301,6 +2372,7 @@
               </table>
             </div>
           </div>
+          </section>
         </div>
 
         <!-- ========== DEMAIS ABAS ========== -->
@@ -2381,6 +2453,7 @@
         </div>
 
         <div class="page" id="page-pagantes">
+          <template id="legacy-pagamentos-kpis">
           <div class="kpi-row kpi-3">
             <div class="kpi">
               <div
@@ -2404,6 +2477,16 @@
               <div class="kpi-val" id="pQtd">—</div>
             </div>
           </div>
+          </template>
+          <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores de pagamentos">
+            <div class="kpi-row kpi-4">
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #8a6200, #c9a227)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Cart&atilde;o</div><div class="kpi-val sm" id="pCartao">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Tempo de pagamento</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
+            </div>
+          </section>
+          <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de pagamentos">
           <div class="cgrid g2">
             <div class="cc">
               <div class="cc-hdr">
@@ -2436,9 +2519,11 @@
               </table>
             </div>
           </div>
+          </section>
         </div>
 
         <div class="page" id="page-frota">
+          <template id="legacy-frota-kpis">
           <div class="kpi-row kpi-4">
             <div class="kpi">
               <div class="kpi-accent" style="background: var(--blue-g)"></div>
@@ -2470,6 +2555,21 @@
               <div class="kpi-val" id="vMan">—</div>
             </div>
           </div>
+          </template>
+          <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores de frota">
+            <div class="kpi-row kpi-6">
+              <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Preventiva programada</div><div class="kpi-val" id="frPrevProg">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #0a9396, #3dbdc1)"></div><div class="kpi-lbl">Preventiva condi&ccedil;&atilde;o</div><div class="kpi-val" id="frPrevCond">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #e07000, #f59532)"></div><div class="kpi-lbl">Corretiva n&atilde;o cr&iacute;tica</div><div class="kpi-val" id="frCorrNaoCrit">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #c0392b, #e05a4e)"></div><div class="kpi-lbl">Corretiva cr&iacute;tica</div><div class="kpi-val" id="frCorrCrit">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Conserva&ccedil;&atilde;o</div><div class="kpi-val" id="frConserv">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
+            </div>
+            <div class="tc"><div class="tc-bar"><div><div class="tc-title">KPIs de manuten&ccedil;&atilde;o</div><div class="tc-meta" id="metaFrotaKpis">Metas mensais</div></div></div><div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div></div>
+            <div class="kpi-row kpi-2"><div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Frota pr&oacute;pria &mdash; dias &uacute;teis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div><div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Frota pr&oacute;pria &mdash; fim de semana</div><div class="kpi-val sm" id="frUsoFim">&mdash;</div><div class="metric-list" id="frUsoFimD"></div></div></div>
+            <div class="tc"><div class="tc-bar"><div><div class="tc-title">Uso mensal da frota pr&oacute;pria</div><div class="tc-meta" id="metaFrotaUso">M&eacute;dia di&aacute;ria por m&ecirc;s</div></div></div><div class="tc-wrap"><table><thead><tr><th>M&ecirc;s</th><th>Dias &uacute;teis</th><th>Fim de semana</th></tr></thead><tbody id="tblFrotaUso"></tbody></table></div></div>
+          </section>
+          <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de frota">
           <div class="cgrid g2">
             <div class="cc">
               <div class="cc-hdr">
@@ -2508,6 +2608,7 @@
               </table>
             </div>
           </div>
+          </section>
         </div>
 
         <div class="page" id="page-motoristas">
@@ -2681,6 +2782,10 @@
               </div>
               <div id="tblMulMot" class="metric-table-wrap"></div>
             </div>
+          </div>
+          <div class="cc">
+            <div class="cc-hdr"><div><div class="cc-title">Tipo de multa</div><div class="tc-meta" id="mulTipoNote"></div></div></div>
+            <div id="tblMulTipo" class="metric-table-wrap"></div>
           </div>
           <div class="tc">
             <div class="tc-bar">
