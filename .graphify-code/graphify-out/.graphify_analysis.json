@@ -1,8 +1,40 @@
 {
   "communities": {
     "0": [
+      "dashboard_inline_badge",
+      "dashboard_inline_brl",
+      "dashboard_inline_brls",
+      "dashboard_inline_daysbetweenvalues",
+      "dashboard_inline_emptyrow",
+      "dashboard_inline_fmtd",
+      "dashboard_inline_fmtdt",
+      "dashboard_inline_grp",
+      "dashboard_inline_html",
+      "dashboard_inline_maintenancecategory",
+      "dashboard_inline_maintenancekpirows",
+      "dashboard_inline_metricsplit",
+      "dashboard_inline_ml",
+      "dashboard_inline_opts0",
+      "dashboard_inline_progresscell",
+      "dashboard_inline_renderdistributiontable",
+      "dashboard_inline_renderfaturamento",
+      "dashboard_inline_renderfleetusagerows",
+      "dashboard_inline_renderfrota",
+      "dashboard_inline_renderfrotatable",
+      "dashboard_inline_rendermanutencoes",
+      "dashboard_inline_rendermarketing",
+      "dashboard_inline_rendermottable",
+      "dashboard_inline_rendermultas",
+      "dashboard_inline_renderpagamentos",
+      "dashboard_inline_rendersrvtable",
+      "dashboard_inline_rendersumtable",
+      "dashboard_inline_rendertrocas",
+      "dashboard_inline_srchtbl",
+      "dashboard_inline_srt",
+      "dashboard_inline_stl"
+    ],
+    "1": [
       "dashboard_inline",
-      "dashboard_inline_charthasdata",
       "dashboard_inline_charts",
       "dashboard_inline_db",
       "dashboard_inline_detectenv",
@@ -13,71 +45,42 @@
       "dashboard_inline_fat2025",
       "dashboard_inline_font",
       "dashboard_inline_funcmapglobal",
+      "dashboard_inline_lookupvalue",
       "dashboard_inline_monthslabelsall",
       "dashboard_inline_msstate",
       "dashboard_inline_nav",
       "dashboard_inline_pal",
-      "dashboard_inline_rendermetriclines",
       "dashboard_inline_set",
       "dashboard_inline_sparks",
       "dashboard_inline_srchreg",
       "dashboard_inline_srtst",
       "dashboard_inline_t",
-      "dashboard_inline_takeuntilshare",
+      "dashboard_inline_tablesortdefaults",
       "dashboard_inline_tblcache",
       "dashboard_inline_togglems",
       "dashboard_inline_vw"
-    ],
-    "1": [
-      "dashboard_inline_badge",
-      "dashboard_inline_brl",
-      "dashboard_inline_brls",
-      "dashboard_inline_emptyrow",
-      "dashboard_inline_fmtd",
-      "dashboard_inline_fmtdt",
-      "dashboard_inline_grp",
-      "dashboard_inline_mkchart",
-      "dashboard_inline_opts0",
-      "dashboard_inline_renderfaturamento",
-      "dashboard_inline_renderfrota",
-      "dashboard_inline_renderfrotatable",
-      "dashboard_inline_rendermanutencoes",
-      "dashboard_inline_rendermarketing",
-      "dashboard_inline_rendermotoristas",
-      "dashboard_inline_rendermottable",
-      "dashboard_inline_rendermultas",
-      "dashboard_inline_renderpagamentos",
-      "dashboard_inline_rendersharetable",
-      "dashboard_inline_rendersrvtable",
-      "dashboard_inline_rendersumtable",
-      "dashboard_inline_rendertrocas",
-      "dashboard_inline_srchtbl",
-      "dashboard_inline_srt",
-      "dashboard_inline_stl",
-      "dashboard_inline_trunc"
     ],
     "2": [
       "dashboard_inline_enrichreservas",
       "dashboard_inline_ensureexecutivelayout",
       "dashboard_inline_fv",
       "dashboard_inline_getfilteredmonthlydata",
-      "dashboard_inline_html",
       "dashboard_inline_iscardpayment",
       "dashboard_inline_isdataversedisabled",
       "dashboard_inline_ispendingscheduledreservation",
       "dashboard_inline_isproducedreservation",
       "dashboard_inline_isreceivedpayment",
       "dashboard_inline_istravelreservation",
-      "dashboard_inline_maintenancecategory",
       "dashboard_inline_mk",
       "dashboard_inline_mkeys",
-      "dashboard_inline_ml",
       "dashboard_inline_norml",
       "dashboard_inline_paymentop",
       "dashboard_inline_paymentvalue",
       "dashboard_inline_pct",
       "dashboard_inline_renderall",
-      "dashboard_inline_setexecalert"
+      "dashboard_inline_rendermetriclines",
+      "dashboard_inline_setexecalert",
+      "dashboard_inline_takeuntilshare"
     ],
     "3": [
       "dashboard_inline_api",
@@ -97,9 +100,26 @@
       "dashboard_inline_loadveiculos",
       "dashboard_inline_makeheaders",
       "dashboard_inline_populatefilters",
-      "dashboard_inline_setloading"
+      "dashboard_inline_setloading",
+      "dashboard_inline_shouldusemockdata"
     ],
     "4": [
+      "dashboard_inline_buildownfleetusagerows",
+      "dashboard_inline_clampdate",
+      "dashboard_inline_daysbetween",
+      "dashboard_inline_daysinmonth",
+      "dashboard_inline_eachdatebetween",
+      "dashboard_inline_getmetaparaperiodoproporcional",
+      "dashboard_inline_isownvehicle",
+      "dashboard_inline_isreservableservice",
+      "dashboard_inline_pad2",
+      "dashboard_inline_parsebrdate",
+      "dashboard_inline_sameperiodlastmonth",
+      "dashboard_inline_sameperiodlastyear",
+      "dashboard_inline_shouldshowlm",
+      "dashboard_inline_ymd"
+    ],
+    "5": [
       "dataverse_export_metadata_console",
       "dataverse_export_metadata_console_exportmetadata",
       "dataverse_export_metadata_console_getall",
@@ -115,18 +135,19 @@
       "dataverse_export_metadata_console_pick",
       "dataverse_export_metadata_console_request"
     ],
-    "5": [
-      "dashboard_inline_clampdate",
-      "dashboard_inline_daysbetween",
-      "dashboard_inline_daysinmonth",
-      "dashboard_inline_pad2",
-      "dashboard_inline_parsebrdate",
-      "dashboard_inline_sameperiodlastmonth",
-      "dashboard_inline_sameperiodlastyear",
-      "dashboard_inline_shouldshowlm",
-      "dashboard_inline_ymd"
-    ],
     "6": [
+      "dashboard_inline_charthasdata",
+      "dashboard_inline_mkchart",
+      "dashboard_inline_mkspark",
+      "dashboard_inline_rendermotoristas",
+      "dashboard_inline_rendersharetable",
+      "dashboard_inline_setchartemptystate",
+      "dashboard_inline_sharesortclass",
+      "dashboard_inline_sharesortvalue",
+      "dashboard_inline_srtshare",
+      "dashboard_inline_trunc"
+    ],
+    "7": [
       "dashboard_inline_getlmvalueandcount",
       "dashboard_inline_getlyvalueandcount",
       "dashboard_inline_getmonthlydatafromdataverse",
@@ -136,65 +157,88 @@
       "dashboard_inline_passesactivefilters",
       "dashboard_inline_sumv"
     ],
-    "7": [
+    "8": [
+      "dashboard_inline_enhancesortabletables",
+      "dashboard_inline_marktablesort",
+      "dashboard_inline_parsetablevalue",
+      "dashboard_inline_sortdomtable",
+      "dashboard_inline_tablesortkey"
+    ],
+    "9": [
       "dashboard_inline_calcularmetamensal",
       "dashboard_inline_gethistoricalfat",
-      "dashboard_inline_getmetaparaperiodo",
-      "dashboard_inline_getmetaparaperiodoproporcional"
+      "dashboard_inline_getmetaparaperiodo"
     ],
-    "8": [
+    "10": [
       "dashboard_inline_msselectall",
       "dashboard_inline_mstoggle",
       "dashboard_inline_updatemsbutton"
     ],
-    "9": [
+    "11": [
       "scripts_deploy_webresource",
       "scripts_deploy_webresource_escape_odatastring",
       "scripts_deploy_webresource_write_step"
     ],
-    "10": [
+    "12": [
       "dashboard_inline_applyf",
       "dashboard_inline_quickfilter"
     ],
-    "11": [
+    "13": [
       "dashboard_inline_clearf",
       "dashboard_inline_filtermsoptions"
     ],
-    "12": [
+    "14": [
       "dashboard_inline_copytoclipboard",
       "dashboard_inline_showalert"
     ],
-    "13": [
-      "dashboard_inline_mkspark",
-      "dashboard_inline_setchartemptystate"
+    "15": [
+      "dashboard_inline_ensurereviewlayouts",
+      "dashboard_inline_replacecanvaswithtable"
     ]
   },
   "cohesion": {
-    "0": 0.07692307692307693,
-    "1": 0.2523076923076923,
-    "2": 0.12857142857142856,
-    "3": 0.2222222222222222,
-    "4": 0.38461538461538464,
-    "5": 0.3055555555555556,
-    "6": 0.2857142857142857,
-    "7": 0.5,
-    "8": 0.6666666666666666,
+    "0": 0.1978494623655914,
+    "1": 0.08,
+    "2": 0.1368421052631579,
+    "3": 0.2046783625730994,
+    "4": 0.1978021978021978,
+    "5": 0.38461538461538464,
+    "6": 0.2,
+    "7": 0.2857142857142857,
+    "8": 0.5,
     "9": 0.6666666666666666,
-    "10": 1.0,
-    "11": 1.0,
+    "10": 0.6666666666666666,
+    "11": 0.6666666666666666,
     "12": 1.0,
-    "13": 1.0
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0
   },
   "gods": [
     {
       "id": "dashboard_inline_renderall",
       "label": "renderAll()",
-      "degree": 46
+      "degree": 55
     },
     {
       "id": "dashboard_inline_loadall",
       "label": "loadAll()",
-      "degree": 18
+      "degree": 19
+    },
+    {
+      "id": "dashboard_inline_renderdistributiontable",
+      "label": "renderDistributionTable()",
+      "degree": 16
+    },
+    {
+      "id": "dashboard_inline_renderfrota",
+      "label": "renderFrota()",
+      "degree": 15
+    },
+    {
+      "id": "dashboard_inline_emptyrow",
+      "label": "emptyRow()",
+      "degree": 15
     },
     {
       "id": "dashboard_inline_rendermanutencoes",
@@ -202,44 +246,29 @@
       "degree": 13
     },
     {
-      "id": "dashboard_inline_opts0",
-      "label": "opts0()",
+      "id": "dashboard_inline_renderpagamentos",
+      "label": "renderPagamentos()",
       "degree": 12
     },
     {
-      "id": "dashboard_inline_mkchart",
-      "label": "mkChart()",
-      "degree": 12
+      "id": "dashboard_inline_brls",
+      "label": "brlS()",
+      "degree": 11
     },
     {
-      "id": "dashboard_inline_trunc",
-      "label": "trunc()",
+      "id": "dashboard_inline_norml",
+      "label": "normL()",
       "degree": 11
     },
     {
       "id": "dashboard_inline_fetchall",
       "label": "fetchAll()",
       "degree": 11
-    },
-    {
-      "id": "dashboard_inline_renderpagamentos",
-      "label": "renderPagamentos()",
-      "degree": 11
-    },
-    {
-      "id": "dashboard_inline_emptyrow",
-      "label": "emptyRow()",
-      "degree": 11
-    },
-    {
-      "id": "dashboard_inline_api",
-      "label": "API()",
-      "degree": 10
     }
   ],
   "surprises": [
     {
-      "source": "renderManutencoes()",
+      "source": "renderAll()",
       "target": "mL()",
       "source_files": [
         "dashboard-inline.js",
@@ -247,7 +276,29 @@
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 2 → community 1"
+      "note": "Bridges community 0 → community 2"
+    },
+    {
+      "source": "renderShareTable()",
+      "target": "brlS()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 0 → community 6"
+    },
+    {
+      "source": "isOwnVehicle()",
+      "target": "fv()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 2 → community 4"
     },
     {
       "source": "renderAll()",
@@ -258,7 +309,7 @@
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 6 → community 2"
+      "note": "Bridges community 7 → community 2"
     },
     {
       "source": "renderFaturamento()",
@@ -269,46 +320,24 @@
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 6 → community 1"
-    },
-    {
-      "source": "getMetaParaPeriodoProporcional()",
-      "target": "parseBRDate()",
-      "source_files": [
-        "dashboard-inline.js",
-        "dashboard-inline.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 5 → community 7"
-    },
-    {
-      "source": "getTotalForPeriod()",
-      "target": "parseBRDate()",
-      "source_files": [
-        "dashboard-inline.js",
-        "dashboard-inline.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 5 → community 6"
+      "note": "Bridges community 7 → community 0"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `renderAll()` connect `Community 2` to `Community 0`, `Community 1`, `Community 5`, `Community 6`, `Community 7`, `Community 10`, `Community 11`, `Community 13`?",
-      "why": "High betweenness centrality (0.046) - this node is a cross-community bridge."
+      "question": "Why does `renderAll()` connect `Community 2` to `Community 0`, `Community 1`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 12`, `Community 13`, `Community 15`?",
+      "why": "High betweenness centrality (0.049) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `loadAll()` connect `Community 3` to `Community 0`, `Community 2`, `Community 10`, `Community 12`?",
-      "why": "High betweenness centrality (0.006) - this node is a cross-community bridge."
+      "question": "Why does `loadAll()` connect `Community 3` to `Community 1`, `Community 2`, `Community 12`, `Community 14`?",
+      "why": "High betweenness centrality (0.005) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `fetchAll()` connect `Community 3` to `Community 0`?",
-      "why": "High betweenness centrality (0.001) - this node is a cross-community bridge."
+      "question": "Why does `renderFrota()` connect `Community 0` to `Community 1`, `Community 2`, `Community 4`?",
+      "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
     },
     {
       "type": "verify_inferred",
@@ -318,17 +347,17 @@
     {
       "type": "isolated_nodes",
       "question": "What connects `fat2023`, `fat2024`, `fat2025` to the rest of the system?",
-      "why": "17 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "why": "18 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 0` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected."
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
       "question": "Should `Community 2` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.12857142857142856 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.1368421052631579 - nodes in this community are weakly interconnected."
     }
   ]
 }

@@ -907,6 +907,46 @@
         font-size: clamp(18px, 9cqi, 22px);
         font-weight: 800;
       }
+      .kpi.kpi-compact {
+        min-height: 64px;
+        padding: 12px 14px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        align-items: end;
+        column-gap: 10px;
+      }
+      .kpi.kpi-compact > .kpi-lbl {
+        grid-column: 1;
+        grid-row: 2;
+        margin: 0;
+        min-width: 0;
+        font-size: 11px;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .kpi.kpi-compact > .kpi-val {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: start;
+        margin: 0 0 4px;
+        font-size: 20px;
+        line-height: 1;
+      }
+      .kpi.kpi-compact > .kpi-val.sm {
+        font-size: 17px;
+      }
+      .kpi.kpi-compact > .metric-list {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        margin: 0;
+      }
+      .kpi:not(:has(.kpi-main, .metric-list)) {
+        min-height: 92px;
+        padding: 14px 16px;
+      }
       .kpi-right {
         display: flex;
         flex-direction: column;
@@ -2062,7 +2102,7 @@
               ></div>
               <div class="kpi-main">
                 <div class="kpi-left">
-                  <div class="kpi-lbl">Concluídos s/ Valor</div>
+                  <div class="kpi-lbl">CP Pendente</div>
                   <div class="kpi-val" id="kSemVal">—</div>
                 </div>
                 <div class="kpi-right">
@@ -2299,7 +2339,7 @@
                 class="kpi-accent"
                 style="background: linear-gradient(135deg, #8a6200, #c9a227)"
               ></div>
-              <div class="kpi-lbl">Sem Valor</div>
+              <div class="kpi-lbl">CP Pendente</div>
               <div class="kpi-val" id="sSemVal">—</div>
             </div>
             <div class="kpi">
@@ -3088,7 +3128,7 @@
         // Preços
         for (let i = 0; i < 60; i++) {
           const id = `mock-preco-${i}`;
-          const st = r(["Faturado", "Pendente", "Pago"]);
+          const st = r(["Concluída", "Pendente"]);
           mock.precos.push({
             cr40f_composicaodeprecosid: id,
             new_valortotal: randF(150, 3500),
@@ -3118,7 +3158,7 @@
 
         // Pagantes (deve vir antes de Reservas para que possam ser referenciados)
         for (let i = 0; i < 40; i++) {
-          const st = r(["Pago", "Pendente"]);
+          const st = r(["Paga", "Pendente"]);
           mock.pagantes.push({
             cr40f_pagantesid: `mock-pag-${i}`,
             _cr40f_financeiro_value: `mock-op-${i}`,
@@ -3541,8 +3581,19 @@
         return k.includes("pend") || k.includes("progr") || k.includes("program") || k.includes("solicit");
       };
       const isReceivedPayment = (r) => {
-        const k = normL(fv(r, F.pag.status));
-        return k.includes("pago") || k.includes("receb");
+        return r[F.pag.status] === 202410002;
+      };
+      const isTicketEligibleReservation = (r) =>
+        r?._cpConcluida === true && (parseFloat(r?._valor) || 0) > 0;
+      const getTicketStats = (rows) => {
+        const eligible = rows.filter(isTicketEligibleReservation);
+        const value = sumV(eligible);
+        return {
+          rows: eligible,
+          value,
+          count: eligible.length,
+          ticket: eligible.length ? value / eligible.length : 0,
+        };
       };
       const isCardPayment = (r) => {
         const k = normL(fv(r, F.pag.forma));
@@ -4122,8 +4173,10 @@ function detectEnv(){
           const id = p["cr40f_composicaodeprecosid"]?.toLowerCase();
           if (id) {
             const valor = parseFloat(p[F.preco.valorTotal]) || 0;
-            const pendente = normL(fv(p, F.preco.status)).includes("pend");
-            precoMap.set(id, { valor, pendente });
+            const status = p[F.preco.status];
+            const pendente = status === 100000000;
+            const concluida = status === 100000001;
+            precoMap.set(id, { valor, pendente, concluida });
           }
         }
         console.log(
@@ -4157,6 +4210,7 @@ function detectEnv(){
             _veiNome: String(fv(r, F.res.veiculo) || "—"),
             _valor: valor,
             _cpPendente: cpPendente,
+            _cpConcluida: entry?.concluida ?? false,
             _opId: F.res.lookupOP ? (r[F.res.lookupOP] || "").toLowerCase() : "",
             _ts: r[F.res.data] ? new Date(r[F.res.data]).getTime() : 0,
           };
@@ -4779,6 +4833,15 @@ function detectEnv(){
         return { value, count: reservas.length, hasData: value > 0 || reservas.length > 0 };
       }
 
+      function getTicketStatsForPeriod(startStr, endStr) {
+        if (!startStr || !endStr) return getTicketStats([]);
+        return getTicketStats(
+          DB.reservas.filter((r) =>
+            inDateRange(r[F.res.data], startStr, endStr) && passesActiveFilters(r),
+          ),
+        );
+      }
+
       Chart.register(ChartDataLabels);
       const PAL = [
         "#1a6cf5",
@@ -4828,7 +4891,7 @@ const monthsLabelsAll = [
             </div>
             <div class="kpi executive kpi-tone-orange">
               <div class="kpi-accent" style="background: linear-gradient(135deg, #e07000, #f59532)"></div>
-              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Sem valor</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
+              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP Pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
               <div class="kpi-spark"><canvas id="spSemValor"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-red">
@@ -4838,7 +4901,7 @@ const monthsLabelsAll = [
             </div>
           </div>
           <div class="exec-alerts">
-            <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>Sem valor</span></div><b>Conferir</b></div>
+            <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
           </div>
@@ -4957,9 +5020,15 @@ const monthsLabelsAll = [
         el.innerHTML = `<div><strong>${value}</strong><span>${label}</span></div><b>${status}</b>`;
       }
 
+      function compactStandaloneKpis() {
+        document.querySelectorAll(".kpi").forEach((card) => {
+          const hasMain = card.querySelector(".kpi-main");
+          const hasSupportingMetrics = card.querySelector(".metric-list");
+          if (!hasMain && !hasSupportingMetrics) card.classList.add("kpi-compact");
+        });
+      }
+
       function renderAll() {
-        ensureExecutiveLayout();
-        ensureReviewLayouts();
         const dvDisabled = isDataverseDisabled();
         const rv = dvDisabled ? [] : VW.reservas;
         const fat = sumV(rv);
@@ -5118,8 +5187,16 @@ const monthsLabelsAll = [
         const ndChip = (label, cls) =>
           `<span class="badge-kpi ${cls}" style="opacity:.45;"><span class="bk-label">${label}</span><span class="bk-val">—</span><span class="bk-pct" style="letter-spacing:.5px;">s/dado</span></span>`;
 
-        // Last-month ticket value (valor / count)
-        const lmTkVal = lmSrvCount > 0 ? lmValue / lmSrvCount : 0;
+        const ticketAtual = getTicketStats(rv);
+        const curTk = ticketAtual.ticket;
+        const lmTkStats = lmPeriod
+          ? getTicketStatsForPeriod(lmPeriod.start, lmPeriod.end)
+          : getTicketStats([]);
+        const lyTkStats = lyPeriod
+          ? getTicketStatsForPeriod(lyPeriod.start, lyPeriod.end)
+          : getTicketStats([]);
+        const lmTkVal = lmTkStats.ticket;
+        const lyTkVal = lyTkStats.ticket;
 
         // KPIs
         set("kSrv", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
@@ -5129,8 +5206,6 @@ const monthsLabelsAll = [
         set("kFat", dvDisabled ? "—" : brlS(fat));
         html("kFatD", dvDisabled ? "" :
           (showLM ? fmtKpiChip(fat, lmValue, "LM", "badge-lm") : "") + fmtKpiChip(fat, lyValue, "LY", "badge-ly"));
-        const curTk = rv.length ? fat / rv.length : 0;
-        const lyTkVal = lySrvCount > 0 ? lyValue / lySrvCount : 0;
         set("kTk", dvDisabled ? "—" : brl(curTk));
         html("kTkD", dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
@@ -5218,7 +5293,7 @@ const monthsLabelsAll = [
         const trendSrv = trendKeys.map((k) => (byM[k] || []).length);
         const trendTk = trendKeys.map((k) => {
           const rows = byM[k] || [];
-          return rows.length ? sumV(rows) / rows.length : 0;
+          return getTicketStats(rows).ticket;
         });
         const trendReceber = trendKeys.map((k) => {
           const rows = (byM[k] || []).filter(isProducedReservation);
@@ -5249,7 +5324,7 @@ const monthsLabelsAll = [
         mkSpark("spSemValor", trendLabels, trendSemValor, "#e07000");
         mkSpark("spRecebPct", trendLabels, trendRecebPct, "#1a7a40");
 
-        setExecAlert("alertSemValor", semValor.length, "Sem valor", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
+        setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
@@ -5404,7 +5479,7 @@ const monthsLabelsAll = [
         const ticketMedioMensal = (mks.length > 0 ? mks : monthsLabelsAll).map((k, idx) => {
           if (mks.length > 0) {
             const md = byM[k];
-            return md.length ? sumV(md) / md.length : 0;
+            return getTicketStats(md).ticket;
           }
           return null;
         });
@@ -5606,7 +5681,7 @@ const monthsLabelsAll = [
           <tbody>${topFatRows.map(([nome, rows], i) => {
             const val = sumV(rows);
             const p = fat ? (val / fat) * 100 : 0;
-            return `<tr><td class="em">${trunc(nome, 26)}</td><td class="r em">${brl(val)}</td><td class="r dim">${brl(rows.length ? val / rows.length : 0)}</td><td>${progressCell(p, brlS(val), PAL[i % PAL.length])}</td></tr>`;
+            return `<tr><td class="em">${trunc(nome, 26)}</td><td class="r em">${brl(val)}</td><td class="r dim">${brl(getTicketStats(rows).ticket)}</td><td>${progressCell(p, brlS(val), PAL[i % PAL.length])}</td></tr>`;
           }).join("") || emptyRow(4)}</tbody></table>
         `);
 
@@ -5681,7 +5756,7 @@ const monthsLabelsAll = [
         set("sFinTotal", dvDisabled ? "â€”" : brlS(fat));
         html("sFinMix", dvDisabled ? "" : renderMetricLines([
           ["Ticket medio", brl(curTk)],
-          ["Sem valor", semValor.length.toLocaleString("pt-BR")],
+          ["CP pendente", semValor.length.toLocaleString("pt-BR")],
           ["A receber", brlS(aReceber)],
         ]));
         const byTipo = grp(rv, (r) => r._tipoL);
@@ -5791,7 +5866,7 @@ const monthsLabelsAll = [
             nome: n,
             qtd: v.length,
             fat: sumV(v),
-            ticket: v.length ? sumV(v) / v.length : 0,
+            ticket: getTicketStats(v).ticket,
           }))
           .sort((a, b) => b.fat - a.fat);
         tblCache.tbFat = cliRows;
@@ -6023,7 +6098,7 @@ const monthsLabelsAll = [
               funcao: f[F.fun.funcao] || "—",
               qtd: srvs.length,
               fat: sumV(srvs),
-              ticket: srvs.length ? sumV(srvs) / srvs.length : 0,
+              ticket: getTicketStats(srvs).ticket,
               cnh: f[F.fun.cnh],
             };
           })

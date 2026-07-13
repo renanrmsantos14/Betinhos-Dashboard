@@ -1,8 +1,6 @@
-﻿// Gerado por scripts/build-graphify-code.ps1
-// Fonte: Dashboard.html
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
       // DADOS HARDCODED
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       const fat2023 = [
         148127.05, 218779.86, 344114.51, 280122.75, 363727.08, 298182.52,
         282676.23, 434144.06, 314675.09, 365644.26, 366559.39, 281865.47,
@@ -16,15 +14,15 @@
         450734.61, 426814.08, 419071.97, 434559.4, 421781.78, 438377.83,
       ];
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      // DADOS FICTÃCIOS (MOCK) â€” DESENVOLVIMENTO LOCAL
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
+      // DADOS FICTÍCIOS (MOCK) — DESENVOLVIMENTO LOCAL
+      // ════════════════════════════════════════════
       let USING_MOCK_DATA = false;
 
       function generateMockData() {
         const now = new Date();
         const motores = [
-          "JoÃ£o Silva",
+          "João Silva",
           "Carlos Oliveira",
           "Maria Santos",
           "Pedro Costa",
@@ -38,18 +36,18 @@
         const clientes = [
           "Empresa Alpha",
           "Beta Transportes",
-          "Gamma LogÃ­stica",
+          "Gamma Logística",
           "Delta Corp",
-          "Epsilon ServiÃ§os",
+          "Epsilon Serviços",
           "Zeta Holdings",
-          "Eta ComÃ©rcio",
-          "Theta IndÃºstria",
+          "Eta Comércio",
+          "Theta Indústria",
           "Iota Ltda",
           "Kappa Group",
         ];
         const tiposServ = [
           "Transfer",
-          "DisposiÃ§Ã£o",
+          "Disposição",
           "Evento",
           "Aeroporto",
           "Intermunicipal",
@@ -66,7 +64,7 @@
           "Standard",
         ];
         const statusRes = [
-          "ConcluÃ­do",
+          "Concluído",
           "Pendente",
           "Programado",
           "Cancelado",
@@ -94,20 +92,20 @@
           "C180",
         ];
         const formasPag = [
-          "CartÃ£o",
+          "Cartão",
           "Boleto",
           "PIX",
-          "TransferÃªncia",
+          "Transferência",
           "Dinheiro",
         ];
         const tiposMan = [
-          "RevisÃ£o",
+          "Revisão",
           "Pneu",
-          "ElÃ©trica",
-          "MecÃ¢nica",
+          "Elétrica",
+          "Mecânica",
           "Funilaria",
           "Ar Condicionado",
-          "Troca de Ã“leo",
+          "Troca de Óleo",
         ];
         const tiposMulta = [
           "Excesso de velocidade",
@@ -119,7 +117,7 @@
         const tiposTroca = [
           "Troca Programada",
           "Quebra",
-          "ManutenÃ§Ã£o",
+          "Manutenção",
           "Upgrade",
         ];
         const catsMkt = [
@@ -130,7 +128,7 @@
           "Folder",
           "Parceria",
         ];
-        const statusMkt = ["Publicado", "Em ProduÃ§Ã£o", "Rascunho", "Aprovado"];
+        const statusMkt = ["Publicado", "Em Produção", "Rascunho", "Aprovado"];
 
         const r = (arr) => arr[Math.floor(Math.random() * arr.length)];
         const rand = (min, max) =>
@@ -156,10 +154,10 @@
           marketing: [],
         };
 
-        // PreÃ§os
+        // Preços
         for (let i = 0; i < 60; i++) {
           const id = `mock-preco-${i}`;
-          const st = r(["Faturado", "Pendente", "Pago"]);
+          const st = r(["Concluída", "Pendente"]);
           mock.precos.push({
             cr40f_composicaodeprecosid: id,
             new_valortotal: randF(150, 3500),
@@ -168,7 +166,7 @@
           });
         }
 
-        // FuncionÃ¡rios
+        // Funcionários
         for (let i = 0; i < motores.length; i++) {
           const cnh = new Date(now);
           cnh.setFullYear(cnh.getFullYear() + rand(0, 3));
@@ -189,7 +187,7 @@
 
         // Pagantes (deve vir antes de Reservas para que possam ser referenciados)
         for (let i = 0; i < 40; i++) {
-          const st = r(["Pago", "Pendente"]);
+          const st = r(["Paga", "Pendente"]);
           mock.pagantes.push({
             cr40f_pagantesid: `mock-pag-${i}`,
             _cr40f_financeiro_value: `mock-op-${i}`,
@@ -202,9 +200,9 @@
           });
         }
 
-        // VeÃ­culos
+        // Veículos
         for (let i = 0; i < 15; i++) {
-          const st = r(["DisponÃ­vel", "Em ManutenÃ§Ã£o", "Ativo", "Reservado"]);
+          const st = r(["Disponível", "Em Manutenção", "Ativo", "Reservado"]);
           const catVei = i < 10 ? "Proprio" : "Terceiro";
           mock.veiculos.push({
             cr40f_veiculosid: `mock-vei-${i}`,
@@ -260,9 +258,9 @@
           });
         }
 
-        // ManutenÃ§Ãµes
+        // Manutenções
         for (let i = 0; i < 25; i++) {
-          const st = r(["ConcluÃ­do", "Em Andamento", "Pendente"]);
+          const st = r(["Concluído", "Em Andamento", "Pendente"]);
           mock.manutencoes.push({
             cr40f_manutencoesid: `mock-man-${i}`,
             cr40f_datamanutencao: dt(rand(0, 90)),
@@ -299,7 +297,7 @@
 
         // Trocas
         for (let i = 0; i < 18; i++) {
-          const st = r(["ConcluÃ­da", "Pendente", "Aguardando"]);
+          const st = r(["Concluída", "Pendente", "Aguardando"]);
           mock.trocas.push({
             cr40f_trocasdecarrosid: `mock-trc-${i}`,
             cr40f_dataehorariodatroca: dt(rand(0, 60)),
@@ -328,9 +326,9 @@
         return mock;
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      // CONFIGURAÃ‡Ã•ES DO DATAVERSE
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
+      // CONFIGURAÇÕES DO DATAVERSE
+      // ════════════════════════════════════════════
       const ENVS = {
         orgf261ae8e: {
           label: "PROD",
@@ -457,18 +455,18 @@
       let msState = { St: [], Cl: [], Mo: [], Tp: [] };
       let funcMapGlobal = new Map();
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // UTILS
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       const brl = (v) =>
         v == null
-          ? "â€”"
+          ? "—"
           : Number(v).toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",
             });
       const brlS = (v) => {
-        if (v == null) return "â€”";
+        if (v == null) return "—";
         if (v >= 1e6) return "R$\u00a0" + (v / 1e6).toFixed(2) + "M";
         if (v >= 1e3) return "R$\u00a0" + (v / 1e3).toFixed(1) + "k";
         return brl(v);
@@ -482,20 +480,20 @@
               hour: "2-digit",
               minute: "2-digit",
             })
-          : "â€”";
-      const fmtD = (v) => (v ? new Date(v).toLocaleDateString("pt-BR") : "â€”");
+          : "—";
+      const fmtD = (v) => (v ? new Date(v).toLocaleDateString("pt-BR") : "—");
       const pct = (v, t) => (t ? Math.round((v / t) * 100) : 0);
 
       function mK(v) {
         if (!v) return null;
-        // Extrai ano-mÃªs diretamente da string ISO para evitar problemas de fuso horÃ¡rio
+        // Extrai ano-mês diretamente da string ISO para evitar problemas de fuso horário
         const match = String(v).match(/^(\d{4})-(\d{2})/);
         if (match) return `${match[1]}-${match[2]}`;
         const d = new Date(v);
         return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
       }
       const mL = (k) => {
-        if (!k) return "â€”";
+        if (!k) return "—";
         const [y, m] = k.split("-");
         const date = new Date(parseInt(y), parseInt(m) - 1, 1);
         return date
@@ -509,7 +507,7 @@
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(text);
-            showAlert("suc", "âœ… Copiado para a Ã¡rea de transferÃªncia!");
+            showAlert("suc", "✅ Copiado para a área de transferência!");
             return true;
           }
         } catch (err) {
@@ -524,11 +522,11 @@
           textarea.select();
           document.execCommand("copy");
           document.body.removeChild(textarea);
-          showAlert("suc", "âœ… Copiado para a Ã¡rea de transferÃªncia!");
+          showAlert("suc", "✅ Copiado para a área de transferência!");
           return true;
         } catch (err) {
           console.error("Copy failed:", err);
-          showAlert("err", "âŒ NÃ£o foi possÃ­vel copiar. Tente manualmente.");
+          showAlert("err", "❌ Não foi possível copiar. Tente manualmente.");
           return false;
         }
       }
@@ -546,7 +544,7 @@
           .sort((a, b) => a.localeCompare(b));
       }
       const trunc = (s, n = 22) =>
-        s && s.length > n ? s.substring(0, n) + "â€¦" : s || "â€”";
+        s && s.length > n ? s.substring(0, n) + "…" : s || "—";
       const stL = (s) => s.toLowerCase();
       const normL = (s) =>
         String(s ?? "")
@@ -613,7 +611,19 @@
       };
       const isReceivedPayment = (r) => {
         const k = normL(fv(r, F.pag.status));
-        return k.includes("pago") || k.includes("receb");
+        return k === "paga";
+      };
+      const isTicketEligibleReservation = (r) =>
+        r?._cpConcluida === true && (parseFloat(r?._valor) || 0) > 0;
+      const getTicketStats = (rows) => {
+        const eligible = rows.filter(isTicketEligibleReservation);
+        const value = sumV(eligible);
+        return {
+          rows: eligible,
+          value,
+          count: eligible.length,
+          ticket: eligible.length ? value / eligible.length : 0,
+        };
       };
       const isCardPayment = (r) => {
         const k = normL(fv(r, F.pag.forma));
@@ -973,17 +983,17 @@
         return out;
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      // REGRA GLOBAL: Dados Dataverse prÃ©-2026 suprimidos
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
+      // REGRA GLOBAL: Dados Dataverse pré-2026 suprimidos
+      // ════════════════════════════════════════════
       function isDataverseDisabled() {
-        // Removida a restriÃ§Ã£o de 2026 para permitir visualizaÃ§Ã£o dos dados
+        // Removida a restrição de 2026 para permitir visualização dos dados
         return false;
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // FETCH
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       async function fetchAll(url) {
         let res = [],
           next = url;
@@ -1008,11 +1018,11 @@
         return res;
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // ENV DETECTION
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 // ENV DETECTION
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 let IS_LOCAL = false;
 function detectEnv(){
   const h=window.location.hostname;
@@ -1031,26 +1041,26 @@ function detectEnv(){
   IS_LOCAL = true;
 }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // LOAD
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       async function loadAll() {
         clearAlerts();
-        setLoading(true, "Iniciando cargaâ€¦");
+        setLoading(true, "Iniciando carga…");
         const btn = document.getElementById("btnRef");
         btn.disabled = true;
         btn.classList.add("spin");
         try {
           if (shouldUseMockData()) {
-            // Usar dados fictÃ­cios para desenvolvimento local
+            // Usar dados fictícios para desenvolvimento local
             USING_MOCK_DATA = true;
             const mock = generateMockData();
             DB = { ...mock };
             showAlert(
               "warn",
-              "<strong>âš ï¸ MODO DESENVOLVIMENTO:</strong> VocÃª estÃ¡ visualizando dados <strong>FICTÃCIOS</strong> gerados apenas para testes. Nenhum dado real estÃ¡ sendo exibido.",
+              "<strong>⚠️ MODO DESENVOLVIMENTO:</strong> Você está visualizando dados <strong>FICTÍCIOS</strong> gerados apenas para testes. Nenhum dado real está sendo exibido.",
             );
-            console.log("[MOCK] Dados fictÃ­cios gerados:", {
+            console.log("[MOCK] Dados fictícios gerados:", {
               reservas: DB.reservas.length,
               precos: DB.precos.length,
               manutencoes: DB.manutencoes.length,
@@ -1111,7 +1121,7 @@ function detectEnv(){
       }
 
       async function loadReservas() {
-        setLoading(true, "Carregando serviÃ§osâ€¦");
+        setLoading(true, "Carregando serviços…");
         const sel = [
           F.res.id,
           F.res.data,
@@ -1193,8 +1203,10 @@ function detectEnv(){
           const id = p["cr40f_composicaodeprecosid"]?.toLowerCase();
           if (id) {
             const valor = parseFloat(p[F.preco.valorTotal]) || 0;
-            const pendente = normL(fv(p, F.preco.status)).includes("pend");
-            precoMap.set(id, { valor, pendente });
+            const status = normL(fv(p, F.preco.status));
+            const pendente = status.includes("pend");
+            const concluida = status === "concluida";
+            precoMap.set(id, { valor, pendente, concluida });
           }
         }
         console.log(
@@ -1221,13 +1233,14 @@ function detectEnv(){
             _mot: motDisplay,
             _cli: r[F.res.navCli]?.cr40f_nomedocliente || "Sem cliente",
             _stL: String(fv(r, F.res.status) || "Sem status"),
-            _fatStL: String(fv(r, F.res.fatStatus) || "â€”"),
-            _tipoL: String(fv(r, F.res.tipo) || "â€”"),
-            _veiL: String(fv(r, F.res.veiTipo) || "â€”"),
+            _fatStL: String(fv(r, F.res.fatStatus) || "—"),
+            _tipoL: String(fv(r, F.res.tipo) || "—"),
+            _veiL: String(fv(r, F.res.veiTipo) || "—"),
             _veiId: String(r[F.res.veiculo] || "").toLowerCase(),
-            _veiNome: String(fv(r, F.res.veiculo) || "â€”"),
+            _veiNome: String(fv(r, F.res.veiculo) || "—"),
             _valor: valor,
             _cpPendente: cpPendente,
+            _cpConcluida: entry?.concluida ?? false,
             _opId: F.res.lookupOP ? (r[F.res.lookupOP] || "").toLowerCase() : "",
             _ts: r[F.res.data] ? new Date(r[F.res.data]).getTime() : 0,
           };
@@ -1240,9 +1253,9 @@ function detectEnv(){
         );
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // FILTERS
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       function populateFilters() {
         const setMS = (id, vals, ph) => {
           const btn = document.getElementById(`${id}-btn`);
@@ -1255,7 +1268,7 @@ function detectEnv(){
           const unique = [...new Map(opts.map((v) => [v.value, v])).values()]
             .sort((a, b) => a.label.localeCompare(b.label));
           dd.innerHTML = `
-      <input type="text" class="ms-search" placeholder="ðŸ” Filtrar opÃ§Ãµesâ€¦" oninput="filterMSOptions('${id}', this.value)">
+      <input type="text" class="ms-search" placeholder="🔍 Filtrar opções…" oninput="filterMSOptions('${id}', this.value)">
       <div class="ms-options-container" id="${id}-options">
         ${unique.map((v) => `<label><input type="checkbox" value="${String(v.value).replace(/"/g, "&quot;")}" onchange="msToggle('${id}','${String(v.value).replace(/'/g, "\\'").replace(/"/g, '\\"')}')"><span>${v.label}</span></label>`).join("")}
       </div>
@@ -1321,6 +1334,7 @@ function detectEnv(){
         if (idx > -1) state.splice(idx, 1);
         else state.push(val);
         updateMSButton(id);
+        applyF(true);
       }
       function msSelectAll(id, sel) {
         const key = id.replace("ms", "");
@@ -1336,6 +1350,7 @@ function detectEnv(){
           opts.forEach((o) => (o.checked = false));
         }
         updateMSButton(id);
+        applyF(true);
       }
       function updateMSButton(id) {
         const key = id.replace("ms", "");
@@ -1350,25 +1365,69 @@ function detectEnv(){
         if (state.length === 0) btn.innerHTML = ph[id];
         else
           btn.innerHTML = `${ph[id]} <span class="sel-count">${state.length}</span>`;
+        updateFilterSummary();
       }
-      document.addEventListener("click", (e) => {
-        if (!e.target.closest(".ms-wrap")) {
-          document
-            .querySelectorAll(".ms-dd")
-            .forEach((d) => d.classList.remove("open"));
-          document
-            .querySelectorAll(".ms-btn")
-            .forEach((b) => b.classList.remove("open"));
-        }
-      });
-
-      function applyF() {
+      function closeMultiselects() {
         document
           .querySelectorAll(".ms-dd")
           .forEach((d) => d.classList.remove("open"));
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+      }
+      function toggleFilterPanel(forceOpen) {
+        const panel = document.getElementById("filterPanel");
+        const btn = document.getElementById("filterToggle");
+        if (!panel || !btn) return;
+        const open =
+          typeof forceOpen === "boolean"
+            ? forceOpen
+            : !panel.classList.contains("open");
+        panel.classList.toggle("open", open);
+        btn.setAttribute("aria-expanded", String(open));
+        if (!open) closeMultiselects();
+      }
+      function updateFilterSummary() {
+        const summary = document.getElementById("filterSummary");
+        const countEl = document.getElementById("filterCount");
+        if (!summary || !countEl) return;
+
+        const start = document.getElementById("fS")?.value || "";
+        const end = document.getElementById("fE")?.value || "";
+        const fmtFilterDate = (value) =>
+          value ? fmtD(`${value}T12:00:00-03:00`) : "...";
+        const parts = [];
+        let activeCount = 0;
+
+        if (start || end) {
+          activeCount += 1;
+          parts.push(`Periodo: ${fmtFilterDate(start)} ate ${fmtFilterDate(end)}`);
+        }
+
+        const labels = {
+          St: "status",
+          Cl: "clientes",
+          Mo: "motoristas",
+          Tp: "tipos",
+        };
+        Object.entries(msState).forEach(([key, values]) => {
+          if (!values.length) return;
+          activeCount += 1;
+          parts.push(`${values.length} ${labels[key]}`);
+        });
+
+        summary.textContent = parts.length ? parts.join(" | ") : "Nenhum filtro ativo";
+        countEl.textContent = activeCount;
+        countEl.classList.toggle("is-empty", activeCount === 0);
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".ms-wrap")) {
+          closeMultiselects();
+        }
+      });
+
+      function applyF(keepMultiselectOpen) {
+        if (!keepMultiselectOpen) closeMultiselects();
         const dS = document.getElementById("fS").value;
         const dE = document.getElementById("fE").value;
         let d = [...DB.reservas];
@@ -1395,8 +1454,10 @@ function detectEnv(){
         VW.reservas = d;
         tblCache = {};
         renderAll();
+        updateFilterSummary();
       }
       function clearF() {
+        closeMultiselects();
         ["fS", "fE"].forEach((x) => (document.getElementById(x).value = ""));
         msState = { St: [], Cl: [], Mo: [], Tp: [] };
         ["msSt", "msCl", "msMo", "msTp"].forEach((id) => {
@@ -1423,6 +1484,7 @@ function detectEnv(){
         VW.reservas = [...DB.reservas];
         tblCache = {};
         renderAll();
+        updateFilterSummary();
       }
       function quickFilter(period, btnEl) {
         document
@@ -1477,9 +1539,9 @@ function detectEnv(){
         applyF();
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // META INTELIGENTE
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       function getHistoricalFat(ano, mes) {
         if (ano === 2023 && typeof fat2023 !== "undefined") return fat2023[mes] || 0;
         if (ano === 2024 && typeof fat2024 !== "undefined") return fat2024[mes] || 0;
@@ -1487,7 +1549,7 @@ function detectEnv(){
         return 0;
       }
       function calcularMetaMensal(ano, mes) {
-        // Meta = 50% ano anterior + 40% 2 anos atrÃ¡s + 10% 3 anos atrÃ¡s, +13%
+        // Meta = 50% ano anterior + 40% 2 anos atrás + 10% 3 anos atrás, +13%
         const v1 = getHistoricalFat(ano - 1, mes);
         const v2 = getHistoricalFat(ano - 2, mes);
         const v3 = getHistoricalFat(ano - 3, mes);
@@ -1507,10 +1569,10 @@ function detectEnv(){
         let meta = 0;
 
         if (startYear === endYear && startMonth === endMonth) {
-          // Mesmo mÃªs - retorna a meta mensal
+          // Mesmo mês - retorna a meta mensal
           return calcularMetaMensal(startYear, startMonth);
         } else {
-          // MÃºltiplos meses - soma as metas mensais
+          // Múltiplos meses - soma as metas mensais
           let current = new Date(startYear, startMonth, 1);
           const endDate = new Date(endYear, endMonth, 1);
 
@@ -1524,9 +1586,9 @@ function detectEnv(){
         }
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      // FUNÃ‡Ã•ES AUXILIARES PARA DADOS HARDCODED
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
+      // FUNÇÕES AUXILIARES PARA DADOS HARDCODED
+      // ════════════════════════════════════════════
       function getMetaParaPeriodoProporcional(startStr, endStr) {
         if (!startStr || !endStr) return 0;
         const start = parseBRDate(startStr);
@@ -1608,7 +1670,7 @@ function detectEnv(){
         return total;
       }
 
-      // Calcula faturamento mensal do Dataverse para um ano especÃ­fico
+      // Calcula faturamento mensal do Dataverse para um ano específico
       function getMonthlyDataFromDataverse(year, startDateStr, endDateStr) {
         const result = [];
         for (let month = 0; month < 12; month++) {
@@ -1643,9 +1705,9 @@ function detectEnv(){
         return result;
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      // LÃ“GICA DE LM/LY COM RESPEITO A FILTROS
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
+      // LÓGICA DE LM/LY COM RESPEITO A FILTROS
+      // ════════════════════════════════════════════
       function getLMValueAndCount(lmYear, lmMonth) {
         const lmMk = `${lmYear}-${String(lmMonth + 1).padStart(2, "0")}`;
         const lmReservas = DB.reservas.filter(r => {
@@ -1663,7 +1725,7 @@ function detectEnv(){
         const lmValue = sumV(lmReservas);
         const lmCount = lmReservas.length;
 
-        // Se nÃ£o tem dados do Dataverse, tenta hardcoded (apenas 2025 pra trÃ¡s)
+        // Se não tem dados do Dataverse, tenta hardcoded (apenas 2025 pra trás)
         if (lmValue === 0 && lmYear <= 2025) {
           const yearDataMap = {
             2023: typeof fat2023 !== "undefined" ? fat2023 : [],
@@ -1705,7 +1767,7 @@ function detectEnv(){
         const lyValue = sumV(lyReservas);
         const lyCount = lyReservas.length;
 
-        // Se nÃ£o tem dados do Dataverse, tenta hardcoded (apenas 2025 pra trÃ¡s)
+        // Se não tem dados do Dataverse, tenta hardcoded (apenas 2025 pra trás)
         if (lyValue === 0 && lyYear <= 2025) {
           const yearDataMap = {
             2023: typeof fat2023 !== "undefined" ? fat2023 : [],
@@ -1724,9 +1786,9 @@ function detectEnv(){
         return { value: lyValue, count: lyCount, hasData: lyValue > 0 };
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // RENDER PRINCIPAL
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       function passesActiveFilters(r) {
         return (msState.St.length === 0 || msState.St.includes(r._stL)) &&
                (msState.Cl.length === 0 || msState.Cl.includes(r._cli)) &&
@@ -1753,6 +1815,15 @@ function detectEnv(){
           }
         }
         return { value, count: reservas.length, hasData: value > 0 || reservas.length > 0 };
+      }
+
+      function getTicketStatsForPeriod(startStr, endStr) {
+        if (!startStr || !endStr) return getTicketStats([]);
+        return getTicketStats(
+          DB.reservas.filter((r) =>
+            inDateRange(r[F.res.data], startStr, endStr) && passesActiveFilters(r),
+          ),
+        );
       }
 
       Chart.register(ChartDataLabels);
@@ -1804,7 +1875,7 @@ const monthsLabelsAll = [
             </div>
             <div class="kpi executive kpi-tone-orange">
               <div class="kpi-accent" style="background: linear-gradient(135deg, #e07000, #f59532)"></div>
-              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Sem valor</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
+              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP Pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
               <div class="kpi-spark"><canvas id="spSemValor"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-red">
@@ -1814,7 +1885,7 @@ const monthsLabelsAll = [
             </div>
           </div>
           <div class="exec-alerts">
-            <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>Sem valor</span></div><b>Conferir</b></div>
+            <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
           </div>
@@ -1944,14 +2015,14 @@ const monthsLabelsAll = [
         const mls = mks.map(mL);
         const byCli = grp(rv, (r) => r._cli);
 
-        // Aplicar filtros de data Ã s outras abas
+        // Aplicar filtros de data às outras abas
         const start = document.getElementById("fS").value;
         const end = document.getElementById("fE").value;
         const filterByDate = (records, dateField) => {
           if (!start && !end) return records;
           return records.filter(r => {
             const rDate = r[dateField];
-            if (!rDate) return true; // Incluir se nÃ£o tem data
+            if (!rDate) return true; // Incluir se não tem data
             if (start) {
               const startDate = new Date(start + "T00:00:00-03:00");
               if (new Date(rDate) < startDate) return false;
@@ -1967,7 +2038,7 @@ const monthsLabelsAll = [
         VW.multas = filterByDate(DB.multas, F.mul.data);
         VW.trocas = filterByDate(DB.trocas, F.trc.data);
 
-        // Construir opPagoSet â€” OP com status pago/recebido
+        // Construir opPagoSet — OP com status pago/recebido
         const opPagoSet = new Set(
           DB.pagantes
             .filter(isReceivedPayment)
@@ -2049,7 +2120,7 @@ const monthsLabelsAll = [
         const lmValue = lmData.hasData ? lmData.value : 0;
         const lmSrvCount = lmData.count !== null ? lmData.count : 0;
 
-        // LY deve comparar o perÃ­odo atual com o mesmo perÃ­odo do ano anterior
+        // LY deve comparar o período atual com o mesmo período do ano anterior
         let lyValue = 0;
         let lySrvCount = null;
         if (start && end) {
@@ -2062,7 +2133,7 @@ const monthsLabelsAll = [
           lyValue = lyData.hasData ? lyData.value : 0;
           lySrvCount = lyData.count;
         } else {
-          // Se nÃ£o hÃ¡ filtro, comparar o ano completo
+          // Se não há filtro, comparar o ano completo
           const lyData = getLYValueAndCount(
             `${currentYear - 1}-01-01`,
             `${currentYear - 1}-12-31`,
@@ -2072,7 +2143,7 @@ const monthsLabelsAll = [
           lySrvCount = lyData.count;
         }
 
-        // Chip helpers â€” value + % delta
+        // Chip helpers — value + % delta
         const lyDataScoped = lyPeriod ? getPeriodValueAndCount(lyPeriod.start, lyPeriod.end) : { value: 0, count: null, hasData: false };
         lyValue = lyDataScoped.hasData ? lyDataScoped.value : 0;
         lySrvCount = lyDataScoped.count;
@@ -2081,37 +2152,43 @@ const monthsLabelsAll = [
           if (!prev) return "";
           const pct = ((cur - prev) / prev) * 100;
           const up = pct >= 0;
-          return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${brlS(prev)}</span><span class="bk-pct ${up ? "du" : "dd"}">${up ? "â–²" : "â–¼"}${Math.abs(pct).toFixed(1)}%</span></span>`;
+          return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${brlS(prev)}</span><span class="bk-pct ${up ? "du" : "dd"}">${up ? "▲" : "▼"}${Math.abs(pct).toFixed(1)}%</span></span>`;
         };
-        // Count chip â€” shows count + % delta (no currency)
+        // Count chip — shows count + % delta (no currency)
         const fmtCntChip = (cur, prev, label, cls) => {
           if (!prev) return "";
           const pct = ((cur - prev) / prev) * 100;
           const up = pct >= 0;
-          return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${prev.toLocaleString("pt-BR")}</span><span class="bk-pct ${up ? "du" : "dd"}">${up ? "â–²" : "â–¼"}${Math.abs(pct).toFixed(1)}%</span></span>`;
+          return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${prev.toLocaleString("pt-BR")}</span><span class="bk-pct ${up ? "du" : "dd"}">${up ? "▲" : "▼"}${Math.abs(pct).toFixed(1)}%</span></span>`;
         };
-        // No-data chip â€” shown when the metric can't be computed for a given period
+        // No-data chip — shown when the metric can't be computed for a given period
         const ndChip = (label, cls) =>
-          `<span class="badge-kpi ${cls}" style="opacity:.45;"><span class="bk-label">${label}</span><span class="bk-val">â€”</span><span class="bk-pct" style="letter-spacing:.5px;">s/dado</span></span>`;
+          `<span class="badge-kpi ${cls}" style="opacity:.45;"><span class="bk-label">${label}</span><span class="bk-val">—</span><span class="bk-pct" style="letter-spacing:.5px;">s/dado</span></span>`;
 
-        // Last-month ticket value (valor / count)
-        const lmTkVal = lmSrvCount > 0 ? lmValue / lmSrvCount : 0;
+        const ticketAtual = getTicketStats(rv);
+        const curTk = ticketAtual.ticket;
+        const lmTkStats = lmPeriod
+          ? getTicketStatsForPeriod(lmPeriod.start, lmPeriod.end)
+          : getTicketStats([]);
+        const lyTkStats = lyPeriod
+          ? getTicketStatsForPeriod(lyPeriod.start, lyPeriod.end)
+          : getTicketStats([]);
+        const lmTkVal = lmTkStats.ticket;
+        const lyTkVal = lyTkStats.ticket;
 
         // KPIs
-        set("kSrv", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
+        set("kSrv", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
         html("kSrvD", dvDisabled ? "" :
           (showLM ? (lmSrvCount ? fmtCntChip(rv.length, lmSrvCount, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
           (lySrvCount ? fmtCntChip(rv.length, lySrvCount, "LY", "badge-ly") : ndChip("LY", "badge-ly")));
-        set("kFat", dvDisabled ? "â€”" : brlS(fat));
+        set("kFat", dvDisabled ? "—" : brlS(fat));
         html("kFatD", dvDisabled ? "" :
           (showLM ? fmtKpiChip(fat, lmValue, "LM", "badge-lm") : "") + fmtKpiChip(fat, lyValue, "LY", "badge-ly"));
-        const curTk = rv.length ? fat / rv.length : 0;
-        const lyTkVal = lySrvCount > 0 ? lyValue / lySrvCount : 0;
-        set("kTk", dvDisabled ? "â€”" : brl(curTk));
+        set("kTk", dvDisabled ? "—" : brl(curTk));
         html("kTkD", dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
           (lyTkVal ? fmtKpiChip(curTk, lyTkVal, "LY", "badge-ly") : ndChip("LY", "badge-ly")));
-        set("kMan", dvDisabled ? "â€”" : VW.manutencoes.length);
+        set("kMan", dvDisabled ? "—" : VW.manutencoes.length);
         const custoTotal = dvDisabled
           ? 0
           : VW.manutencoes.reduce(
@@ -2121,7 +2198,7 @@ const monthsLabelsAll = [
         const cfPctRec = fat > 0 ? (custoTotal / fat * 100).toFixed(1) : 0;
         html("kManD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta"><span class="bk-label">CUSTO</span><span class="bk-val">${brlS(custoTotal)}</span><span class="bk-pct ${custoTotal <= fat * 0.1 ? "du" : "dd"}">${cfPctRec}% rec</span></span>`);
-        set("kMul", dvDisabled ? "â€”" : VW.multas.length);
+        set("kMul", dvDisabled ? "—" : VW.multas.length);
         const mulFv2 = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
         const mulPen2 = VW.multas.filter(
@@ -2132,7 +2209,7 @@ const monthsLabelsAll = [
         const mulPenPct = VW.multas.length ? (mulPen2.length / VW.multas.length * 100).toFixed(0) : 0;
         html("kMulD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${mulPen2.length > 0 ? " below" : ""}"><span class="bk-label">PEND</span><span class="bk-val">${mulPen2.length}</span><span class="bk-pct">${mulPenPct}%</span></span>`);
-        set("kSemVal", dvDisabled ? "â€”" : semValor.length);
+        set("kSemVal", dvDisabled ? "—" : semValor.length);
         const semValPct = rv.length ? (semValor.length / rv.length * 100).toFixed(1) : 0;
         const projecao = dvDisabled ? 0 : curTk * semValor.length;
         const produzidoValor = sumV(conclServices);
@@ -2152,11 +2229,11 @@ const monthsLabelsAll = [
           conclServices
             .filter(r => (!r._opId || !opPagoSet.has(r._opId)) && r._valor > 0)
             .reduce((s, r) => s + r._valor, 0) + projecao;
-        set("kPPend", dvDisabled ? "â€”" : brlS(aReceber));
+        set("kPPend", dvDisabled ? "—" : brlS(aReceber));
         const aReceberPct = fat > 0 ? (aReceber / fat * 100).toFixed(0) : 0;
         html("kPPendD", dvDisabled ? "" :
           `<span class="badge-kpi badge-ly"><span class="bk-label">%FAT</span><span class="bk-val">${aReceberPct}%</span><span class="bk-pct">pendente</span></span>`);
-        set("kRecebPct", dvDisabled ? "Ã¢â‚¬â€" : `${recebimentoPct.toFixed(0)}%`);
+        set("kRecebPct", dvDisabled ? "â€”" : `${recebimentoPct.toFixed(0)}%`);
         html("kRecebPctD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta"><span class="bk-label">REC</span><span class="bk-val">${brlS(recebidoProduzido)}</span><span class="bk-pct">recebido</span></span>` +
           `<span class="badge-kpi badge-meta${recebimentoPct >= 90 ? "" : " below"}"><span class="bk-label">BASE</span><span class="bk-val">${brlS(baseRecebimento)}</span><span class="bk-pct">${recebimentoPct.toFixed(1)}%</span></span>`);
@@ -2166,23 +2243,23 @@ const monthsLabelsAll = [
             (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24) < 90
           );
         });
-        set("kCnhW", dvDisabled ? "â€”" : cnhWarn.length);
+        set("kCnhW", dvDisabled ? "—" : cnhWarn.length);
         html("kCnhWD", dvDisabled
           ? ""
           : cnhWarn.length
-            ? `<span class="dd">${cnhWarn.length} atenÃ§Ã£o</span>`
+            ? `<span class="dd">${cnhWarn.length} atenção</span>`
             : `<span class="du">OK</span>`);
         const veiAtivos = DB.veiculos.filter(
           (r) =>
             stL(String(fv(r, F.vei.status) || "")).includes("dispon") ||
             stL(String(fv(r, F.vei.status) || "")).includes("ativo"),
         ).length;
-        set("kFrotaAtiva", dvDisabled ? "â€”" : veiAtivos);
+        set("kFrotaAtiva", dvDisabled ? "—" : veiAtivos);
         html("kFrotaAtivaD", dvDisabled
           ? ""
           : `Total: ${DB.veiculos.length}`);
 
-        // Total Produzido - usando ano atual, anterior e penÃºltimo
+        // Total Produzido - usando ano atual, anterior e penúltimo
         const trendKeys = mks.length > 0
           ? mks.slice(-8)
           : monthsLabelsAll.map((_, i) => `${currentYear}-${String(i + 1).padStart(2, "0")}`).slice(-8);
@@ -2194,7 +2271,7 @@ const monthsLabelsAll = [
         const trendSrv = trendKeys.map((k) => (byM[k] || []).length);
         const trendTk = trendKeys.map((k) => {
           const rows = byM[k] || [];
-          return rows.length ? sumV(rows) / rows.length : 0;
+          return getTicketStats(rows).ticket;
         });
         const trendReceber = trendKeys.map((k) => {
           const rows = (byM[k] || []).filter(isProducedReservation);
@@ -2225,7 +2302,7 @@ const monthsLabelsAll = [
         mkSpark("spSemValor", trendLabels, trendSemValor, "#e07000");
         mkSpark("spRecebPct", trendLabels, trendRecebPct, "#1a7a40");
 
-        setExecAlert("alertSemValor", semValor.length, "Sem valor", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
+        setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
@@ -2253,8 +2330,8 @@ const monthsLabelsAll = [
           "Dez",
         ];
         const year1 = currentYear; // Ano atual
-        const year2 = currentYear - 1; // Ãšltimo ano completo
-        const year3 = currentYear - 2; // Ano anterior ao Ãºltimo
+        const year2 = currentYear - 1; // Último ano completo
+        const year3 = currentYear - 2; // Ano anterior ao último
 
         // Para 2026 em diante, usar dados do Dataverse; para 2025 ou antes, usar hardcoded
         const dataYear1 = year1 >= 2026 && dvDisabled === false
@@ -2347,16 +2424,16 @@ const monthsLabelsAll = [
           if (!value) return "";
           const up = delta >= 0;
           const pctClass = up ? "du" : "dd";
-          const arrow = up ? "â–²" : "â–¼";
+          const arrow = up ? "▲" : "▼";
           return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${brlS(value)}</span><span class="bk-pct ${pctClass}">${arrow}${Math.abs(delta).toFixed(1)}%</span></span>`;
         };
         const metaAchieved = metaProgress >= 100;
         const metaChip = meta > 0
-          ? `<span class="badge-kpi badge-meta${metaAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(meta)}</span><span class="bk-pct" style="font-weight:800;">${metaProgress.toFixed(0)}%${metaAchieved ? " âœ“" : ""}</span></span>`
+          ? `<span class="badge-kpi badge-meta${metaAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(meta)}</span><span class="bk-pct" style="font-weight:800;">${metaProgress.toFixed(0)}%${metaAchieved ? " ✓" : ""}</span></span>`
           : "";
 
         if (document.getElementById("v_totalProd"))
-          document.getElementById("v_totalProd").textContent = dvDisabled ? "â€”" : brlS(accumulated);
+          document.getElementById("v_totalProd").textContent = dvDisabled ? "—" : brlS(accumulated);
         document.getElementById("indicatorsLM_LY_META").innerHTML =
           (showLM ? mkChip("LM", lmValue, lmDelta, "badge-lm") : "") +
           mkChip("LY", lyValue, lyDelta, "badge-ly") +
@@ -2373,14 +2450,14 @@ const monthsLabelsAll = [
             <div class="meta-kpi-pill" style="flex:1;min-width:160px;"><span>${metaProgress.toFixed(1)}% da meta</span><div class="meta-progress-bar-outer" style="margin-top:4px;"><div class="meta-progress-bar-inner" style="width:${barW}%;background:${barColor};"></div></div></div>
           </div>` : "";
 
-        // Ticket MÃ©dio mensal
+        // Ticket Médio mensal
         const tmLabels = mks.length > 0
           ? mks.map(mL).map(label => label.split(" ")[0])
           : monthsLabelsAll;
         const ticketMedioMensal = (mks.length > 0 ? mks : monthsLabelsAll).map((k, idx) => {
           if (mks.length > 0) {
             const md = byM[k];
-            return md.length ? sumV(md) / md.length : 0;
+            return getTicketStats(md).ticket;
           }
           return null;
         });
@@ -2390,7 +2467,7 @@ const monthsLabelsAll = [
             labels: tmLabels,
             datasets: [
               {
-                label: "Ticket MÃ©dio",
+                label: "Ticket Médio",
                 data: ticketMedioMensal,
                 backgroundColor: "#6c4fd8",
                 borderRadius: 5,
@@ -2399,14 +2476,14 @@ const monthsLabelsAll = [
           },
           options: opts0({ noLegend: true, yBrl: true }),
         });
-        set("sub_tm", dvDisabled ? "â€”" : `${mks.length} meses`);
-        set("v_tm", dvDisabled ? "â€”" : brl(curTk));
-        // Ticket MÃ©dio chips: LM only if last month is in current period; LY not available (count unknown)
+        set("sub_tm", dvDisabled ? "—" : `${mks.length} meses`);
+        set("v_tm", dvDisabled ? "—" : brl(curTk));
+        // Ticket Médio chips: LM only if last month is in current period; LY not available (count unknown)
         document.getElementById("ind_tm").innerHTML = dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
           ndChip("LY", "badge-ly");
 
-        // Meta x Realizado por MÃªs
+        // Meta x Realizado por Mês
         {
           const allMks = mks.length > 0 ? mks : monthsLabelsAll.map((_, i) => {
             const m = String(i + 1).padStart(2, "0");
@@ -2426,14 +2503,14 @@ const monthsLabelsAll = [
           const totalMvrReal = mvrReal.reduce((a, b) => a + b, 0);
           const pctGlobal = totalMvrMeta > 0 ? (totalMvrReal / totalMvrMeta * 100) : 0;
           const mvrAchieved = pctGlobal >= 100;
-          set("sub_mvr", `${allMks.length} meses Â· ${pctGlobal.toFixed(1)}% da meta`);
-          set("v_totalMvr", dvDisabled ? "â€”" : brlS(totalMvrReal));
+          set("sub_mvr", `${allMks.length} meses · ${pctGlobal.toFixed(1)}% da meta`);
+          set("v_totalMvr", dvDisabled ? "—" : brlS(totalMvrReal));
           html("mvrSummary", dvDisabled ? "" : `
             <table><thead><tr><th>Meta [R$]</th><th>Alcancado [R$]</th><th>Participacao</th></tr></thead>
             <tbody><tr><td class="r em">${brl(totalMvrMeta)}</td><td class="r em">${brl(totalMvrReal)}</td><td><div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, pctGlobal).toFixed(0)}%;background:${pctGlobal >= 100 ? "var(--green)" : pctGlobal >= 75 ? "var(--blue)" : "var(--orange)"};"></div></div><span class="prg-pct">${pctGlobal.toFixed(1)}%</span></div></td></tr></tbody></table>
           `);
           document.getElementById("ind_mvr").innerHTML = dvDisabled ? "" :
-            (totalMvrMeta > 0 ? `<span class="badge-kpi badge-meta${mvrAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(totalMvrMeta)}</span><span class="bk-pct" style="font-weight:800;">${pctGlobal.toFixed(0)}%${mvrAchieved ? " âœ“" : ""}</span></span>` : "") +
+            (totalMvrMeta > 0 ? `<span class="badge-kpi badge-meta${mvrAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(totalMvrMeta)}</span><span class="bk-pct" style="font-weight:800;">${pctGlobal.toFixed(0)}%${mvrAchieved ? " ✓" : ""}</span></span>` : "") +
             fmtKpiChip(totalMvrReal, lyValue, "LY", "badge-ly");
           mkChart("cMetaVsReal", {
             type: "bar",
@@ -2448,7 +2525,7 @@ const monthsLabelsAll = [
           });
         }
 
-        // Faturamento por Cliente por MÃªs
+        // Faturamento por Cliente por Mês
         {
           const allMks2 = mks.length > 0 ? mks : monthsLabelsAll.map((_, i) => `${currentYear}-${String(i + 1).padStart(2, "0")}`);
           const fcLabels = allMks2.map(k => {
@@ -2473,11 +2550,11 @@ const monthsLabelsAll = [
           if (cliEntries.length > 0) {
             const top1Fat = sumV(cliEntries[0][1]);
             const top1Pct = fat > 0 ? (top1Fat / fat * 100).toFixed(1) : 0;
-            set("v_fatCliTop", dvDisabled ? "â€”" : brlS(top1Fat));
+            set("v_fatCliTop", dvDisabled ? "—" : brlS(top1Fat));
             set("sub_fatcli", trunc(cliEntries[0][0], 26));
             document.getElementById("ind_fatcli").innerHTML = dvDisabled ? "" :
-              `<span class="badge-kpi badge-meta"><span class="bk-label">1Â°</span><span class="bk-val">${brlS(top1Fat)}</span><span class="bk-pct">${top1Pct}%</span></span>` +
-              (cliEntries.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2Â°</span><span class="bk-val">${brlS(sumV(cliEntries[1][1]))}</span><span class="bk-pct">${fat > 0 ? (sumV(cliEntries[1][1])/fat*100).toFixed(1) : 0}%</span></span>` : "");
+              `<span class="badge-kpi badge-meta"><span class="bk-label">1°</span><span class="bk-val">${brlS(top1Fat)}</span><span class="bk-pct">${top1Pct}%</span></span>` +
+              (cliEntries.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2°</span><span class="bk-val">${brlS(sumV(cliEntries[1][1]))}</span><span class="bk-pct">${fat > 0 ? (sumV(cliEntries[1][1])/fat*100).toFixed(1) : 0}%</span></span>` : "");
           } else {
             set("sub_fatcli", `${cliEntries.length} clientes`);
           }
@@ -2490,14 +2567,14 @@ const monthsLabelsAll = [
           }
         }
 
-        // Status dos serviÃ§os
+        // Status dos serviços
         const bySt = grp(rv, (r) => r._stL);
         const stKeys = Object.keys(bySt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => bySt[b].length - bySt[a].length);
         const concluPct = rv.length ? (conclServices.length / rv.length * 100).toFixed(1) : 0;
-        set("v_stTotal", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
-        set("sub_st", dvDisabled ? "â€”" : `${conclServices.length} concluÃ­dos Â· ${cancelados.length} cancelados`);
+        set("v_stTotal", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
+        set("sub_st", dvDisabled ? "—" : `${conclServices.length} concluídos · ${cancelados.length} cancelados`);
         document.getElementById("ind_st").innerHTML = dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${concluPct >= 75 ? "" : " below"}"><span class="bk-label">CONC</span><span class="bk-val">${conclServices.length}</span><span class="bk-pct">${concluPct}%</span></span>` +
           (cancelados.length ? `<span class="badge-kpi" style="background:var(--red-l);color:var(--red);"><span class="bk-label" style="background:var(--red);color:#fff;">CAN</span><span class="bk-val">${cancelados.length}</span><span class="bk-pct">${rv.length ? (cancelados.length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
@@ -2526,11 +2603,11 @@ const monthsLabelsAll = [
                 ),
               )
             : [];
-        set("v_cf", dvDisabled ? "â€”" : brlS(custoTotal));
-        set("sub_cf", dvDisabled ? "â€”" : `${VW.manutencoes.length} manutenÃ§Ãµes Â· ${cfPctRec}% da receita`);
+        set("v_cf", dvDisabled ? "—" : brlS(custoTotal));
+        set("sub_cf", dvDisabled ? "—" : `${VW.manutencoes.length} manutenções · ${cfPctRec}% da receita`);
         document.getElementById("ind_cf").innerHTML = dvDisabled ? "" :
-          `<span class="badge-kpi badge-meta"><span class="bk-label">% REC</span><span class="bk-val">${cfPctRec}%</span><span class="bk-pct ${parseFloat(cfPctRec) <= 10 ? "du" : "dd"}">${parseFloat(cfPctRec) <= 10 ? "âœ“ OK" : "âš  alto"}</span></span>` +
-          (VW.manutencoes.length ? `<span class="badge-kpi badge-ly"><span class="bk-label">MAN</span><span class="bk-val">${VW.manutencoes.length}</span><span class="bk-pct">serviÃ§os</span></span>` : "");
+          `<span class="badge-kpi badge-meta"><span class="bk-label">% REC</span><span class="bk-val">${cfPctRec}%</span><span class="bk-pct ${parseFloat(cfPctRec) <= 10 ? "du" : "dd"}">${parseFloat(cfPctRec) <= 10 ? "✓ OK" : "⚠ alto"}</span></span>` +
+          (VW.manutencoes.length ? `<span class="badge-kpi badge-ly"><span class="bk-label">MAN</span><span class="bk-val">${VW.manutencoes.length}</span><span class="bk-pct">serviços</span></span>` : "");
         mkChart("cCF", {
           type: "bar",
           data: {
@@ -2553,11 +2630,11 @@ const monthsLabelsAll = [
           .slice(0, 10);
         if (top10v.length > 0) {
           const t1vPct = rv.length ? (top10v[0][1].length / rv.length * 100).toFixed(1) : 0;
-          set("v_topVol", dvDisabled ? "â€”" : top10v[0][1].length.toLocaleString("pt-BR"));
+          set("v_topVol", dvDisabled ? "—" : top10v[0][1].length.toLocaleString("pt-BR"));
           set("sub_topVol", trunc(top10v[0][0], 26));
           document.getElementById("ind_topVol").innerHTML = dvDisabled ? "" :
-            `<span class="badge-kpi badge-meta"><span class="bk-label">1Â°</span><span class="bk-val">${top10v[0][1].length}</span><span class="bk-pct">${t1vPct}%</span></span>` +
-            (top10v.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2Â°</span><span class="bk-val">${top10v[1][1].length}</span><span class="bk-pct">${rv.length ? (top10v[1][1].length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
+            `<span class="badge-kpi badge-meta"><span class="bk-label">1°</span><span class="bk-val">${top10v[0][1].length}</span><span class="bk-pct">${t1vPct}%</span></span>` +
+            (top10v.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2°</span><span class="bk-val">${top10v[1][1].length}</span><span class="bk-pct">${rv.length ? (top10v[1][1].length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
         }
         renderDistributionTable(
           "tblTopVolResumo",
@@ -2570,11 +2647,11 @@ const monthsLabelsAll = [
           .slice(0, 10);
         if (top10f.length > 0) {
           const t1fPct = fat > 0 ? (sumV(top10f[0][1]) / fat * 100).toFixed(1) : 0;
-          set("v_topFat", dvDisabled ? "â€”" : brlS(sumV(top10f[0][1])));
+          set("v_topFat", dvDisabled ? "—" : brlS(sumV(top10f[0][1])));
           set("sub_topFat", trunc(top10f[0][0], 26));
           document.getElementById("ind_topFat").innerHTML = dvDisabled ? "" :
-            `<span class="badge-kpi badge-meta"><span class="bk-label">1Â°</span><span class="bk-val">${brlS(sumV(top10f[0][1]))}</span><span class="bk-pct">${t1fPct}%</span></span>` +
-            (top10f.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2Â°</span><span class="bk-val">${brlS(sumV(top10f[1][1]))}</span><span class="bk-pct">${fat > 0 ? (sumV(top10f[1][1])/fat*100).toFixed(1) : 0}%</span></span>` : "");
+            `<span class="badge-kpi badge-meta"><span class="bk-label">1°</span><span class="bk-val">${brlS(sumV(top10f[0][1]))}</span><span class="bk-pct">${t1fPct}%</span></span>` +
+            (top10f.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2°</span><span class="bk-val">${brlS(sumV(top10f[1][1]))}</span><span class="bk-pct">${fat > 0 ? (sumV(top10f[1][1])/fat*100).toFixed(1) : 0}%</span></span>` : "");
         }
         const topFatRows = takeUntilShare(top10f, fat, ([, rows]) => sumV(rows));
         html("tblTopFatResumo", dvDisabled ? "" : `
@@ -2582,7 +2659,7 @@ const monthsLabelsAll = [
           <tbody>${topFatRows.map(([nome, rows], i) => {
             const val = sumV(rows);
             const p = fat ? (val / fat) * 100 : 0;
-            return `<tr><td class="em">${trunc(nome, 26)}</td><td class="r em">${brl(val)}</td><td class="r dim">${brl(rows.length ? val / rows.length : 0)}</td><td>${progressCell(p, brlS(val), PAL[i % PAL.length])}</td></tr>`;
+            return `<tr><td class="em">${trunc(nome, 26)}</td><td class="r em">${brl(val)}</td><td class="r dim">${brl(getTicketStats(rows).ticket)}</td><td>${progressCell(p, brlS(val), PAL[i % PAL.length])}</td></tr>`;
           }).join("") || emptyRow(4)}</tbody></table>
         `);
 
@@ -2609,7 +2686,7 @@ const monthsLabelsAll = [
               }))
             : [] || [
                 {
-                  label: "Dados mÃ©dios",
+                  label: "Dados médios",
                   data: monthsLabelsAll.map((m, i) =>
                     Math.round((yearDataMap[2025]?.[i] || 0) / 50),
                   ),
@@ -2618,8 +2695,8 @@ const monthsLabelsAll = [
                 },
               ];
         const motCount = mots.length > 0 ? mots.length : 0;
-        set("v_topMot", dvDisabled ? "â€”" : motCount.toLocaleString("pt-BR"));
-        set("sub_mm", dvDisabled ? "â€”" : `${motCount > 0 ? motCount : "â€”"} motoristas ativos`);
+        set("v_topMot", dvDisabled ? "—" : motCount.toLocaleString("pt-BR"));
+        set("sub_mm", dvDisabled ? "—" : `${motCount > 0 ? motCount : "—"} motoristas ativos`);
         if (!dvDisabled && mots.length > 0) {
           // Find top motorista by total services
           const motTotals = mots.map(m => ({
@@ -2631,8 +2708,8 @@ const monthsLabelsAll = [
           const topMot = motTotals[0];
           const topMotPct = rv.length ? (topMot.count / rv.length * 100).toFixed(1) : 0;
           document.getElementById("ind_mot").innerHTML =
-            `<span class="badge-kpi badge-meta"><span class="bk-label">1Â°</span><span class="bk-val">${topMot.count}</span><span class="bk-pct">${topMotPct}%</span></span>` +
-            (motTotals.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2Â°</span><span class="bk-val">${motTotals[1].count}</span><span class="bk-pct">${rv.length ? (motTotals[1].count/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
+            `<span class="badge-kpi badge-meta"><span class="bk-label">1°</span><span class="bk-val">${topMot.count}</span><span class="bk-pct">${topMotPct}%</span></span>` +
+            (motTotals.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2°</span><span class="bk-val">${motTotals[1].count}</span><span class="bk-pct">${rv.length ? (motTotals[1].count/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
         }
         mkChart("cMM", {
           type: "bar",
@@ -2640,24 +2717,24 @@ const monthsLabelsAll = [
           options: opts0({ legendRight: true }),
         });
 
-        // ===== PÃGINA SERVIÃ‡OS =====
-        set("sT", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
-        set("sCon", dvDisabled ? "â€”" : conclServices.length);
-        set("sPen", dvDisabled ? "â€”" : pendentes.length);
-        set("sCan", dvDisabled ? "â€”" : cancelados.length);
-        set("sTk", dvDisabled ? "â€”" : brl(curTk));
-        set("sSemVal", dvDisabled ? "â€”" : semValor.length);
-        set("sFat", dvDisabled ? "â€”" : brlS(fat));
-        set("sOpTotal", dvDisabled ? "Ã¢â‚¬â€" : rv.length.toLocaleString("pt-BR"));
+        // ===== PÁGINA SERVIÇOS =====
+        set("sT", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
+        set("sCon", dvDisabled ? "—" : conclServices.length);
+        set("sPen", dvDisabled ? "—" : pendentes.length);
+        set("sCan", dvDisabled ? "—" : cancelados.length);
+        set("sTk", dvDisabled ? "—" : brl(curTk));
+        set("sSemVal", dvDisabled ? "—" : semValor.length);
+        set("sFat", dvDisabled ? "—" : brlS(fat));
+        set("sOpTotal", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
         html("sOpMix", dvDisabled ? "" : renderMetricLines([
           ["Concluidos", conclServices.length.toLocaleString("pt-BR")],
           ["Pendentes/Prog.", pendentes.length.toLocaleString("pt-BR")],
           ["Cancelados", cancelados.length.toLocaleString("pt-BR")],
         ]));
-        set("sFinTotal", dvDisabled ? "Ã¢â‚¬â€" : brlS(fat));
+        set("sFinTotal", dvDisabled ? "â€”" : brlS(fat));
         html("sFinMix", dvDisabled ? "" : renderMetricLines([
           ["Ticket medio", brl(curTk)],
-          ["Sem valor", semValor.length.toLocaleString("pt-BR")],
+          ["CP pendente", semValor.length.toLocaleString("pt-BR")],
           ["A receber", brlS(aReceber)],
         ]));
         const byTipo = grp(rv, (r) => r._tipoL);
@@ -2683,7 +2760,7 @@ const monthsLabelsAll = [
         tblCache.tbSrv = rv;
         set(
           "metaSrv",
-          dvDisabled ? "â€”" : `${rv.length.toLocaleString("pt-BR")} registros`,
+          dvDisabled ? "—" : `${rv.length.toLocaleString("pt-BR")} registros`,
         );
         renderSrvTable(rv);
 
@@ -2705,7 +2782,7 @@ const monthsLabelsAll = [
         enhanceSortableTables();
       }
 
-      // FunÃ§Ãµes de renderizaÃ§Ã£o das outras abas (implementaÃ§Ã£o funcional)
+      // Funções de renderização das outras abas (implementação funcional)
       function renderFaturamento(
         dvDisabled,
         rv,
@@ -2718,14 +2795,14 @@ const monthsLabelsAll = [
         currentYear,
         yearDataMap,
       ) {
-        set("fT", dvDisabled ? "â€”" : brlS(fat));
-        set("fTk", dvDisabled ? "â€”" : brlS(curTk));
+        set("fT", dvDisabled ? "—" : brlS(fat));
+        set("fTk", dvDisabled ? "—" : brlS(curTk));
         const maxVal = rv.length ? Math.max(...rv.map((r) => r._valor)) : 0;
-        set("fMax", dvDisabled ? "â€”" : brlS(maxVal));
+        set("fMax", dvDisabled ? "—" : brlS(maxVal));
         const cliAtivos = new Set(
           rv.map((r) => r._cli).filter((x) => x !== "Sem cliente"),
         ).size;
-        set("fCli", dvDisabled ? "â€”" : cliAtivos);
+        set("fCli", dvDisabled ? "—" : cliAtivos);
         const fmLabels = mks.length > 0
           ? mls.map(label => label.split(" ")[0])
           : monthsLabelsAll;
@@ -2767,11 +2844,11 @@ const monthsLabelsAll = [
             nome: n,
             qtd: v.length,
             fat: sumV(v),
-            ticket: v.length ? sumV(v) / v.length : 0,
+            ticket: getTicketStats(v).ticket,
           }))
           .sort((a, b) => b.fat - a.fat);
         tblCache.tbFat = cliRows;
-        set("metaFat", dvDisabled ? "â€”" : `${cliRows.length} clientes`);
+        set("metaFat", dvDisabled ? "—" : `${cliRows.length} clientes`);
         renderSumTable("tbFat", cliRows, fat);
       }
       function renderPagamentos(dvDisabled, resumoFinanceiro) {
@@ -2788,16 +2865,16 @@ const monthsLabelsAll = [
         set(
           "pTot",
           dvDisabled
-            ? "â€”"
+            ? "—"
             : brlS(resumo.recebidoProduzido ?? pagReceb.reduce((s, r) => s + paymentValue(r), 0)),
         );
-        set("pPend", dvDisabled ? "â€”" : brlS(resumo.aReceber || 0));
-        set("pQtd", dvDisabled ? "â€”" : pags.length);
-        set("pCartao", dvDisabled ? "â€”" : brlS(cartaoRecebido));
-        set("pPrazo", dvDisabled ? "â€”" : "s/dado");
+        set("pPend", dvDisabled ? "—" : brlS(resumo.aReceber || 0));
+        set("pQtd", dvDisabled ? "—" : pags.length);
+        set("pCartao", dvDisabled ? "—" : brlS(cartaoRecebido));
+        set("pPrazo", dvDisabled ? "—" : "s/dado");
         html("paymentInsight", dvDisabled ? "" : "Para calcular nome e tempo de pagamento por cliente, falta incluir no fetch uma data de pagamento/baixa e, se existir, data de vencimento. Sem esse campo, qualquer ranking de atrasados seria falso.");
-        const byForma = grp(pags, (r) => String(pgFv(r, F.pag.forma) || "â€”"));
-        const byPagSt = grp(pags, (r) => String(pgFv(r, F.pag.status) || "â€”"));
+        const byForma = grp(pags, (r) => String(pgFv(r, F.pag.forma) || "—"));
+        const byPagSt = grp(pags, (r) => String(pgFv(r, F.pag.status) || "—"));
         const fmK = Object.keys(byForma)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byForma[b].length - byForma[a].length);
@@ -2816,14 +2893,14 @@ const monthsLabelsAll = [
           pags.length,
           { label: "Status", countLabel: "Registros", valueLabel: "Valor", badgeLabels: true, moneyValue: true, participationByValue: true },
         );
-        set("metaPag", dvDisabled ? "â€”" : `${pags.length} registros`);
+        set("metaPag", dvDisabled ? "—" : `${pags.length} registros`);
         const tbPag = document.getElementById("tbPag");
         if (tbPag) tbPag.innerHTML =
           pags
             .slice(0, 300)
             .map(
               (r) =>
-                `<tr><td>${badge(String(pgFv(r, F.pag.status) || "â€”"))}</td><td>${String(pgFv(r, F.pag.forma) || "â€”")}</td><td class="r em">${brl(parseFloat(r[F.pag.valor]) || 0)}</td></tr>`,
+                `<tr><td>${badge(String(pgFv(r, F.pag.status) || "—"))}</td><td>${String(pgFv(r, F.pag.forma) || "—")}</td><td class="r em">${brl(parseFloat(r[F.pag.valor]) || 0)}</td></tr>`,
             )
             .join("") || emptyRow(3);
       }
@@ -2846,21 +2923,21 @@ const monthsLabelsAll = [
         const vManF = vei.filter((r) =>
           stL(String(vFv(r, F.vei.status) || "")).includes("manut"),
         );
-        set("vTot", dvDisabled ? "â€”" : vei.length);
-        set("vDisp", dvDisabled ? "â€”" : disp.length);
-        set("vBlin", dvDisabled ? "â€”" : blin.length);
-        set("vMan", dvDisabled ? "â€”" : vManF.length);
+        set("vTot", dvDisabled ? "—" : vei.length);
+        set("vDisp", dvDisabled ? "—" : disp.length);
+        set("vBlin", dvDisabled ? "—" : blin.length);
+        set("vMan", dvDisabled ? "—" : vManF.length);
         const manFvInFrota = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
         const manutPorCategoria = grp(dvDisabled ? [] : VW.manutencoes, (r) =>
           maintenanceCategory(manFvInFrota(r, F.man.tipo))
         );
-        set("frPrevProg", dvDisabled ? "â€”" : (manutPorCategoria["Preventiva programada"] || []).length);
-        set("frPrevCond", dvDisabled ? "â€”" : (manutPorCategoria["Preventiva condicao"] || []).length);
-        set("frCorrNaoCrit", dvDisabled ? "â€”" : (manutPorCategoria["Corretiva nao critica"] || []).length);
-        set("frCorrCrit", dvDisabled ? "â€”" : (manutPorCategoria["Corretiva critica"] || []).length);
-        set("frConserv", dvDisabled ? "â€”" : (manutPorCategoria["Conservacao"] || []).length);
-        set("frAvaria", dvDisabled ? "â€”" : (manutPorCategoria["Avaria"] || []).length);
+        set("frPrevProg", dvDisabled ? "—" : (manutPorCategoria["Preventiva programada"] || []).length);
+        set("frPrevCond", dvDisabled ? "—" : (manutPorCategoria["Preventiva condicao"] || []).length);
+        set("frCorrNaoCrit", dvDisabled ? "—" : (manutPorCategoria["Corretiva nao critica"] || []).length);
+        set("frCorrCrit", dvDisabled ? "—" : (manutPorCategoria["Corretiva critica"] || []).length);
+        set("frConserv", dvDisabled ? "—" : (manutPorCategoria["Conservacao"] || []).length);
+        set("frAvaria", dvDisabled ? "—" : (manutPorCategoria["Avaria"] || []).length);
         const usageStart = document.getElementById("fS")?.value || `${new Date().getFullYear()}-01-01`;
         const usageEnd = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
         const usage = dvDisabled
@@ -2878,8 +2955,8 @@ const monthsLabelsAll = [
         };
         const weekUse = avgUsage("weekday");
         const weekendUse = avgUsage("weekend");
-        set("frUsoSemana", dvDisabled || !weekUse ? "â€”" : `${weekUse.pct.toFixed(1)}%`);
-        set("frUsoFim", dvDisabled || !weekendUse ? "â€”" : `${weekendUse.pct.toFixed(1)}%`);
+        set("frUsoSemana", dvDisabled || !weekUse ? "—" : `${weekUse.pct.toFixed(1)}%`);
+        set("frUsoFim", dvDisabled || !weekendUse ? "—" : `${weekendUse.pct.toFixed(1)}%`);
         html("frUsoSemanaD", dvDisabled || !weekUse ? "" : renderMetricLines([
           ["Com servico/dia", weekUse.withAvg.toFixed(1)],
           ["Sem servico/dia", weekUse.withoutAvg.toFixed(1)],
@@ -2888,16 +2965,16 @@ const monthsLabelsAll = [
           ["Com servico/dia", weekendUse.withAvg.toFixed(1)],
           ["Sem servico/dia", weekendUse.withoutAvg.toFixed(1)],
         ]));
-        set("metaFrotaUso", dvDisabled ? "â€”" : `${usage.totalOwn} carros proprios Â· media diaria por mes`);
+        set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} carros proprios · media diaria por mes`);
         renderFleetUsageRows(usage.rows);
         const kpiRows = dvDisabled ? [] : maintenanceKpiRows(VW.manutencoes, manFvInFrota);
-        set("metaFrotaKpis", dvDisabled ? "â€”" : `${VW.manutencoes.length} manutencoes no filtro atual`);
+        set("metaFrotaKpis", dvDisabled ? "—" : `${VW.manutencoes.length} manutencoes no filtro atual`);
         html("tblFrotaKpis", kpiRows.map((row) => {
           const status = row.ok === null ? badge("Sem dado") : badge(row.ok ? "OK" : "Atencao");
           return `<tr><td class="em">${row.categoria}</td><td class="r">${row.resultado}</td><td>${row.meta}</td><td>${metricSplit(row.cobertura, status)}</td></tr>`;
         }).join("") || emptyRow(4));
-        const byVSt = grp(vei, (r) => String(vFv(r, F.vei.status) || "â€”"));
-        const byMarca = grp(vei, (r) => r[F.vei.marca] || "â€”");
+        const byVSt = grp(vei, (r) => String(vFv(r, F.vei.status) || "—"));
+        const byMarca = grp(vei, (r) => r[F.vei.marca] || "—");
         const vsK = Object.keys(byVSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byVSt[b].length - byVSt[a].length);
@@ -2917,26 +2994,26 @@ const monthsLabelsAll = [
           { label: "Marca", countLabel: "Veiculos" },
         );
         tblCache.tbFrota = vei.map((r) => ({
-          placa: r[F.vei.placa] || "â€”",
-          marca: r[F.vei.marca] || "â€”",
-          modelo: r[F.vei.modelo] || "â€”",
-          ano: r[F.vei.ano] || "â€”",
+          placa: r[F.vei.placa] || "—",
+          marca: r[F.vei.marca] || "—",
+          modelo: r[F.vei.modelo] || "—",
+          ano: r[F.vei.ano] || "—",
           blindado: r[F.vei.blindado],
-          status: String(vFv(r, F.vei.status) || "â€”"),
+          status: String(vFv(r, F.vei.status) || "—"),
         }));
-        set("metaFrota", dvDisabled ? "â€”" : `${vei.length} veÃ­culos`);
+        set("metaFrota", dvDisabled ? "—" : `${vei.length} veículos`);
         renderFrotaTable(tblCache.tbFrota);
       }
       function renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap) {
-        set("mTot", dvDisabled ? "â€”" : DB.funcionarios.length);
+        set("mTot", dvDisabled ? "—" : DB.funcionarios.length);
         const cnhWarn = DB.funcionarios.filter((r) => {
           if (!r[F.fun.cnh]) return true;
           return (
             (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24) < 90
           );
         });
-        set("mCnh", dvDisabled ? "â€”" : cnhWarn.length);
-        set("mSrv", dvDisabled ? "â€”" : rv.length);
+        set("mCnh", dvDisabled ? "—" : cnhWarn.length);
+        set("mSrv", dvDisabled ? "—" : rv.length);
         const motMap = new Map();
         rv.forEach((r) => {
           if (r._mot !== "Sem motorista") motMap.set(r._motKey || r._mot, r._mot);
@@ -2973,7 +3050,7 @@ const monthsLabelsAll = [
               }))
             : [] || [
                 {
-                  label: "Dados mÃ©dios",
+                  label: "Dados médios",
                   data: monthsLabelsAll.map((m, i) =>
                     Math.round((yearDataMap[currentYear]?.[i] || 0) / 50000),
                   ),
@@ -2990,16 +3067,16 @@ const monthsLabelsAll = [
           .map((f) => {
             const funcId = String(f.cr40f_funcionariosid || "").toLowerCase();
             const apelido = f[F.fun.apelido] || "";
-            const nome = apelido || f[F.fun.nome] || "â€”";
+            const nome = apelido || f[F.fun.nome] || "—";
             const srvs = rv.filter((r) =>
               funcId ? r._motId === funcId : r._mot === nome
             );
             return {
               nome,
-              funcao: f[F.fun.funcao] || "â€”",
+              funcao: f[F.fun.funcao] || "—",
               qtd: srvs.length,
               fat: sumV(srvs),
-              ticket: srvs.length ? sumV(srvs) / srvs.length : 0,
+              ticket: getTicketStats(srvs).ticket,
               cnh: f[F.fun.cnh],
             };
           })
@@ -3007,7 +3084,7 @@ const monthsLabelsAll = [
         tblCache.tbMot = motRows;
         set(
           "metaMot",
-          dvDisabled ? "â€”" : `${DB.funcionarios.length} motoristas`,
+          dvDisabled ? "—" : `${DB.funcionarios.length} motoristas`,
         );
         renderMotTable(motRows, fat);
       }
@@ -3021,12 +3098,12 @@ const monthsLabelsAll = [
             stL(String(manFv(r, F.man.status) || "")).includes("aberto") ||
             stL(String(manFv(r, F.man.status) || "")).includes("pend"),
         );
-        set("manTot", dvDisabled ? "â€”" : mans.length);
-        set("manCusto", dvDisabled ? "â€”" : brlS(custoTotal));
-        set("manAnd", dvDisabled ? "â€”" : manAnd.length);
+        set("manTot", dvDisabled ? "—" : mans.length);
+        set("manCusto", dvDisabled ? "—" : brlS(custoTotal));
+        set("manAnd", dvDisabled ? "—" : manAnd.length);
         set(
           "manMed",
-          dvDisabled ? "â€”" : brlS(mans.length ? custoTotal / mans.length : 0),
+          dvDisabled ? "—" : brlS(mans.length ? custoTotal / mans.length : 0),
         );
         const mmLabels = manMks.length > 0 ? manMks.map(mL) : monthsLabelsAll;
         const mmData =
@@ -3053,7 +3130,7 @@ const monthsLabelsAll = [
           },
           options: opts0({ noLegend: true, yBrl: true }),
         });
-        const byManTp = grp(mans, (r) => String(manFv(r, F.man.tipo) || "â€”"));
+        const byManTp = grp(mans, (r) => String(manFv(r, F.man.tipo) || "—"));
         const mtK = Object.keys(byManTp)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byManTp[b].length - byManTp[a].length);
@@ -3063,13 +3140,13 @@ const monthsLabelsAll = [
           mans.length,
           { label: "Tipo", countLabel: "Registros", valueLabel: "Custo", moneyValue: true, participationByValue: true },
         );
-        set("metaMan", dvDisabled ? "â€”" : `${mans.length} registros`);
+        set("metaMan", dvDisabled ? "—" : `${mans.length} registros`);
         document.getElementById("tbMan").innerHTML =
           mans
             .slice(0, 300)
             .map(
               (r) =>
-                `<tr><td class="dim">${fmtD(r[F.man.data])}</td><td class="em">${r[`_${F.man.veiculo}_value@OData.Community.Display.V1.FormattedValue`] || "â€”"}</td><td>${String(manFv(r, F.man.tipo) || "â€”")}</td><td>${badge(String(manFv(r, F.man.status) || "â€”"))}</td><td class="r em">${brl(parseFloat(r[F.man.valor]) || 0)}</td></tr>`,
+                `<tr><td class="dim">${fmtD(r[F.man.data])}</td><td class="em">${r[`_${F.man.veiculo}_value@OData.Community.Display.V1.FormattedValue`] || "—"}</td><td>${String(manFv(r, F.man.tipo) || "—")}</td><td>${badge(String(manFv(r, F.man.status) || "—"))}</td><td class="r em">${brl(parseFloat(r[F.man.valor]) || 0)}</td></tr>`,
             )
             .join("") || emptyRow(5);
       }
@@ -3088,10 +3165,10 @@ const monthsLabelsAll = [
             stL(String(mulFv(r, F.mul.status) || "")).includes("resolvid") ||
             stL(String(mulFv(r, F.mul.status) || "")).includes("conclu"),
         );
-        set("mulTot", dvDisabled ? "â€”" : muls.length);
-        set("mulPen", dvDisabled ? "â€”" : mulPen.length);
-        set("mulRes", dvDisabled ? "â€”" : mulRes.length);
-        const byMulSt = grp(muls, (r) => String(mulFv(r, F.mul.status) || "â€”"));
+        set("mulTot", dvDisabled ? "—" : muls.length);
+        set("mulPen", dvDisabled ? "—" : mulPen.length);
+        set("mulRes", dvDisabled ? "—" : mulRes.length);
+        const byMulSt = grp(muls, (r) => String(mulFv(r, F.mul.status) || "—"));
         const multaTipo = (r) => String(lookupValue(r, F.mul.tipo) || "Sem tipo");
         const byMulTipo = grp(muls, multaTipo);
         const byMulMot = grp(muls, (r) => {
@@ -3099,7 +3176,7 @@ const monthsLabelsAll = [
           const motName =
             r[
               `_${F.mul.mot}_value@OData.Community.Display.V1.FormattedValue`
-            ] || "â€”";
+            ] || "—";
           return funcMapGlobal.get(String(motId)?.toLowerCase()) || motName;
         });
         const msK = Object.keys(byMulSt)
@@ -3132,7 +3209,7 @@ const monthsLabelsAll = [
           muls.length,
           { label: "Tipo", countLabel: "Multas" },
         );
-        set("metaMul", dvDisabled ? "â€”" : `${muls.length} registros`);
+        set("metaMul", dvDisabled ? "—" : `${muls.length} registros`);
         document.getElementById("tbMul").innerHTML =
           muls
             .slice(0, 300)
@@ -3141,10 +3218,10 @@ const monthsLabelsAll = [
               const motName =
                 r[
                   `_${F.mul.mot}_value@OData.Community.Display.V1.FormattedValue`
-                ] || "â€”";
+                ] || "—";
               const motDisplay =
                 funcMapGlobal.get(String(motId)?.toLowerCase()) || motName;
-              return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "â€”"}</td><td>${trunc(multaTipo(r), 28)}</td><td>${badge(String(mulFv(r, F.mul.status) || "â€”"))}</td></tr>`;
+              return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "—"}</td><td>${trunc(multaTipo(r), 28)}</td><td>${badge(String(mulFv(r, F.mul.status) || "—"))}</td></tr>`;
             })
             .join("") || emptyRow(5);
       }
@@ -3162,11 +3239,11 @@ const monthsLabelsAll = [
             stL(String(trcFv(r, F.trc.status) || "")).includes("conclu") ||
             stL(String(trcFv(r, F.trc.status) || "")).includes("realiz"),
         );
-        set("trcTot", dvDisabled ? "â€”" : trcs.length);
-        set("trcPen", dvDisabled ? "â€”" : trcPen.length);
-        set("trcCon", dvDisabled ? "â€”" : trcCon.length);
-        const byTrcSt = grp(trcs, (r) => String(trcFv(r, F.trc.status) || "â€”"));
-        const byTrcTp = grp(trcs, (r) => String(trcFv(r, F.trc.tipo) || "â€”"));
+        set("trcTot", dvDisabled ? "—" : trcs.length);
+        set("trcPen", dvDisabled ? "—" : trcPen.length);
+        set("trcCon", dvDisabled ? "—" : trcCon.length);
+        const byTrcSt = grp(trcs, (r) => String(trcFv(r, F.trc.status) || "—"));
+        const byTrcTp = grp(trcs, (r) => String(trcFv(r, F.trc.tipo) || "—"));
         const tsK = Object.keys(byTrcSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byTrcSt[b].length - byTrcSt[a].length);
@@ -3185,13 +3262,13 @@ const monthsLabelsAll = [
           trcs.length,
           { label: "Tipo", countLabel: "Trocas" },
         );
-        set("metaTrc", dvDisabled ? "â€”" : `${trcs.length} registros`);
+        set("metaTrc", dvDisabled ? "—" : `${trcs.length} registros`);
         document.getElementById("tbTrc").innerHTML =
           trcs
             .slice(0, 200)
             .map(
               (r) =>
-                `<tr><td class="dim">${fmtDt(r[F.trc.data])}</td><td>${String(trcFv(r, F.trc.tipo) || "â€”")}</td><td>${badge(String(trcFv(r, F.trc.status) || "â€”"))}</td></tr>`,
+                `<tr><td class="dim">${fmtDt(r[F.trc.data])}</td><td>${String(trcFv(r, F.trc.tipo) || "—")}</td><td>${badge(String(trcFv(r, F.trc.status) || "—"))}</td></tr>`,
             )
             .join("") || emptyRow(3);
       }
@@ -3210,11 +3287,11 @@ const monthsLabelsAll = [
             stL(String(mktFv(r, F.mkt.status) || "")).includes("pend") ||
             stL(String(mktFv(r, F.mkt.status) || "")).includes("rascunho"),
         );
-        set("mktTot", dvDisabled ? "â€”" : mkts.length);
-        set("mktPub", dvDisabled ? "â€”" : mktPub.length);
-        set("mktProd", dvDisabled ? "â€”" : mktProd.length);
-        const byMktCat = grp(mkts, (r) => String(mktFv(r, F.mkt.cat) || "â€”"));
-        const byMktSt = grp(mkts, (r) => String(mktFv(r, F.mkt.status) || "â€”"));
+        set("mktTot", dvDisabled ? "—" : mkts.length);
+        set("mktPub", dvDisabled ? "—" : mktPub.length);
+        set("mktProd", dvDisabled ? "—" : mktProd.length);
+        const byMktCat = grp(mkts, (r) => String(mktFv(r, F.mkt.cat) || "—"));
+        const byMktSt = grp(mkts, (r) => String(mktFv(r, F.mkt.status) || "—"));
         const mcK = Object.keys(byMktCat)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMktCat[b].length - byMktCat[a].length);
@@ -3233,20 +3310,20 @@ const monthsLabelsAll = [
           mkts.length,
           { label: "Status", countLabel: "Publicacoes", badgeLabels: true },
         );
-        set("metaMkt", dvDisabled ? "â€”" : `${mkts.length} publicaÃ§Ãµes`);
+        set("metaMkt", dvDisabled ? "—" : `${mkts.length} publicações`);
         document.getElementById("tbMkt").innerHTML =
           mkts
             .slice(0, 200)
             .map(
               (r) =>
-                `<tr><td class="dim">${fmtD(r[F.mkt.data])}</td><td>${String(mktFv(r, F.mkt.cat) || "â€”")}</td><td>${badge(String(mktFv(r, F.mkt.status) || "â€”"))}</td></tr>`,
+                `<tr><td class="dim">${fmtD(r[F.mkt.data])}</td><td>${String(mktFv(r, F.mkt.cat) || "—")}</td><td>${badge(String(mktFv(r, F.mkt.status) || "—"))}</td></tr>`,
             )
             .join("") || emptyRow(3);
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // CHART HELPERS
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       const FONT = { family: "'Plus Jakarta Sans',system-ui,sans-serif" };
       function opts0({
         noLegend,
@@ -3411,9 +3488,9 @@ const monthsLabelsAll = [
         });
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // TABLE RENDERERS
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       function renderSrvTable(rows) {
         document.getElementById("tbSrv").innerHTML =
           rows
@@ -3422,7 +3499,7 @@ const monthsLabelsAll = [
               (r) => `<tr>
     <td class="dim">${fmtDt(r[F.res.data])}</td><td class="em">${r._cli}</td><td>${r._mot}</td>
     <td class="dim">${r._tipoL}</td><td class="dim">${r._veiL}</td><td>${badge(r._stL)}</td><td>${badge(r._fatStL)}</td>
-    <td class="r em">${r._valor ? brl(r._valor) : '<span class="dim">â€”</span>'}</td>
+    <td class="r em">${r._valor ? brl(r._valor) : '<span class="dim">—</span>'}</td>
   </tr>`,
             )
             .join("") || emptyRow(8);
@@ -3450,7 +3527,7 @@ const monthsLabelsAll = [
             .map(
               (r) => `<tr>
     <td class="em">${r.placa}</td><td>${r.marca}</td><td>${r.modelo}</td><td class="dim">${r.ano}</td>
-    <td class="c">${r.blindado === true || r.blindado === "true" || r.blindado === 1 ? "ðŸ›¡ï¸ Sim" : "â€”"}</td><td>${badge(r.status)}</td>
+    <td class="c">${r.blindado === true || r.blindado === "true" || r.blindado === 1 ? "🛡️ Sim" : "—"}</td><td>${badge(r.status)}</td>
   </tr>`,
             )
             .join("") || emptyRow(6);
@@ -3461,7 +3538,7 @@ const monthsLabelsAll = [
           rows
             .map((r, i) => {
               let cnhCls = "dim",
-                cnhTxt = "â€”";
+                cnhTxt = "—";
               if (r.cnh) {
                 const d = new Date(r.cnh);
                 const diff = (d - hoje) / (1000 * 60 * 60 * 24);
@@ -3480,9 +3557,9 @@ const monthsLabelsAll = [
             .join("") || emptyRow(8);
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // TABLE SORT + SEARCH
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       function srt(tbId, field, th) {
         th.closest("thead")
           .querySelectorAll("th")
@@ -3577,11 +3654,11 @@ const monthsLabelsAll = [
         }
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // UI HELPERS
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       function badge(s) {
-        if (!s || s === "â€”") return '<span class="dim">â€”</span>';
+        if (!s || s === "—") return '<span class="dim">—</span>';
         const k = s.toLowerCase();
         let bg, c;
         if (
@@ -3653,18 +3730,22 @@ const monthsLabelsAll = [
       }
       function showAlert(type, html) {
         document.getElementById("alertArea").innerHTML =
-          `<div class="alert al-${type}"><span>${type === "err" ? "âš ï¸" : "â„¹ï¸"}</span><div>${html}</div></div>`;
+          `<div class="alert al-${type}"><span>${type === "err" ? "⚠️" : "ℹ️"}</span><div>${html}</div></div>`;
       }
       function clearAlerts() {
         document.getElementById("alertArea").innerHTML = "";
       }
       function emptyRow(n) {
-        return `<tr><td colspan="${n}"><div class="empty"><div class="ei">ðŸ“­</div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;
+        return `<tr><td colspan="${n}"><div class="empty"><div class="ei">📭</div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;
       }
 
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
       // INIT
-      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      // ════════════════════════════════════════════
+      ["fS", "fE"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.addEventListener("change", () => applyF(true));
+      });
+      updateFilterSummary();
       detectEnv();
       loadAll();
-
