@@ -119,6 +119,12 @@
         object-fit: cover;
         display: block;
       }
+      .tb-logo-fallback::after {
+        content: "B";
+        color: var(--blue);
+        font-size: 16px;
+        font-weight: 800;
+      }
       .tb-name {
         font-size: 15px;
         font-weight: 800;
@@ -390,12 +396,17 @@
         font-size: 13px;
         font-weight: 800;
         cursor: pointer;
+        outline: none;
         transition:
           background-color var(--dur-fast) ease,
           border-color var(--dur-fast) ease,
           color var(--dur-fast) ease,
           box-shadow var(--dur-med) var(--ease-out),
           transform var(--dur-fast) var(--ease-out);
+      }
+      .filter-toggle:focus-visible {
+        outline: 2px solid rgba(26, 108, 245, 0.48);
+        outline-offset: 2px;
       }
       .filter-toggle:hover {
         background: var(--blue-l);
@@ -483,6 +494,53 @@
         display: flex;
         flex-direction: column;
         gap: var(--space-150);
+      }
+      .filter-mobile-sheet-head,
+      .filter-mobile-sheet-actions,
+      .filter-mobile-scrim {
+        display: none;
+      }
+      .filter-mobile-sheet-head {
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--b1);
+      }
+      .filter-mobile-sheet-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--t1);
+      }
+      .filter-mobile-sheet-sub {
+        margin-top: 3px;
+        color: var(--t3);
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .filter-mobile-sheet-close {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        border: 1px solid var(--b1);
+        border-radius: 11px;
+        background: var(--surf2);
+        color: var(--t2);
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .filter-mobile-sheet-actions {
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 14px;
+        border-top: 1px solid var(--b1);
+      }
+      .filter-mobile-sheet-actions .filter-mobile-clear {
+        min-height: 40px;
       }
       .fbar.open .filter-body-inner {
         overflow: visible;
@@ -1100,6 +1158,7 @@
         display: grid;
         gap: var(--card-gap);
         margin-bottom: 0;
+        min-width: 0;
       }
       .g2 {
         grid-template-columns: 1fr 1fr;
@@ -1113,6 +1172,8 @@
         border-radius: var(--r12);
         padding: var(--surface-pad);
         box-shadow: var(--s1);
+        min-width: 0;
+        max-width: 100%;
         transition:
           box-shadow var(--dur-med) var(--ease-out),
           border-color var(--dur-med) ease,
@@ -1280,7 +1341,87 @@
         font-variant-numeric: tabular-nums;
       }
       .metric-table-wrap {
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
         padding: 0 var(--surface-pad) var(--surface-pad);
+      }
+      .metric-mobile-list {
+        display: none;
+      }
+      .metric-mobile-row {
+        display: grid;
+        gap: 8px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--b1);
+      }
+      .metric-mobile-row:last-child {
+        border-bottom: 0;
+      }
+      .metric-mobile-row-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        min-width: 0;
+      }
+      .metric-mobile-label {
+        min-width: 0;
+        color: var(--t1);
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+      .metric-mobile-stats {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+      .metric-mobile-stats span {
+        display: grid;
+        gap: 1px;
+        justify-items: end;
+        min-width: 48px;
+      }
+      .metric-mobile-stats small {
+        color: var(--t3);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+      }
+      .metric-mobile-stats b {
+        color: var(--t1);
+        font-size: 12px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .metric-mobile-stats em {
+        color: var(--t3);
+        font-size: 10px;
+        font-style: normal;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .metric-mobile-progress {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+      .metric-mobile-progress .prg-bg {
+        min-width: 0;
+        height: 6px;
+      }
+      .metric-mobile-progress > span {
+        flex: 0 0 auto;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
       }
       .metric-table-wrap table {
         font-size: 11px;
@@ -1309,6 +1450,7 @@
       .dashboard-section {
         display: grid;
         gap: var(--section-gap);
+        min-width: 0;
       }
       .dashboard-section--alerts {
         gap: var(--card-gap);
@@ -1323,6 +1465,12 @@
       .dashboard-section > .cgrid,
       .dashboard-section > .tc {
         min-width: 0;
+      }
+      .page,
+      .page > *,
+      .dashboard-section > * {
+        min-width: 0;
+        max-width: 100%;
       }
       .section-label {
         margin: 0;
@@ -1746,6 +1894,572 @@
           height: 34px !important;
         }
       }
+
+      /* ===== MOBILE APP SHELL ===== */
+      .mobile-nav,
+      .mobile-more-sheet {
+        display: none;
+      }
+      .mobile-nav-item,
+      .mobile-more-item {
+        border: 0;
+        font-family: var(--font);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-nav-icon {
+        width: 22px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+      }
+      .mobile-nav-icon svg {
+        width: 19px;
+        height: 19px;
+        display: block;
+      }
+      .mobile-more-sheet {
+        position: fixed;
+        inset: 0;
+        z-index: 450;
+        place-items: end center;
+        padding: 12px 12px 0;
+        background: rgba(15, 17, 23, 0.28);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 180ms ease-out,
+          visibility 180ms ease-out;
+      }
+      .mobile-more-sheet.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+      .mobile-more-card {
+        width: min(100%, 440px);
+        padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+        background: var(--surf);
+        border: 1px solid var(--b1);
+        border-radius: 22px 22px 0 0;
+        box-shadow: 0 -18px 50px rgba(15, 17, 23, 0.18);
+        transform: translateY(18px) scale(0.98);
+        transition: transform 220ms var(--ease-out);
+      }
+      .mobile-more-sheet.is-open .mobile-more-card {
+        transform: none;
+      }
+      .mobile-more-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .mobile-more-title {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: -0.2px;
+      }
+      .mobile-more-sub {
+        margin-top: 2px;
+        color: var(--t3);
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .mobile-more-close {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--b1);
+        border-radius: 11px;
+        background: var(--surf2);
+        color: var(--t2);
+        font-size: 20px;
+        line-height: 1;
+      }
+      .mobile-more-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .mobile-more-item {
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 12px;
+        border: 1px solid var(--b1);
+        border-radius: 13px;
+        background: var(--surf2);
+        color: var(--t2);
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          transform var(--dur-fast) var(--ease-out);
+      }
+      .mobile-more-item::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: var(--blue);
+        box-shadow: 0 0 0 4px var(--blue-l);
+      }
+      .mobile-more-item.act {
+        border-color: rgba(26, 108, 245, 0.3);
+        background: var(--blue-l);
+        color: var(--blue);
+      }
+      .mobile-more-item:active,
+      .mobile-more-close:active,
+      .mobile-nav-item:active {
+        transform: scale(0.97);
+      }
+
+      @media (max-width: 960px) {
+        .shell {
+          height: calc(100dvh - var(--topbar-h));
+          min-height: 0;
+        }
+        .content {
+          min-width: 0;
+          padding-bottom: calc(82px + env(safe-area-inset-bottom));
+          overscroll-behavior-y: contain;
+        }
+        .mobile-nav {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 350;
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 4px;
+          min-height: 70px;
+          padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+          background: rgba(255, 255, 255, 0.94);
+          border-top: 1px solid rgba(208, 211, 217, 0.82);
+          box-shadow: 0 -8px 26px rgba(15, 17, 23, 0.08);
+          backdrop-filter: blur(16px);
+        }
+        .mobile-nav-item {
+          min-width: 0;
+          min-height: 56px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          border-radius: 13px;
+          background: transparent;
+          color: var(--t3);
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: -0.1px;
+          transition:
+            background-color var(--dur-fast) ease,
+            color var(--dur-fast) ease,
+            transform var(--dur-fast) var(--ease-out);
+        }
+        .mobile-nav-item.act {
+          background: var(--blue-l);
+          color: var(--blue);
+        }
+        .mobile-nav-item.act .mobile-nav-icon {
+          background: rgba(26, 108, 245, 0.12);
+        }
+        .mobile-more-sheet {
+          display: grid;
+        }
+        .mobile-sheet-open .content {
+          overflow: hidden;
+        }
+      }
+
+      @media (max-width: 540px) {
+        :root {
+          --topbar-h: 58px;
+          --surface-pad: 14px;
+          --card-gap: 10px;
+          --section-gap: 14px;
+          --page-gap: 14px;
+        }
+        body {
+          overflow-x: hidden;
+        }
+        .topbar {
+          padding: 0 12px;
+        }
+        .tb-brand,
+        .tb-right {
+          min-width: 0;
+        }
+        .tb-logo {
+          width: 32px;
+          height: 32px;
+        }
+        .tb-sub,
+        .tb-right .ts {
+          display: none;
+        }
+        .tb-name {
+          font-size: 14px;
+          white-space: nowrap;
+        }
+        .tb-right {
+          gap: 6px;
+        }
+        .env-pill {
+          max-width: 82px;
+          overflow: hidden;
+          padding: 3px 7px;
+          font-size: 9px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .btn-ic {
+          width: 38px;
+          height: 38px;
+          border-radius: 11px;
+        }
+        .content {
+          padding: 12px 12px calc(82px + env(safe-area-inset-bottom));
+        }
+        .fbar {
+          padding: 10px;
+          border-radius: 15px;
+        }
+        .filter-head-actions,
+        .fbar.open .filter-head-actions {
+          align-items: stretch;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .filter-head-actions .quick-filters,
+        .fbar.open .filter-head-actions .quick-filters {
+          width: calc(100% + 2px);
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          overflow-x: auto;
+          padding: 1px 1px 3px;
+          scrollbar-width: none;
+        }
+        .filter-head-actions .quick-filters::-webkit-scrollbar {
+          display: none;
+        }
+        .filter-head-actions .btn-qf {
+          flex: 0 0 auto;
+          min-height: 38px;
+        }
+        .filter-clear {
+          align-self: flex-start;
+          min-height: 38px;
+        }
+        .filter-row {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .fg input,
+        .ms-btn {
+          height: 40px;
+        }
+        .ms-wrap {
+          width: 100%;
+          min-width: 0;
+        }
+        .kpi-6,
+        .kpi-5,
+        .kpi-4,
+        .kpi-3 {
+          --metric-columns: 2;
+        }
+        .kpi {
+          min-height: 124px;
+          padding: 13px 12px;
+          border-radius: 14px;
+        }
+        .kpi.executive {
+          min-height: 132px;
+          padding: 12px 12px 9px;
+        }
+        .kpi.executive .kpi-main {
+          min-height: 64px;
+          gap: 6px;
+        }
+        .kpi-lbl {
+          font-size: 9px;
+          letter-spacing: 0.045em;
+        }
+        .kpi-val {
+          font-size: 20px;
+        }
+        .kpi.executive .kpi-val,
+        .kpi.executive .kpi-val.sm {
+          font-size: clamp(16px, 8.7cqi, 21px);
+        }
+        .kpi-spark {
+          height: 30px;
+        }
+        .kpi-spark canvas {
+          height: 27px !important;
+        }
+        .exec-alerts {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .exec-alert {
+          min-height: 76px;
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 7px;
+          padding: 11px 12px;
+        }
+        .exec-alert strong {
+          font-size: 17px;
+        }
+        .exec-alert span {
+          font-size: 9px;
+        }
+        .exec-alert b {
+          align-self: flex-start;
+          padding: 3px 7px;
+          font-size: 10px;
+        }
+        .cc,
+        .tc {
+          border-radius: 15px;
+        }
+        .cc {
+          padding: 14px;
+        }
+        .dashboard-section--analysis {
+          gap: 10px;
+        }
+        .dashboard-section--analysis > .cc,
+        .dashboard-section--analysis > .cgrid {
+          min-width: 0;
+        }
+        .cc-hdr,
+        .cc-hdr2 {
+          gap: 8px;
+        }
+        .cc-hdr2 {
+          padding-bottom: 10px;
+        }
+        .cc-hdr2 .cc2-bigval {
+          font-size: 20px;
+        }
+        .meta-kpi-pills {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+          padding: 0 0 10px;
+        }
+        .meta-kpi-pill {
+          min-width: 0;
+          min-height: 44px;
+          padding: 5px 8px;
+          border-radius: 9px;
+        }
+        .meta-kpi-pill strong {
+          font-size: 12px;
+        }
+        .meta-kpi-pill:last-child {
+          grid-column: 1 / -1;
+          min-width: 0 !important;
+        }
+        .meta-kpi-pill:last-child .meta-progress-bar-outer {
+          min-width: 0;
+          height: 6px;
+        }
+        .inline-indicators {
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+        }
+        .tc-bar {
+          align-items: stretch;
+          padding: 13px 14px;
+        }
+        .tc-bar > div:first-child {
+          min-width: 0;
+        }
+        .tc-search {
+          width: 100%;
+          min-width: 0;
+          flex: 1 1 100%;
+          height: 38px;
+        }
+        .tc-wrap {
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
+          scroll-padding-inline: 12px;
+        }
+        .tc-wrap table {
+          min-width: max-content;
+        }
+        thead th,
+        td {
+          padding: 10px 12px;
+        }
+        .metric-table-wrap {
+          overflow-x: auto;
+          padding-inline: 0;
+          -webkit-overflow-scrolling: touch;
+        }
+        .page,
+        .page > *,
+        .dashboard-section,
+        .dashboard-section > *,
+        .cgrid,
+        .cgrid > *,
+        .cc,
+        .tc,
+        .metric-table-wrap {
+          min-width: 0;
+          max-width: 100%;
+        }
+        .filter-head {
+          gap: 8px;
+        }
+        .filter-head-left {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 8px;
+        }
+        .filter-head-actions {
+          display: none !important;
+        }
+        .filter-toggle {
+          width: 100%;
+          min-height: 42px;
+          height: 42px;
+          justify-content: space-between;
+          padding-inline: 12px;
+        }
+        .filter-summary {
+          width: 100%;
+          padding-inline: 2px;
+          font-size: 11px;
+        }
+        .filter-mobile-scrim {
+          position: fixed;
+          inset: 0;
+          z-index: 440;
+          display: block;
+          background: rgba(15, 17, 23, 0.32);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 180ms ease-out;
+        }
+        .filter-mobile-scrim.is-visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .filter-sheet-open .content {
+          overflow: hidden;
+        }
+        .fbar.open {
+          z-index: 470;
+        }
+        .fbar.open .filter-body {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 471;
+          display: block;
+          max-height: min(78dvh, 620px);
+          margin: 0;
+          padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          background: var(--surf);
+          border: 1px solid var(--b1);
+          border-bottom: 0;
+          border-radius: 24px 24px 0 0;
+          box-shadow: 0 -18px 50px rgba(15, 17, 23, 0.18);
+          opacity: 1;
+          transform: none;
+          grid-template-rows: none;
+        }
+        .fbar.open .filter-body-inner {
+          gap: 14px;
+          overflow: visible;
+        }
+        .fbar.open .filter-mobile-sheet-head {
+          display: flex;
+        }
+        .fbar.open .filter-mobile-sheet-actions {
+          display: flex;
+        }
+        .filter-mobile-clear {
+          padding-inline: 13px;
+          border: 1px solid var(--b1);
+          border-radius: 10px;
+          background: var(--surf2);
+          color: var(--t2);
+          font-family: var(--font);
+          font-size: 12px;
+          font-weight: 800;
+          cursor: pointer;
+        }
+        .filter-body .quick-filters {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 8px;
+          overflow-x: auto;
+          padding: 1px 1px 3px;
+          scrollbar-width: none;
+        }
+        .filter-body .quick-filters::-webkit-scrollbar {
+          display: none;
+        }
+        .filter-body .btn-qf {
+          flex: 0 0 auto;
+          min-height: 40px;
+          height: 40px;
+        }
+        .filter-body .filter-row {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding: 0;
+        }
+        .filter-body .fg,
+        .filter-body .ms-wrap {
+          width: 100%;
+          min-width: 0;
+        }
+        .metric-table-wrap.has-mobile-list {
+          overflow: visible;
+          padding: 0 14px 8px;
+        }
+        .metric-table-wrap.has-mobile-list > table {
+          display: none;
+        }
+        .metric-table-wrap.has-mobile-list .metric-mobile-list {
+          display: grid;
+        }
+        .metric-mobile-stats {
+          gap: 7px;
+        }
+        .metric-mobile-stats span {
+          min-width: 42px;
+        }
+        .mobile-more-card {
+          padding-inline: 14px;
+        }
+      }
       ::-webkit-scrollbar {
         width: 5px;
         height: 5px;
@@ -1776,6 +2490,7 @@
           <img
             src="https://org23b93544.crm2.dynamics.com/WebResources/cr40f_LogoBetinhosB"
             alt="Logo"
+            onerror="this.hidden = true; this.parentElement.classList.add('tb-logo-fallback')"
           />
         </div>
         <div>
@@ -1942,6 +2657,20 @@
             </div>
           </div>
           <div class="filter-body" id="filterPanelBody">
+            <div class="filter-mobile-sheet-head">
+              <div>
+                <div class="filter-mobile-sheet-title">Filtrar dados</div>
+                <div class="filter-mobile-sheet-sub">Escolha o periodo e os recortes da operacao</div>
+              </div>
+              <button
+                type="button"
+                class="filter-mobile-sheet-close"
+                aria-label="Fechar filtros"
+                onclick="toggleFilterPanel(false)"
+              >
+                &times;
+              </button>
+            </div>
             <div class="filter-body-inner">
           <div class="quick-filters">
             <button class="btn-qf" onclick="quickFilter('hoje', this)">
@@ -2014,8 +2743,24 @@
             </div>
           </div>
             </div>
+            <div class="filter-mobile-sheet-actions">
+              <span class="filter-mobile-sheet-sub">As alteracoes sao aplicadas automaticamente</span>
+              <button
+                type="button"
+                class="filter-mobile-clear"
+                onclick="clearF(); toggleFilterPanel(false)"
+              >
+                Limpar filtros
+              </button>
+            </div>
           </div>
         </div>
+        <div
+          class="filter-mobile-scrim"
+          id="filterMobileScrim"
+          aria-hidden="true"
+          onclick="toggleFilterPanel(false)"
+        ></div>
 
         <!-- ========== PAGE RESUMO ========== -->
         <div class="page on" id="page-resumo">
@@ -2186,7 +2931,7 @@
               <div class="inline-indicators" id="indicatorsLM_LY_META"></div>
             </div>
             <div id="metaProgressWrap"></div>
-            <canvas id="cTotalProd" height="55"></canvas>
+            <canvas id="cTotalProd" height="100" data-mobile-height="138"></canvas>
           </div>
 
           <!-- Meta x Realizado por Mês -->
@@ -2200,7 +2945,7 @@
               <div class="inline-indicators" id="ind_mvr"></div>
             </div>
             <div id="mvrSummary" class="metric-table-wrap"></div>
-            <canvas id="cMetaVsReal" height="65"></canvas>
+            <canvas id="cMetaVsReal" height="110" data-mobile-height="144"></canvas>
           </div>
 
           <!-- Faturamento por Cliente por Mês -->
@@ -2213,7 +2958,7 @@
               </div>
               <div class="inline-indicators" id="ind_fatcli"></div>
             </div>
-            <canvas id="cFatCli" height="70"></canvas>
+            <canvas id="cFatCli" height="105" data-mobile-height="136"></canvas>
           </div>
 
           <div class="cgrid g2">
@@ -2226,7 +2971,7 @@
                 </div>
                 <div class="inline-indicators" id="ind_tm"></div>
               </div>
-              <canvas id="cTicketMedio" height="60"></canvas>
+              <canvas id="cTicketMedio" height="90" data-mobile-height="126"></canvas>
             </div>
             <div class="cc">
               <div class="cc-hdr2">
@@ -2250,7 +2995,7 @@
                 </div>
                 <div class="inline-indicators" id="ind_cf"></div>
               </div>
-              <canvas id="cCF" height="60"></canvas>
+              <canvas id="cCF" height="90" data-mobile-height="126"></canvas>
             </div>
             <div class="cc">
               <div class="cc-hdr2">
@@ -2285,7 +3030,7 @@
                 </div>
                 <div class="inline-indicators" id="ind_mot"></div>
               </div>
-              <canvas id="cMM" height="65"></canvas>
+              <canvas id="cMM" height="105" data-mobile-height="144"></canvas>
             </div>
           </div>
           </section>
@@ -2453,7 +3198,7 @@
               <div class="cc-hdr">
                 <div class="cc-title">Faturamento mensal</div>
               </div>
-              <canvas id="cFM2" height="100"></canvas>
+              <canvas id="cFM2" height="100" data-mobile-height="136"></canvas>
             </div>
             <div class="cc">
               <div class="cc-hdr">
@@ -2680,7 +3425,7 @@
               <div class="cc-hdr">
                 <div class="cc-title">Serviços por motorista por mês</div>
               </div>
-              <canvas id="cMotMes" height="100"></canvas>
+              <canvas id="cMotMes" height="100" data-mobile-height="136"></canvas>
             </div>
           </div>
           <div class="tc">
@@ -2753,7 +3498,7 @@
               <div class="cc-hdr">
                 <div class="cc-title">Custo por mês</div>
               </div>
-              <canvas id="cManMes" height="100"></canvas>
+              <canvas id="cManMes" height="100" data-mobile-height="136"></canvas>
             </div>
             <div class="cc">
               <div class="cc-hdr">
@@ -2966,6 +3711,124 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Navegacao principal">
+      <button
+        type="button"
+        class="mobile-nav-item act"
+        data-nav="resumo"
+        aria-current="page"
+        onclick="nav('resumo', this)"
+      >
+        <span class="mobile-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </span>
+        Resumo
+      </button>
+      <button
+        type="button"
+        class="mobile-nav-item"
+        data-nav="servicos"
+        onclick="nav('servicos', this)"
+      >
+        <span class="mobile-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 5h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 19h10"></path>
+            <circle cx="18" cy="19" r="2"></circle>
+          </svg>
+        </span>
+        Servicos
+      </button>
+      <button
+        type="button"
+        class="mobile-nav-item"
+        data-nav="faturamento"
+        onclick="nav('faturamento', this)"
+      >
+        <span class="mobile-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19V5"></path>
+            <path d="M4 19h16"></path>
+            <path d="m8 15 3-4 3 2 4-6"></path>
+          </svg>
+        </span>
+        Financeiro
+      </button>
+      <button
+        type="button"
+        class="mobile-nav-item"
+        data-nav="frota"
+        onclick="nav('frota', this)"
+      >
+        <span class="mobile-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 17h14l1-6H4l1 6Z"></path>
+            <path d="m7 11 1.5-4h7L17 11"></path>
+            <circle cx="8" cy="17" r="1.5"></circle>
+            <circle cx="16" cy="17" r="1.5"></circle>
+          </svg>
+        </span>
+        Frota
+      </button>
+      <button
+        type="button"
+        class="mobile-nav-item mobile-more-trigger"
+        aria-expanded="false"
+        aria-controls="mobileMoreSheet"
+        onclick="toggleMobileMore()"
+      >
+        <span class="mobile-nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5" cy="12" r="1"></circle>
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="19" cy="12" r="1"></circle>
+          </svg>
+        </span>
+        Mais
+      </button>
+    </nav>
+
+    <div
+      class="mobile-more-sheet"
+      id="mobileMoreSheet"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mais areas do dashboard"
+      onclick="if (event.target === this) toggleMobileMore(false)"
+    >
+      <section class="mobile-more-card">
+        <div class="mobile-more-head">
+          <div>
+            <div class="mobile-more-title">Mais areas</div>
+            <div class="mobile-more-sub">Acesso rapido ao restante da operacao</div>
+          </div>
+          <button
+            type="button"
+            class="mobile-more-close"
+            aria-label="Fechar menu"
+            onclick="toggleMobileMore(false)"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="mobile-more-grid">
+          <button type="button" class="mobile-more-item" data-nav="pagantes" onclick="nav('pagantes', this)">Pagamentos</button>
+          <button type="button" class="mobile-more-item" data-nav="motoristas" onclick="nav('motoristas', this)">Motoristas</button>
+          <button type="button" class="mobile-more-item" data-nav="manutencoes" onclick="nav('manutencoes', this)">Manutencoes</button>
+          <button type="button" class="mobile-more-item" data-nav="multas" onclick="nav('multas', this)">Multas</button>
+          <button type="button" class="mobile-more-item" data-nav="trocas" onclick="nav('trocas', this)">Trocas</button>
+          <button type="button" class="mobile-more-item" data-nav="marketing" onclick="nav('marketing', this)">Marketing</button>
+        </div>
+      </section>
     </div>
 
     <script>
@@ -3710,7 +4573,13 @@
         const pctText = `${Number(pctValue || 0).toFixed(1)}%`;
         return `<div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, Math.round(pctValue || 0))}%;background:${color}"></div></div><span class="prg-pct">${metricSplit(pctText, secondary, "r")}</span></div>`;
       }
+      function metricMobileProgress(pctValue, color) {
+        const pct = Number(pctValue || 0);
+        return `<div class="metric-mobile-progress"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, Math.round(pct))}%;background:${color}"></div></div><span>${pct.toFixed(1)}%</span></div>`;
+      }
       function renderDistributionTable(targetId, rows, total, options = {}) {
+        const el = document.getElementById(targetId);
+        if (!el) return;
         const {
           label = "Categoria",
           countLabel = "Registros",
@@ -3726,19 +4595,37 @@
           ? rows.reduce((s, r) => s + Number(r.value || 0), 0)
           : total;
         const cols = hasValue ? 4 : 3;
-        html(targetId, `
-          <table><thead><tr><th>${label}</th><th class="r">${countLabel}</th>${hasValue ? `<th class="r">${valueLabel}</th>` : ""}<th>Participacao</th></tr></thead>
-          <tbody>${tableRows.map((r, i) => {
+        const mobileRows = tableRows
+          .map((r, i) => {
             const qtd = Number(r.qtd || 0);
             const value = Number(r.value || 0);
             const partValue = participationByValue ? value : qtd;
             const part = partBase ? (partValue / partBase) * 100 : 0;
-            const secondary = participationByValue && hasValue
-              ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
-              : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
-            return `<tr><td class="em">${badgeLabels ? badge(r.label) : trunc(r.label, 28)}</td><td class="r">${qtd.toLocaleString("pt-BR")}</td>${hasValue ? `<td class="r em">${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</td>` : ""}<td>${progressCell(part, secondary, PAL[i % PAL.length])}</td></tr>`;
-          }).join("") || emptyRow(cols)}</tbody></table>
-        `);
+            const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, 28);
+            const valueStat = hasValue
+              ? `<span><small>${valueLabel}</small><b>${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</b></span>`
+              : "";
+            return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${labelHtml}</span><div class="metric-mobile-stats"><span><small>${countLabel}</small><b>${qtd.toLocaleString("pt-BR")}</b></span>${valueStat}</div></div>${metricMobileProgress(part, PAL[i % PAL.length])}</div>`;
+          })
+          .join("");
+        const mobileMarkup = mobileRows || '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
+        const valueHead = hasValue ? '<th class="r">' + valueLabel + '</th>' : '';
+        const tableHead = '<thead><tr><th>' + label + '</th><th class="r">' + countLabel + '</th>' + valueHead + '<th>Participacao</th></tr></thead>';
+        const tableBody = tableRows.map((r, i) => {
+          const qtd = Number(r.qtd || 0);
+          const value = Number(r.value || 0);
+          const partValue = participationByValue ? value : qtd;
+          const part = partBase ? (partValue / partBase) * 100 : 0;
+          const secondary = participationByValue && hasValue
+            ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
+            : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
+          const valueCell = hasValue
+            ? '<td class="r em">' + (moneyValue ? brl(value) : value.toLocaleString("pt-BR")) + '</td>'
+            : '';
+          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, 28)) + '</td><td class="r">' + qtd.toLocaleString("pt-BR") + '</td>' + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
+        }).join("") || emptyRow(cols);
+        el.classList.add("has-mobile-list");
+        el.innerHTML = '<table>' + tableHead + '<tbody>' + tableBody + '</tbody></table><div class="metric-mobile-list">' + mobileMarkup + '</div>';
       }
       function renderShareTable(targetId, rows, totalQtd, totalFat) {
         const el = document.getElementById(targetId);
@@ -3760,7 +4647,17 @@
               })
               .join("")
           : emptyRow(4);
-        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participacao</th></tr></thead><tbody>${body}</tbody></table>`;
+        const mobileBody = sortedRows.length
+          ? sortedRows
+              .map((r, i) => {
+                const pctQtd = totalQtd ? (r.qtd / totalQtd) * 100 : 0;
+                const pctFat = totalFat ? (r.fat / totalFat) * 100 : 0;
+                return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${trunc(r.nome, 24)}</span><div class="metric-mobile-stats"><span><small>QT</small><b>${pctQtd.toFixed(1)}%</b><em>${r.qtd.toLocaleString("pt-BR")}</em></span><span><small>R$</small><b>${pctFat.toFixed(1)}%</b><em>${brlS(r.fat)}</em></span></div></div>${metricMobileProgress(pctFat, PAL[i % PAL.length])}</div>`;
+              })
+              .join("")
+          : `<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>`;
+        el.classList.add("has-mobile-list");
+        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participacao</th></tr></thead><tbody>${body}</tbody></table><div class="metric-mobile-list">${mobileBody}</div>`;
       }
       function srtShare(targetId, field) {
         const key = `share:${targetId}`;
@@ -4388,6 +5285,7 @@ function detectEnv(){
       function toggleFilterPanel(forceOpen) {
         const panel = document.getElementById("filterPanel");
         const btn = document.getElementById("filterToggle");
+        const scrim = document.getElementById("filterMobileScrim");
         if (!panel || !btn) return;
         const wasOpen = panel.classList.contains("open");
         const open =
@@ -4400,6 +5298,9 @@ function detectEnv(){
         const first = actions?.getBoundingClientRect();
         panel.classList.toggle("open", open);
         btn.setAttribute("aria-expanded", String(open));
+        scrim?.classList.toggle("is-visible", open);
+        scrim?.setAttribute("aria-hidden", String(!open));
+        document.body.classList.toggle("filter-sheet-open", open);
         if (!open) closeMultiselects();
         animateFilterActions(actions, wasOpen, first);
       }
@@ -6449,6 +7350,10 @@ const monthsLabelsAll = [
         const el = document.getElementById(id);
         if (!el) return;
         if (charts[id]) charts[id].destroy();
+        const mobileHeight = Number(el.dataset.mobileHeight || 0);
+        if (mobileHeight && window.matchMedia("(max-width: 540px)").matches) {
+          el.height = mobileHeight;
+        }
         setChartEmptyState(el, !chartHasData(cfg?.data?.datasets || []));
         charts[id] = new Chart(el, cfg);
       }
@@ -6728,15 +7633,46 @@ const monthsLabelsAll = [
         }
         return `<span class="bd" style="background:${bg};color:${c}"><span class="dot" style="background:${c}"></span>${s}</span>`;
       }
+      function toggleMobileMore(forceOpen) {
+        const sheet = document.getElementById("mobileMoreSheet");
+        const trigger = document.querySelector(".mobile-more-trigger");
+        if (!sheet) return;
+        const open =
+          typeof forceOpen === "boolean"
+            ? forceOpen
+            : !sheet.classList.contains("is-open");
+        sheet.classList.toggle("is-open", open);
+        sheet.setAttribute("aria-hidden", String(!open));
+        document.body.classList.toggle("mobile-sheet-open", open);
+        trigger?.setAttribute("aria-expanded", String(open));
+      }
+
       function nav(id, el) {
         document
-          .querySelectorAll(".sb-item")
+          .querySelectorAll(".sb-item, .mobile-nav-item, .mobile-more-item")
           .forEach((n) => n.classList.remove("act"));
         document
           .querySelectorAll(".page")
           .forEach((p) => p.classList.remove("on"));
-        el.classList.add("act");
+        document
+          .querySelectorAll("[data-nav]")
+          .forEach((n) => n.removeAttribute("aria-current"));
+        if (el) el.classList.add("act");
+        document
+          .querySelectorAll(`[data-nav="${id}"]`)
+          .forEach((n) => {
+            n.classList.add("act");
+            n.setAttribute("aria-current", "page");
+          });
+        document
+          .querySelector(".mobile-more-trigger")
+          ?.classList.toggle(
+            "act",
+            !["resumo", "servicos", "faturamento", "frota"].includes(id),
+          );
         document.getElementById("page-" + id).classList.add("on");
+        document.querySelector(".content")?.scrollTo({ top: 0, behavior: "auto" });
+        toggleMobileMore(false);
       }
       function set(id, v) {
         const el = document.getElementById(id);
@@ -6767,6 +7703,12 @@ const monthsLabelsAll = [
       ["fS", "fE"].forEach((id) => {
         const input = document.getElementById(id);
         if (input) input.addEventListener("change", () => applyF(true));
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          toggleMobileMore(false);
+          toggleFilterPanel(false);
+        }
       });
       updateFilterSummary();
       detectEnv();
