@@ -299,6 +299,8 @@
         background: var(--bg);
       }
       .fbar {
+        position: relative;
+        z-index: 1000;
         background: var(--surf);
         border: 1px solid var(--b1);
         border-radius: var(--r12);
@@ -309,18 +311,27 @@
         margin-bottom: 0;
         box-shadow: var(--s1);
       }
+      .fbar:has(.ms-dd.open) {
+        z-index: 5000;
+      }
       .filter-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: var(--space-150);
         min-height: 38px;
+        flex-wrap: wrap;
       }
       .filter-head-left {
         display: flex;
         align-items: center;
         gap: var(--space-100);
         min-width: 0;
+        flex: 1 1 320px;
+      }
+      .filter-head-actions {
+        flex: 0 1 auto;
+        justify-content: flex-end;
       }
       .filter-toggle {
         height: 34px;
@@ -440,6 +451,9 @@
         display: flex;
         gap: 6px;
         flex-wrap: wrap;
+      }
+      .filter-body .quick-filters {
+        display: none;
       }
       .btn-qf {
         font-size: 12px;
@@ -572,7 +586,7 @@
         border: 1.5px solid var(--b1);
         border-radius: var(--r12);
         box-shadow: var(--s3);
-        z-index: 200;
+        z-index: 10000;
         max-height: 280px;
         overflow-y: auto;
         min-width: 100%;
@@ -1764,6 +1778,32 @@
                 </span>
               </button>
               <div class="filter-summary" id="filterSummary">Nenhum filtro ativo</div>
+            </div>
+            <div class="quick-filters filter-head-actions">
+              <button class="btn-qf" onclick="quickFilter('hoje', this)">
+                Hoje
+              </button>
+              <button class="btn-qf" onclick="quickFilter('ult7', this)">
+                Últ. 7 dias
+              </button>
+              <button class="btn-qf" onclick="quickFilter('ult30', this)">
+                Últ. 30 dias
+              </button>
+              <button class="btn-qf" onclick="quickFilter('esteMes', this)">
+                Este mês
+              </button>
+              <button class="btn-qf" onclick="quickFilter('mesAnt', this)">
+                Mês anterior
+              </button>
+              <button
+                class="btn-qf active"
+                onclick="quickFilter('esteAno', this)"
+              >
+                Este ano
+              </button>
+              <button class="btn-qf" onclick="quickFilter('anoAnt', this)">
+                Ano anterior
+              </button>
             </div>
           </div>
           <div class="filter-body" id="filterPanelBody">
