@@ -4269,6 +4269,7 @@
           data: "new_datadepublicacao",
         },
       };
+      const DV_STATUS_FAT_PAGO = 202410010;
 
       let DB = {
         reservas: [],
@@ -5961,13 +5962,6 @@ const monthsLabelsAll = [
         VW.multas = filterByDate(DB.multas, F.mul.data);
         VW.trocas = filterByDate(DB.trocas, F.trc.data);
 
-        // Construir opPagoSet — OP com status pago/recebido
-        const opPagoSet = new Set(
-          DB.pagantes
-            .filter(isReceivedPayment)
-            .map(paymentOp)
-            .filter(Boolean)
-        );
         const pagReceb = DB.pagantes.filter(isReceivedPayment);
 
         // Badges
@@ -6143,15 +6137,15 @@ const monthsLabelsAll = [
         const recebidoProduzido = pagReceb
           .filter((p) => producedOps.has(paymentOp(p)))
           .reduce((s, p) => s + paymentValue(p), 0);
-        const baseRecebimento = Math.max(0, produzidoValor - emViagemValor) + projecao;
+        const baseRecebimento = Math.max(0, produzidoValor - emViagemValor);
         const recebimentoPct = baseRecebimento ? (recebidoProduzido / baseRecebimento) * 100 : 0;
         html("kSemValD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">%</span><span class="bk-val">${semValor.length}</span><span class="bk-pct">${semValPct}% tot</span></span>` +
           (semValor.length > 0 ? `<span class="badge-kpi badge-meta"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span><span class="bk-pct">potencial</span></span>` : ""));
         const aReceber = dvDisabled ? 0 :
-          conclServices
-            .filter(r => (!r._opId || !opPagoSet.has(r._opId)) && r._valor > 0)
-            .reduce((s, r) => s + r._valor, 0) + projecao;
+          rv
+            .filter(r => r._cpConcluida === true && r._opId && r[F.res.fatStatus] !== DV_STATUS_FAT_PAGO && r._valor > 0)
+            .reduce((s, r) => s + r._valor, 0);
         set("kPPend", dvDisabled ? "—" : brlS(aReceber));
         const aReceberPct = fat > 0 ? (aReceber / fat * 100).toFixed(0) : 0;
         html("kPPendD", dvDisabled ? "" :
@@ -6197,18 +6191,14 @@ const monthsLabelsAll = [
           return getTicketStats(rows).ticket;
         });
         const trendReceber = trendKeys.map((k) => {
-          const rows = (byM[k] || []).filter(isProducedReservation);
-          const rowsTk = rows.length ? sumV(rows) / rows.length : 0;
-          const rowsProj = getSemValorRows(byM[k] || []).length * rowsTk;
+          const rows = (byM[k] || []).filter(r => r._cpConcluida === true && r._opId);
           return rows
-            .filter((r) => (!r._opId || !opPagoSet.has(r._opId)) && r._valor > 0)
-            .reduce((s, r) => s + r._valor, 0) + rowsProj;
+            .filter((r) => r[F.res.fatStatus] !== DV_STATUS_FAT_PAGO && r._valor > 0)
+            .reduce((s, r) => s + r._valor, 0);
         });
         const trendRecebPct = trendKeys.map((k) => {
           const rows = (byM[k] || []).filter(isProducedReservation);
-          const rowsTk = rows.length ? sumV(rows) / rows.length : 0;
-          const rowsProj = getSemValorRows(byM[k] || []).length * rowsTk;
-          const base = sumV(rows) + rowsProj;
+          const base = sumV(rows);
           const ops = new Set(rows.map((r) => r._opId).filter(Boolean));
           const recebido = pagReceb
             .filter((p) => ops.has(paymentOp(p)))
