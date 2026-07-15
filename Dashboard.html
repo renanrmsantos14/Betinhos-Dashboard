@@ -9,6 +9,36 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script>
+      (() => {
+        const earlyErrors = (window.__DASHBOARD_EARLY_ERRORS = window.__DASHBOARD_EARLY_ERRORS || []);
+        window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = true;
+        const capture = (entry) => {
+          if (window.__DASHBOARD_EARLY_CAPTURE_ACTIVE && earlyErrors.length < 20) earlyErrors.push(entry);
+        };
+        window.addEventListener("error", (event) => {
+          const target = event.target;
+          if (target && target !== window) {
+            capture({
+              source: "window.resourceerror",
+              action: target.currentSrc || target.src || target.href || "",
+              phase: String(target.tagName || "resource").toLowerCase(),
+              message: "Falha ao carregar recurso.",
+            });
+            return;
+          }
+          capture({
+            source: "window.error",
+            action: event.filename || "",
+            phase: `${event.lineno || 0}:${event.colno || 0}`,
+            message: event.message || "Erro inesperado antes da inicializacao.",
+          });
+        }, true);
+        window.addEventListener("unhandledrejection", (event) => {
+          capture({ source: "window.unhandledrejection", message: String(event.reason || "Promise rejeitada sem tratamento.") });
+        });
+      })();
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <style>
@@ -4450,6 +4480,226 @@
         return h;
       }
 
+      // Logs App Motoristas: mesmo contrato do webresource App Motoristas.
+      const ERROR_LOG_TABLE = "new_appmotoristaslog";
+      const ERROR_LOG_QUEUE_KEY = "dashboard-betinhos-error-log-queue-v1";
+      const ERROR_LOG_MAX_QUEUE = 50;
+      let errorLogEntitySetPromise = null;
+      let originalDashboardConsoleError = null;
+
+      const truncateLog = (value, max) => String(value ?? "").slice(0, max);
+      const redactLogText = (value) => String(value ?? "")
+        .replace(/data:[^;,]+;base64,[A-Za-z0-9+/=\s]{40,}/gi, "data:[redacted-base64]")
+        .replace(/\b[A-Za-z0-9+/]{160,}={0,2}\b/g, "[redacted-base64]")
+        .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]")
+        .replace(/https?:\/\/[^\s"'<>)]*/gi, (url) => {
+          try {
+            const parsed = new URL(url);
+            return `${parsed.origin}${parsed.pathname}${parsed.search ? "?[redacted-query]" : ""}`;
+          } catch {
+            return "[redacted-url]";
+          }
+        });
+
+      function redactLogValue(value, key = "", depth = 0) {
+        if (value === null || value === undefined) return value;
+        if (/(token|secret|senha|password|authorization|email|mail|telefone|phone|foto|photo|imagem|image|base64|content|conteudo|link)/i.test(key)) return "[redacted]";
+        if (depth > 6) return "[max-depth]";
+        if (typeof value === "string") return redactLogText(value);
+        if (Array.isArray(value)) return value.map((item) => redactLogValue(item, key, depth + 1));
+        if (typeof value === "object") {
+          return Object.fromEntries(Object.entries(value).map(([entryKey, entryValue]) => [entryKey, redactLogValue(entryValue, entryKey, depth + 1)]));
+        }
+        return value;
+      }
+
+      function safeLogJson(value) {
+        try {
+          const seen = new WeakSet();
+          return truncateLog(JSON.stringify(redactLogValue(value), (_key, item) => {
+            if (typeof item === "object" && item !== null) {
+              if (seen.has(item)) return "[circular]";
+              seen.add(item);
+            }
+            if (typeof item === "function") return `[function ${item.name || "anonymous"}]`;
+            return item;
+          }), 20000);
+        } catch {
+          return "[payload indisponivel]";
+        }
+      }
+
+      function getDashboardXrm() {
+        try {
+          if (window.Xrm?.WebApi) return window.Xrm;
+          if (window.parent?.Xrm?.WebApi) return window.parent.Xrm;
+        } catch {
+          return window.Xrm?.WebApi ? window.Xrm : null;
+        }
+        return null;
+      }
+
+      function normalizeDashboardError(error) {
+        if (error instanceof Error) return {
+          message: redactLogText(error.message || "Erro inesperado."),
+          stack: redactLogText(error.stack || ""),
+          name: redactLogText(error.name || "Error"),
+          code: redactLogText(error.code || ""),
+        };
+        if (typeof error === "string") return { message: redactLogText(error), stack: "", name: "Error", code: "" };
+        return { message: redactLogText(safeLogJson(error) || "Erro inesperado."), stack: "", name: "Error", code: "" };
+      }
+
+      function readErrorLogQueue() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(ERROR_LOG_QUEUE_KEY) || "[]");
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function writeErrorLogQueue(records) {
+        try {
+          localStorage.setItem(ERROR_LOG_QUEUE_KEY, JSON.stringify(records.slice(-ERROR_LOG_MAX_QUEUE)));
+        } catch {
+          // Falha de storage nunca deve interromper o dashboard.
+        }
+      }
+
+      function buildErrorLogRecord(error, context = {}) {
+        const xrm = getDashboardXrm();
+        const user = xrm?.Utility?.getGlobalContext?.().userSettings;
+        const normalized = normalizeDashboardError(error);
+        const severity = truncateLog(context.severity || "error", 30);
+        const source = truncateLog(context.source || "dashboard", 120);
+        return {
+          new_name: truncateLog(`${severity} | ${source} | ${normalized.message}`, 160),
+          new_occurredat: new Date().toISOString(),
+          new_severity: severity,
+          new_source: source,
+          new_action: truncateLog(redactLogText(context.action || ""), 180),
+          new_phase: truncateLog(redactLogText(context.phase || ""), 120),
+          new_message: truncateLog(normalized.message, 20000),
+          new_stack: truncateLog(normalized.stack, 100000),
+          new_errorname: truncateLog(normalized.name, 220),
+          new_errorcode: truncateLog(normalized.code, 120),
+          new_appname: "Dashboard Betinhos",
+          new_sessionid: truncateLog(window.__DASHBOARD_ERROR_SESSION || (window.__DASHBOARD_ERROR_SESSION = window.crypto?.randomUUID?.() || `dashboard-${Date.now()}-${Math.random().toString(16).slice(2)}`), 120),
+          new_userid: truncateLog(String(user?.userId || "").replace(/[{}]/g, ""), 120),
+          new_username: truncateLog(user?.userName || "", 300),
+          new_url: truncateLog(redactLogText(location.href), 4000),
+          new_referrer: truncateLog(redactLogText(document.referrer), 4000),
+          new_useragent: truncateLog(navigator.userAgent, 4000),
+          new_language: truncateLog(navigator.language, 80),
+          new_platform: truncateLog(navigator.platform, 160),
+          new_timezone: truncateLog(Intl.DateTimeFormat().resolvedOptions().timeZone || "", 120),
+          new_viewport: `${window.innerWidth}x${window.innerHeight}@${window.devicePixelRatio || 1}`,
+          new_visibilitystate: truncateLog(document.visibilityState, 40),
+          new_connectiontype: truncateLog(navigator.connection?.effectiveType || navigator.connection?.type || "", 80),
+          new_clienturl: truncateLog(xrm?.Utility?.getGlobalContext?.().getClientUrl?.() || BASE, 500),
+          new_isoffline: navigator.onLine === false ? "true" : "false",
+          new_payloadjson: safeLogJson(context.payload || {}),
+        };
+      }
+
+      async function getErrorLogEntitySet() {
+        if (!errorLogEntitySetPromise) {
+          errorLogEntitySetPromise = fetch(`${API()}/EntityDefinitions(LogicalName='${ERROR_LOG_TABLE}')?$select=EntitySetName`, {
+            credentials: "same-origin",
+            headers: makeHeaders(false, false),
+          }).then(async (response) => {
+            const data = await response.json();
+            if (!response.ok || !data?.EntitySetName) throw new Error("Tabela de logs indisponivel.");
+            return data.EntitySetName;
+          }).catch((error) => {
+            errorLogEntitySetPromise = null;
+            throw error;
+          });
+        }
+        return errorLogEntitySetPromise;
+      }
+
+      async function createErrorLogRecord(record) {
+        const xrm = getDashboardXrm();
+        if (xrm?.WebApi?.createRecord) {
+          await xrm.WebApi.createRecord(ERROR_LOG_TABLE, record);
+          return;
+        }
+        const entitySet = await getErrorLogEntitySet();
+        const headers = makeHeaders(false, false);
+        headers.set("Content-Type", "application/json; charset=utf-8");
+        const response = await fetch(`${API()}/${entitySet}`, {
+          method: "POST",
+          credentials: "same-origin",
+          headers,
+          body: JSON.stringify(record),
+        });
+        if (!response.ok) throw new Error(`Falha ao gravar log: HTTP ${response.status}`);
+      }
+
+      async function flushErrorLogQueue() {
+        if (IS_LOCAL) return;
+        const pending = [];
+        for (const record of readErrorLogQueue()) {
+          try {
+            await createErrorLogRecord(record);
+          } catch {
+            pending.push(record);
+          }
+        }
+        writeErrorLogQueue(pending);
+      }
+
+      function reportDashboardError(error, context = {}) {
+        if (IS_LOCAL) return;
+        const record = buildErrorLogRecord(error, context);
+        void createErrorLogRecord(record).then(flushErrorLogQueue).catch(() => {
+          writeErrorLogQueue([...readErrorLogQueue(), record]);
+        });
+      }
+
+      function installDashboardErrorLogger() {
+        window.__DASHBOARD_REPORT_ERROR = reportDashboardError;
+        if (window.__DASHBOARD_ERROR_LOGGER_INSTALLED) return;
+        window.__DASHBOARD_ERROR_LOGGER_INSTALLED = true;
+
+        window.addEventListener("error", (event) => {
+          const target = event.target;
+          if (target && target !== window) {
+            reportDashboardError(new Error(`Falha ao carregar recurso ${String(target.tagName || "resource").toLowerCase()}.`), {
+              source: "window.resourceerror",
+              action: target.currentSrc || target.src || target.href || "",
+              phase: String(target.tagName || "resource").toLowerCase(),
+            });
+            return;
+          }
+          reportDashboardError(event.error || event.message, {
+            severity: "critical",
+            source: "window.error",
+            action: event.filename || "",
+            phase: `${event.lineno || 0}:${event.colno || 0}`,
+          });
+        }, true);
+        window.addEventListener("unhandledrejection", (event) => {
+          reportDashboardError(event.reason, { severity: "critical", source: "window.unhandledrejection" });
+        });
+
+        originalDashboardConsoleError = console.error.bind(console);
+        console.error = (...args) => {
+          originalDashboardConsoleError(...args);
+          const error = args.find((item) => item instanceof Error) || new Error(args.map((item) => typeof item === "string" ? item : safeLogJson(item)).join(" "));
+          reportDashboardError(error, { source: "console.error", payload: args });
+        };
+
+        const earlyErrors = Array.isArray(window.__DASHBOARD_EARLY_ERRORS) ? window.__DASHBOARD_EARLY_ERRORS : [];
+        window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = false;
+        window.__DASHBOARD_EARLY_ERRORS = [];
+        earlyErrors.forEach((entry) => reportDashboardError(entry.message, entry));
+        window.addEventListener("online", () => { void flushErrorLogQueue(); });
+        void flushErrorLogQueue();
+      }
+
       const T = {
         reservas: "cr40f_reservadeveculoses",
         precos: "cr40f_composicaodeprecoses",
@@ -7961,6 +8211,7 @@ const monthsLabelsAll = [
       });
       updateFilterSummary();
       detectEnv();
+      installDashboardErrorLogger();
       loadAll();
     </script>
   </body>
