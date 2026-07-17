@@ -6243,6 +6243,7 @@
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
       const DV_STATUS_MUL_NOTIFICAR = 202410000;
+      const DV_CAT_ITEM_SERVICO = 100000000;
       const isMultaPendente = (r) =>
         Number(r?.[F.mul.status]) === DV_STATUS_MUL_NOTIFICAR;
       const pad2 = (n) => String(n).padStart(2, "0");
@@ -8140,7 +8141,9 @@ function setAppVersion() {
       function renderAll() {
         const monthsLabelsAll = getDashboardMonthLabels();
         const dvDisabled = isDataverseDisabled();
-        const rv = dvDisabled ? [] : VW.reservas;
+        const rv = dvDisabled
+          ? []
+          : VW.reservas.filter((r) => Number(r[F.res.catItem]) === DV_CAT_ITEM_SERVICO);
         const fat = sumV(rv);
         const byM = grp(rv, (r) => mK(r[F.res.data]));
         const mks = mKeys(byM);
@@ -8422,7 +8425,6 @@ function setAppVersion() {
           !r._opId
         ).length;
         const statusSemMotorista = new Set([202410001, 202410005, 202410008]);
-        const categoriaServico = 100000000;
         const inicioSemMotorista = new Date("2026-04-10T00:00:00-03:00").getTime();
         const agoraSemMotorista = Date.now();
         const dqSemMotorista = rv.filter((r) => {
@@ -8433,7 +8435,7 @@ function setAppVersion() {
             saida >= inicioSemMotorista &&
             saida <= agoraSemMotorista &&
             statusSemMotorista.has(Number(r[F.res.status])) &&
-            Number(r[F.res.catItem]) === categoriaServico
+            Number(r[F.res.catItem]) === DV_CAT_ITEM_SERVICO
           );
         }).length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
