@@ -15,6 +15,9 @@
     <script>
       (() => {
         document.documentElement.classList.add("dashboard-js-ready");
+        if (/SMART-TV|SmartTV|Tizen|SmartHub|Maple|HbbTV|NetCast|Web0S|WebTV/i.test(navigator.userAgent || "")) {
+          document.documentElement.classList.add("tv-pin-pending");
+        }
         const earlyErrors = (window.__DASHBOARD_EARLY_ERRORS = window.__DASHBOARD_EARLY_ERRORS || []);
         window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = true;
         const capture = (entry) => {
@@ -121,6 +124,199 @@
         line-height: 1.5;
         min-height: 100vh;
         -webkit-font-smoothing: antialiased;
+      }
+      .tv-pin-gate {
+        display: none;
+      }
+      .tv-pin-pending body {
+        background: #001a3d;
+        overflow: hidden;
+      }
+      .tv-pin-pending body > :not(#tvPinGate) {
+        display: none !important;
+      }
+      .tv-pin-pending .tv-pin-gate {
+        align-items: center;
+        background: #001a3d;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        left: 0;
+        overflow: hidden;
+        padding: 32px;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 10000;
+      }
+      .tv-pin-backdrop {
+        background: rgba(33, 89, 210, 0.16);
+        border-radius: 50%;
+        height: 620px;
+        position: absolute;
+        right: -180px;
+        top: -260px;
+        transform: rotate(-12deg);
+        width: 620px;
+      }
+      .tv-pin-backdrop-secondary {
+        background: rgba(255, 255, 255, 0.045);
+        bottom: -330px;
+        height: 700px;
+        left: -230px;
+        right: auto;
+        top: auto;
+        width: 700px;
+      }
+      .tv-pin-card {
+        animation: tvPinCardIn 280ms cubic-bezier(0.23, 1, 0.32, 1) both;
+        background: #fcfcfb;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 22px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+        max-width: 520px;
+        padding: 42px 46px 36px;
+        position: relative;
+        text-align: center;
+        width: 100%;
+        z-index: 1;
+      }
+      @keyframes tvPinCardIn {
+        from { opacity: 0; transform: translateY(18px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .tv-pin-brand {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+      .tv-pin-brand-mark {
+        align-items: center;
+        background: #001a3d;
+        border-radius: 13px;
+        color: #ffffff;
+        display: flex;
+        font-size: 20px;
+        font-weight: 800;
+        height: 48px;
+        justify-content: center;
+        margin-right: 11px;
+        width: 48px;
+      }
+      .tv-pin-brand-copy {
+        color: #001a3d;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.25;
+        text-align: left;
+      }
+      .tv-pin-brand-copy small {
+        color: var(--t2);
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        margin-top: 2px;
+        text-transform: uppercase;
+      }
+      .tv-pin-title {
+        color: #0f172a;
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+      }
+      .tv-pin-subtitle {
+        color: var(--t2);
+        font-size: 15px;
+        line-height: 1.55;
+        margin: 8px auto 20px;
+        max-width: 360px;
+      }
+      .tv-pin-dots {
+        display: flex;
+        justify-content: center;
+        margin: 0 auto 18px;
+      }
+      .tv-pin-dot {
+        background: #ffffff;
+        border: 2px solid #c7d2e2;
+        border-radius: 50%;
+        height: 20px;
+        margin: 0 8px;
+        transition: background-color 120ms ease, border-color 120ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+        width: 20px;
+      }
+      .tv-pin-dot.is-filled {
+        background: #2159d2;
+        border-color: #2159d2;
+        transform: scale(1.08);
+      }
+      .tv-pin-keypad {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -5px auto;
+        max-width: 360px;
+      }
+      .tv-pin-key {
+        background: #ffffff;
+        border: 1px solid #dbe3ef;
+        border-radius: 12px;
+        color: #0f172a;
+        cursor: pointer;
+        flex: 0 0 calc(33.333% - 10px);
+        font: 800 24px/1 "Manrope", "Segoe UI", sans-serif;
+        height: 66px;
+        margin: 5px;
+        outline: none;
+        transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .tv-pin-key:hover,
+      .tv-pin-key:focus {
+        background: #edf3ff;
+        border-color: #2159d2;
+        color: #2159d2;
+      }
+      .tv-pin-key:active {
+        transform: scale(0.96);
+      }
+      .tv-pin-key-empty {
+        visibility: hidden;
+      }
+      .tv-pin-key-delete {
+        color: var(--t2);
+        font-size: 17px;
+      }
+      .tv-pin-message {
+        color: var(--t2);
+        font-size: 12px;
+        font-weight: 700;
+        min-height: 18px;
+        margin-top: 18px;
+      }
+      .tv-pin-card.is-error {
+        animation: tvPinError 260ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+      .tv-pin-card.is-error .tv-pin-message {
+        color: #c12f45;
+      }
+      .tv-pin-card.is-success .tv-pin-message {
+        color: #168f57;
+      }
+      @keyframes tvPinError {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+      }
+      .tv-pin-gate.is-unlocking {
+        opacity: 0;
+        transition: opacity 180ms linear;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .tv-pin-card { animation: none; }
+        .tv-pin-dot { transition: none; }
+        .tv-pin-card.is-error { animation: none; }
       }
       .topbar {
         height: var(--topbar-h);
@@ -3465,6 +3661,36 @@
     </style>
   </head>
   <body>
+    <section id="tvPinGate" class="tv-pin-gate" aria-labelledby="tvPinTitle" aria-modal="true" role="dialog">
+      <div class="tv-pin-backdrop" aria-hidden="true"></div>
+      <div class="tv-pin-backdrop tv-pin-backdrop-secondary" aria-hidden="true"></div>
+      <div class="tv-pin-card" id="tvPinCard">
+        <div class="tv-pin-brand">
+          <span class="tv-pin-brand-mark" aria-hidden="true">B</span>
+          <span class="tv-pin-brand-copy">Betinhos<small>Dashboard do Gestor</small></span>
+        </div>
+        <h1 class="tv-pin-title" id="tvPinTitle">Acesso protegido</h1>
+        <p class="tv-pin-subtitle">Digite o PIN de 4 d&iacute;gitos usando o controle remoto ou o teclado abaixo.</p>
+        <div class="tv-pin-dots" id="tvPinDots" aria-label="Nenhum digito informado">
+          <span class="tv-pin-dot"></span><span class="tv-pin-dot"></span><span class="tv-pin-dot"></span><span class="tv-pin-dot"></span>
+        </div>
+        <div class="tv-pin-keypad" aria-label="Teclado numerico">
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="1">1</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="2">2</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="3">3</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="4">4</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="5">5</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="6">6</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="7">7</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="8">8</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="9">9</button>
+          <span class="tv-pin-key tv-pin-key-empty" aria-hidden="true"></span>
+          <button class="tv-pin-key" type="button" data-tv-pin-digit="0">0</button>
+          <button class="tv-pin-key tv-pin-key-delete" id="tvPinDelete" type="button" aria-label="Apagar ultimo digito">&#8592;</button>
+        </div>
+        <p class="tv-pin-message" id="tvPinMessage" aria-live="polite">Aguardando PIN</p>
+      </div>
+    </section>
     <div id="browserCompatFallback" role="alert">
       <div>
         <strong>Navegador incompatível ou carregamento interrompido.</strong>
@@ -9657,9 +9883,132 @@ function setAppVersion() {
           toggleFilterPanel(false);
         }
       });
-      function startDashboard() {
+
+      let tvPinValue = "";
+      let tvPinBusy = false;
+      const tvPinKeyDownAt = {};
+
+      function tvPinFingerprint(value) {
+        let hash = 7;
+        for (let index = 0; index < value.length; index += 1) {
+          hash = (hash * 31 + value.charCodeAt(index)) % 1000003;
+        }
+        return hash;
+      }
+
+      function tvPinDigitFromEvent(event) {
+        if (/^[0-9]$/.test(event.key || "")) return event.key;
+        const code = Number(event.keyCode || event.which || 0);
+        if (code >= 48 && code <= 57) return String.fromCharCode(code);
+        if (code >= 96 && code <= 105) return String(code - 96);
+        return "";
+      }
+
+      function renderTvPin() {
+        const dots = document.querySelectorAll("#tvPinDots .tv-pin-dot");
+        dots.forEach((dot, index) => dot.classList.toggle("is-filled", index < tvPinValue.length));
+        const group = document.getElementById("tvPinDots");
+        if (group) group.setAttribute("aria-label", `${tvPinValue.length} de 4 digitos informados`);
+      }
+
+      function clearTvPin() {
+        tvPinValue = "";
+        renderTvPin();
+      }
+
+      function unlockTvDashboard() {
+        const gate = document.getElementById("tvPinGate");
+        const card = document.getElementById("tvPinCard");
+        const message = document.getElementById("tvPinMessage");
+        tvPinBusy = true;
+        card?.classList.remove("is-error");
+        card?.classList.add("is-success");
+        if (message) message.textContent = "Acesso liberado";
+        document.removeEventListener("keydown", handleTvPinKeydown, true);
+        document.removeEventListener("keyup", handleTvPinKeyup, true);
+        window.setTimeout(() => gate?.classList.add("is-unlocking"), 80);
+        window.setTimeout(() => {
+          document.documentElement.classList.remove("tv-pin-pending");
+          initializeDashboardAfterAccess();
+        }, 270);
+      }
+
+      function validateTvPin() {
+        if (tvPinValue.length !== 4 || tvPinBusy) return;
+        if (tvPinFingerprint(tvPinValue) === 7790) {
+          unlockTvDashboard();
+          return;
+        }
+        tvPinBusy = true;
+        const card = document.getElementById("tvPinCard");
+        const message = document.getElementById("tvPinMessage");
+        card?.classList.remove("is-error");
+        void card?.offsetWidth;
+        card?.classList.add("is-error");
+        if (message) message.textContent = "PIN incorreto. Tente novamente.";
+        window.setTimeout(() => {
+          clearTvPin();
+          card?.classList.remove("is-error");
+          if (message) message.textContent = "Aguardando PIN";
+          tvPinBusy = false;
+        }, 650);
+      }
+
+      function addTvPinDigit(digit) {
+        if (tvPinBusy || tvPinValue.length >= 4 || !/^[0-9]$/.test(digit)) return;
+        tvPinValue += digit;
+        renderTvPin();
+        if (tvPinValue.length === 4) validateTvPin();
+      }
+
+      function deleteTvPinDigit() {
+        if (tvPinBusy || !tvPinValue.length) return;
+        tvPinValue = tvPinValue.slice(0, -1);
+        renderTvPin();
+      }
+
+      function handleTvPinKeydown(event) {
+        const digit = tvPinDigitFromEvent(event);
+        const isDelete = event.key === "Backspace" || event.key === "Delete" || event.keyCode === 8 || event.keyCode === 46;
+        if (!digit && !isDelete && event.key !== "Enter" && event.keyCode !== 13) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (digit) {
+          tvPinKeyDownAt[digit] = Date.now();
+          addTvPinDigit(digit);
+        } else if (isDelete) deleteTvPinDigit();
+        else validateTvPin();
+      }
+
+      function handleTvPinKeyup(event) {
+        const digit = tvPinDigitFromEvent(event);
+        if (!digit) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const handledAt = tvPinKeyDownAt[digit] || 0;
+        delete tvPinKeyDownAt[digit];
+        if (Date.now() - handledAt >= 1200) addTvPinDigit(digit);
+      }
+
+      function installTvPinGate() {
+        if (!window.__DASHBOARD_TV_MODE) {
+          document.documentElement.classList.remove("tv-pin-pending");
+          return false;
+        }
+        document.querySelectorAll("[data-tv-pin-digit]").forEach((button) => {
+          button.addEventListener("click", () => addTvPinDigit(button.dataset.tvPinDigit));
+        });
+        document.getElementById("tvPinDelete")?.addEventListener("click", deleteTvPinDigit);
+        document.addEventListener("keydown", handleTvPinKeydown, true);
+        document.addEventListener("keyup", handleTvPinKeyup, true);
+        renderTvPin();
+        return true;
+      }
+
+      function initializeDashboardAfterAccess() {
+        if (window.__DASHBOARD_AFTER_ACCESS_STARTED) return;
+        window.__DASHBOARD_AFTER_ACCESS_STARTED = true;
         try {
-          if (window.DashboardTvCompat) window.DashboardTvCompat.install(window);
           initializeDashboardCharts();
           updateFilterSummary();
           detectEnv();
@@ -9677,6 +10026,16 @@ function setAppVersion() {
           setLoading(false);
           showDashboardLoadError(error);
           window.__DASHBOARD_REPORT_ERROR?.(error, { source: "dashboard", action: "startDashboard", phase: "bootstrap" });
+        }
+      }
+      function startDashboard() {
+        try {
+          if (window.DashboardTvCompat) window.DashboardTvCompat.install(window);
+          if (installTvPinGate()) return;
+          initializeDashboardAfterAccess();
+        } catch (error) {
+          document.documentElement.classList.remove("tv-pin-pending");
+          showDashboardLoadError(error);
         }
       }
       function startDashboardAutoRefresh() {
