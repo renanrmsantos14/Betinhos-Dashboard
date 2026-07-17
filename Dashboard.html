@@ -1489,9 +1489,15 @@
         display: flex;
         flex-direction: column;
       }
-      .dashboard-section--analysis > .cgrid.g2:first-child > .cc:first-child > #cTotalProd {
+      .dashboard-section--analysis > .cgrid.g2:first-child > .cc:first-child > .chart-fill {
         flex: 1 1 auto;
         min-height: 180px;
+        min-width: 0;
+        position: relative;
+      }
+      .dashboard-section--analysis > .cgrid.g2:first-child > .cc:first-child > .chart-fill > #cTotalProd {
+        height: 100% !important;
+        width: 100% !important;
       }
       .g1 {
         grid-template-columns: 1fr;
@@ -4509,7 +4515,7 @@
               <div class="inline-indicators" id="indicatorsLM_LY_META"></div>
             </div>
             <div id="metaProgressWrap"></div>
-            <canvas id="cTotalProd" height="78" data-mobile-height="138"></canvas>
+            <div class="chart-fill"><canvas id="cTotalProd" height="78" data-mobile-height="138"></canvas></div>
           </div>
 
           <!-- Meta x Realizado por Mês -->
@@ -8527,7 +8533,7 @@ function setAppVersion() {
               },
             ],
           },
-          options: opts0({ noLegend: false, yBrl: true, datalabels: false }),
+          options: { ...opts0({ noLegend: false, yBrl: true, datalabels: false }), maintainAspectRatio: false },
         });
 
         // Cards de Total Produzido
