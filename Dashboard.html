@@ -6800,7 +6800,11 @@ function setBrandLogo() {
 function setAppVersion() {
   const label = window.__DASHBOARD_BUILD_INFO?.label || "v—";
   const version = document.getElementById("appVersion");
-  if (version) version.textContent = label;
+  if (!version) return;
+  const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(window.location.hostname || "");
+  version.textContent = isLocalHost ? `${label} · LOCAL` : label;
+  version.hidden = false;
+  version.style.display = "block";
 }
 
       // ════════════════════════════════════════════
