@@ -4371,7 +4371,6 @@
               <div class="inline-indicators" id="ind_mvr"></div>
             </div>
             <div id="mvrSummary" class="metric-table-wrap"></div>
-            <canvas id="cMetaVsReal" height="82" data-mobile-height="144"></canvas>
           </div>
           </div>
 
@@ -8434,24 +8433,17 @@ function setAppVersion() {
           const mvrAchieved = pctGlobal >= 100;
           set("sub_mvr", `${allMks.length} meses · ${pctGlobal.toFixed(1)}% da meta`);
           set("v_totalMvr", dvDisabled ? "—" : brlS(totalMvrReal));
+          const mvrRows = mvrLabels.map((label, i) => {
+            const pct = mvrMeta[i] > 0 ? (mvrReal[i] / mvrMeta[i] * 100) : 0;
+            const color = pct >= 100 ? "var(--green)" : pct >= 75 ? "var(--blue)" : "var(--orange)";
+            return "<tr><td class=\"em\">" + label + "</td><td class=\"r\">" + brl(mvrMeta[i]) + "</td><td class=\"r em\">" + brl(mvrReal[i]) + "</td><td><div class=\"prg\"><div class=\"prg-bg\"><div class=\"prg-fill\" style=\"width:" + Math.min(100, pct).toFixed(0) + "%;background:" + color + ";\"></div></div><span class=\"prg-pct\">" + pct.toFixed(1) + "%</span></div></td></tr>";
+          }).join("");
           html("mvrSummary", dvDisabled ? "" : `
-            <table><thead><tr><th>Meta [R$]</th><th>Alcancado [R$]</th><th>Participacao</th></tr></thead>
-            <tbody><tr><td class="r em">${brl(totalMvrMeta)}</td><td class="r em">${brl(totalMvrReal)}</td><td><div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, pctGlobal).toFixed(0)}%;background:${pctGlobal >= 100 ? "var(--green)" : pctGlobal >= 75 ? "var(--blue)" : "var(--orange)"};"></div></div><span class="prg-pct">${pctGlobal.toFixed(1)}%</span></div></td></tr></tbody></table>
+            <table><thead><tr><th>Mês</th><th class="r">Meta</th><th class="r">Realizado</th><th>Atingimento</th></tr></thead><tbody>${mvrRows}</tbody></table>
           `);
           document.getElementById("ind_mvr").innerHTML = dvDisabled ? "" :
             (totalMvrMeta > 0 ? `<span class="badge-kpi badge-meta${mvrAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(totalMvrMeta)}</span><span class="bk-pct" style="font-weight:800;">${pctGlobal.toFixed(0)}%${mvrAchieved ? " ✓" : ""}</span></span>` : "") +
             fmtKpiChip(totalMvrReal, lyValue, "LY", "badge-ly");
-          mkChart("cMetaVsReal", {
-            type: "bar",
-            data: {
-              labels: mvrLabels,
-              datasets: [
-                { label: "Realizado", data: mvrReal, backgroundColor: "#2159d2", borderRadius: 4 },
-                { label: "Meta", data: mvrMeta, backgroundColor: "rgba(201,162,39,0.35)", borderColor: "#b17a00", borderWidth: 1.5, borderRadius: 4, type: "bar" },
-              ],
-            },
-            options: opts0({ yBrl: true, datalabels: false }),
-          });
         }
 
         // Faturamento por Cliente por Mês
