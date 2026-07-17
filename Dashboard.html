@@ -8422,6 +8422,7 @@ function setAppVersion() {
           !r._opId
         ).length;
         const statusSemMotorista = new Set([202410001, 202410005, 202410008]);
+        const categoriaServico = 100000000;
         const inicioSemMotorista = new Date("2026-04-10T00:00:00-03:00").getTime();
         const agoraSemMotorista = Date.now();
         const dqSemMotorista = rv.filter((r) => {
@@ -8431,7 +8432,8 @@ function setAppVersion() {
             Number.isFinite(saida) &&
             saida >= inicioSemMotorista &&
             saida <= agoraSemMotorista &&
-            statusSemMotorista.has(Number(r[F.res.status]))
+            statusSemMotorista.has(Number(r[F.res.status])) &&
+            Number(r[F.res.catItem]) === categoriaServico
           );
         }).length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
