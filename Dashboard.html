@@ -7774,7 +7774,7 @@ function setAppVersion() {
             <div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div>
           </div>
           <div class="exec-alerts">
-            <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem veiculo</span></div><b>Dados</b></div>
+            <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div>
@@ -8419,7 +8419,7 @@ function setAppVersion() {
         const dqSemOP = rv.filter((r) => !r._opId).length;
         const dqSemMotorista = rv.filter((r) => afterOperationalStart(r) && r._mot === "Sem motorista").length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
-        setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veiculo", "motorista sem veiculo", dqSemVeiculo ? "warn" : "ok");
+        setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veículo", "OS sem veículo", dqSemVeiculo ? "warn" : "ok");
         setExecAlert("dqSemOP", dqSemOP, "Sem OP", "sem financeiro vinculado", dqSemOP ? "warn" : "ok");
         setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", dqSemMotorista ? "Corrigir" : "OK", dqSemMotorista ? "warn" : "ok");
         setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", dqSemCliente ? "Corrigir" : "OK", dqSemCliente ? "warn" : "ok");
