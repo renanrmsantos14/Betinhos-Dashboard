@@ -3956,10 +3956,18 @@
       #page-servicos .service-summary-card.kpi-tone-blue .metric-line b {
         color: var(--blue);
       }
-      #page-servicos .service-summary-card.kpi-tone-green .metric-line b {
-        color: var(--green);
+     #page-servicos .service-summary-card.kpi-tone-green .metric-line b {
+       color: var(--green);
+     }
+      #page-servicos .service-summary-card > .metric-list {
+        padding-block: 2px;
       }
-      @media (max-width: 700px) {
+      #page-servicos .service-summary-card > .metric-list .metric-line {
+        min-height: 14px;
+        padding-block: 1px;
+        line-height: 1.1;
+      }
+     @media (max-width: 700px) {
         #page-servicos .kpi-row.kpi-2 .kpi.executive {
           min-height: 78px;
           height: 78px;
