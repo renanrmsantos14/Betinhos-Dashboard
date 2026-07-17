@@ -8412,7 +8412,10 @@ function setAppVersion() {
         const programadosPct = rv.length ? ((programados.length / rv.length) * 100).toFixed(0) : 0;
         setExecAlert("alertProgramados", programados.length, "Programados", programados.length ? `${programadosPct}% do período` : "Sem agenda", programados.length ? "ok" : "warn");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
-        const dqSemVeiculo = rv.filter((r) => r._mot !== "Sem motorista" && !r[F.res.veiculo]).length;
+        const dqSemVeiculo = rv.filter((r) => {
+          const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
+          return r._mot !== "Sem motorista" && !r[F.res.veiculo] && Number.isFinite(saida) && saida <= Date.now();
+        }).length;
         const dqSemOP = rv.filter((r) => !r._opId).length;
         const dqSemMotorista = rv.filter((r) => afterOperationalStart(r) && r._mot === "Sem motorista").length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
