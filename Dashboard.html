@@ -8141,9 +8141,7 @@ function setAppVersion() {
           `<span class="receipt-value">${brlS(recebidoProduzido)}</span>` +
           `<span class="receipt-separator">recebido de</span>` +
           `<span class="receipt-base">${brlS(baseRecebimento)}</span>`);
-        html("kRecebPctD", dvDisabled ? "" :
-          `<span class="badge-kpi badge-meta"><span class="bk-label">REC</span><span class="bk-val">${brlS(recebidoProduzido)}</span><span class="bk-pct">recebido</span></span>` +
-          `<span class="badge-kpi badge-meta${recebimentoPct >= 90 ? "" : " below"}"><span class="bk-label">BASE</span><span class="bk-val">${brlS(baseRecebimento)}</span><span class="bk-pct">${recebimentoPct.toFixed(1)}%</span></span>`);
+        html("kRecebPctD", "");
         const cnhWarn = DB.funcionarios.filter((r) => {
           if (!r[F.fun.cnh]) return true;
           return (
