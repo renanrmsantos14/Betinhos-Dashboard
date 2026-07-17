@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Betinhos · Dashboard do Gestor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -11,6 +14,7 @@
     />
     <script>
       (() => {
+        document.documentElement.classList.add("dashboard-js-ready");
         const earlyErrors = (window.__DASHBOARD_EARLY_ERRORS = window.__DASHBOARD_EARLY_ERRORS || []);
         window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = true;
         const capture = (entry) => {
@@ -39,6 +43,8 @@
         });
       })();
     </script>
+    <script id="dashboard-build-info">window.__DASHBOARD_BUILD_INFO = {"version":"1.0.0","label":"v1.0.0"};</script>
+    <script src="tv-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <style>
@@ -87,6 +93,8 @@
         --s3: 0 18px 42px rgba(15, 23, 42, 0.18), 0 2px 7px rgba(15, 23, 42, 0.08);
         --font: "Manrope", "Segoe UI", sans-serif;
         --topbar-h: 64px;
+        --brand-logo-size: 40px;
+        --brand-logo-radius: 11px;
         --space-050: 4px;
         --space-075: 6px;
         --space-100: 8px;
@@ -334,6 +342,15 @@
         background: var(--b1);
         margin: 6px 12px;
       }
+      .sb-version {
+        margin: auto 12px 0;
+        padding-top: 14px;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-align: center;
+      }
       .content {
         flex: 1;
         overflow-y: auto;
@@ -345,7 +362,11 @@
       }
       .content > .fbar,
       .content > .page {
+        width: 100%;
+        max-width: var(--content-max);
         width: min(100%, var(--content-max));
+        margin-left: auto;
+        margin-right: auto;
         margin-inline: auto;
       }
       .fbar {
@@ -1080,7 +1101,10 @@
         display: block;
       }
       .kpi-spark .chart-empty {
-        inset: 4px 0 0;
+        top: 4px;
+        right: 0;
+        bottom: 0;
+        left: 0;
         min-height: auto;
         border: 0;
         background: transparent;
@@ -1745,14 +1769,18 @@
       .ov {
         display: none;
         position: fixed;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         background: rgba(240, 242, 245, 0.85);
         backdrop-filter: none;
         z-index: 500;
-        place-items: center;
+        align-items: center;
+        justify-content: center;
       }
       .ov.on {
-        display: grid;
+        display: flex;
       }
       .ov-box {
         background: var(--surf);
@@ -1968,7 +1996,10 @@
       }
       .mobile-more-sheet {
         position: fixed;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         z-index: 450;
         place-items: end center;
         padding: 12px 12px 0;
@@ -2400,7 +2431,10 @@
         }
         .filter-mobile-scrim {
           position: fixed;
-          inset: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
           z-index: 440;
           display: block;
           background: rgba(15, 17, 23, 0.32);
@@ -2536,26 +2570,31 @@
       .topbar {
         height: var(--topbar-h);
         padding: 0 26px;
-        background: var(--surf);
+        background: var(--surf2);
         border-bottom-color: var(--b1);
-        box-shadow: 0 1px 0 rgba(0, 26, 61, 0.04);
+        box-shadow: 0 1px 0 rgba(0, 26, 61, 0.06);
       }
 
-      .tb-brand { gap: 12px; }
+      .tb-brand { gap: var(--space-150); }
       .tb-logo {
-        width: 40px;
-        height: 40px;
+        width: var(--brand-logo-size);
+        height: var(--brand-logo-size);
         border: 0;
-        border-radius: 11px;
-        background: var(--blue);
-        box-shadow: 0 12px 30px rgba(33, 89, 210, 0.3);
+        border-radius: var(--brand-logo-radius);
+        background: transparent;
+        box-shadow: none;
       }
-      .tb-logo-fallback::after { color: #ffffff; }
+      .tb-logo-fallback::after { color: var(--blue); }
       .tb-logo img[hidden] { display: none; }
-      .tb-name { color: var(--navy); font-size: 14px; letter-spacing: -0.02em; }
+      .tb-name { color: var(--navy); font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
       .tb-sub { color: var(--t2); font-size: 11px; }
-      .ts { color: var(--t2); }
-      .env-pill { border-radius: 999px; padding: 4px 8px; }
+      .tb-right { gap: var(--space-100); }
+      .ts { color: var(--t2); font-variant-numeric: tabular-nums; }
+      .env-pill {
+        border-radius: 999px;
+        padding: 4px var(--space-100);
+        box-shadow: inset 0 0 0 1px currentColor;
+      }
 
       .btn-ic,
       .mobile-more-close {
@@ -2565,6 +2604,16 @@
         background: var(--surf2);
         border-color: var(--b1);
         color: var(--t2);
+      }
+      .topbar .btn-ic:hover {
+        background: var(--surf);
+        border-color: var(--b2);
+        color: var(--blue);
+        box-shadow: var(--s1);
+      }
+      .topbar .btn-ic:focus-visible {
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(33, 89, 210, 0.18);
       }
 
       .shell { height: calc(100vh - var(--topbar-h)); }
@@ -3011,6 +3060,336 @@
         font-size: 12px;
         line-height: 1.4;
       }
+      #browserCompatFallback {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: #f0f0f0;
+        color: #0f172a;
+        font-family: Arial, sans-serif;
+      }
+      #browserCompatFallback > div {
+        max-width: 440px;
+        padding: 24px;
+        border: 1px solid #c7d2e2;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 10px 28px rgba(0, 26, 61, 0.12);
+        text-align: center;
+      }
+      #browserCompatFallback strong,
+      #browserCompatFallback span { display: block; }
+      #browserCompatFallback strong { margin-bottom: 10px; font-size: 18px; }
+      #browserCompatFallback span { color: #475569; font-size: 14px; line-height: 1.5; }
+      .dashboard-js-ready #browserCompatFallback { display: none; }
+      #dashboardLoadError[hidden] { display: none; }
+      #dashboardLoadError {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 99998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(240, 240, 240, 0.96);
+        font-family: var(--font);
+      }
+      .dashboard-load-error-card {
+        width: 100%;
+        max-width: 560px;
+        width: min(100%, 560px);
+        padding: 28px;
+        border: 1px solid #f0b9c3;
+        border-radius: var(--r12);
+        background: #ffffff;
+        box-shadow: var(--s3);
+      }
+      .dashboard-load-error-card h1 { margin-bottom: 10px; color: var(--red); font-size: 20px; }
+      .dashboard-load-error-card p { color: var(--t2); font-size: 14px; line-height: 1.5; }
+      .dashboard-load-error-detail {
+        margin: 16px 0;
+        padding: 12px;
+        overflow-wrap: anywhere;
+        border-radius: var(--r8);
+        background: var(--red-l);
+        color: #7e1c2c;
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .dashboard-load-error-card button {
+        border: 0;
+        border-radius: var(--r8);
+        padding: 11px 16px;
+        background: var(--blue);
+        color: #ffffff;
+        font: inherit;
+        font-weight: 800;
+      }
+      .tv-navigation {
+        display: none;
+      }
+      .tv-browser .tv-navigation {
+        display: block;
+      }
+      .tv-nav-edge {
+        position: fixed;
+        top: 50%;
+        z-index: 320;
+        width: 52px;
+        height: 84px;
+        margin-top: -42px;
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        border-radius: 12px;
+        background: rgba(0, 26, 61, 0.72);
+        color: #ffffff;
+        font: 800 30px/1 Arial, sans-serif;
+        cursor: pointer;
+      }
+      .tv-nav-edge-left { left: 244px; }
+      .tv-nav-edge-right { right: 6px; }
+      .tv-nav-edge:hover,
+      .tv-nav-edge:focus {
+        outline: 3px solid #ffffff;
+        background: #001a3d;
+      }
+      .tv-no-grid .kpi-row,
+      .tv-no-grid .exec-alerts,
+      .tv-no-grid .cgrid,
+      .tv-no-grid .meta-kpi-pills,
+      .tv-no-grid .card-detail-layout,
+      .tv-no-grid .card-detail-stats {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .tv-no-grid .kpi-row > *,
+      .tv-no-grid .exec-alerts > *,
+      .tv-no-grid .cgrid > *,
+      .tv-no-grid .meta-kpi-pills > *,
+      .tv-no-grid .card-detail-layout > *,
+      .tv-no-grid .card-detail-stats > * {
+        flex: 1 1 220px;
+        min-width: 0;
+        margin: 6px;
+      }
+      .tv-no-grid .kpi.kpi-compact {
+        display: flex;
+        flex-direction: column;
+      }
+      .tv-browser .filter-head {
+        display: block;
+        min-height: 0;
+      }
+      .tv-browser .filter-head-left {
+        display: block;
+        width: 100%;
+      }
+      .tv-browser .filter-toggle {
+        display: flex;
+        width: 100%;
+        min-height: 42px;
+        height: 42px;
+        justify-content: flex-start;
+      }
+      .tv-browser .filter-chevron {
+        margin-left: auto;
+      }
+      .tv-browser .filter-summary {
+        display: block;
+        width: 100%;
+        margin-top: 8px;
+        white-space: normal;
+      }
+      .tv-browser .filter-head-actions,
+      .tv-browser .fbar.open .filter-head-actions {
+        display: block;
+        width: 100%;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--b1);
+      }
+      .tv-browser .filter-head-actions .quick-filters {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .tv-browser .filter-head-actions .filter-clear {
+        margin-top: 8px;
+      }
+      .tv-browser .filter-body {
+        display: none;
+        opacity: 1;
+        transform: none;
+        transition: none;
+        margin-top: 0;
+      }
+      .tv-browser .fbar.open .filter-body {
+        display: block;
+        margin-top: 14px;
+      }
+      .tv-browser .filter-body-inner {
+        display: block;
+        overflow: visible;
+      }
+      .tv-browser .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -5px;
+        padding: 8px 0 0;
+      }
+      .tv-browser .filter-row > .fg {
+        flex: 1 1 190px;
+        min-width: 0;
+        margin: 5px;
+      }
+      .tv-no-flex-gap .content > * + *,
+      .tv-no-flex-gap .page.on > * + * {
+        margin-top: 16px;
+      }
+      .tv-no-flex-gap .tb-brand > * + *,
+      .tv-no-flex-gap .tb-right > * + * {
+        margin-left: 10px;
+      }
+      .tv-no-flex-gap .sb-item .sb-icon {
+        margin-right: 9px;
+      }
+      .tv-no-flex-gap .quick-filters > * {
+        margin: 3px;
+      }
+      .tv-diagnostic-nav {
+        display: none;
+      }
+      .tv-browser .tv-diagnostic-nav {
+        display: flex;
+      }
+      .tv-diagnostic-active #filterPanel,
+      .tv-diagnostic-active #alertArea {
+        display: none;
+      }
+      .tv-diagnostic-intro {
+        margin-bottom: 16px;
+      }
+      .tv-diagnostic-intro h2 {
+        color: var(--t1);
+        font-size: 22px;
+        line-height: 1.25;
+        margin-bottom: 6px;
+      }
+      .tv-diagnostic-intro p {
+        color: var(--t2);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .tv-diagnostic-intro p + p {
+        margin-top: 6px;
+      }
+      .tv-diagnostic-grid {
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+        margin: -6px;
+      }
+      .tv-diagnostic-card {
+        background: var(--surf);
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        box-shadow: var(--s1);
+        flex: 1 1 300px;
+        margin: 6px;
+        min-width: 0;
+        padding: 18px;
+      }
+      .tv-diagnostic-card-wide {
+        flex-basis: 100%;
+      }
+      .tv-diagnostic-label {
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+      .tv-diagnostic-last {
+        color: var(--blue);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 25px;
+        font-weight: 800;
+        line-height: 1.25;
+        min-height: 32px;
+        overflow-wrap: anywhere;
+      }
+      .tv-diagnostic-detail,
+      .tv-diagnostic-device {
+        color: var(--t2);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.65;
+        margin-top: 10px;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+      .tv-diagnostic-status {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+      .tv-diagnostic-target {
+        align-items: center;
+        background: var(--blue-l);
+        border: 2px solid var(--blue);
+        border-radius: var(--r12);
+        color: var(--blue-d);
+        cursor: pointer;
+        display: flex;
+        font-size: 18px;
+        font-weight: 800;
+        justify-content: center;
+        min-height: 116px;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+      }
+      .tv-diagnostic-log {
+        list-style: none;
+        margin-top: 4px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .tv-diagnostic-log li {
+        border-bottom: 1px solid var(--b1);
+        color: var(--t2);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        padding: 8px 0;
+      }
+      .tv-diagnostic-log li:first-child {
+        color: var(--t1);
+        font-weight: 700;
+      }
+      .tv-diagnostic-actions {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 12px -4px -4px;
+      }
+      .tv-diagnostic-actions .btn {
+        margin: 4px;
+      }
+      .tv-browser .page.on > * {
+        animation: none;
+      }
       .card-detail-table-wrap {
         margin-top: 14px;
         overflow: auto;
@@ -3029,19 +3408,38 @@
     </style>
   </head>
   <body>
+    <div id="browserCompatFallback" role="alert">
+      <div>
+        <strong>Navegador incompatível ou carregamento interrompido.</strong>
+        <span>Abra este painel em um computador, Samsung DeX ou atualize o navegador da TV.</span>
+      </div>
+    </div>
+    <section id="dashboardLoadError" hidden role="alert" aria-live="assertive">
+      <div class="dashboard-load-error-card">
+        <h1>Não foi possível carregar o Dashboard</h1>
+        <p>Não foi possível consultar os dados do Dataverse neste navegador.</p>
+        <div id="dashboardLoadErrorDetail" class="dashboard-load-error-detail"></div>
+        <button type="button" onclick="loadAll()">Tentar novamente</button>
+      </div>
+    </section>
     <div class="ov" id="ov">
       <div class="ov-box">
         <div class="ring"></div>
         <div class="ring-lbl" id="ovLbl">Carregando…</div>
       </div>
     </div>
+    <nav id="tvNavigation" class="tv-navigation" aria-label="Navegação da TV">
+      <button type="button" class="tv-nav-edge tv-nav-edge-left" aria-label="Página anterior" onclick="navigateTv(-1)">&#8249;</button>
+      <button type="button" class="tv-nav-edge tv-nav-edge-right" aria-label="Próxima página" onclick="navigateTv(1)">&#8250;</button>
+    </nav>
 
     <div class="topbar">
       <div class="tb-brand">
         <div class="tb-logo">
           <img
-            src="https://org23b93544.crm2.dynamics.com/WebResources/cr40f_LogoBetinhosB"
-            alt=""
+            id="brandLogo"
+            data-webresource="cr40f_LogoBetinhosB"
+            alt="Betinhos"
             onerror="this.hidden = true; this.parentElement.classList.add('tb-logo-fallback')"
           />
         </div>
@@ -3053,7 +3451,7 @@
       <div class="tb-right">
         <span class="ts" id="ts"></span>
         <span class="env-pill" id="envPill">—</span>
-        <button class="btn-ic" id="btnRef" onclick="loadAll()">
+        <button class="btn-ic" id="btnRef" type="button" aria-label="Atualizar dados" title="Atualizar dados" onclick="loadAll()">
           <svg
             width="15"
             height="15"
@@ -3073,22 +3471,22 @@
     <div class="shell">
       <div class="sidebar">
         <div class="sb-section">Operações</div>
-        <div class="sb-item act" onclick="nav('resumo', this)">
+        <div class="sb-item act" data-nav="resumo" onclick="nav('resumo', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></span>Resumo<span class="sb-badge" id="nbSrv"
             >—</span
           >
         </div>
-        <div class="sb-item" onclick="nav('servicos', this)">
+        <div class="sb-item" data-nav="servicos" onclick="nav('servicos', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path></svg></span>Serviços<span
             class="sb-badge"
             id="nbSrv2"
             >—</span
           >
         </div>
-        <div class="sb-item" onclick="nav('faturamento', this)">
+        <div class="sb-item" data-nav="faturamento" onclick="nav('faturamento', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="m7 15 4-4 3 2 5-6"></path></svg></span>Faturamento
         </div>
-        <div class="sb-item" onclick="nav('pagantes', this)">
+        <div class="sb-item" data-nav="pagantes" onclick="nav('pagantes', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path></svg></span>Pagamentos<span
             class="sb-badge"
             id="nbPag"
@@ -3097,47 +3495,53 @@
         </div>
         <div class="sb-div"></div>
         <div class="sb-section">Frota & Equipe</div>
-        <div class="sb-item" onclick="nav('frota', this)">
+        <div class="sb-item" data-nav="frota" onclick="nav('frota', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 17 1-6h12l1 6"></path><path d="M4 17h16v3H4z"></path><path d="M7 11l2-4h6l2 4"></path><circle cx="7" cy="18.5" r="1"></circle><circle cx="17" cy="18.5" r="1"></circle></svg></span>Frota<span
             class="sb-badge"
             id="nbFrota"
             >—</span
           >
         </div>
-        <div class="sb-item" onclick="nav('motoristas', this)">
+        <div class="sb-item" data-nav="motoristas" onclick="nav('motoristas', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></span>Motoristas<span
             class="sb-badge"
             id="nbMot"
             >—</span
           >
         </div>
-        <div class="sb-item" onclick="nav('manutencoes', this)">
+        <div class="sb-item" data-nav="manutencoes" onclick="nav('manutencoes', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.7 6.3 3-3a4 4 0 0 0-5.7 5.7l-7.7 7.7a2 2 0 1 0 2.8 2.8l7.7-7.7a4 4 0 0 0 5.7-5.7l-3 3"></path></svg></span>Manutenções<span
             class="sb-badge warn"
             id="nbMan"
             >—</span
           >
         </div>
-        <div class="sb-item" onclick="nav('multas', this)">
+        <div class="sb-item" data-nav="multas" onclick="nav('multas', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 3.5-8 14A2 2 0 0 0 4 20.5h16a2 2 0 0 0 1.7-3l-8-14a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4M12 17h.01"></path></svg></span>Multas<span
             class="sb-badge danger"
             id="nbMul"
             >—</span
           >
         </div>
-        <div class="sb-item" onclick="nav('trocas', this)">
+        <div class="sb-item" data-nav="trocas" onclick="nav('trocas', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 3-3 3 3"></path><path d="M10 4v10a4 4 0 0 0 4 4h3"></path><path d="m17 17-3 3-3-3"></path><path d="M14 20V10a4 4 0 0 0-4-4H7"></path></svg></span>Trocas<span class="sb-badge" id="nbTrc"
             >—</span
           >
         </div>
         <div class="sb-div"></div>
         <div class="sb-section">Marketing</div>
-        <div class="sb-item" onclick="nav('marketing', this)">
+        <div class="sb-item" data-nav="marketing" onclick="nav('marketing', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 13z"></path><path d="M11 15.5V20H7l-1.5-5.7"></path></svg></span>Marketing<span
             class="sb-badge"
             id="nbMkt"
             >—</span
           >
+        </div>
+        <small id="appVersion" class="sb-version" aria-label="Versão do app">v1.0.0</small>
+        <div class="sb-div tv-diagnostic-nav"></div>
+        <div class="sb-section tv-diagnostic-nav">Diagn&oacute;stico</div>
+        <div class="sb-item tv-diagnostic-nav" data-nav="tvdiagnostico" onclick="nav('tvdiagnostico', this)">
+          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M8 22h8M12 18v4M8 9h.01M12 9h.01M16 9h.01M8 13h8"></path></svg></span>Controle da TV
         </div>
       </div>
 
@@ -4264,6 +4668,38 @@
             </div>
           </div>
         </div>
+
+        <div class="page" id="page-tvdiagnostico">
+          <div class="tv-diagnostic-intro">
+            <h2>Diagn&oacute;stico do controle da TV</h2>
+            <p>Pressione setas, OK, voltar, volume, canal, cores e m&iacute;dia. O que o navegador receber aparecer&aacute; abaixo e ser&aacute; enviado ao App Log. Se nada aparecer, a pr&oacute;pria TV interceptou o bot&atilde;o antes do navegador.</p>
+            <p><strong>Atalhos confirmados:</strong> 1 Resumo, 2 Servi&ccedil;os, 3 Faturamento, 4 Pagamentos, 5 Frota, 6 Motoristas, 7 Manuten&ccedil;&otilde;es, 8 Multas, 9 Trocas e 0 Marketing.</p>
+          </div>
+          <div class="tv-diagnostic-grid">
+            <div class="tv-diagnostic-card">
+              <div class="tv-diagnostic-label">&Uacute;ltimo evento recebido</div>
+              <div class="tv-diagnostic-last" id="tvDiagLastEvent">Aguardando...</div>
+              <div class="tv-diagnostic-detail" id="tvDiagLastDetail">Nenhum comando detectado.</div>
+              <div class="tv-diagnostic-status" id="tvDiagLogStatus">App Log pronto.</div>
+            </div>
+            <div class="tv-diagnostic-card">
+              <div class="tv-diagnostic-label">Teste de OK / clique</div>
+              <button class="tv-diagnostic-target" id="tvDiagTarget" type="button">Aponte aqui e pressione OK</button>
+            </div>
+            <div class="tv-diagnostic-card tv-diagnostic-card-wide">
+              <div class="tv-diagnostic-label">Dispositivo</div>
+              <div class="tv-diagnostic-device" id="tvDiagDevice">Identificando...</div>
+            </div>
+            <div class="tv-diagnostic-card tv-diagnostic-card-wide">
+              <div class="tv-diagnostic-label">Eventos recentes</div>
+              <ol class="tv-diagnostic-log" id="tvDiagEventLog"><li>Aguardando comandos do controle...</li></ol>
+              <div class="tv-diagnostic-actions">
+                <button class="btn" type="button" onclick="clearTvInputDiagnostic()">Limpar lista</button>
+                <button class="btn" type="button" onclick="nav('resumo', document.querySelector('.sidebar .sb-item[data-nav=&quot;resumo&quot;]'))">Voltar ao resumo</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -4745,14 +5181,18 @@
           label: "PROD",
           url: "https://orgf261ae8e.crm2.dynamics.com",
           cls: "env-prod",
+          logoResource: "cr40f_LogoBetinhosB",
         },
         org23b93544: {
           label: "DEV",
           url: "https://org23b93544.crm2.dynamics.com",
           cls: "env-dev",
+          logoResource: "cr40f_LogoBetinhosB",
         },
       };
+      const DEFAULT_LOGO_RESOURCE = "cr40f_LogoBetinhosB";
       let BASE = "";
+      let ACTIVE_ENV = null;
       const API = () => `${BASE}/api/data/v9.2`;
 
       function shouldUseMockData() {
@@ -4799,7 +5239,11 @@
         if (typeof value === "string") return redactLogText(value);
         if (Array.isArray(value)) return value.map((item) => redactLogValue(item, key, depth + 1));
         if (typeof value === "object") {
-          return Object.fromEntries(Object.entries(value).map(([entryKey, entryValue]) => [entryKey, redactLogValue(entryValue, entryKey, depth + 1)]));
+          const redacted = {};
+          Object.keys(value).forEach((entryKey) => {
+            redacted[entryKey] = redactLogValue(value[entryKey], entryKey, depth + 1);
+          });
+          return redacted;
         }
         return value;
       }
@@ -5660,14 +6104,35 @@
       // ════════════════════════════════════════════
       // FETCH
       // ════════════════════════════════════════════
+      const DASHBOARD_DATA_REQUEST_TIMEOUT_MS = 25 * 1000;
+
+      async function fetchDashboardData(url) {
+        const controller = typeof AbortController === "function" ? new AbortController() : null;
+        let timeoutId = null;
+        try {
+          return await Promise.race([
+            fetch(url, {
+              credentials: "same-origin",
+              headers: makeHeaders(true, true),
+              ...(controller ? { signal: controller.signal } : {}),
+            }),
+            new Promise((_, reject) => {
+              timeoutId = window.setTimeout(() => {
+                controller?.abort();
+                reject(new Error("Consulta ao Dataverse excedeu 25 segundos. Verifique login e conexão da TV."));
+              }, DASHBOARD_DATA_REQUEST_TIMEOUT_MS);
+            }),
+          ]);
+        } finally {
+          if (timeoutId !== null) window.clearTimeout(timeoutId);
+        }
+      }
+
       async function fetchAll(url) {
         let res = [],
           next = url;
         while (next) {
-          const r = await fetch(next, {
-            credentials: "same-origin",
-            headers: makeHeaders(true, true),
-          });
+          const r = await fetchDashboardData(next);
           if (!r.ok) {
             const t = await r.text();
             let msg = `HTTP ${r.status}`;
@@ -5694,6 +6159,7 @@ function detectEnv(){
   const h=window.location.hostname;
   for(const[k,e] of Object.entries(ENVS)){
     if(h.includes(k)){
+      ACTIVE_ENV = e;
       BASE=e.url;
       const p=document.getElementById('envPill');
       p.textContent=e.label;p.className='env-pill '+e.cls;
@@ -5702,15 +6168,36 @@ function detectEnv(){
     }
   }
   BASE=window.location.origin;
+  ACTIVE_ENV = null;
   const p=document.getElementById('envPill');
   p.textContent='LOCAL';p.className='env-pill env-local';
   IS_LOCAL = true;
 }
 
+function setBrandLogo() {
+  const logo = document.getElementById("brandLogo");
+  if (!logo || !BASE) return;
+  const resourceName = ACTIVE_ENV?.logoResource || logo.dataset.webresource || DEFAULT_LOGO_RESOURCE;
+  logo.src = new URL(`/WebResources/${resourceName}`, `${BASE}/`).href;
+}
+
+function setAppVersion() {
+  const label = window.__DASHBOARD_BUILD_INFO?.label || "v—";
+  const version = document.getElementById("appVersion");
+  if (version) version.textContent = label;
+}
+
       // ════════════════════════════════════════════
       // LOAD
       // ════════════════════════════════════════════
+      const DASHBOARD_AUTO_REFRESH_INTERVAL_MS = 60 * 1000;
+      let dashboardLoadInProgress = false;
+      let dashboardAutoRefreshTimer = null;
+
       async function loadAll() {
+        if (dashboardLoadInProgress) return;
+        dashboardLoadInProgress = true;
+        hideDashboardLoadError();
         clearAlerts();
         setLoading(true, "Iniciando carga…");
         const btn = document.getElementById("btnRef");
@@ -5774,6 +6261,8 @@ function detectEnv(){
           });
           document.getElementById("ts").textContent = `Atualizado ${now}`;
         } catch (e) {
+          showDashboardLoadError(e);
+          reportDashboardError(e, { source: "dashboard", action: "loadAll", phase: "initial-load" });
           showAlert(
             "err",
             `<strong>Erro ao carregar dados:</strong> ${e.message}`,
@@ -5783,6 +6272,7 @@ function detectEnv(){
           setLoading(false);
           btn.disabled = false;
           btn.classList.remove("spin");
+          dashboardLoadInProgress = false;
         }
       }
 
@@ -6542,7 +7032,22 @@ function detectEnv(){
         );
       }
 
-      Chart.register(ChartDataLabels);
+      function initializeDashboardCharts() {
+        const ChartConstructor = window.Chart;
+        const dataLabelsPlugin = window.ChartDataLabels;
+        if (typeof ChartConstructor !== "function" || !dataLabelsPlugin) {
+          throw new Error("Bibliotecas de gráficos não foram inicializadas neste navegador.");
+        }
+        ChartConstructor.register(dataLabelsPlugin);
+      }
+
+      function createDashboardChart(target, config) {
+        const ChartConstructor = window.Chart;
+        if (typeof ChartConstructor !== "function") {
+          throw new Error("Biblioteca de gráficos indisponível durante a renderização.");
+        }
+        return new ChartConstructor(target, config);
+      }
       const PAL = [
         "#2159d2",
         "#2159d2",
@@ -6555,10 +7060,12 @@ function detectEnv(){
         "#168f57",
         "#6b4b9b",
       ];
-const monthsLabelsAll = [
-  "jan", "fev", "mar", "abr", "mai", "jun",
-  "jul", "ago", "set", "out", "nov", "dez",
-];
+      function getDashboardMonthLabels() {
+        return [
+          "jan", "fev", "mar", "abr", "mai", "jun",
+          "jul", "ago", "set", "out", "nov", "dez",
+        ];
+      }
 
       function ensureExecutiveLayout() {
         const page = document.getElementById("page-resumo");
@@ -6858,7 +7365,7 @@ const monthsLabelsAll = [
           chartWrap.appendChild(chartCanvas);
           main.appendChild(chartWrap);
           try {
-            const expandedChart = new Chart(chartCanvas, {
+            const expandedChart = createDashboardChart(chartCanvas, {
               type: sourceChart.config.type,
               data: {
                 labels: [...(sourceChart.data.labels || [])],
@@ -6950,6 +7457,7 @@ const monthsLabelsAll = [
       }
 
       function renderAll() {
+        const monthsLabelsAll = getDashboardMonthLabels();
         const dvDisabled = isDataverseDisabled();
         const rv = dvDisabled ? [] : VW.reservas;
         const fat = sumV(rv);
@@ -7731,6 +8239,7 @@ const monthsLabelsAll = [
         currentYear,
         yearDataMap,
       ) {
+        const monthsLabelsAll = getDashboardMonthLabels();
         set("fT", dvDisabled ? "—" : brlS(fat));
         set("fTk", dvDisabled ? "—" : brlS(curTk));
         const maxVal = rv.length ? Math.max(...rv.map((r) => r._valor)) : 0;
@@ -8025,6 +8534,7 @@ const monthsLabelsAll = [
         renderMotTable(motRows, fat);
       }
       function renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap) {
+        const monthsLabelsAll = getDashboardMonthLabels();
         const mans = dvDisabled ? [] : VW.manutencoes;
         const manFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
@@ -8368,7 +8878,7 @@ const monthsLabelsAll = [
           el.height = mobileHeight;
         }
         setChartEmptyState(el, !chartHasData(cfg?.data?.datasets || []));
-        charts[id] = new Chart(el, cfg);
+        charts[id] = createDashboardChart(el, cfg);
       }
       function chartHasData(datasets) {
         return datasets.some((ds) =>
@@ -8395,7 +8905,7 @@ const monthsLabelsAll = [
         if (!el) return;
         if (charts[id]) charts[id].destroy();
         setChartEmptyState(el, !data.some((v) => v !== null && v !== undefined && Number(v) !== 0));
-        charts[id] = new Chart(el, {
+        charts[id] = createDashboardChart(el, {
           type: "line",
           data: {
             labels,
@@ -8684,8 +9194,296 @@ const monthsLabelsAll = [
             !["resumo", "servicos", "faturamento", "frota"].includes(id),
           );
         document.getElementById("page-" + id).classList.add("on");
-        document.querySelector(".content")?.scrollTo({ top: 0, behavior: "auto" });
+        document.body.classList.toggle("tv-diagnostic-active", id === "tvdiagnostico");
+        const content = document.querySelector(".content");
+        if (content) {
+          if (typeof content.scrollTo === "function") content.scrollTo({ top: 0, behavior: "auto" });
+          else content.scrollTop = 0;
+        }
         toggleMobileMore(false);
+      }
+      const TV_NAV_IDS = [
+        "resumo", "servicos", "faturamento", "pagantes", "frota",
+        "motoristas", "manutencoes", "multas", "trocas", "marketing", "tvdiagnostico",
+      ];
+      const TV_NUMERIC_NAV = {
+        "1": "resumo",
+        "2": "servicos",
+        "3": "faturamento",
+        "4": "pagantes",
+        "5": "frota",
+        "6": "motoristas",
+        "7": "manutencoes",
+        "8": "multas",
+        "9": "trocas",
+        "0": "marketing",
+      };
+      const tvNavigationKeyDownAt = {};
+      const TV_POINTER_NAV_THRESHOLD = 42;
+      const TV_POINTER_IDLE_MS = 260;
+      let tvPointerLastX = null;
+      let tvPointerLastY = null;
+      let tvPointerLastAt = 0;
+      let tvPointerAccumX = 0;
+      let tvPointerAccumY = 0;
+      let tvPointerGestureHandled = false;
+      let tvPointerIdleTimer = 0;
+      function navigateTv(direction) {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        const active = document.querySelector(".sidebar .sb-item.act");
+        const currentId = active?.dataset.nav || "resumo";
+        const currentIndex = Math.max(0, TV_NAV_IDS.indexOf(currentId));
+        const nextIndex = (currentIndex + direction + TV_NAV_IDS.length) % TV_NAV_IDS.length;
+        const nextId = TV_NAV_IDS[nextIndex];
+        const nextItem = document.querySelector(`.sidebar .sb-item[data-nav="${nextId}"]`);
+        nav(nextId, nextItem);
+      }
+      function navigateTvTo(id) {
+        if (!window.__DASHBOARD_TV_MODE || !id) return;
+        const item = document.querySelector(`.sidebar .sb-item[data-nav="${id}"]`);
+        nav(id, item);
+      }
+      function resetTvPointerGesture() {
+        tvPointerLastX = null;
+        tvPointerLastY = null;
+        tvPointerLastAt = 0;
+        tvPointerAccumX = 0;
+        tvPointerAccumY = 0;
+        tvPointerGestureHandled = false;
+      }
+      function handleTvPointerNavigation(event) {
+        if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
+        if (isTvNavigationBlocked(event)) {
+          resetTvPointerGesture();
+          return;
+        }
+        const now = Date.now();
+        const x = Number(event.clientX || 0);
+        const y = Number(event.clientY || 0);
+        if (tvPointerLastX === null || now - tvPointerLastAt > TV_POINTER_IDLE_MS) {
+          resetTvPointerGesture();
+          tvPointerLastX = x;
+          tvPointerLastY = y;
+          tvPointerLastAt = now;
+        } else {
+          tvPointerAccumX += x - tvPointerLastX;
+          tvPointerAccumY += y - tvPointerLastY;
+          tvPointerLastX = x;
+          tvPointerLastY = y;
+          tvPointerLastAt = now;
+        }
+        window.clearTimeout(tvPointerIdleTimer);
+        tvPointerIdleTimer = window.setTimeout(resetTvPointerGesture, TV_POINTER_IDLE_MS);
+        if (tvPointerGestureHandled) return;
+        const horizontal = Math.abs(tvPointerAccumX);
+        const vertical = Math.abs(tvPointerAccumY);
+        if (horizontal < TV_POINTER_NAV_THRESHOLD || horizontal < vertical * 1.4) return;
+        tvPointerGestureHandled = true;
+        navigateTv(tvPointerAccumX < 0 ? -1 : 1);
+        reportDashboardError(new Error(`Navegacao pelo cursor: ${tvPointerAccumX < 0 ? "esquerda" : "direita"}`), {
+          severity: "info",
+          source: "tv-navigation",
+          action: "pointer-gesture",
+          phase: tvPointerAccumX < 0 ? "previous" : "next",
+          payload: { deltaX: tvPointerAccumX, deltaY: tvPointerAccumY, threshold: TV_POINTER_NAV_THRESHOLD },
+        });
+      }
+      function isTvNavigationBlocked(event) {
+        const target = event.target;
+        const tagName = String(target?.tagName || "").toLowerCase();
+        if (["input", "select", "textarea"].includes(tagName) || target?.isContentEditable) return true;
+        if (document.body.classList.contains("tv-diagnostic-active")) return true;
+        if (document.getElementById("ov")?.classList.contains("on")) return true;
+        const errorPanel = document.getElementById("dashboardLoadError");
+        return Boolean(errorPanel && !errorPanel.hidden);
+      }
+      function installTvNavigation() {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        document.addEventListener("keydown", (event) => {
+          if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
+          const key = event.key || ({ 37: "ArrowLeft", 39: "ArrowRight" })[event.keyCode];
+          if (key === "ArrowLeft" || key === "Left" || key === "ArrowRight" || key === "Right") {
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTv(key === "ArrowLeft" || key === "Left" ? -1 : 1);
+            return;
+          }
+          if (TV_NUMERIC_NAV[key]) {
+            tvNavigationKeyDownAt[key] = Date.now();
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTvTo(TV_NUMERIC_NAV[key]);
+          }
+        }, true);
+        document.addEventListener("keyup", (event) => {
+          if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
+          const key = event.key || String.fromCharCode(event.keyCode || 0);
+          if (TV_NUMERIC_NAV[key]) {
+            const handledAt = tvNavigationKeyDownAt[key] || 0;
+            delete tvNavigationKeyDownAt[key];
+            if (Date.now() - handledAt < 1200) return;
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTvTo(TV_NUMERIC_NAV[key]);
+            return;
+          }
+          if (key === "XF86PlayBack") {
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTv(1);
+          }
+        }, true);
+        document.addEventListener(window.PointerEvent ? "pointermove" : "mousemove", handleTvPointerNavigation, true);
+      }
+
+      const TV_DIAGNOSTIC_EVENT_LIMIT = 40;
+      const tvDiagnosticEvents = [];
+      let tvDiagnosticLastMoveAt = 0;
+
+      function isTvDiagnosticOpen() {
+        return Boolean(window.__DASHBOARD_TV_MODE && document.body.classList.contains("tv-diagnostic-active"));
+      }
+
+      function tvDiagnosticEventData(event) {
+        const data = {
+          type: event.type || "unknown",
+          key: event.key || "",
+          code: event.code || "",
+          keyCode: Number(event.keyCode || 0),
+          which: Number(event.which || 0),
+          button: Number(event.button || 0),
+          buttons: Number(event.buttons || 0),
+          clientX: Number(event.clientX || 0),
+          clientY: Number(event.clientY || 0),
+          movementX: Number(event.movementX || 0),
+          movementY: Number(event.movementY || 0),
+          deltaX: Number(event.deltaX || 0),
+          deltaY: Number(event.deltaY || 0),
+          detail: Number(event.detail || 0),
+          repeat: Boolean(event.repeat),
+          target: String(event.target?.id || event.target?.tagName || ""),
+          occurredAt: new Date().toISOString(),
+        };
+        if (event.touches) data.touches = event.touches.length;
+        if (event.changedTouches) data.changedTouches = event.changedTouches.length;
+        if (event.keyName) data.keyName = String(event.keyName);
+        return data;
+      }
+
+      function tvDiagnosticSummary(data) {
+        const identity = data.key || data.code || data.keyName || (data.type === "wheel" ? `deltaY ${data.deltaY}` : "sem codigo");
+        return `${data.type}: ${identity}`;
+      }
+
+      function renderTvInputDiagnostic(data) {
+        const last = document.getElementById("tvDiagLastEvent");
+        const detail = document.getElementById("tvDiagLastDetail");
+        const log = document.getElementById("tvDiagEventLog");
+        if (last) last.textContent = tvDiagnosticSummary(data);
+        if (detail) detail.textContent = [
+          `key=${data.key || "-"} | code=${data.code || "-"}`,
+          `keyCode=${data.keyCode} | which=${data.which} | button=${data.button} | buttons=${data.buttons}`,
+          `x=${data.clientX} y=${data.clientY} | move=${data.movementX},${data.movementY} | wheel=${data.deltaX},${data.deltaY}`,
+          `alvo=${data.target || "-"} | ${data.occurredAt}`,
+        ].join("\n");
+        if (!log) return;
+        log.innerHTML = "";
+        tvDiagnosticEvents.forEach((item) => {
+          const row = document.createElement("li");
+          row.textContent = `${item.occurredAt.slice(11, 23)} | ${tvDiagnosticSummary(item)} | keyCode=${item.keyCode} | alvo=${item.target || "-"}`;
+          log.appendChild(row);
+        });
+      }
+
+      function sendTvDiagnosticToAppLog(data) {
+        reportDashboardError(new Error(`Evento detectado: ${tvDiagnosticSummary(data)}`), {
+          severity: "info",
+          source: "tv-input-diagnostic",
+          action: data.type,
+          phase: data.key || data.code || data.keyName || "input",
+          payload: data,
+        });
+        const status = document.getElementById("tvDiagLogStatus");
+        if (status) status.textContent = "Evento enviado ao App Log ou guardado na fila local.";
+      }
+
+      function captureTvDiagnosticEvent(event) {
+        if (!isTvDiagnosticOpen()) return;
+        if (event.type === "mousemove" || event.type === "pointermove") {
+          const now = Date.now();
+          if (now - tvDiagnosticLastMoveAt < 750) return;
+          tvDiagnosticLastMoveAt = now;
+        }
+        if (event.type === "keydown") event.preventDefault();
+        const data = tvDiagnosticEventData(event);
+        tvDiagnosticEvents.unshift(data);
+        if (tvDiagnosticEvents.length > TV_DIAGNOSTIC_EVENT_LIMIT) tvDiagnosticEvents.length = TV_DIAGNOSTIC_EVENT_LIMIT;
+        renderTvInputDiagnostic(data);
+        sendTvDiagnosticToAppLog(data);
+      }
+
+      function clearTvInputDiagnostic() {
+        tvDiagnosticEvents.length = 0;
+        const last = document.getElementById("tvDiagLastEvent");
+        const detail = document.getElementById("tvDiagLastDetail");
+        const log = document.getElementById("tvDiagEventLog");
+        if (last) last.textContent = "Aguardando...";
+        if (detail) detail.textContent = "Nenhum comando detectado.";
+        if (log) log.innerHTML = "<li>Aguardando comandos do controle...</li>";
+      }
+
+      function registerTizenDiagnosticKeys() {
+        const inputDevice = window.tizen?.tvinputdevice;
+        if (!inputDevice) return "API tizen.tvinputdevice indisponivel no navegador.";
+        const keys = [
+          "ColorF0Red", "ColorF1Green", "ColorF2Yellow", "ColorF3Blue",
+          "MediaPlay", "MediaPause", "MediaStop", "MediaRewind", "MediaFastForward",
+          "ChannelUp", "ChannelDown", "VolumeUp", "VolumeDown", "VolumeMute",
+        ];
+        try {
+          if (typeof inputDevice.registerKeyBatch === "function") inputDevice.registerKeyBatch(keys);
+          else keys.forEach((key) => inputDevice.registerKey(key));
+          return `${keys.length} teclas extras registradas pela API Tizen.`;
+        } catch (error) {
+          reportDashboardError(error, {
+            severity: "warn",
+            source: "tv-input-diagnostic",
+            action: "registerTizenKeys",
+            phase: "capability",
+            payload: { keys },
+          });
+          return `API Tizen encontrada, mas o registro falhou: ${errorMessage(error)}`;
+        }
+      }
+
+      function installTvInputDiagnostic() {
+        if (!window.__DASHBOARD_TV_MODE || window.__TV_INPUT_DIAGNOSTIC_INSTALLED) return;
+        window.__TV_INPUT_DIAGNOSTIC_INSTALLED = true;
+        const tizenStatus = registerTizenDiagnosticKeys();
+        const device = document.getElementById("tvDiagDevice");
+        if (device) device.textContent = [
+          `TV detectada: sim`,
+          `viewport: ${window.innerWidth}x${window.innerHeight}@${window.devicePixelRatio || 1}`,
+          `plataforma: ${navigator.platform || "indisponivel"}`,
+          `user agent: ${navigator.userAgent}`,
+          `Tizen: ${tizenStatus}`,
+        ].join("\n");
+        ["keydown", "keyup", "keypress", "click", "mousedown", "mouseup", "mousemove", "wheel", "contextmenu", "touchstart", "touchend", "pointerdown", "pointerup", "pointermove", "tizenhwkey"].forEach((type) => {
+          document.addEventListener(type, captureTvDiagnosticEvent, true);
+        });
+        reportDashboardError(new Error("Diagnostico do controle inicializado."), {
+          severity: "info",
+          source: "tv-input-diagnostic",
+          action: "install",
+          phase: "capability",
+          payload: { tizenStatus, userAgent: navigator.userAgent, viewport: `${window.innerWidth}x${window.innerHeight}` },
+        });
+      }
+
+      function openRequestedTvDiagnostic() {
+        if (!window.__DASHBOARD_TV_MODE || location.hash !== "#tvdiagnostico") return;
+        const item = document.querySelector('.sidebar .sb-item[data-nav="tvdiagnostico"]');
+        nav("tvdiagnostico", item);
       }
       function set(id, v) {
         const el = document.getElementById(id);
@@ -8698,6 +9496,21 @@ const monthsLabelsAll = [
       function setLoading(on, msg) {
         document.getElementById("ov").classList.toggle("on", on);
         if (msg) document.getElementById("ovLbl").textContent = msg;
+      }
+      function errorMessage(error) {
+        if (error instanceof Error) return error.message || "Erro desconhecido.";
+        return String(error || "Erro desconhecido.");
+      }
+      function showDashboardLoadError(error) {
+        const panel = document.getElementById("dashboardLoadError");
+        const detail = document.getElementById("dashboardLoadErrorDetail");
+        if (!panel || !detail) return;
+        detail.textContent = errorMessage(error);
+        panel.hidden = false;
+      }
+      function hideDashboardLoadError() {
+        const panel = document.getElementById("dashboardLoadError");
+        if (panel) panel.hidden = true;
       }
       function showAlert(type, html) {
         const icon = type === "err"
@@ -8726,12 +9539,35 @@ const monthsLabelsAll = [
           toggleFilterPanel(false);
         }
       });
-      updateFilterSummary();
-      detectEnv();
-      installDashboardErrorLogger();
-      addKpiGoalDirections();
-      installCardDetailDialog();
-      loadAll();
+      function startDashboard() {
+        try {
+          if (window.DashboardTvCompat) window.DashboardTvCompat.install(window);
+          initializeDashboardCharts();
+          updateFilterSummary();
+          detectEnv();
+          setBrandLogo();
+          setAppVersion();
+          installDashboardErrorLogger();
+          addKpiGoalDirections();
+          installCardDetailDialog();
+          installTvNavigation();
+          installTvInputDiagnostic();
+          openRequestedTvDiagnostic();
+          void loadAll();
+          startDashboardAutoRefresh();
+        } catch (error) {
+          setLoading(false);
+          showDashboardLoadError(error);
+          window.__DASHBOARD_REPORT_ERROR?.(error, { source: "dashboard", action: "startDashboard", phase: "bootstrap" });
+        }
+      }
+      function startDashboardAutoRefresh() {
+        if (dashboardAutoRefreshTimer) window.clearInterval(dashboardAutoRefreshTimer);
+        dashboardAutoRefreshTimer = window.setInterval(() => {
+          if (!document.hidden) void loadAll();
+        }, DASHBOARD_AUTO_REFRESH_INTERVAL_MS);
+      }
+      startDashboard();
     </script>
   </body>
 </html>

@@ -1,0 +1,24 @@
+const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
+
+const root = path.resolve(__dirname, "..");
+const html = fs.readFileSync(path.join(root, "Dashboard.html"), "utf8");
+
+assert.match(html, /data-nav="tvdiagnostico"/i, "Aba de diagnostico ausente.");
+assert.match(html, /id="page-tvdiagnostico"/i, "Pagina de diagnostico ausente.");
+assert.match(html, /function installTvInputDiagnostic\(/i, "Captura de eventos ausente.");
+assert.match(html, /location\.hash\s*!==\s*"#tvdiagnostico"/i, "Atalho direto para o diagnostico ausente.");
+assert.match(html, /source:\s*"tv-input-diagnostic"/i, "Envio ao App Log ausente.");
+assert.match(html, /addEventListener\("keydown"/i, "Captura de teclado ausente.");
+assert.match(html, /\["keydown",\s*"keyup",[\s\S]*?"click"[\s\S]*?"mousemove"[\s\S]*?"wheel"/i, "Lista de eventos do controle incompleta.");
+assert.match(html, /\.tv-browser\s+\.tv-diagnostic-nav\s*\{[^}]*display:\s*flex/i, "Aba nao esta limitada a TV.");
+assert.match(html, /TV_NAV_IDS\s*=\s*\[[\s\S]*?"tvdiagnostico"/i, "Aba nao participa da navegacao da TV.");
+assert.match(html, /TV_NUMERIC_NAV\s*=\s*\{/i, "Atalhos numericos da TV ausentes.");
+assert.match(html, /"1":\s*"resumo"/i, "Atalho 1 para Resumo ausente.");
+assert.match(html, /"0":\s*"marketing"/i, "Atalho 0 para Marketing ausente.");
+assert.match(html, /function handleTvPointerNavigation\(/i, "Navegacao pela direcao do cursor ausente.");
+assert.match(html, /TV_POINTER_NAV_THRESHOLD/i, "Limite do gesto horizontal ausente.");
+assert.doesNotMatch(html, /Object\.fromEntries\(/i, "Logger ainda usa Object.fromEntries, indisponivel no Chrome 63 da TV.");
+
+console.log("Dashboard TV: diagnostico de controle e App Log validados.");
