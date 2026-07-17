@@ -1239,6 +1239,31 @@
         font-size: 17px;
         font-weight: 700;
       }
+      .kpi-receipt-detail {
+        margin-top: 6px;
+        color: var(--t2);
+        font-size: clamp(10px, 4.2cqi, 11px);
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .kpi-receipt-detail .receipt-value {
+        color: var(--kpi-color, var(--green));
+        font-weight: 800;
+      }
+      .kpi-receipt-detail .receipt-base {
+        color: var(--t1);
+        font-weight: 750;
+      }
+      .kpi-receipt-detail .receipt-separator {
+        color: var(--t3);
+        padding: 0 3px;
+      }
       .kpi.executive .kpi-val {
         font-size: clamp(18px, 10cqi, 24px);
       }
@@ -4278,7 +4303,7 @@
               <div class="kpi executive kpi-tone-purple"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Ticket m&eacute;dio</div><div class="kpi-val sm" id="kTk">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kTkD"></div></div></div><div class="kpi-spark"><canvas id="spTk"></canvas></div></div>
               <div class="kpi executive kpi-tone-green"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="kPPend">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kPPendD"></div></div></div><div class="kpi-spark"><canvas id="spReceber"></canvas></div></div>
               <div class="kpi executive kpi-tone-orange"><div class="kpi-accent" style="background: var(--orange)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div><div class="kpi-spark"><canvas id="spSemValor"></canvas></div></div>
-              <div class="kpi executive kpi-tone-red"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div><div class="kpi-spark"><canvas id="spRecebPct"></canvas></div></div>
+              <div class="kpi executive kpi-tone-green"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div><div class="kpi-receipt-detail" id="kRecebPctSub">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div><div class="kpi-spark"><canvas id="spRecebPct"></canvas></div></div>
             </div>
           </section>
           <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
@@ -7540,9 +7565,9 @@ function setAppVersion() {
               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP Pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
               <div class="kpi-spark"><canvas id="spSemValor"></canvas></div>
             </div>
-            <div class="kpi executive kpi-tone-red">
+            <div class="kpi executive kpi-tone-green">
               <div class="kpi-accent" style="background: var(--green)"></div>
-              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div>
+              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div><div class="kpi-receipt-detail" id="kRecebPctSub">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div>
               <div class="kpi-spark"><canvas id="spRecebPct"></canvas></div>
             </div>
           </div>
@@ -8112,6 +8137,10 @@ function setAppVersion() {
         html("kPPendD", dvDisabled ? "" :
           `<span class="badge-kpi badge-ly"><span class="bk-label">%FAT</span><span class="bk-val">${aReceberPct}%</span><span class="bk-pct">pendente</span></span>`);
         set("kRecebPct", dvDisabled ? "â€”" : `${recebimentoPct.toFixed(0)}%`);
+        html("kRecebPctSub", dvDisabled ? "" :
+          `<span class="receipt-value">${brlS(recebidoProduzido)}</span>` +
+          `<span class="receipt-separator">recebido de</span>` +
+          `<span class="receipt-base">${brlS(baseRecebimento)}</span>`);
         html("kRecebPctD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta"><span class="bk-label">REC</span><span class="bk-val">${brlS(recebidoProduzido)}</span><span class="bk-pct">recebido</span></span>` +
           `<span class="badge-kpi badge-meta${recebimentoPct >= 90 ? "" : " below"}"><span class="bk-label">BASE</span><span class="bk-val">${brlS(baseRecebimento)}</span><span class="bk-pct">${recebimentoPct.toFixed(1)}%</span></span>`);
