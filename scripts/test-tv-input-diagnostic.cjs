@@ -19,6 +19,13 @@ assert.match(html, /"1":\s*"resumo"/i, "Atalho 1 para Resumo ausente.");
 assert.match(html, /"0":\s*"marketing"/i, "Atalho 0 para Marketing ausente.");
 assert.match(html, /function handleTvPointerNavigation\(/i, "Navegacao pela direcao do cursor ausente.");
 assert.match(html, /TV_POINTER_NAV_THRESHOLD/i, "Limite do gesto horizontal ausente.");
+assert.match(html, /TV_POINTER_NAV_THRESHOLD\s*=\s*[1-8]\b/i, "Gesto lateral ainda exige movimento longo.");
+assert.match(html, /id="sidebarLastUpdated"/i, "Horario da ultima atualizacao ausente no menu.");
+assert.match(html, /function handleTvSidebarReveal\(/i, "Abertura do menu pelo canto esquerdo ausente.");
+assert.match(html, /\.tv-browser:not\(\.tv-sidebar-revealed\)\s+\.sidebar/i, "Menu da TV nao inicia recolhido.");
+assert.match(html, /function rotateTvPage\(/i, "Rotacao automatica das abas ausente.");
+assert.match(html, /tv-auto-page-enter/i, "Animacao da rotacao automatica ausente.");
+assert.match(html, /loadAll\(\{\s*silent:\s*true\s*\}\)/i, "Atualizacao silenciosa da TV ausente.");
 assert.doesNotMatch(html, /Object\.fromEntries\(/i, "Logger ainda usa Object.fromEntries, indisponivel no Chrome 63 da TV.");
 
 console.log("Dashboard TV: diagnostico de controle e App Log validados.");

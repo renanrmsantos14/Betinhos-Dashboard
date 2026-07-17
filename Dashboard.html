@@ -351,6 +351,18 @@
         letter-spacing: 0.03em;
         text-align: center;
       }
+      .sb-last-updated {
+        display: none;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 10px 8px 0;
+        text-align: center;
+      }
+      .tv-browser .sb-last-updated {
+        color: rgba(255, 255, 255, 0.58);
+        display: block;
+      }
       .content {
         flex: 1;
         overflow-y: auto;
@@ -3156,7 +3168,7 @@
         font: 800 30px/1 Arial, sans-serif;
         cursor: pointer;
       }
-      .tv-nav-edge-left { left: 244px; }
+      .tv-nav-edge-left { left: 12px; }
       .tv-nav-edge-right { right: 6px; }
       .tv-nav-edge:hover,
       .tv-nav-edge:focus {
@@ -3240,6 +3252,39 @@
       .tv-browser .filter-body-inner {
         display: block;
         overflow: visible;
+      }
+      .tv-browser .shell {
+        position: relative;
+      }
+      .tv-browser .sidebar {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transform: translateX(0);
+        transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+        z-index: 260;
+      }
+      .tv-browser:not(.tv-sidebar-revealed) .sidebar {
+        transform: translateX(-230px);
+      }
+      .tv-browser .content {
+        padding-left: 24px;
+        width: 100%;
+      }
+      .tv-browser .tv-auto-page-enter {
+        animation: tvAutoPageEnter 280ms cubic-bezier(0.23, 1, 0.32, 1) both;
+        will-change: transform, opacity;
+      }
+      @keyframes tvAutoPageEnter {
+        from {
+          opacity: 0;
+          transform: translateX(26px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
       .tv-browser .filter-row {
         display: flex;
@@ -3389,6 +3434,18 @@
       }
       .tv-browser .page.on > * {
         animation: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .tv-browser .sidebar {
+          transition-duration: 0ms;
+        }
+        .tv-browser .tv-auto-page-enter {
+          animation: tvAutoPageFade 160ms linear both;
+        }
+        @keyframes tvAutoPageFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
       }
       .card-detail-table-wrap {
         margin-top: 14px;
@@ -3543,6 +3600,7 @@
         <div class="sb-item tv-diagnostic-nav" data-nav="tvdiagnostico" onclick="nav('tvdiagnostico', this)">
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M8 22h8M12 18v4M8 9h.01M12 9h.01M16 9h.01M8 13h8"></path></svg></span>Controle da TV
         </div>
+        <small id="sidebarLastUpdated" class="sb-last-updated">Atualizando dados...</small>
       </div>
 
       <div class="content">
@@ -5511,6 +5569,8 @@
         },
       };
       const DV_STATUS_FAT_PAGO = 202410010;
+      const DV_STATUS_FAT_PAGANTE_EM_VIAGEM = 202410006;
+      const DV_STATUS_FAT_MENSAL = 202410008;
 
       let DB = {
         reservas: [],
@@ -5707,6 +5767,20 @@
       };
       const paymentOp = (r) => String(r?.[F.pag.lookupOP] || "").toLowerCase();
       const paymentValue = (r) => parseFloat(r?.[F.pag.valor]) || 0;
+      const getRecebimentoStats = (rows) => {
+        const recebido = rows
+          .filter((r) => r[F.res.fatStatus] === DV_STATUS_FAT_PAGO && r._valor > 0)
+          .reduce((s, r) => s + r._valor, 0);
+        const base = rows
+          .filter(
+            (r) =>
+              r[F.res.fatStatus] !== DV_STATUS_FAT_PAGANTE_EM_VIAGEM &&
+              r[F.res.fatStatus] !== DV_STATUS_FAT_MENSAL &&
+              r._valor > 0,
+          )
+          .reduce((s, r) => s + r._valor, 0);
+        return { recebido, base, percentual: base ? (recebido / base) * 100 : 0 };
+      };
       const lookupValue = (r, lookupName) =>
         r?.[`_${lookupName}_value@OData.Community.Display.V1.FormattedValue`] ||
         r?.[`${lookupName}@OData.Community.Display.V1.FormattedValue`] ||
@@ -6192,17 +6266,30 @@ function setAppVersion() {
       // ════════════════════════════════════════════
       const DASHBOARD_AUTO_REFRESH_INTERVAL_MS = 60 * 1000;
       let dashboardLoadInProgress = false;
+      let dashboardSilentLoad = false;
       let dashboardAutoRefreshTimer = null;
 
-      async function loadAll() {
+      function setDashboardLastUpdated(date) {
+        const value = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        const sidebar = document.getElementById("sidebarLastUpdated");
+        if (sidebar) sidebar.textContent = `Ultima atualizacao: ${value}`;
+        const topbar = document.getElementById("ts");
+        if (topbar) topbar.textContent = `Atualizado ${value}`;
+      }
+
+      async function loadAll(options = {}) {
         if (dashboardLoadInProgress) return;
+        const silent = options.silent === true;
         dashboardLoadInProgress = true;
+        dashboardSilentLoad = silent;
         hideDashboardLoadError();
         clearAlerts();
         setLoading(true, "Iniciando carga…");
         const btn = document.getElementById("btnRef");
-        btn.disabled = true;
-        btn.classList.add("spin");
+        if (!silent) {
+          btn.disabled = true;
+          btn.classList.add("spin");
+        }
         try {
           if (shouldUseMockData()) {
             // Usar dados fictícios para desenvolvimento local
@@ -6252,14 +6339,9 @@ function setAppVersion() {
           buildFuncMap();
           enrichReservas();
           populateFilters();
-          quickFilter("esteAno", document.querySelector(".btn-qf.active"));
-          const now = new Date().toLocaleString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          document.getElementById("ts").textContent = `Atualizado ${now}`;
+          if (silent) applyF(true);
+          else quickFilter("esteAno", document.querySelector(".btn-qf.active"));
+          setDashboardLastUpdated(new Date());
         } catch (e) {
           showDashboardLoadError(e);
           reportDashboardError(e, { source: "dashboard", action: "loadAll", phase: "initial-load" });
@@ -6270,8 +6352,11 @@ function setAppVersion() {
           console.error("Erro no loadAll:", e);
         } finally {
           setLoading(false);
-          btn.disabled = false;
-          btn.classList.remove("spin");
+          if (!silent) {
+            btn.disabled = false;
+            btn.classList.remove("spin");
+          }
+          dashboardSilentLoad = false;
           dashboardLoadInProgress = false;
         }
       }
@@ -7657,16 +7742,10 @@ function setAppVersion() {
         set("kSemVal", dvDisabled ? "—" : semValor.length);
         const semValPct = rv.length ? (semValor.length / rv.length * 100).toFixed(1) : 0;
         const projecao = dvDisabled ? 0 : curTk * semValor.length;
-        const produzidoValor = sumV(conclServices);
-        const emViagemValor = sumV(emViagemRows);
-        const producedOps = new Set(
-          conclServices.map((r) => r._opId).filter(Boolean)
-        );
-        const recebidoProduzido = pagReceb
-          .filter((p) => producedOps.has(paymentOp(p)))
-          .reduce((s, p) => s + paymentValue(p), 0);
-        const baseRecebimento = Math.max(0, produzidoValor - emViagemValor);
-        const recebimentoPct = baseRecebimento ? (recebidoProduzido / baseRecebimento) * 100 : 0;
+        const recebimentoStats = getRecebimentoStats(rv);
+        const recebidoProduzido = recebimentoStats.recebido;
+        const baseRecebimento = recebimentoStats.base;
+        const recebimentoPct = recebimentoStats.percentual;
         html("kSemValD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">%</span><span class="bk-val">${semValor.length}</span><span class="bk-pct">${semValPct}% tot</span></span>` +
           (semValor.length > 0 ? `<span class="badge-kpi badge-meta"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span><span class="bk-pct">potencial</span></span>` : ""));
@@ -7725,13 +7804,7 @@ function setAppVersion() {
             .reduce((s, r) => s + r._valor, 0);
         });
         const trendRecebPct = trendKeys.map((k) => {
-          const rows = (byM[k] || []).filter(isProducedReservation);
-          const base = sumV(rows);
-          const ops = new Set(rows.map((r) => r._opId).filter(Boolean));
-          const recebido = pagReceb
-            .filter((p) => ops.has(paymentOp(p)))
-            .reduce((s, p) => s + paymentValue(p), 0);
-          return base ? (recebido / base) * 100 : 0;
+          return getRecebimentoStats(byM[k] || []).percentual;
         });
         const trendSemValor = trendKeys.map((k) =>
           getSemValorRows(byM[k] || []).length
@@ -9170,7 +9243,7 @@ function setAppVersion() {
         trigger?.setAttribute("aria-expanded", String(open));
       }
 
-      function nav(id, el) {
+      function nav(id, el, options = {}) {
         document
           .querySelectorAll(".sb-item, .mobile-nav-item, .mobile-more-item")
           .forEach((n) => n.classList.remove("act"));
@@ -9193,7 +9266,14 @@ function setAppVersion() {
             "act",
             !["resumo", "servicos", "faturamento", "frota"].includes(id),
           );
-        document.getElementById("page-" + id).classList.add("on");
+        const nextPage = document.getElementById("page-" + id);
+        nextPage.classList.add("on");
+        if (window.__DASHBOARD_TV_MODE && options.automatic === true) {
+          nextPage.classList.remove("tv-auto-page-enter");
+          void nextPage.offsetWidth;
+          nextPage.classList.add("tv-auto-page-enter");
+          window.setTimeout(() => nextPage.classList.remove("tv-auto-page-enter"), 320);
+        }
         document.body.classList.toggle("tv-diagnostic-active", id === "tvdiagnostico");
         const content = document.querySelector(".content");
         if (content) {
@@ -9205,6 +9285,10 @@ function setAppVersion() {
       const TV_NAV_IDS = [
         "resumo", "servicos", "faturamento", "pagantes", "frota",
         "motoristas", "manutencoes", "multas", "trocas", "marketing", "tvdiagnostico",
+      ];
+      const TV_ROTATION_IDS = [
+        "resumo", "servicos", "faturamento", "pagantes", "frota",
+        "motoristas", "manutencoes", "multas", "trocas", "marketing",
       ];
       const TV_NUMERIC_NAV = {
         "1": "resumo",
@@ -9219,8 +9303,10 @@ function setAppVersion() {
         "0": "marketing",
       };
       const tvNavigationKeyDownAt = {};
-      const TV_POINTER_NAV_THRESHOLD = 42;
+      const TV_POINTER_NAV_THRESHOLD = 6;
       const TV_POINTER_IDLE_MS = 260;
+      const TV_SIDEBAR_HOT_EDGE_PX = 4;
+      const TV_SIDEBAR_WIDTH_PX = 250;
       let tvPointerLastX = null;
       let tvPointerLastY = null;
       let tvPointerLastAt = 0;
@@ -9228,6 +9314,7 @@ function setAppVersion() {
       let tvPointerAccumY = 0;
       let tvPointerGestureHandled = false;
       let tvPointerIdleTimer = 0;
+      let tvSidebarHideTimer = 0;
       function navigateTv(direction) {
         if (!window.__DASHBOARD_TV_MODE) return;
         const active = document.querySelector(".sidebar .sb-item.act");
@@ -9243,6 +9330,35 @@ function setAppVersion() {
         const item = document.querySelector(`.sidebar .sb-item[data-nav="${id}"]`);
         nav(id, item);
       }
+      function rotateTvPage() {
+        if (!window.__DASHBOARD_TV_MODE || document.body.classList.contains("tv-diagnostic-active")) return;
+        const active = document.querySelector(".sidebar .sb-item.act");
+        const currentId = active?.dataset.nav || "resumo";
+        const currentIndex = Math.max(0, TV_ROTATION_IDS.indexOf(currentId));
+        const nextId = TV_ROTATION_IDS[(currentIndex + 1) % TV_ROTATION_IDS.length];
+        const nextItem = document.querySelector(`.sidebar .sb-item[data-nav="${nextId}"]`);
+        nav(nextId, nextItem, { automatic: true });
+      }
+      function handleTvSidebarReveal(event) {
+        const root = document.documentElement;
+        const x = Number(event.clientX || 0);
+        const revealed = root.classList.contains("tv-sidebar-revealed");
+        if (!revealed && x <= TV_SIDEBAR_HOT_EDGE_PX) {
+          window.clearTimeout(tvSidebarHideTimer);
+          root.classList.add("tv-sidebar-revealed");
+          resetTvPointerGesture();
+          return true;
+        }
+        if (!revealed) return false;
+        window.clearTimeout(tvSidebarHideTimer);
+        if (x > TV_SIDEBAR_WIDTH_PX) {
+          tvSidebarHideTimer = window.setTimeout(() => {
+            root.classList.remove("tv-sidebar-revealed");
+            resetTvPointerGesture();
+          }, 260);
+        }
+        return true;
+      }
       function resetTvPointerGesture() {
         tvPointerLastX = null;
         tvPointerLastY = null;
@@ -9253,6 +9369,7 @@ function setAppVersion() {
       }
       function handleTvPointerNavigation(event) {
         if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
+        if (handleTvSidebarReveal(event)) return;
         if (isTvNavigationBlocked(event)) {
           resetTvPointerGesture();
           return;
@@ -9494,6 +9611,7 @@ function setAppVersion() {
         if (el) el.innerHTML = v;
       }
       function setLoading(on, msg) {
+        if (on && dashboardSilentLoad) return;
         document.getElementById("ov").classList.toggle("on", on);
         if (msg) document.getElementById("ovLbl").textContent = msg;
       }
@@ -9564,6 +9682,11 @@ function setAppVersion() {
       function startDashboardAutoRefresh() {
         if (dashboardAutoRefreshTimer) window.clearInterval(dashboardAutoRefreshTimer);
         dashboardAutoRefreshTimer = window.setInterval(() => {
+          if (window.__DASHBOARD_TV_MODE) {
+            void loadAll({ silent: true });
+            rotateTvPage();
+            return;
+          }
           if (!document.hidden) void loadAll();
         }, DASHBOARD_AUTO_REFRESH_INTERVAL_MS);
       }
