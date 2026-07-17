@@ -338,6 +338,9 @@
         align-items: center;
         gap: 10px;
       }
+      .tv-current-menu {
+        display: none;
+      }
       .tb-logo {
         width: 36px;
         height: 36px;
@@ -3464,6 +3467,34 @@
       .tv-browser:not(.tv-sidebar-revealed) .sidebar {
         transform: translateX(-230px);
       }
+      .tv-browser:not(.tv-sidebar-revealed) .tv-current-menu {
+        align-items: center;
+        border-left: 1px solid var(--b1);
+        color: var(--navy);
+        display: flex;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1;
+        margin-left: 10px;
+        min-height: 30px;
+        padding-left: 18px;
+      }
+      .tv-browser.tv-sidebar-revealed .tv-current-menu {
+        display: none;
+      }
+      .tv-current-menu-icon {
+        align-items: center;
+        color: var(--blue);
+        display: flex;
+        height: 22px;
+        justify-content: center;
+        margin-right: 9px;
+        width: 22px;
+      }
+      .tv-current-menu-icon svg {
+        height: 20px;
+        width: 20px;
+      }
       .tv-browser .content {
         padding-left: 24px;
         width: 100%;
@@ -3729,6 +3760,10 @@
         <div>
           <div class="tb-name">Betinhos</div>
           <div class="tb-sub">Dashboard do Gestor</div>
+        </div>
+        <div class="tv-current-menu" id="tvCurrentMenu" aria-live="polite">
+          <span class="tv-current-menu-icon" id="tvCurrentMenuIcon" aria-hidden="true"></span>
+          <span id="tvCurrentMenuLabel">Resumo</span>
         </div>
       </div>
       <div class="tb-right">
@@ -9469,6 +9504,31 @@ function setAppVersion() {
         trigger?.setAttribute("aria-expanded", String(open));
       }
 
+      const TV_NAV_LABELS = {
+        resumo: "Resumo",
+        servicos: "Serviços",
+        faturamento: "Faturamento",
+        pagantes: "Pagamentos",
+        frota: "Frota",
+        motoristas: "Motoristas",
+        manutencoes: "Manutenções",
+        multas: "Multas",
+        trocas: "Trocas",
+        marketing: "Marketing",
+        tvdiagnostico: "Controle da TV",
+      };
+
+      function updateTvCurrentMenu(id) {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        const label = document.getElementById("tvCurrentMenuLabel");
+        const icon = document.getElementById("tvCurrentMenuIcon");
+        const sourceIcon = document.querySelector(
+          `.sidebar .sb-item[data-nav="${id}"] .sb-icon`,
+        );
+        if (label) label.textContent = TV_NAV_LABELS[id] || id;
+        if (icon && sourceIcon) icon.innerHTML = sourceIcon.innerHTML;
+      }
+
       function nav(id, el, options = {}) {
         document
           .querySelectorAll(".sb-item, .mobile-nav-item, .mobile-more-item")
@@ -9494,6 +9554,7 @@ function setAppVersion() {
           );
         const nextPage = document.getElementById("page-" + id);
         nextPage.classList.add("on");
+        updateTvCurrentMenu(id);
         if (window.__DASHBOARD_TV_MODE && options.automatic === true) {
           nextPage.classList.remove("tv-auto-page-enter");
           void nextPage.offsetWidth;

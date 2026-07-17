@@ -28,6 +28,11 @@ assert.match(html, /\.tv-browser:not\(\.tv-sidebar-revealed\)\s+\.sidebar/i, "Me
 assert.match(html, /function rotateTvPage\(/i, "Rotacao automatica das abas ausente.");
 assert.match(html, /tv-auto-page-enter/i, "Animacao da rotacao automatica ausente.");
 assert.match(html, /loadAll\(\{\s*silent:\s*true\s*\}\)/i, "Atualizacao silenciosa da TV ausente.");
+assert.match(html, /id="tvCurrentMenu"/i, "Indicador da aba atual ausente no topbar.");
+assert.match(html, /function updateTvCurrentMenu\(/i, "Sincronizacao do indicador da aba atual ausente.");
+assert.match(html, /updateTvCurrentMenu\(id\)/i, "Navegacao nao atualiza o indicador da aba atual.");
+assert.match(html, /\.tv-browser:not\(\.tv-sidebar-revealed\)\s+\.tv-current-menu\s*\{[^}]*display:\s*flex/i, "Indicador nao aparece com o menu recolhido.");
+assert.match(html, /\.tv-browser\.tv-sidebar-revealed\s+\.tv-current-menu\s*\{[^}]*display:\s*none/i, "Indicador nao some com o menu aberto.");
 assert.doesNotMatch(html, /Object\.fromEntries\(/i, "Logger ainda usa Object.fromEntries, indisponivel no Chrome 63 da TV.");
 
 console.log("Dashboard TV: diagnostico de controle e App Log validados.");
