@@ -8416,7 +8416,11 @@ function setAppVersion() {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
           return r._mot !== "Sem motorista" && !r[F.res.veiculo] && Number.isFinite(saida) && saida <= Date.now();
         }).length;
-        const dqSemOP = rv.filter((r) => !r._opId).length;
+        const dqSemOP = rv.filter((r) =>
+          isProducedReservation(r) &&
+          normL(fv(r, F.res.fatStatus)).includes("pend") &&
+          !r._opId
+        ).length;
         const dqSemMotorista = rv.filter((r) => afterOperationalStart(r) && r._mot === "Sem motorista").length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
         setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veículo", "OS sem veículo", dqSemVeiculo ? "warn" : "ok");
