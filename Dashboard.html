@@ -15,7 +15,9 @@
     <script>
       (() => {
         document.documentElement.classList.add("dashboard-js-ready");
-        if (/SMART-TV|SmartTV|Tizen|SmartHub|Maple|HbbTV|NetCast|Web0S|WebTV/i.test(navigator.userAgent || "")) {
+        const localTvPreview = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(location.hostname || "")
+          && /(?:^|[?&])tv=1(?:&|$)/i.test(location.search || "");
+        if (/SMART-TV|SmartTV|Tizen|SmartHub|Maple|HbbTV|NetCast|Web0S|WebTV/i.test(navigator.userAgent || "") || localTvPreview) {
           document.documentElement.classList.add("tv-pin-pending");
         }
         const earlyErrors = (window.__DASHBOARD_EARLY_ERRORS = window.__DASHBOARD_EARLY_ERRORS || []);
@@ -9748,6 +9750,15 @@ function setAppVersion() {
         document.addEventListener("keydown", (event) => {
           if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
           const key = event.key || ({ 37: "ArrowLeft", 39: "ArrowRight" })[event.keyCode];
+          if (key === "ArrowLeft" || key === "ArrowRight") {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!event.repeat) {
+              if (key === "ArrowLeft") navigateTv(-1);
+              if (key === "ArrowRight") navigateTv(1);
+            }
+            return;
+          }
           if (TV_NUMERIC_NAV[key]) {
             tvNavigationKeyDownAt[key] = Date.now();
             event.preventDefault();
@@ -10146,12 +10157,20 @@ function setAppVersion() {
       function startDashboard() {
         try {
           if (window.DashboardTvCompat) window.DashboardTvCompat.install(window);
+          if (isLocalTvPreview()) {
+            document.documentElement.classList.add("tv-browser");
+            window.__DASHBOARD_TV_MODE = true;
+          }
           if (installTvPinGate()) return;
           initializeDashboardAfterAccess();
         } catch (error) {
           document.documentElement.classList.remove("tv-pin-pending");
           showDashboardLoadError(error);
         }
+      }
+      function isLocalTvPreview() {
+        return /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(location.hostname || "")
+          && /(?:^|[?&])tv=1(?:&|$)/i.test(location.search || "");
       }
       function startDashboardAutoRefresh() {
         if (dashboardAutoRefreshTimer) window.clearInterval(dashboardAutoRefreshTimer);

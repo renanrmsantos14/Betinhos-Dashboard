@@ -4,6 +4,7 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const html = fs.readFileSync(path.join(root, "Dashboard.html"), "utf8");
+const devServer = fs.readFileSync(path.join(root, "scripts", "dev-server.js"), "utf8");
 
 assert.match(html, /data-nav="tvdiagnostico"/i, "Aba de diagnostico ausente.");
 assert.match(html, /id="page-tvdiagnostico"/i, "Pagina de diagnostico ausente.");
@@ -15,6 +16,12 @@ assert.match(html, /\["keydown",\s*"keyup",[\s\S]*?"click"[\s\S]*?"mousemove"[\s
 assert.match(html, /\.tv-browser\s+\.tv-diagnostic-nav\s*\{[^}]*display:\s*flex/i, "Aba nao esta limitada a TV.");
 assert.match(html, /TV_NAV_IDS\s*=\s*\[[\s\S]*?"tvdiagnostico"/i, "Aba nao participa da navegacao da TV.");
 assert.match(html, /TV_NUMERIC_NAV\s*=\s*\{/i, "Atalhos numericos da TV ausentes.");
+assert.match(html, /key\s*===\s*"ArrowLeft"[\s\S]*?navigateTv\(-1\)/i, "ArrowLeft nao troca para a aba anterior.");
+assert.match(html, /key\s*===\s*"ArrowRight"[\s\S]*?navigateTv\(1\)/i, "ArrowRight nao troca para a proxima aba.");
+assert.match(html, /function isLocalTvPreview\(/i, "Modo de teste local da TV ausente.");
+assert.match(html, /tv=1/i, "Parametro local tv=1 ausente.");
+assert.match(devServer, /require\("\.\/build-dashboard-tv-compatible\.cjs"\)/i, "Preview da TV nao gera o bundle legado.");
+assert.match(devServer, /dist[\\/]Dashboard\.html|path\.join\(repoRoot,\s*"dist",\s*"Dashboard\.html"\)/i, "Preview da TV nao serve o bundle legado.");
 assert.match(html, /"1":\s*"resumo"/i, "Atalho 1 para Resumo ausente.");
 assert.match(html, /"0":\s*"marketing"/i, "Atalho 0 para Marketing ausente.");
 assert.match(html, /function handleTvPointerNavigation\(/i, "Captura de pointermove ausente.");

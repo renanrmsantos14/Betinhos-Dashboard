@@ -3,7 +3,11 @@ const http = require("http");
 const path = require("path");
 
 const repoRoot = path.resolve(__dirname, "..");
-const defaultFile = path.join(repoRoot, "Dashboard.html");
+const tvPreview = process.argv.includes("--tv");
+if (tvPreview) require("./build-dashboard-tv-compatible.cjs");
+const defaultFile = tvPreview
+  ? path.join(repoRoot, "dist", "Dashboard.html")
+  : path.join(repoRoot, "Dashboard.html");
 const host = "127.0.0.1";
 const requestedPort = Number(process.env.PORT || 0);
 
@@ -57,5 +61,7 @@ const server = http.createServer((request, response) => {
 
 server.listen(requestedPort, host, () => {
   const address = server.address();
-  console.log(`[dev] Dashboard local com mock data: http://localhost:${address.port}/?mock=1`);
+  const query = tvPreview ? "?mock=1&tv=1" : "?mock=1";
+  const mode = tvPreview ? "TV/Tizen legado" : "desktop";
+  console.log(`[dev] Dashboard ${mode}: http://localhost:${address.port}/${query}`);
 });
