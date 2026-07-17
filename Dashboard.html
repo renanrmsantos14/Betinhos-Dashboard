@@ -2851,23 +2851,123 @@
           transform: scale(1.05);
         }
       }
-      .card-detail-body > .kpi,
-      .card-detail-body > .cc,
-      .card-detail-body > .tc,
-      .card-detail-body > .exec-alert {
-        box-sizing: border-box;
-        width: 100%;
-        min-height: 0;
-        cursor: default;
+      .card-detail-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(300px, .85fr);
+        gap: 20px;
       }
-      .card-detail-body img.card-detail-chart {
+      .card-detail-main,
+      .card-detail-side {
+        min-width: 0;
+      }
+      .card-detail-focus,
+      .card-detail-section {
+        box-sizing: border-box;
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        background: var(--surf);
+        box-shadow: var(--s1);
+      }
+      .card-detail-focus {
+        padding: 24px;
+      }
+      .card-detail-focus-label,
+      .card-detail-section-title {
+        margin: 0;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .card-detail-focus-value {
+        margin: 8px 0 0;
+        color: var(--navy);
+        font-size: clamp(34px, 6vw, 62px);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        line-height: 1;
+      }
+      .card-detail-focus-context {
+        margin: 12px 0 0;
+        color: var(--t2);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .card-detail-chart-wrap {
+        position: relative;
+        height: min(52vh, 520px);
+        margin-top: 20px;
+        padding: 18px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        background: var(--surf);
+      }
+      .card-detail-chart-wrap canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+      .card-detail-section {
+        padding: 18px;
+      }
+      .card-detail-side {
+        display: grid;
+        align-content: start;
+        gap: 16px;
+      }
+      .card-detail-stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .card-detail-stat {
+        min-width: 0;
+        padding: 12px;
+        border-radius: var(--r8);
+        background: var(--bg);
+      }
+      .card-detail-stat span {
         display: block;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+      }
+      .card-detail-stat strong {
+        display: block;
+        margin-top: 5px;
+        overflow-wrap: anywhere;
+        color: var(--t1);
+        font-size: 14px;
+      }
+      .card-detail-notes {
+        display: grid;
+        gap: 8px;
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .card-detail-notes li {
+        padding: 10px 12px;
+        border-left: 3px solid var(--blue);
+        background: var(--blue-l);
+        color: var(--t2);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .card-detail-table-wrap {
+        margin-top: 14px;
+        overflow: auto;
+      }
+      .card-detail-table-wrap table {
         width: 100%;
-        height: auto;
-        margin-top: 12px;
       }
       @media (max-width: 700px) {
         .card-detail-panel { padding: 20px 16px; }
+        .card-detail-layout { grid-template-columns: 1fr; }
+        .card-detail-chart-wrap { height: 320px; }
       }
     </style>
   </head>
@@ -4915,6 +5015,7 @@
       let VW = { reservas: [], manutencoes: [], multas: [], trocas: [] };
       let charts = {},
         sparks = {},
+        detailCharts = [],
         srtSt = {},
         tblCache = {};
       let msState = { St: [], Cl: [], Mo: [], Tp: [] };
@@ -6576,29 +6677,150 @@ const monthsLabelsAll = [
         return card.querySelector(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .exec-alert span")?.textContent.trim() || "Detalhes do indicador";
       }
 
-      function cloneCardForDetail(card) {
-        const clone = card.cloneNode(true);
-        const sourceCanvases = [...card.querySelectorAll("canvas")];
-        clone.querySelectorAll("canvas").forEach((canvas, index) => {
-          const image = document.createElement("img");
-          image.className = "card-detail-chart";
-          image.alt = `Gráfico ampliado: ${getCardDetailTitle(card)}`;
-          try {
-            image.src = sourceCanvases[index]?.toDataURL("image/png") || "";
-            canvas.replaceWith(image);
-          } catch {
-            canvas.remove();
-          }
+      function createCardDetailElement(tag, className, text) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (text != null) element.textContent = text;
+        return element;
+      }
+
+      function getCardPrimaryValue(card) {
+        return card.querySelector(".kpi-val, .cc2-bigval, .exec-alert strong, .cc-kv")?.textContent.trim() || "Sem dado";
+      }
+
+      function getCardDetailNotes(card) {
+        const seen = new Set();
+        return [...card.querySelectorAll(".cc2-sub, .tc-meta, .kpi-delta, .metric-list, .badge-kpi, .metric-line, .exec-alert b")]
+          .map((element) => element.textContent.replace(/\s+/g, " ").trim())
+          .filter((text) => text && !seen.has(text) && seen.add(text))
+          .slice(0, 16);
+      }
+
+      function addCardDetailStat(container, label, value) {
+        const stat = createCardDetailElement("div", "card-detail-stat");
+        stat.append(createCardDetailElement("span", "", label), createCardDetailElement("strong", "", value));
+        container.appendChild(stat);
+      }
+
+      function getChartValue(value, title) {
+        const rawValue = typeof value === "object" && value !== null ? (value.y ?? value.x ?? "") : value;
+        const numericValue = Number(rawValue);
+        if (!Number.isFinite(numericValue)) return String(rawValue ?? "—");
+        if (/fatur|ticket|custo|receb|meta|produz/i.test(title)) return brl(numericValue);
+        return numericValue.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+      }
+
+      function createChartDataTable(chart, title) {
+        const wrap = createCardDetailElement("div", "card-detail-table-wrap");
+        const table = document.createElement("table");
+        const head = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        const labels = chart.data.labels || [];
+        ["Período", ...chart.data.datasets.map((dataset) => dataset.label || "Série")].forEach((text) => {
+          headRow.appendChild(createCardDetailElement("th", "", text));
         });
-        clone.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
-        clone.querySelectorAll("[onclick], [onchange]").forEach((element) => {
+        head.appendChild(headRow);
+        const body = document.createElement("tbody");
+        labels.forEach((label, index) => {
+          const row = document.createElement("tr");
+          row.appendChild(createCardDetailElement("td", "em", label));
+          chart.data.datasets.forEach((dataset) => {
+            row.appendChild(createCardDetailElement("td", "r", getChartValue(dataset.data?.[index], title)));
+          });
+          body.appendChild(row);
+        });
+        table.append(head, body);
+        wrap.appendChild(table);
+        return wrap;
+      }
+
+      function cloneCardTable(table) {
+        const clone = table.cloneNode(true);
+        clone.querySelectorAll("[id], [onclick], [onchange]").forEach((element) => {
+          element.removeAttribute("id");
           element.removeAttribute("onclick");
           element.removeAttribute("onchange");
         });
-        clone.querySelectorAll("input, button, select, textarea").forEach((control) => {
-          control.disabled = true;
-        });
         return clone;
+      }
+
+      function destroyDetailCharts() {
+        detailCharts.forEach((chart) => chart.destroy());
+        detailCharts = [];
+      }
+
+      function buildCardDetail(card) {
+        const title = getCardDetailTitle(card);
+        const primaryValue = getCardPrimaryValue(card);
+        const notes = getCardDetailNotes(card);
+        const layout = createCardDetailElement("div", "card-detail-layout");
+        const main = createCardDetailElement("div", "card-detail-main");
+        const side = createCardDetailElement("aside", "card-detail-side");
+        const focus = createCardDetailElement("section", "card-detail-focus");
+        focus.append(
+          createCardDetailElement("p", "card-detail-focus-label", title),
+          createCardDetailElement("p", "card-detail-focus-value", primaryValue),
+        );
+        if (notes[0]) focus.appendChild(createCardDetailElement("p", "card-detail-focus-context", notes[0]));
+        main.appendChild(focus);
+
+        const summary = createCardDetailElement("section", "card-detail-section");
+        summary.appendChild(createCardDetailElement("p", "card-detail-section-title", "Resumo do filtro"));
+        const stats = createCardDetailElement("div", "card-detail-stats");
+        addCardDetailStat(stats, "Indicador", title);
+        addCardDetailStat(stats, "Valor atual", primaryValue);
+        addCardDetailStat(stats, "Tipo", card.querySelector("canvas") ? "Gráfico" : card.querySelector("table") ? "Tabela" : "Indicador");
+        addCardDetailStat(stats, "Filtro", document.getElementById("filterSummary")?.textContent.trim() || "Todos os dados");
+        summary.appendChild(stats);
+        side.appendChild(summary);
+
+        if (notes.length) {
+          const context = createCardDetailElement("section", "card-detail-section");
+          context.appendChild(createCardDetailElement("p", "card-detail-section-title", "Leitura atual"));
+          const list = createCardDetailElement("ul", "card-detail-notes");
+          notes.forEach((note) => list.appendChild(createCardDetailElement("li", "", note)));
+          context.appendChild(list);
+          side.appendChild(context);
+        }
+
+        const canvas = card.querySelector("canvas");
+        const sourceChart = canvas ? charts[canvas.id] : null;
+        if (sourceChart) {
+          const chartWrap = createCardDetailElement("section", "card-detail-chart-wrap");
+          const chartCanvas = document.createElement("canvas");
+          chartWrap.appendChild(chartCanvas);
+          main.appendChild(chartWrap);
+          try {
+            const expandedChart = new Chart(chartCanvas, {
+              type: sourceChart.config.type,
+              data: {
+                labels: [...(sourceChart.data.labels || [])],
+                datasets: sourceChart.data.datasets.map((dataset) => ({ ...dataset, data: [...(dataset.data || [])] })),
+              },
+              options: { responsive: true, maintainAspectRatio: false },
+            });
+            detailCharts.push(expandedChart);
+          } catch {
+            chartWrap.remove();
+          }
+          const dataset = createCardDetailElement("section", "card-detail-section");
+          dataset.appendChild(createCardDetailElement("p", "card-detail-section-title", "Dados do gráfico"));
+          dataset.appendChild(createChartDataTable(sourceChart, title));
+          side.appendChild(dataset);
+        }
+
+        const table = card.querySelector("table");
+        if (table) {
+          const records = createCardDetailElement("section", "card-detail-section");
+          records.appendChild(createCardDetailElement("p", "card-detail-section-title", "Registros exibidos"));
+          const wrap = createCardDetailElement("div", "card-detail-table-wrap");
+          wrap.appendChild(cloneCardTable(table));
+          records.appendChild(wrap);
+          main.appendChild(records);
+        }
+
+        layout.append(main, side);
+        return layout;
       }
 
       function installCardDetailDialog() {
@@ -6613,7 +6835,10 @@ const monthsLabelsAll = [
         dialog.addEventListener("click", (event) => {
           if (event.target === dialog) closeDialog();
         });
-        dialog.addEventListener("close", () => body.replaceChildren());
+        dialog.addEventListener("close", () => {
+          destroyDetailCharts();
+          body.replaceChildren();
+        });
 
         document.addEventListener("click", (event) => {
           const target = event.target instanceof Element ? event.target : null;
@@ -6622,7 +6847,7 @@ const monthsLabelsAll = [
           const card = target.closest(".kpi, .cc, .tc, .exec-alert");
           if (!card) return;
           title.textContent = getCardDetailTitle(card);
-          body.replaceChildren(cloneCardForDetail(card));
+          body.replaceChildren(buildCardDetail(card));
           dialog.showModal();
         });
       }
