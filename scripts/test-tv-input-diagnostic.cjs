@@ -17,9 +17,11 @@ assert.match(html, /TV_NAV_IDS\s*=\s*\[[\s\S]*?"tvdiagnostico"/i, "Aba nao parti
 assert.match(html, /TV_NUMERIC_NAV\s*=\s*\{/i, "Atalhos numericos da TV ausentes.");
 assert.match(html, /"1":\s*"resumo"/i, "Atalho 1 para Resumo ausente.");
 assert.match(html, /"0":\s*"marketing"/i, "Atalho 0 para Marketing ausente.");
-assert.match(html, /function handleTvPointerNavigation\(/i, "Navegacao pela direcao do cursor ausente.");
-assert.match(html, /TV_POINTER_NAV_THRESHOLD/i, "Limite do gesto horizontal ausente.");
-assert.match(html, /TV_POINTER_NAV_THRESHOLD\s*=\s*[1-8]\b/i, "Gesto lateral ainda exige movimento longo.");
+assert.match(html, /function handleTvPointerNavigation\(/i, "Captura de pointermove ausente.");
+assert.match(html, /TV_POINTER_CLICKS_REQUIRED\s*=\s*3/i, "Regra de tres rajadas ausente.");
+assert.match(html, /TV_POINTER_MAX_GESTURE_MS/i, "Movimento segurado nao possui limite de duracao.");
+assert.match(html, /function finishTvPointerGesture\(/i, "Finalizacao da rajada de movimento ausente.");
+assert.match(html, /tvPointerClickCount\s*>=\s*TV_POINTER_CLICKS_REQUIRED/i, "Contador nao exige tres movimentos.");
 assert.match(html, /id="sidebarLastUpdated"/i, "Horario da ultima atualizacao ausente no menu.");
 assert.match(html, /function handleTvSidebarReveal\(/i, "Abertura do menu pelo canto esquerdo ausente.");
 assert.match(html, /\.tv-browser:not\(\.tv-sidebar-revealed\)\s+\.sidebar/i, "Menu da TV nao inicia recolhido.");

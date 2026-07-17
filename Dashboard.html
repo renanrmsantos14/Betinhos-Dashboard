@@ -9530,16 +9530,23 @@ function setAppVersion() {
       };
       const tvNavigationKeyDownAt = {};
       const TV_POINTER_NAV_THRESHOLD = 6;
-      const TV_POINTER_IDLE_MS = 260;
+      const TV_POINTER_IDLE_MS = 180;
+      const TV_POINTER_CLICKS_REQUIRED = 3;
+      const TV_POINTER_CLICK_WINDOW_MS = 2500;
+      const TV_POINTER_MAX_GESTURE_MS = 450;
+      const TV_POINTER_MAX_GESTURE_DISTANCE = 90;
       const TV_SIDEBAR_HOT_EDGE_PX = 4;
       const TV_SIDEBAR_WIDTH_PX = 250;
       let tvPointerLastX = null;
       let tvPointerLastY = null;
       let tvPointerLastAt = 0;
+      let tvPointerGestureStartedAt = 0;
       let tvPointerAccumX = 0;
       let tvPointerAccumY = 0;
-      let tvPointerGestureHandled = false;
       let tvPointerIdleTimer = 0;
+      let tvPointerClickDirection = 0;
+      let tvPointerClickCount = 0;
+      let tvPointerLastClickAt = 0;
       let tvSidebarHideTimer = 0;
       function navigateTv(direction) {
         if (!window.__DASHBOARD_TV_MODE) return;
@@ -9589,9 +9596,42 @@ function setAppVersion() {
         tvPointerLastX = null;
         tvPointerLastY = null;
         tvPointerLastAt = 0;
+        tvPointerGestureStartedAt = 0;
         tvPointerAccumX = 0;
         tvPointerAccumY = 0;
-        tvPointerGestureHandled = false;
+      }
+      function finishTvPointerGesture() {
+        const horizontal = Math.abs(tvPointerAccumX);
+        const vertical = Math.abs(tvPointerAccumY);
+        const duration = tvPointerGestureStartedAt ? Date.now() - tvPointerGestureStartedAt : 0;
+        const isShortClick = duration <= TV_POINTER_MAX_GESTURE_MS && horizontal <= TV_POINTER_MAX_GESTURE_DISTANCE;
+        if (isShortClick && horizontal >= TV_POINTER_NAV_THRESHOLD && horizontal >= vertical * 1.4) {
+          const direction = tvPointerAccumX < 0 ? -1 : 1;
+          const now = Date.now();
+          if (direction === tvPointerClickDirection && now - tvPointerLastClickAt <= TV_POINTER_CLICK_WINDOW_MS) {
+            tvPointerClickCount += 1;
+          } else {
+            tvPointerClickDirection = direction;
+            tvPointerClickCount = 1;
+          }
+          tvPointerLastClickAt = now;
+          if (tvPointerClickCount >= TV_POINTER_CLICKS_REQUIRED) {
+            navigateTv(direction);
+            reportDashboardError(new Error(`Navegacao por tres movimentos: ${direction < 0 ? "esquerda" : "direita"}`), {
+              severity: "info",
+              source: "tv-navigation",
+              action: "pointer-triple-click",
+              phase: direction < 0 ? "previous" : "next",
+              payload: { clicks: tvPointerClickCount, direction },
+            });
+            tvPointerClickCount = 0;
+            tvPointerClickDirection = 0;
+          }
+        } else {
+          tvPointerClickCount = 0;
+          tvPointerClickDirection = 0;
+        }
+        resetTvPointerGesture();
       }
       function handleTvPointerNavigation(event) {
         if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
@@ -9608,6 +9648,7 @@ function setAppVersion() {
           tvPointerLastX = x;
           tvPointerLastY = y;
           tvPointerLastAt = now;
+          tvPointerGestureStartedAt = now;
         } else {
           tvPointerAccumX += x - tvPointerLastX;
           tvPointerAccumY += y - tvPointerLastY;
@@ -9616,20 +9657,7 @@ function setAppVersion() {
           tvPointerLastAt = now;
         }
         window.clearTimeout(tvPointerIdleTimer);
-        tvPointerIdleTimer = window.setTimeout(resetTvPointerGesture, TV_POINTER_IDLE_MS);
-        if (tvPointerGestureHandled) return;
-        const horizontal = Math.abs(tvPointerAccumX);
-        const vertical = Math.abs(tvPointerAccumY);
-        if (horizontal < TV_POINTER_NAV_THRESHOLD || horizontal < vertical * 1.4) return;
-        tvPointerGestureHandled = true;
-        navigateTv(tvPointerAccumX < 0 ? -1 : 1);
-        reportDashboardError(new Error(`Navegacao pelo cursor: ${tvPointerAccumX < 0 ? "esquerda" : "direita"}`), {
-          severity: "info",
-          source: "tv-navigation",
-          action: "pointer-gesture",
-          phase: tvPointerAccumX < 0 ? "previous" : "next",
-          payload: { deltaX: tvPointerAccumX, deltaY: tvPointerAccumY, threshold: TV_POINTER_NAV_THRESHOLD },
-        });
+        tvPointerIdleTimer = window.setTimeout(finishTvPointerGesture, TV_POINTER_IDLE_MS);
       }
       function isTvNavigationBlocked(event) {
         const target = event.target;
@@ -9645,12 +9673,6 @@ function setAppVersion() {
         document.addEventListener("keydown", (event) => {
           if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
           const key = event.key || ({ 37: "ArrowLeft", 39: "ArrowRight" })[event.keyCode];
-          if (key === "ArrowLeft" || key === "Left" || key === "ArrowRight" || key === "Right") {
-            event.preventDefault();
-            event.stopPropagation();
-            navigateTv(key === "ArrowLeft" || key === "Left" ? -1 : 1);
-            return;
-          }
           if (TV_NUMERIC_NAV[key]) {
             tvNavigationKeyDownAt[key] = Date.now();
             event.preventDefault();
