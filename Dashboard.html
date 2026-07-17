@@ -978,6 +978,21 @@
         line-height: 1.25;
         text-wrap: balance;
       }
+      .goal-direction-label[data-goal-direction]::after {
+        content: "";
+        display: inline-block;
+        margin-left: 6px;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        vertical-align: middle;
+        opacity: 0.8;
+      }
+      .goal-direction-label[data-goal-direction="up"]::after {
+        border-bottom: 6px solid var(--t3);
+      }
+      .goal-direction-label[data-goal-direction="down"]::after {
+        border-top: 6px solid var(--t3);
+      }
       .kpi-val {
         font-size: 22px;
         font-weight: 800;
@@ -2760,6 +2775,100 @@
           transition-duration: .01ms !important;
         }
       }
+      .kpi,
+      .cc,
+      .tc,
+      .exec-alert {
+        cursor: zoom-in;
+      }
+      .card-detail-dialog {
+        width: 100vw;
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: var(--bg);
+        color: var(--t1);
+        opacity: 0;
+        transform: scale(0.985);
+        transition: opacity 180ms ease-out, transform 180ms ease-out;
+      }
+      .card-detail-dialog[open] {
+        display: block;
+        opacity: 1;
+        transform: scale(1);
+      }
+      .card-detail-dialog::backdrop {
+        background: rgba(9, 25, 47, 0.5);
+        backdrop-filter: blur(4px);
+      }
+      .card-detail-panel {
+        box-sizing: border-box;
+        width: min(1180px, 100%);
+        min-height: 100%;
+        margin: 0 auto;
+        padding: 28px;
+      }
+      .card-detail-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .card-detail-eyebrow {
+        margin: 0 0 4px;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .card-detail-title {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(22px, 3vw, 34px);
+        letter-spacing: -0.03em;
+      }
+      .card-detail-close {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 auto;
+        border: 1px solid var(--b1);
+        border-radius: 50%;
+        background: var(--surf);
+        color: var(--t1);
+        cursor: pointer;
+        font-size: 24px;
+        line-height: 1;
+        transition: transform 150ms ease, border-color 150ms ease;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .card-detail-close:hover {
+          border-color: var(--blue);
+          transform: scale(1.05);
+        }
+      }
+      .card-detail-body > .kpi,
+      .card-detail-body > .cc,
+      .card-detail-body > .tc,
+      .card-detail-body > .exec-alert {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 0;
+        cursor: default;
+      }
+      .card-detail-body img.card-detail-chart {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-top: 12px;
+      }
+      @media (max-width: 700px) {
+        .card-detail-panel { padding: 20px 16px; }
+      }
     </style>
   </head>
   <body>
@@ -3201,11 +3310,12 @@
           </section>
           <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
             <p class="section-label">Opera&ccedil;&atilde;o</p>
-            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
             <div class="exec-alerts"><div class="exec-alert" id="dqSemPreco"><div><strong>&mdash;</strong><span>Sem pre&ccedil;o</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises executivas">
+          <div class="cgrid g2">
           <!-- Total Produzido -->
           <div class="cc">
             <div class="cc-hdr2">
@@ -3217,7 +3327,7 @@
               <div class="inline-indicators" id="indicatorsLM_LY_META"></div>
             </div>
             <div id="metaProgressWrap"></div>
-            <canvas id="cTotalProd" height="100" data-mobile-height="138"></canvas>
+            <canvas id="cTotalProd" height="78" data-mobile-height="138"></canvas>
           </div>
 
           <!-- Meta x Realizado por Mês -->
@@ -3231,7 +3341,8 @@
               <div class="inline-indicators" id="ind_mvr"></div>
             </div>
             <div id="mvrSummary" class="metric-table-wrap"></div>
-            <canvas id="cMetaVsReal" height="110" data-mobile-height="144"></canvas>
+            <canvas id="cMetaVsReal" height="82" data-mobile-height="144"></canvas>
+          </div>
           </div>
 
           <!-- Faturamento por Cliente por Mês -->
@@ -3244,7 +3355,7 @@
               </div>
               <div class="inline-indicators" id="ind_fatcli"></div>
             </div>
-            <canvas id="cFatCli" height="105" data-mobile-height="136"></canvas>
+            <canvas id="cFatCli" height="80" data-mobile-height="136"></canvas>
           </div>
 
           <div class="cgrid g2">
@@ -4116,6 +4227,19 @@
         </div>
       </section>
     </div>
+
+    <dialog id="cardDetailDialog" class="card-detail-dialog" aria-labelledby="cardDetailTitle">
+      <div class="card-detail-panel">
+        <header class="card-detail-head">
+          <div>
+            <p class="card-detail-eyebrow">Detalhamento</p>
+            <h2 id="cardDetailTitle" class="card-detail-title">Detalhes</h2>
+          </div>
+          <button id="cardDetailClose" class="card-detail-close" type="button" aria-label="Fechar detalhes">&times;</button>
+        </header>
+        <div id="cardDetailBody" class="card-detail-body"></div>
+      </div>
+    </dialog>
 
     <script>
       // ════════════════════════════════════════════
@@ -6312,6 +6436,7 @@ const monthsLabelsAll = [
             <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
+            <div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div>
           </div>
           <div class="exec-alerts">
             <div class="exec-alert" id="dqSemPreco"><div><strong>&mdash;</strong><span>Sem preco</span></div><b>Dados</b></div>
@@ -6436,6 +6561,72 @@ const monthsLabelsAll = [
         });
       }
 
+      function addKpiGoalDirections() {
+        const shouldIncrease = /tempo de pagamento/i;
+        const shouldDecrease = /pendente|a receber|multa|cancelad|manuten|custo|cnh|corretiva|avaria|em andamento|falta|sem pre[cç]o|sem op|sem motorista|sem cliente/i;
+        document.querySelectorAll(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .meta-kpi-pill > span, .exec-alert span").forEach((label) => {
+          const direction = shouldIncrease.test(label.textContent) ? "up" : shouldDecrease.test(label.textContent) ? "down" : "up";
+          label.classList.add("goal-direction-label");
+          label.dataset.goalDirection = direction;
+          label.title = `Para um resultado positivo, este indicador deve ${direction === "up" ? "subir" : "descer"}.`;
+        });
+      }
+
+      function getCardDetailTitle(card) {
+        return card.querySelector(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .exec-alert span")?.textContent.trim() || "Detalhes do indicador";
+      }
+
+      function cloneCardForDetail(card) {
+        const clone = card.cloneNode(true);
+        const sourceCanvases = [...card.querySelectorAll("canvas")];
+        clone.querySelectorAll("canvas").forEach((canvas, index) => {
+          const image = document.createElement("img");
+          image.className = "card-detail-chart";
+          image.alt = `Gráfico ampliado: ${getCardDetailTitle(card)}`;
+          try {
+            image.src = sourceCanvases[index]?.toDataURL("image/png") || "";
+            canvas.replaceWith(image);
+          } catch {
+            canvas.remove();
+          }
+        });
+        clone.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
+        clone.querySelectorAll("[onclick], [onchange]").forEach((element) => {
+          element.removeAttribute("onclick");
+          element.removeAttribute("onchange");
+        });
+        clone.querySelectorAll("input, button, select, textarea").forEach((control) => {
+          control.disabled = true;
+        });
+        return clone;
+      }
+
+      function installCardDetailDialog() {
+        const dialog = document.getElementById("cardDetailDialog");
+        const title = document.getElementById("cardDetailTitle");
+        const body = document.getElementById("cardDetailBody");
+        const close = document.getElementById("cardDetailClose");
+        if (!dialog || !title || !body || !close) return;
+
+        const closeDialog = () => dialog.close();
+        close.addEventListener("click", closeDialog);
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) closeDialog();
+        });
+        dialog.addEventListener("close", () => body.replaceChildren());
+
+        document.addEventListener("click", (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          if (!target || target.closest("#cardDetailDialog")) return;
+          if (target.closest("a, button, input, select, textarea, th, [contenteditable='true']")) return;
+          const card = target.closest(".kpi, .cc, .tc, .exec-alert");
+          if (!card) return;
+          title.textContent = getCardDetailTitle(card);
+          body.replaceChildren(cloneCardForDetail(card));
+          dialog.showModal();
+        });
+      }
+
       function renderAll() {
         const dvDisabled = isDataverseDisabled();
         const rv = dvDisabled ? [] : VW.reservas;
@@ -6514,6 +6705,7 @@ const monthsLabelsAll = [
         };
         const semValor = getSemValorRows(rv);
         const pendentes = rv.filter(isPendingScheduledReservation);
+        const programados = rv.filter((r) => normL(r?._stL).includes("progr"));
         const cancelados = rv.filter(
           (r) =>
             stL(r._stL).includes("cancel") || stL(r._stL).includes("recus"),
@@ -6724,6 +6916,8 @@ const monthsLabelsAll = [
         setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
+        const programadosPct = rv.length ? ((programados.length / rv.length) * 100).toFixed(0) : 0;
+        setExecAlert("alertProgramados", programados.length, "Programados", programados.length ? `${programadosPct}% do período` : "Sem agenda", programados.length ? "ok" : "warn");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
         const dqSemPreco = rv.filter((r) => !r[F.res.lookupPreco]).length;
         const dqSemOP = rv.filter((r) => !r._opId).length;
@@ -7198,6 +7392,7 @@ const monthsLabelsAll = [
         renderMultas(dvDisabled);
         renderTrocas(dvDisabled);
         renderMarketing(dvDisabled);
+        addKpiGoalDirections();
         enhanceSortableTables();
       }
 
@@ -8212,6 +8407,8 @@ const monthsLabelsAll = [
       updateFilterSummary();
       detectEnv();
       installDashboardErrorLogger();
+      addKpiGoalDirections();
+      installCardDetailDialog();
       loadAll();
     </script>
   </body>
