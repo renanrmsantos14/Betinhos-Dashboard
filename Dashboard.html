@@ -3870,6 +3870,39 @@
           align-self: center;
         }
       }
+      #page-servicos > .kpi-row.kpi-2 .kpi.executive {
+        min-height: 104px;
+        padding: 12px 14px;
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(190px, 1.2fr);
+        align-items: center;
+        column-gap: 20px;
+      }
+      #page-servicos > .kpi-row.kpi-2 .kpi-main {
+        min-height: 0;
+      }
+      #page-servicos > .kpi-row.kpi-2 .kpi-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      #page-servicos > .kpi-row.kpi-2 .kpi-lbl {
+        margin: 0;
+      }
+      #page-servicos > .kpi-row.kpi-2 .kpi-val {
+        margin: 0;
+      }
+      #page-servicos > .kpi-row.kpi-2 .metric-list {
+        margin: 0;
+        gap: 5px;
+      }
+      @media (max-width: 700px) {
+        #page-servicos > .kpi-row.kpi-2 .kpi.executive {
+          min-height: 96px;
+          grid-template-columns: minmax(0, 0.75fr) minmax(150px, 1.25fr);
+          column-gap: 12px;
+        }
+      }
       @media (max-width: 700px) {
         .card-detail-panel { padding: 20px 16px; }
         .card-detail-layout { grid-template-columns: 1fr; }
@@ -8690,13 +8723,13 @@ function setAppVersion() {
         set("sFat", dvDisabled ? "—" : brlS(fat));
         set("sOpTotal", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
         html("sOpMix", dvDisabled ? "" : renderMetricLines([
-          ["Concluidos", conclServices.length.toLocaleString("pt-BR")],
+          ["Concluídos", conclServices.length.toLocaleString("pt-BR")],
           ["Pendentes/Prog.", pendentes.length.toLocaleString("pt-BR")],
           ["Cancelados", cancelados.length.toLocaleString("pt-BR")],
         ]));
         set("sFinTotal", dvDisabled ? "â€”" : brlS(fat));
         html("sFinMix", dvDisabled ? "" : renderMetricLines([
-          ["Ticket medio", brl(curTk)],
+          ["Ticket médio", brl(curTk)],
           ["CP pendente", semValor.length.toLocaleString("pt-BR")],
           ["A receber", brlS(aReceber)],
         ]));
