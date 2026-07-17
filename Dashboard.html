@@ -6376,7 +6376,7 @@
           .join("");
         const mobileMarkup = mobileRows || '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
         const valueHead = hasValue ? '<th class="r">' + valueLabel + '</th>' : '';
-        const tableHead = '<thead><tr><th>' + label + '</th><th class="r">' + countLabel + '</th>' + valueHead + '<th>Participacao</th></tr></thead>';
+        const tableHead = '<thead><tr><th>' + label + '</th><th class="r">' + countLabel + '</th>' + valueHead + '<th>Participa&ccedil;&atilde;o</th></tr></thead>';
         const tableBody = tableRows.map((r, i) => {
           const qtd = Number(r.qtd || 0);
           const value = Number(r.value || 0);
@@ -6423,7 +6423,7 @@
               .join("")
           : `<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>`;
         el.classList.add("has-mobile-list");
-        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participacao</th></tr></thead><tbody>${body}</tbody></table><div class="metric-mobile-list">${mobileBody}</div>`;
+        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participação</th></tr></thead><tbody>${body}</tbody></table><div class="metric-mobile-list">${mobileBody}</div>`;
       }
       function srtShare(targetId, field) {
         const key = `share:${targetId}`;
@@ -8540,10 +8540,10 @@ function setAppVersion() {
         document.getElementById("ind_st").innerHTML = dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${concluPct >= 75 ? "" : " below"}"><span class="bk-label">CONC</span><span class="bk-val">${conclServices.length}</span><span class="bk-pct">${concluPct}%</span></span>` +
           (cancelados.length ? `<span class="badge-kpi" style="background:var(--red-l);color:var(--red);"><span class="bk-label" style="background:var(--red);color:#fff;">CAN</span><span class="bk-val">${cancelados.length}</span><span class="bk-pct">${rv.length ? (cancelados.length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
-        const stRows = takeUntilShare(stKeys, rv.length, (k) => bySt[k].length)
+        const stRows = takeUntilShare(stKeys.filter((k) => rv.length > 0 && (bySt[k].length / rv.length) * 100 > 10), rv.length, (k) => bySt[k].length)
           .map((k) => ({ status: k, qtd: bySt[k].length }));
         html("tblStatusResumo", dvDisabled ? "" : `
-          <table><thead><tr><th>Status</th><th class="r">Qt de servicos</th><th>Participacao</th></tr></thead>
+          <table><thead><tr><th>Status</th><th class="r">Qt de servi&ccedil;os</th><th>Participa&ccedil;&atilde;o</th></tr></thead>
           <tbody>${stRows.map((r, i) => {
             const p = rv.length ? (r.qtd / rv.length) * 100 : 0;
             return `<tr><td>${badge(r.status)}</td><td class="r em">${r.qtd.toLocaleString("pt-BR")}</td><td>${progressCell(p, `${r.qtd.toLocaleString("pt-BR")} serv.`, PAL[i % PAL.length])}</td></tr>`;
@@ -8589,6 +8589,7 @@ function setAppVersion() {
         // Top clientes
         const top10v = Object.entries(byCli)
           .sort((a, b) => b[1].length - a[1].length)
+          .filter(([, rows]) => rv.length > 0 && (rows.length / rv.length) * 100 > 10)
           .slice(0, 10);
         if (top10v.length > 0) {
           const t1vPct = rv.length ? (top10v[0][1].length / rv.length * 100).toFixed(1) : 0;
@@ -8602,7 +8603,7 @@ function setAppVersion() {
           "tblTopVolResumo",
           top10v.map(([label, rows]) => ({ label, qtd: rows.length })),
           rv.length,
-          { label: "Cliente", countLabel: "Servicos" },
+          { label: "Cliente", countLabel: "Servi\u00e7os" },
         );
         const top10f = Object.entries(byCli)
           .sort((a, b) => sumV(b[1]) - sumV(a[1]))
