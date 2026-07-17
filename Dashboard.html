@@ -1151,10 +1151,7 @@
         box-shadow: var(--s1);
         position: relative;
         overflow: hidden;
-        transition:
-          box-shadow var(--dur-med) var(--ease-out),
-          border-color var(--dur-med) ease,
-          transform 320ms var(--ease-out);
+        transition: border-color 140ms ease;
         cursor: default;
         display: flex;
         flex-direction: column;
@@ -1193,8 +1190,6 @@
       @media (hover: hover) and (pointer: fine) {
         .kpi:hover {
           border-color: var(--b2);
-          box-shadow: var(--s2);
-          transform: translateY(-2px);
         }
       }
       .kpi-accent {
@@ -1489,13 +1484,21 @@
         display: flex;
         flex-direction: column;
       }
-      .dashboard-section--analysis > .cgrid.g2:first-child > .cc:first-child > .chart-fill {
+      .cc:has(> .chart-fill) {
+        display: flex;
+        flex-direction: column;
         flex: 1 1 auto;
         min-height: 180px;
         min-width: 0;
         position: relative;
       }
-      .dashboard-section--analysis > .cgrid.g2:first-child > .cc:first-child > .chart-fill > #cTotalProd {
+      .cc:has(> .chart-fill) > .chart-fill {
+        flex: 1 1 auto;
+        min-height: 136px;
+        min-width: 0;
+        position: relative;
+      }
+      .cc:has(> .chart-fill) > .chart-fill > canvas {
         height: 100% !important;
         width: 100% !important;
       }
@@ -1511,16 +1514,12 @@
         min-width: 0;
         max-width: 100%;
         transition:
-          box-shadow var(--dur-med) var(--ease-out),
-          border-color var(--dur-med) ease,
-          transform 320ms var(--ease-out);
+          border-color 140ms ease;
         position: relative;
       }
       @media (hover: hover) and (pointer: fine) {
         .cc:hover {
           border-color: var(--b2);
-          box-shadow: var(--s2);
-          transform: translateY(-3px);
         }
       }
       .chart-empty {
@@ -3044,7 +3043,7 @@
 
       @media (hover: hover) and (pointer: fine) {
         .kpi:hover,
-        .cc:hover { border-color: var(--b2); box-shadow: var(--s2); transform: translateY(-2px); }
+        .cc:hover { border-color: var(--b2); }
       }
 
       @media (max-width: 1120px) {
@@ -9546,12 +9545,25 @@ function setAppVersion() {
         const el = document.getElementById(id);
         if (!el) return;
         if (charts[id]) charts[id].destroy();
+        if (!el.parentElement?.classList.contains("chart-fill")) {
+          const wrap = document.createElement("div");
+          wrap.className = "chart-fill";
+          el.parentElement?.insertBefore(wrap, el);
+          wrap.appendChild(el);
+        }
         const mobileHeight = Number(el.dataset.mobileHeight || 0);
         if (mobileHeight && window.matchMedia("(max-width: 540px)").matches) {
           el.height = mobileHeight;
         }
         setChartEmptyState(el, !chartHasData(cfg?.data?.datasets || []));
-        charts[id] = createDashboardChart(el, cfg);
+        charts[id] = createDashboardChart(el, {
+          ...cfg,
+          options: {
+            ...(cfg.options || {}),
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        });
       }
       function chartHasData(datasets) {
         return datasets.some((ds) =>
