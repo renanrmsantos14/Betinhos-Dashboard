@@ -6502,6 +6502,8 @@
       }
       function parseTableValue(text) {
         const raw = String(text || "").trim();
+        const month = raw.match(/^(\d{4})-(\d{2})$/);
+        if (month) return new Date(Number(month[1]), Number(month[2]) - 1, 1).getTime();
         const date = raw.match(/^(\d{2})\/(\d{2})\/(\d{2,4})(?:,\s*(\d{2}):(\d{2}))?/);
         if (date) {
           const y = Number(date[3].length === 2 ? `20${date[3]}` : date[3]);
@@ -6530,8 +6532,8 @@
         if (!tbody) return;
         const rows = [...tbody.rows].filter((r) => !r.querySelector(".empty"));
         rows.sort((a, b) => {
-          const av = parseTableValue(a.cells[col]?.textContent);
-          const bv = parseTableValue(b.cells[col]?.textContent);
+          const av = parseTableValue(a.cells[col]?.dataset.sortValue || a.cells[col]?.textContent);
+          const bv = parseTableValue(b.cells[col]?.dataset.sortValue || b.cells[col]?.textContent);
           if (typeof av === "number" && typeof bv === "number") return asc ? av - bv : bv - av;
           return asc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
         });
@@ -8436,7 +8438,7 @@ function setAppVersion() {
           const mvrRows = mvrLabels.map((label, i) => {
             const pct = mvrMeta[i] > 0 ? (mvrReal[i] / mvrMeta[i] * 100) : 0;
             const color = pct >= 100 ? "var(--green)" : pct >= 75 ? "var(--blue)" : "var(--orange)";
-            return "<tr><td class=\"em\">" + label + "</td><td class=\"r\">" + brl(mvrMeta[i]) + "</td><td class=\"r em\">" + brl(mvrReal[i]) + "</td><td><div class=\"prg\"><div class=\"prg-bg\"><div class=\"prg-fill\" style=\"width:" + Math.min(100, pct).toFixed(0) + "%;background:" + color + ";\"></div></div><span class=\"prg-pct\">" + pct.toFixed(1) + "%</span></div></td></tr>";
+            return "<tr><td class=\"em\" data-sort-value=\"" + allMks[i] + "\">" + label + "</td><td class=\"r\">" + brl(mvrMeta[i]) + "</td><td class=\"r em\">" + brl(mvrReal[i]) + "</td><td><div class=\"prg\"><div class=\"prg-bg\"><div class=\"prg-fill\" style=\"width:" + Math.min(100, pct).toFixed(0) + "%;background:" + color + ";\"></div></div><span class=\"prg-pct\">" + pct.toFixed(1) + "%</span></div></td></tr>";
           }).join("");
           html("mvrSummary", dvDisabled ? "" : `
             <table><thead><tr><th>Mês</th><th class="r">Meta</th><th class="r">Realizado</th><th>Atingimento</th></tr></thead><tbody>${mvrRows}</tbody></table>
