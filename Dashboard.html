@@ -3706,18 +3706,18 @@
           <span class="tv-pin-dot"></span><span class="tv-pin-dot"></span><span class="tv-pin-dot"></span><span class="tv-pin-dot"></span>
         </div>
         <div class="tv-pin-keypad" aria-label="Teclado numerico">
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="1">1</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="2">2</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="3">3</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="4">4</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="5">5</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="6">6</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="7">7</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="8">8</button>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="9">9</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="0" data-tv-pin-digit="1">1</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="1" data-tv-pin-digit="2">2</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="2" data-tv-pin-digit="3">3</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="3" data-tv-pin-digit="4">4</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="4" data-tv-pin-digit="5">5</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="5" data-tv-pin-digit="6">6</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="6" data-tv-pin-digit="7">7</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="7" data-tv-pin-digit="8">8</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="8" data-tv-pin-digit="9">9</button>
           <span class="tv-pin-key tv-pin-key-empty" aria-hidden="true"></span>
-          <button class="tv-pin-key" type="button" data-tv-pin-digit="0">0</button>
-          <button class="tv-pin-key tv-pin-key-delete" id="tvPinDelete" type="button" aria-label="Apagar ultimo digito">&#8592;</button>
+          <button class="tv-pin-key" type="button" data-tv-pin-index="9" data-tv-pin-digit="0">0</button>
+          <button class="tv-pin-key tv-pin-key-delete" data-tv-pin-index="10" id="tvPinDelete" type="button" aria-label="Apagar ultimo digito">&#8592;</button>
         </div>
         <p class="tv-pin-message" id="tvPinMessage" aria-live="polite">Aguardando PIN</p>
       </div>
@@ -9590,12 +9590,13 @@ function setAppVersion() {
         "0": "marketing",
       };
       const tvNavigationKeyDownAt = {};
-      const TV_POINTER_NAV_THRESHOLD = 6;
-      const TV_POINTER_IDLE_MS = 180;
+      const TV_POINTER_NAV_THRESHOLD = 4;
+      const TV_POINTER_IDLE_MS = 120;
       const TV_POINTER_CLICKS_REQUIRED = 3;
       const TV_POINTER_CLICK_WINDOW_MS = 2500;
-      const TV_POINTER_MAX_GESTURE_MS = 450;
-      const TV_POINTER_MAX_GESTURE_DISTANCE = 90;
+      const TV_POINTER_MAX_GESTURE_MS = 650;
+      const TV_POINTER_MAX_GESTURE_DISTANCE = 160;
+      const TV_POINTER_DUPLICATE_EVENT_MS = 24;
       const TV_SIDEBAR_HOT_EDGE_PX = 4;
       const TV_SIDEBAR_WIDTH_PX = 250;
       let tvPointerLastX = null;
@@ -9608,6 +9609,10 @@ function setAppVersion() {
       let tvPointerClickDirection = 0;
       let tvPointerClickCount = 0;
       let tvPointerLastClickAt = 0;
+      let tvPointerLastEventType = "";
+      let tvPointerLastEventX = null;
+      let tvPointerLastEventY = null;
+      let tvPointerLastEventAt = 0;
       let tvSidebarHideTimer = 0;
       function navigateTv(direction) {
         if (!window.__DASHBOARD_TV_MODE) return;
@@ -9688,7 +9693,7 @@ function setAppVersion() {
             tvPointerClickCount = 0;
             tvPointerClickDirection = 0;
           }
-        } else {
+        } else if (Date.now() - tvPointerLastClickAt > TV_POINTER_CLICK_WINDOW_MS) {
           tvPointerClickCount = 0;
           tvPointerClickDirection = 0;
         }
@@ -9704,6 +9709,15 @@ function setAppVersion() {
         const now = Date.now();
         const x = Number(event.clientX || 0);
         const y = Number(event.clientY || 0);
+        const isDuplicate = event.type !== tvPointerLastEventType
+          && x === tvPointerLastEventX
+          && y === tvPointerLastEventY
+          && now - tvPointerLastEventAt <= TV_POINTER_DUPLICATE_EVENT_MS;
+        tvPointerLastEventType = event.type;
+        tvPointerLastEventX = x;
+        tvPointerLastEventY = y;
+        tvPointerLastEventAt = now;
+        if (isDuplicate) return;
         if (tvPointerLastX === null || now - tvPointerLastAt > TV_POINTER_IDLE_MS) {
           resetTvPointerGesture();
           tvPointerLastX = x;
@@ -9759,7 +9773,10 @@ function setAppVersion() {
             navigateTv(1);
           }
         }, true);
-        document.addEventListener(window.PointerEvent ? "pointermove" : "mousemove", handleTvPointerNavigation, true);
+        document.addEventListener("mousemove", handleTvPointerNavigation, true);
+        if (window.PointerEvent) {
+          document.addEventListener("pointermove", handleTvPointerNavigation, true);
+        }
       }
 
       const TV_DIAGNOSTIC_EVENT_LIMIT = 40;
@@ -10034,6 +10051,7 @@ function setAppVersion() {
           card?.classList.remove("is-error");
           if (message) message.textContent = "Aguardando PIN";
           tvPinBusy = false;
+          focusTvPinKey(0);
         }, 650);
       }
 
@@ -10050,16 +10068,29 @@ function setAppVersion() {
         renderTvPin();
       }
 
+      function focusTvPinKey(index) {
+        const keys = Array.from(document.querySelectorAll("#tvPinGate [data-tv-pin-index]"));
+        if (!keys.length) return;
+        const safeIndex = Math.max(0, Math.min(keys.length - 1, Number(index) || 0));
+        keys[safeIndex].focus();
+      }
+
       function handleTvPinKeydown(event) {
         const digit = tvPinDigitFromEvent(event);
         const isDelete = event.key === "Backspace" || event.key === "Delete" || event.keyCode === 8 || event.keyCode === 46;
-        if (!digit && !isDelete && event.key !== "Enter" && event.keyCode !== 13) return;
+        const key = event.key || ({ 13: "Enter", 37: "ArrowLeft", 38: "ArrowUp", 39: "ArrowRight", 40: "ArrowDown" })[event.keyCode];
+        const directions = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 };
+        if (!digit && !isDelete && key !== "Enter" && !directions[key]) return;
         event.preventDefault();
         event.stopPropagation();
-        if (digit) {
+        if (directions[key]) {
+          const activeIndex = Number(document.activeElement?.dataset?.tvPinIndex || 0);
+          focusTvPinKey(activeIndex + directions[key]);
+        } else if (digit) {
           tvPinKeyDownAt[digit] = Date.now();
           addTvPinDigit(digit);
         } else if (isDelete) deleteTvPinDigit();
+        else if (document.activeElement?.dataset?.tvPinIndex) document.activeElement.click();
         else validateTvPin();
       }
 
@@ -10085,6 +10116,7 @@ function setAppVersion() {
         document.addEventListener("keydown", handleTvPinKeydown, true);
         document.addEventListener("keyup", handleTvPinKeyup, true);
         renderTvPin();
+        window.setTimeout(() => focusTvPinKey(0), 0);
         return true;
       }
 

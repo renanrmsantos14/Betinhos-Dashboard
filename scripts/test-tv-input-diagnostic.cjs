@@ -18,6 +18,9 @@ assert.match(html, /TV_NUMERIC_NAV\s*=\s*\{/i, "Atalhos numericos da TV ausentes
 assert.match(html, /"1":\s*"resumo"/i, "Atalho 1 para Resumo ausente.");
 assert.match(html, /"0":\s*"marketing"/i, "Atalho 0 para Marketing ausente.");
 assert.match(html, /function handleTvPointerNavigation\(/i, "Captura de pointermove ausente.");
+assert.match(html, /addEventListener\("mousemove",\s*handleTvPointerNavigation/i, "Fallback mousemove sempre ativo ausente.");
+assert.match(html, /addEventListener\("pointermove",\s*handleTvPointerNavigation/i, "Captura pointermove ausente.");
+assert.match(html, /TV_POINTER_DUPLICATE_EVENT_MS/i, "Deduplicacao entre pointermove e mousemove ausente.");
 assert.match(html, /TV_POINTER_CLICKS_REQUIRED\s*=\s*3/i, "Regra de tres rajadas ausente.");
 assert.match(html, /TV_POINTER_MAX_GESTURE_MS/i, "Movimento segurado nao possui limite de duracao.");
 assert.match(html, /function finishTvPointerGesture\(/i, "Finalizacao da rajada de movimento ausente.");
