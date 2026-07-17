@@ -8421,7 +8421,19 @@ function setAppVersion() {
           normL(fv(r, F.res.fatStatus)).includes("pend") &&
           !r._opId
         ).length;
-        const dqSemMotorista = rv.filter((r) => afterOperationalStart(r) && r._mot === "Sem motorista").length;
+        const statusSemMotorista = new Set([202410001, 202410005, 202410008]);
+        const inicioSemMotorista = new Date("2026-04-10T00:00:00-03:00").getTime();
+        const agoraSemMotorista = Date.now();
+        const dqSemMotorista = rv.filter((r) => {
+          const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
+          return (
+            !r._motId &&
+            Number.isFinite(saida) &&
+            saida >= inicioSemMotorista &&
+            saida <= agoraSemMotorista &&
+            statusSemMotorista.has(Number(r[F.res.status]))
+          );
+        }).length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
         setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veículo", "OS sem veículo", dqSemVeiculo ? "warn" : "ok");
         setExecAlert("dqSemOP", dqSemOP, "Sem OP", "sem financeiro vinculado", dqSemOP ? "warn" : "ok");
