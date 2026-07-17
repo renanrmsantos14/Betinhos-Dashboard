@@ -3540,6 +3540,97 @@
       .tv-no-flex-gap .quick-filters > * {
         margin: 3px;
       }
+      /* Tizen/Chrome legado: nao depender de flex-gap, gap moderno ou tamanhos intrinsecos. */
+      .tv-browser .page {
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      .tv-browser .kpi-row,
+      .tv-browser .exec-alerts,
+      .tv-browser .cgrid,
+      .tv-browser .meta-kpi-pills {
+        grid-gap: 12px;
+      }
+      .tv-browser .content,
+      .tv-browser .page,
+      .tv-browser .dashboard-section,
+      .tv-browser .filter-body-inner {
+        gap: 0;
+      }
+      .tv-browser .content > * + *,
+      .tv-browser .page.on > * + *,
+      .tv-browser .dashboard-section > * + *,
+      .tv-browser .filter-body-inner > * + * {
+        margin-top: 16px;
+      }
+      .tv-browser .filter-head-actions .quick-filters,
+      .tv-browser .filter-body .quick-filters {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -4px;
+        max-width: 100%;
+        overflow: visible;
+      }
+      .tv-browser .quick-filters > * {
+        flex: 0 0 auto;
+        margin: 4px;
+        max-width: calc(100% - 8px);
+      }
+      .tv-browser .filter-head-actions .filter-clear {
+        display: inline-flex;
+        max-width: 100%;
+      }
+      .tv-browser .filter-row {
+        align-items: flex-end;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        margin: -5px;
+        max-width: calc(100% + 10px);
+        overflow: visible;
+        width: calc(100% + 10px);
+      }
+      .tv-browser .filter-row .fg {
+        box-sizing: border-box;
+        flex: 1 1 calc(25% - 10px);
+        margin: 5px;
+        max-width: calc(25% - 10px);
+        min-width: 180px;
+      }
+      .tv-browser .filter-row .fg input,
+      .tv-browser .filter-row .ms-wrap,
+      .tv-browser .filter-row .ms-btn {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 0;
+        width: 100%;
+      }
+      .tv-browser .filter-row .ms-dd {
+        box-sizing: border-box;
+        left: 0;
+        max-width: 100%;
+        right: 0;
+        width: 100%;
+      }
+      .tv-browser .cc,
+      .tv-browser .tc,
+      .tv-browser .metric-table-wrap,
+      .tv-browser .chart-box {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 0;
+      }
+      .tv-browser .tc-wrap,
+      .tv-browser .metric-table-wrap {
+        overflow-x: auto;
+      }
+      .tv-browser .tb-brand {
+        min-width: 0;
+      }
+      .tv-browser .tb-right {
+        flex: 0 0 auto;
+      }
       .tv-diagnostic-nav {
         display: none;
       }

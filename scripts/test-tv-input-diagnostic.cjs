@@ -43,6 +43,11 @@ assert.match(html, /function updateTvCurrentMenu\(/i, "Sincronizacao do indicado
 assert.match(html, /updateTvCurrentMenu\(id\)/i, "Navegacao nao atualiza o indicador da aba atual.");
 assert.match(html, /\.tv-browser:not\(\.tv-sidebar-revealed\)\s+\.tv-current-menu\s*\{[^}]*display:\s*flex/i, "Indicador nao aparece com o menu recolhido.");
 assert.match(html, /\.tv-browser\.tv-sidebar-revealed\s+\.tv-current-menu\s*\{[^}]*display:\s*none/i, "Indicador nao some com o menu aberto.");
+assert.match(html, /\.tv-browser\s+\.filter-row\s+\.fg\s*\{[^}]*max-width:\s*calc\(25%\s*-\s*10px\)/i, "Campos do filtro nao possuem largura segura na TV.");
+assert.match(html, /\.tv-browser\s+\.filter-row\s+\.ms-wrap,[\s\S]*?\{[^}]*width:\s*100%/i, "Multiselect do filtro pode ultrapassar o bloco.");
+assert.match(html, /\.tv-browser\s+\.quick-filters\s*>\s*\*\s*\{[^}]*margin:/i, "Botoes do filtro dependem de flex gap na TV.");
+assert.match(html, /\.tv-browser\s+\.cgrid[\s\S]*?grid-gap:/i, "Grids da TV nao possuem fallback de espacamento.");
+assert.match(html, /\.tv-browser\s+\.page\s*\{[^}]*min-width:\s*0[^}]*max-width:\s*100%/i, "Paginas da TV nao possuem contencao horizontal.");
 assert.doesNotMatch(html, /Object\.fromEntries\(/i, "Logger ainda usa Object.fromEntries, indisponivel no Chrome 63 da TV.");
 
 console.log("Dashboard TV: diagnostico de controle e App Log validados.");
