@@ -5732,13 +5732,18 @@
 
         // Multas
         for (let i = 0; i < 12; i++) {
-          const st = r(["Notificar o condutor", "Pago", "Concluído"]);
+          const st = r([202410000, 202410006, 202410005]);
+          const stLabel = {
+            202410000: "Notificar o Condutor",
+            202410005: "Finalizado",
+            202410006: "Pago",
+          }[st];
           const tipoMulta = r(tiposMulta);
           mock.multas.push({
             cr40f_multasesid: `mock-mul-${i}`,
             cr40f_dataehorario: dt(rand(0, 120)),
             cr40f_status: st,
-            "cr40f_status@OData.Community.Display.V1.FormattedValue": st,
+            "cr40f_status@OData.Community.Display.V1.FormattedValue": stLabel,
             _cr40f_codigodainfracao_value: `mock-inf-${i % tiposMulta.length}`,
             "_cr40f_codigodainfracao_value@OData.Community.Display.V1.FormattedValue": tipoMulta,
             _cr40f_motorista_value: `mock-func-${rand(0, 9)}`,
@@ -6237,14 +6242,9 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
-      const getMultaStatusLabel = (r) =>
-        String(
-          r?.[`${F.mul.status}@OData.Community.Display.V1.FormattedValue`] ??
-            r?.[F.mul.status] ??
-            "",
-        );
+      const DV_STATUS_MUL_NOTIFICAR = 202410000;
       const isMultaPendente = (r) =>
-        normL(getMultaStatusLabel(r)) === normL("Notificar o condutor");
+        Number(r?.[F.mul.status]) === DV_STATUS_MUL_NOTIFICAR;
       const pad2 = (n) => String(n).padStart(2, "0");
       const ymd = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
       const parseBRDate = (s) => {
