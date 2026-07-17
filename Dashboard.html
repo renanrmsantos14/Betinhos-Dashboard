@@ -3902,10 +3902,17 @@
         line-height: 1.1;
       }
       #page-servicos .service-summary-card {
+        min-height: 82px;
+        height: 82px;
         border-color: var(--b1);
+        background: var(--surf);
+        overflow: hidden;
       }
-      #page-servicos .service-summary-card .kpi-main {
+     #page-servicos .service-summary-card .kpi-main {
         align-items: center;
+       min-width: 0;
+       padding-right: 18px;
+       border-right: 1px solid var(--b1);
       }
       #page-servicos .service-summary-card .kpi-lbl {
         color: var(--t3);
@@ -3917,20 +3924,29 @@
         letter-spacing: -0.045em;
       }
       #page-servicos .service-summary-card .metric-list {
-        padding: 5px 10px;
-        border: 1px solid var(--b1);
-        border-radius: 10px;
-        background: var(--surf2);
+        min-width: 0;
+        padding: 4px 10px;
+       border: 1px solid var(--b1);
+       border-radius: 10px;
+       background: var(--kpi-soft);
       }
-      #page-servicos .service-summary-card .metric-line {
-        min-height: 17px;
-        padding: 2px 0;
+     #page-servicos .service-summary-card .metric-line {
+       min-height: 17px;
+       padding: 2px 0;
+       color: var(--t2);
       }
       #page-servicos .service-summary-card .metric-line + .metric-line {
         border-top: 1px solid var(--b1);
       }
-      #page-servicos .service-summary-card .metric-line b {
-        font-weight: 800;
+     #page-servicos .service-summary-card .metric-line b {
+       font-weight: 800;
+       color: var(--t1);
+      }
+      #page-servicos .service-summary-card.kpi-tone-blue .metric-line b {
+        color: var(--blue);
+      }
+      #page-servicos .service-summary-card.kpi-tone-green .metric-line b {
+        color: var(--green);
       }
       @media (max-width: 700px) {
         #page-servicos .kpi-row.kpi-2 .kpi.executive {
@@ -4634,8 +4650,8 @@
           </template>
           <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores de servi&ccedil;os">
             <div class="kpi-row kpi-2">
-              <div class="kpi executive kpi-tone-blue"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Opera&ccedil;&atilde;o</div><div class="kpi-val" id="sOpTotal">&mdash;</div></div></div><div class="metric-list" id="sOpMix"></div></div>
-              <div class="kpi executive kpi-tone-green"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Financeiro</div><div class="kpi-val sm" id="sFinTotal">&mdash;</div></div></div><div class="metric-list" id="sFinMix"></div></div>
+              <div class="kpi executive kpi-tone-blue service-summary-card"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Opera&ccedil;&atilde;o</div><div class="kpi-val" id="sOpTotal">&mdash;</div></div></div><div class="metric-list" id="sOpMix"></div></div>
+              <div class="kpi executive kpi-tone-green service-summary-card"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Financeiro</div><div class="kpi-val sm" id="sFinTotal">&mdash;</div></div></div><div class="metric-list" id="sFinMix"></div></div>
             </div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de servi&ccedil;os">
