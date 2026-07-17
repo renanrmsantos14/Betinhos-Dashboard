@@ -1513,14 +1513,7 @@
         box-shadow: var(--s1);
         min-width: 0;
         max-width: 100%;
-        transition:
-          border-color 140ms ease;
         position: relative;
-      }
-      @media (hover: hover) and (pointer: fine) {
-        .cc:hover {
-          border-color: var(--b2);
-        }
       }
       .chart-empty {
         position: absolute;
@@ -3041,11 +3034,6 @@
       .mobile-nav-item:active,
       .mobile-more-item:active { transform: scale(0.97); }
 
-      @media (hover: hover) and (pointer: fine) {
-        .kpi:hover,
-        .cc:hover { border-color: var(--b2); }
-      }
-
       @media (max-width: 1120px) {
         .content { padding: 20px; }
       }
@@ -3087,12 +3075,6 @@
           scroll-behavior: auto !important;
           transition-duration: .01ms !important;
         }
-      }
-      .kpi,
-      .cc,
-      .tc,
-      .exec-alert {
-        cursor: pointer;
       }
       .card-detail-dialog {
         width: 100vw;
