@@ -3908,11 +3908,15 @@
         background: var(--surf);
         overflow: hidden;
       }
-     #page-servicos .service-summary-card .kpi-main {
+      #page-servicos .service-summary-card .kpi-main {
         align-items: center;
-       min-width: 0;
-       padding-right: 18px;
-       border-right: 1px solid var(--b1);
+       height: 100%;
+        min-width: 0;
+        padding-right: 18px;
+        border-right: 1px solid var(--b1);
+      }
+      #page-servicos .service-summary-card .kpi-left {
+        justify-content: center;
       }
       #page-servicos .service-summary-card .kpi-lbl {
         color: var(--t3);
@@ -3925,9 +3929,10 @@
       }
       #page-servicos .service-summary-card .metric-list {
         min-width: 0;
+       align-self: center;
         padding: 4px 10px;
-       border: 1px solid var(--b1);
-       border-radius: 10px;
+        border: 1px solid var(--b1);
+        border-radius: 10px;
        background: var(--kpi-soft);
       }
      #page-servicos .service-summary-card .metric-line {
