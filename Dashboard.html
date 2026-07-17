@@ -2816,7 +2816,7 @@
         align-items: flex-start;
         justify-content: space-between;
         gap: 16px;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
       }
       .card-detail-eyebrow {
         margin: 0 0 4px;
@@ -2844,6 +2844,60 @@
         font-size: 24px;
         line-height: 1;
         transition: transform 150ms ease, border-color 150ms ease;
+      }
+      .card-detail-filter {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 10px;
+        margin-bottom: 24px;
+        padding: 14px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        background: var(--surf);
+        box-shadow: var(--s1);
+      }
+      .card-detail-filter-label {
+        display: grid;
+        gap: 5px;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+      .card-detail-filter input {
+        min-height: 36px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r8);
+        padding: 0 10px;
+        background: var(--bg);
+        color: var(--t1);
+        font: inherit;
+      }
+      .card-detail-filter button {
+        min-height: 36px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r8);
+        padding: 0 12px;
+        background: var(--surf);
+        color: var(--t2);
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
+      }
+      .card-detail-filter .card-detail-filter-apply {
+        border-color: var(--blue);
+        background: var(--blue);
+        color: #fff;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .card-detail-filter button:hover {
+          border-color: var(--blue);
+          transform: translateY(-1px);
+        }
       }
       @media (hover: hover) and (pointer: fine) {
         .card-detail-close:hover {
@@ -2968,6 +3022,9 @@
         .card-detail-panel { padding: 20px 16px; }
         .card-detail-layout { grid-template-columns: 1fr; }
         .card-detail-chart-wrap { height: 320px; }
+        .card-detail-filter { align-items: stretch; }
+        .card-detail-filter-label { flex: 1 1 140px; }
+        .card-detail-filter button { flex: 1 1 120px; }
       }
     </style>
   </head>
@@ -4337,6 +4394,16 @@
           </div>
           <button id="cardDetailClose" class="card-detail-close" type="button" aria-label="Fechar detalhes">&times;</button>
         </header>
+        <div class="card-detail-filter" aria-label="Filtrar detalhamento por periodo">
+          <label class="card-detail-filter-label">Inicio
+            <input id="cardDetailStart" type="date" />
+          </label>
+          <label class="card-detail-filter-label">Ate
+            <input id="cardDetailEnd" type="date" />
+          </label>
+          <button id="cardDetailApplyFilter" class="card-detail-filter-apply" type="button">Aplicar periodo</button>
+          <button id="cardDetailClearFilter" type="button">Limpar periodo</button>
+        </div>
         <div id="cardDetailBody" class="card-detail-body"></div>
       </div>
     </dialog>
@@ -6828,16 +6895,44 @@ const monthsLabelsAll = [
         const title = document.getElementById("cardDetailTitle");
         const body = document.getElementById("cardDetailBody");
         const close = document.getElementById("cardDetailClose");
-        if (!dialog || !title || !body || !close) return;
+        const start = document.getElementById("cardDetailStart");
+        const end = document.getElementById("cardDetailEnd");
+        const apply = document.getElementById("cardDetailApplyFilter");
+        const clear = document.getElementById("cardDetailClearFilter");
+        if (!dialog || !title || !body || !close || !start || !end || !apply || !clear) return;
+
+        let activeCard = null;
+        const getCardType = (card) => ["kpi", "cc", "tc", "exec-alert"].find((type) => card.classList.contains(type));
+        const renderActiveCard = () => {
+          if (!activeCard) return;
+          const selector = `.${activeCard.type}`;
+          const card = [...document.querySelectorAll(selector)].find((item) => getCardDetailTitle(item) === activeCard.title);
+          if (!card) return;
+          title.textContent = getCardDetailTitle(card);
+          body.replaceChildren(buildCardDetail(card));
+        };
+        const syncAndApplyPeriod = () => {
+          document.getElementById("fS").value = start.value;
+          document.getElementById("fE").value = end.value;
+          applyF(true);
+          renderActiveCard();
+        };
 
         const closeDialog = () => dialog.close();
         close.addEventListener("click", closeDialog);
+        apply.addEventListener("click", syncAndApplyPeriod);
+        clear.addEventListener("click", () => {
+          start.value = "";
+          end.value = "";
+          syncAndApplyPeriod();
+        });
         dialog.addEventListener("click", (event) => {
           if (event.target === dialog) closeDialog();
         });
         dialog.addEventListener("close", () => {
           destroyDetailCharts();
           body.replaceChildren();
+          activeCard = null;
         });
 
         document.addEventListener("click", (event) => {
@@ -6846,8 +6941,10 @@ const monthsLabelsAll = [
           if (target.closest("a, button, input, select, textarea, th, [contenteditable='true']")) return;
           const card = target.closest(".kpi, .cc, .tc, .exec-alert");
           if (!card) return;
-          title.textContent = getCardDetailTitle(card);
-          body.replaceChildren(buildCardDetail(card));
+          activeCard = { title: getCardDetailTitle(card), type: getCardType(card) };
+          start.value = document.getElementById("fS").value;
+          end.value = document.getElementById("fE").value;
+          renderActiveCard();
           dialog.showModal();
         });
       }
