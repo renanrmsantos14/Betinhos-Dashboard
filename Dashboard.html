@@ -4481,7 +4481,7 @@
             <p class="section-label">Opera&ccedil;&atilde;o</p>
             <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
-            <div class="exec-alerts"><div class="exec-alert" id="dqSemPreco"><div><strong>&mdash;</strong><span>Sem pre&ccedil;o</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises executivas">
           <div class="cgrid g2">
@@ -7774,7 +7774,7 @@ function setAppVersion() {
             <div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div>
           </div>
           <div class="exec-alerts">
-            <div class="exec-alert" id="dqSemPreco"><div><strong>&mdash;</strong><span>Sem preco</span></div><b>Dados</b></div>
+            <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem veiculo</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div>
@@ -8412,11 +8412,11 @@ function setAppVersion() {
         const programadosPct = rv.length ? ((programados.length / rv.length) * 100).toFixed(0) : 0;
         setExecAlert("alertProgramados", programados.length, "Programados", programados.length ? `${programadosPct}% do período` : "Sem agenda", programados.length ? "ok" : "warn");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
-        const dqSemPreco = rv.filter((r) => !r[F.res.lookupPreco]).length;
+        const dqSemVeiculo = rv.filter((r) => r._mot !== "Sem motorista" && !r[F.res.veiculo]).length;
         const dqSemOP = rv.filter((r) => !r._opId).length;
         const dqSemMotorista = rv.filter((r) => afterOperationalStart(r) && r._mot === "Sem motorista").length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
-        setExecAlert("dqSemPreco", dqSemPreco, "Sem preco", "sem tabela preco", dqSemPreco ? "warn" : "ok");
+        setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veiculo", "motorista sem veiculo", dqSemVeiculo ? "warn" : "ok");
         setExecAlert("dqSemOP", dqSemOP, "Sem OP", "sem financeiro vinculado", dqSemOP ? "warn" : "ok");
         setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", dqSemMotorista ? "Corrigir" : "OK", dqSemMotorista ? "warn" : "ok");
         setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", dqSemCliente ? "Corrigir" : "OK", dqSemCliente ? "warn" : "ok");
