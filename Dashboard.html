@@ -5732,7 +5732,7 @@
 
         // Multas
         for (let i = 0; i < 12; i++) {
-          const st = r(["Pendente", "Pago", "Indicado"]);
+          const st = r(["Notificar o condutor", "Pago", "Concluído"]);
           const tipoMulta = r(tiposMulta);
           mock.multas.push({
             cr40f_multasesid: `mock-mul-${i}`,
@@ -6237,6 +6237,14 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
+      const getMultaStatusLabel = (r) =>
+        String(
+          r?.[`${F.mul.status}@OData.Community.Display.V1.FormattedValue`] ??
+            r?.[F.mul.status] ??
+            "",
+        );
+      const isMultaPendente = (r) =>
+        normL(getMultaStatusLabel(r)) === normL("Notificar o condutor");
       const pad2 = (n) => String(n).padStart(2, "0");
       const ymd = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
       const parseBRDate = (s) => {
@@ -8317,13 +8325,7 @@ function setAppVersion() {
         html("kManD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta"><span class="bk-label">CUSTO</span><span class="bk-val">${brlS(custoTotal)}</span><span class="bk-pct ${custoTotal <= fat * 0.1 ? "du" : "dd"}">${cfPctRec}% rec</span></span>`);
         set("kMul", dvDisabled ? "—" : VW.multas.length);
-        const mulFv2 = (r, f) =>
-          r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
-        const mulPen2 = VW.multas.filter(
-          (r) =>
-            stL(String(mulFv2(r, F.mul.status) || "")).includes("pend") ||
-            stL(String(mulFv2(r, F.mul.status) || "")).includes("indicad"),
-        );
+        const mulPen2 = VW.multas.filter(isMultaPendente);
         const mulPenPct = VW.multas.length ? (mulPen2.length / VW.multas.length * 100).toFixed(0) : 0;
         html("kMulD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${mulPen2.length > 0 ? " below" : ""}"><span class="bk-label">PEND</span><span class="bk-val">${mulPen2.length}</span><span class="bk-pct">${mulPenPct}%</span></span>`);
@@ -9254,11 +9256,7 @@ function setAppVersion() {
         const muls = dvDisabled ? [] : VW.multas;
         const mulFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
-        const mulPen = muls.filter(
-          (r) =>
-            stL(String(mulFv(r, F.mul.status) || "")).includes("pend") ||
-            stL(String(mulFv(r, F.mul.status) || "")).includes("indicad"),
-        );
+        const mulPen = muls.filter(isMultaPendente);
         const mulRes = muls.filter(
           (r) =>
             stL(String(mulFv(r, F.mul.status) || "")).includes("pago") ||
