@@ -1485,6 +1485,14 @@
       .g2 {
         grid-template-columns: 1fr 1fr;
       }
+      .dashboard-section--analysis > .cgrid.g2:first-child > .cc {
+        display: flex;
+        flex-direction: column;
+      }
+      .dashboard-section--analysis > .cgrid.g2:first-child > .cc:first-child > #cTotalProd {
+        flex: 1 1 auto;
+        min-height: 180px;
+      }
       .g1 {
         grid-template-columns: 1fr;
       }
@@ -2026,7 +2034,7 @@
         left: 0;
         background: rgba(240, 242, 245, 0.85);
         backdrop-filter: none;
-        z-index: 500;
+        z-index: 6000;
         align-items: center;
         justify-content: center;
       }
@@ -2251,7 +2259,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 450;
+        z-index: 6000;
         place-items: end center;
         padding: 12px 12px 0;
         background: rgba(15, 17, 23, 0.28);
@@ -3079,7 +3087,7 @@
       .cc,
       .tc,
       .exec-alert {
-        cursor: zoom-in;
+        cursor: pointer;
       }
       .card-detail-dialog {
         width: 100vw;
@@ -6460,11 +6468,16 @@
           participationByValue = false,
           limit = 10,
         } = options;
-        const tableRows = rows.slice(0, limit);
-        const hasValue = tableRows.some((r) => r.value !== undefined);
         const partBase = participationByValue
           ? rows.reduce((s, r) => s + Number(r.value || 0), 0)
           : total;
+        const tableRows = topByShare(
+          rows,
+          partBase,
+          (r) => participationByValue ? Number(r.value || 0) : Number(r.qtd || 0),
+          limit,
+        );
+        const hasValue = tableRows.some((r) => r.value !== undefined);
         const cols = hasValue ? 4 : 3;
         const mobileRows = tableRows
           .map((r, i) => {
@@ -6509,8 +6522,9 @@
           if (typeof av === "string") return st.asc ? av.localeCompare(bv) : bv.localeCompare(av);
           return st.asc ? av - bv : bv - av;
         });
-        const body = sortedRows.length
-          ? sortedRows
+        const shareRows = topByShare(sortedRows, totalFat, (r) => r.fat);
+        const body = shareRows.length
+          ? shareRows
               .map((r, i) => {
                 const pctQtd = totalQtd ? (r.qtd / totalQtd) * 100 : 0;
                 const pctFat = totalFat ? (r.fat / totalFat) * 100 : 0;
@@ -6518,8 +6532,8 @@
               })
               .join("")
           : emptyRow(4);
-        const mobileBody = sortedRows.length
-          ? sortedRows
+        const mobileBody = shareRows.length
+          ? shareRows
               .map((r, i) => {
                 const pctQtd = totalQtd ? (r.qtd / totalQtd) * 100 : 0;
                 const pctFat = totalFat ? (r.fat / totalFat) * 100 : 0;
@@ -6721,6 +6735,12 @@
           acc += valueFn(row);
         }
         return out;
+      }
+      function topByShare(rows, total, valueFn, max = 10) {
+        const ranked = rows.slice(0, max);
+        if (!total || ranked.length <= 3) return ranked;
+        const eligible = ranked.filter((row) => (valueFn(row) / total) * 100 > 10);
+        return eligible.length >= 3 ? eligible : ranked.slice(0, 3);
       }
 
       // ════════════════════════════════════════════
@@ -7908,6 +7928,27 @@ function setAppVersion() {
       }
 
       function getCardDetailNotes(card) {
+        const title = getCardDetailTitle(card);
+        if (/cnh/i.test(title)) {
+          const total = DB.funcionarios.length;
+          const semValidade = DB.funcionarios.filter((r) => !r[F.fun.cnh]).length;
+          const vencidas = DB.funcionarios.filter((r) => {
+            if (!r[F.fun.cnh]) return false;
+            return new Date(r[F.fun.cnh]) < new Date();
+          }).length;
+          const proximas = DB.funcionarios.filter((r) => {
+            if (!r[F.fun.cnh]) return false;
+            const dias = (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24);
+            return dias >= 0 && dias < 90;
+          }).length;
+          return [
+            `Total de motoristas: ${total}`,
+            `Sem validade cadastrada: ${semValidade}`,
+            `CNH vencida: ${vencidas}`,
+            `Vence em até 90 dias: ${proximas}`,
+            "O indicador soma CNHs sem validade, vencidas ou com vencimento nos próximos 90 dias.",
+          ];
+        }
         const seen = new Set();
         return [...card.querySelectorAll(".cc2-sub, .tc-meta, .kpi-delta, .metric-list, .badge-kpi, .metric-line, .exec-alert b")]
           .map((element) => element.textContent.replace(/\s+/g, " ").trim())
@@ -8300,15 +8341,13 @@ function setAppVersion() {
         html("kMulD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${mulPen2.length > 0 ? " below" : ""}"><span class="bk-label">PEND</span><span class="bk-val">${mulPen2.length}</span><span class="bk-pct">${mulPenPct}%</span></span>`);
         set("kSemVal", dvDisabled ? "—" : semValor.length);
-        const semValPct = rv.length ? (semValor.length / rv.length * 100).toFixed(1) : 0;
         const projecao = dvDisabled ? 0 : curTk * semValor.length;
         const recebimentoStats = getRecebimentoStats(rv);
         const recebidoProduzido = recebimentoStats.recebido;
         const baseRecebimento = recebimentoStats.base;
         const recebimentoPct = recebimentoStats.percentual;
         html("kSemValD", dvDisabled ? "" :
-          `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">%</span><span class="bk-val">${semValor.length}</span><span class="bk-pct">${semValPct}% tot</span></span>` +
-          (semValor.length > 0 ? `<span class="badge-kpi badge-meta"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span><span class="bk-pct">potencial</span></span>` : ""));
+          `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span></span>`);
         const aReceber = dvDisabled ? 0 :
           rv
             .filter(r => r._cpConcluida === true && r._opId && r[F.res.fatStatus] !== DV_STATUS_FAT_PAGO && r._valor > 0)
@@ -8649,7 +8688,7 @@ function setAppVersion() {
         document.getElementById("ind_st").innerHTML = dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${concluPct >= 75 ? "" : " below"}"><span class="bk-label">CONC</span><span class="bk-val">${conclServices.length}</span><span class="bk-pct">${concluPct}%</span></span>` +
           (cancelados.length ? `<span class="badge-kpi" style="background:var(--red-l);color:var(--red);"><span class="bk-label" style="background:var(--red);color:#fff;">CAN</span><span class="bk-val">${cancelados.length}</span><span class="bk-pct">${rv.length ? (cancelados.length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
-        const stRows = takeUntilShare(stKeys.filter((k) => rv.length > 0 && (bySt[k].length / rv.length) * 100 > 10), rv.length, (k) => bySt[k].length)
+        const stRows = topByShare(stKeys, rv.length, (k) => bySt[k].length)
           .map((k) => ({ status: k, qtd: bySt[k].length }));
         html("tblStatusResumo", dvDisabled ? "" : `
           <table><thead><tr><th>Status</th><th class="r">Qt de servi&ccedil;os</th><th>Participa&ccedil;&atilde;o</th></tr></thead>
@@ -8696,10 +8735,9 @@ function setAppVersion() {
         });
 
         // Top clientes
-        const top10v = Object.entries(byCli)
+        const top10vRanked = Object.entries(byCli)
           .sort((a, b) => b[1].length - a[1].length)
-          .filter(([, rows]) => rv.length > 0 && (rows.length / rv.length) * 100 > 10)
-          .slice(0, 10);
+        const top10v = topByShare(top10vRanked, rv.length, ([, rows]) => rows.length);
         if (top10v.length > 0) {
           const t1vPct = rv.length ? (top10v[0][1].length / rv.length * 100).toFixed(1) : 0;
           set("v_topVol", dvDisabled ? "—" : top10v[0][1].length.toLocaleString("pt-BR"));
@@ -8714,9 +8752,9 @@ function setAppVersion() {
           rv.length,
           { label: "Cliente", countLabel: "Servi\u00e7os" },
         );
-        const top10f = Object.entries(byCli)
-          .sort((a, b) => sumV(b[1]) - sumV(a[1]))
-          .slice(0, 10);
+        const top10fRanked = Object.entries(byCli)
+          .sort((a, b) => sumV(b[1]) - sumV(a[1]));
+        const top10f = topByShare(top10fRanked, fat, ([, rows]) => sumV(rows));
         if (top10f.length > 0) {
           const t1fPct = fat > 0 ? (sumV(top10f[0][1]) / fat * 100).toFixed(1) : 0;
           set("v_topFat", dvDisabled ? "—" : brlS(sumV(top10f[0][1])));
@@ -8725,7 +8763,7 @@ function setAppVersion() {
             `<span class="badge-kpi badge-meta"><span class="bk-label">1°</span><span class="bk-val">${brlS(sumV(top10f[0][1]))}</span><span class="bk-pct">${t1fPct}%</span></span>` +
             (top10f.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2°</span><span class="bk-val">${brlS(sumV(top10f[1][1]))}</span><span class="bk-pct">${fat > 0 ? (sumV(top10f[1][1])/fat*100).toFixed(1) : 0}%</span></span>` : "");
         }
-        const topFatRows = takeUntilShare(top10f, fat, ([, rows]) => sumV(rows));
+        const topFatRows = top10f;
         html("tblTopFatResumo", dvDisabled ? "" : `
           <table><thead><tr><th>Cliente</th><th class="r">Faturamento</th><th class="r">Ticket medio</th><th>Participacao</th></tr></thead>
           <tbody>${topFatRows.map(([nome, rows], i) => {
@@ -9257,14 +9295,14 @@ function setAppVersion() {
         const msK = Object.keys(byMulSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMulSt[b].length - byMulSt[a].length);
-        const mmK = Object.keys(byMulMot)
+        const mmKRanked = Object.keys(byMulMot)
           .filter((k) => k !== "__null__")
-          .sort((a, b) => byMulMot[b].length - byMulMot[a].length)
-          .slice(0, 10);
-        const mtK = Object.keys(byMulTipo)
+          .sort((a, b) => byMulMot[b].length - byMulMot[a].length);
+        const mmK = topByShare(mmKRanked, muls.length, (k) => byMulMot[k].length);
+        const mtKRanked = Object.keys(byMulTipo)
           .filter((k) => k !== "__null__")
-          .sort((a, b) => byMulTipo[b].length - byMulTipo[a].length)
-          .slice(0, 10);
+          .sort((a, b) => byMulTipo[b].length - byMulTipo[a].length);
+        const mtK = topByShare(mtKRanked, muls.length, (k) => byMulTipo[k].length);
         renderDistributionTable(
           "tblMulStatus",
           msK.map((k) => ({ label: k, qtd: byMulSt[k].length })),
