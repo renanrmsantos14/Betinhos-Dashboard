@@ -6484,7 +6484,8 @@
           limit,
         );
         const hasValue = tableRows.some((r) => r.value !== undefined);
-        const cols = hasValue ? 4 : 3;
+        const countIsParticipation = !hasValue && !participationByValue;
+        const cols = hasValue ? 4 : countIsParticipation ? 2 : 3;
         const mobileRows = tableRows
           .map((r, i) => {
             const qtd = Number(r.qtd || 0);
@@ -6501,7 +6502,8 @@
           .join("");
         const mobileMarkup = mobileRows || '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
         const valueHead = hasValue ? '<th class="r">' + valueLabel + '</th>' : '';
-        const tableHead = '<thead><tr><th>' + label + '</th><th class="r">' + countLabel + '</th>' + valueHead + '<th>Participa&ccedil;&atilde;o</th></tr></thead>';
+        const countHead = countIsParticipation ? '' : '<th class="r">' + countLabel + '</th>';
+        const tableHead = '<thead><tr><th>' + label + '</th>' + countHead + valueHead + '<th>Participa&ccedil;&atilde;o</th></tr></thead>';
         const tableBody = tableRows.map((r, i) => {
           const qtd = Number(r.qtd || 0);
           const value = Number(r.value || 0);
@@ -6514,7 +6516,8 @@
           const valueCell = hasValue
             ? '<td class="r em">' + (moneyValue ? brl(value) : value.toLocaleString("pt-BR")) + '</td>'
             : '';
-          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, labelMax)) + '</td><td class="r">' + metricSplit(`${countPct.toFixed(1)}%`, qtd.toLocaleString("pt-BR"), "r") + '</td>' + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
+          const countCell = countIsParticipation ? '' : '<td class="r">' + metricSplit(`${countPct.toFixed(1)}%`, qtd.toLocaleString("pt-BR"), "r") + '</td>';
+          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, labelMax)) + '</td>' + countCell + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
         }).join("") || emptyRow(cols);
         el.classList.add("has-mobile-list");
         el.innerHTML = '<table>' + tableHead + '<tbody>' + tableBody + '</tbody></table><div class="metric-mobile-list">' + mobileMarkup + '</div>';
@@ -8799,11 +8802,11 @@ function setAppVersion() {
         const stRows = topByShare(stKeys, rv.length, (k) => bySt[k].length)
           .map((k) => ({ status: k, qtd: bySt[k].length }));
         html("tblStatusResumo", dvDisabled ? "" : `
-          <table><thead><tr><th>Status</th><th class="r">Qt de servi&ccedil;os</th><th>Participa&ccedil;&atilde;o</th></tr></thead>
+          <table><thead><tr><th>Status</th><th>Participa&ccedil;&atilde;o</th></tr></thead>
           <tbody>${stRows.map((r, i) => {
             const p = rv.length ? (r.qtd / rv.length) * 100 : 0;
-            return `<tr><td>${badge(r.status)}</td><td class="r em">${r.qtd.toLocaleString("pt-BR")}</td><td>${progressCell(p, `${r.qtd.toLocaleString("pt-BR")} serv.`, PAL[i % PAL.length])}</td></tr>`;
-          }).join("") || emptyRow(3)}</tbody></table>
+            return `<tr><td>${badge(r.status)}</td><td>${progressCell(p, `${r.qtd.toLocaleString("pt-BR")} serv.`, PAL[i % PAL.length])}</td></tr>`;
+          }).join("") || emptyRow(2)}</tbody></table>
         `);
 
         // Custo frota
