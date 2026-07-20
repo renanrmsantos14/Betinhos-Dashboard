@@ -6057,6 +6057,7 @@
         veiculos: "cr40f_veiculoses",
         funcionarios: "cr40f_funcionarioses",
         marketing: "new_marketings",
+        infracoes: "cr40f_infracaodetransitos",
       };
       const F = {
         res: {
@@ -6088,6 +6089,11 @@
           placa: "cr40f_placa",
           status: "cr40f_status",
           tipo: "cr40f_codigodainfracao",
+        },
+        inf: {
+          id: "cr40f_infracaodetransitoid",
+          codigo: "cr40f_codigodainfracao",
+          descricao: "cr40f_descricaodainfracao",
         },
         trc: {
           data: "cr40f_dataehorariodatroca",
@@ -6136,6 +6142,7 @@
         veiculos: [],
         funcionarios: [],
         marketing: [],
+        infracoes: [],
       };
       let VW = { reservas: [], manutencoes: [], multas: [], trocas: [] };
       let charts = {},
@@ -6145,6 +6152,7 @@
         tblCache = {};
       let msState = { St: [], Cl: [], Mo: [], Tp: [] };
       let funcMapGlobal = new Map();
+      let infracaoMapGlobal = new Map();
 
       // ════════════════════════════════════════════
       // UTILS
@@ -6463,6 +6471,7 @@
           moneyValue = false,
           participationByValue = false,
           limit = 10,
+          labelMax = 28,
         } = options;
         const partBase = participationByValue
           ? rows.reduce((s, r) => s + Number(r.value || 0), 0)
@@ -6481,7 +6490,7 @@
             const value = Number(r.value || 0);
             const partValue = participationByValue ? value : qtd;
             const part = partBase ? (partValue / partBase) * 100 : 0;
-            const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, 28);
+            const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, labelMax);
             const valueStat = hasValue
               ? `<span><small>${valueLabel}</small><b>${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</b></span>`
               : "";
@@ -6899,6 +6908,7 @@ function setAppVersion() {
               loadVeiculos(),
               loadFuncionarios(),
               loadMarketing(),
+              loadInfracoes(),
             ]);
           }
           console.log("Dados carregados:", {
@@ -6913,6 +6923,7 @@ function setAppVersion() {
             marketing: DB.marketing.length,
           });
           buildFuncMap();
+          buildInfracaoMap();
           enrichReservas();
           populateFilters();
           if (silent) applyF(true);
@@ -6977,6 +6988,11 @@ function setAppVersion() {
           `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.tipo}_value,_${F.mul.mot}_value,_${F.mul.placa}_value&$orderby=${F.mul.data} desc`,
         );
       }
+      async function loadInfracoes() {
+        DB.infracoes = await fetchAll(
+          `${API()}/${T.infracoes}?$select=${F.inf.id},${F.inf.codigo},${F.inf.descricao}`,
+        );
+      }
       async function loadTrocas() {
         DB.trocas = await fetchAll(
           `${API()}/${T.trocas}?$select=${F.trc.data},${F.trc.status},${F.trc.tipo}&$orderby=${F.trc.data} desc`,
@@ -7011,6 +7027,17 @@ function setAppVersion() {
           const id = f["cr40f_funcionariosid"];
           if (id) funcMapGlobal.set(id.toLowerCase(), apelido);
           funcMapGlobal.set(nome.toLowerCase(), apelido);
+        }
+      }
+
+      function buildInfracaoMap() {
+        infracaoMapGlobal.clear();
+        for (const infracao of DB.infracoes || []) {
+          const id = String(infracao[F.inf.id] || "").toLowerCase();
+          if (!id) continue;
+          const descricao = String(infracao[F.inf.descricao] || "").trim();
+          const codigo = String(infracao[F.inf.codigo] || "").trim();
+          infracaoMapGlobal.set(id, [codigo, descricao].filter(Boolean).join(" - "));
         }
       }
 
@@ -9290,7 +9317,10 @@ function setAppVersion() {
         set("mulPen", dvDisabled ? "—" : mulPen.length);
         set("mulRes", dvDisabled ? "—" : mulRes.length);
         const byMulSt = grp(muls, (r) => String(mulFv(r, F.mul.status) || "—"));
-        const multaTipo = (r) => String(lookupValue(r, F.mul.tipo) || "Sem tipo");
+        const multaTipo = (r) => {
+          const id = String(r[`_${F.mul.tipo}_value`] || "").toLowerCase();
+          return infracaoMapGlobal.get(id) || String(lookupValue(r, F.mul.tipo) || "Sem tipo");
+        };
         const byMulTipo = grp(muls, multaTipo);
         const byMulMot = grp(muls, (r) => {
           const motId = r[`_${F.mul.mot}_value`];
@@ -9328,7 +9358,7 @@ function setAppVersion() {
           "tblMulTipo",
           mtK.map((k) => ({ label: k, qtd: byMulTipo[k].length })),
           muls.length,
-          { label: "Tipo", countLabel: "Multas" },
+          { label: "Tipo", countLabel: "Multas", labelMax: 80 },
         );
         set("metaMul", dvDisabled ? "—" : `${muls.length} registros`);
         document.getElementById("tbMul").innerHTML =
@@ -9342,7 +9372,7 @@ function setAppVersion() {
                 ] || "—";
               const motDisplay =
                 funcMapGlobal.get(String(motId)?.toLowerCase()) || motName;
-              return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "—"}</td><td>${trunc(multaTipo(r), 28)}</td><td>${badge(String(mulFv(r, F.mul.status) || "—"))}</td></tr>`;
+                return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "—"}</td><td>${trunc(multaTipo(r), 80)}</td><td>${badge(String(mulFv(r, F.mul.status) || "—"))}</td></tr>`;
             })
             .join("") || emptyRow(5);
       }
