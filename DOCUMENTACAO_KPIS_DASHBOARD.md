@@ -262,18 +262,6 @@ O texto secundário mostra o total geral de veículos cadastrados, que pode incl
 
 ## 5. Alertas executivos e qualidade dos dados
 
-### Programados
-
-```text
-Programados = serviços cujo status contém programado
-```
-
-O percentual é:
-
-```text
-Programados / total de serviços Serviço × 100
-```
-
 ### OS sem veículo
 
 Conta reservas Serviço que:
@@ -319,6 +307,31 @@ Sem cliente = serviço com saída a partir de 01/04/2026 e cliente igual a Sem c
 ```
 
 O alerta mede qualidade cadastral. Não significa necessariamente que a operação não tenha cliente real; significa que o relacionamento não está preenchido no registro carregado.
+
+### Dias sem ocorrências
+
+**O que responde:** quantos dias do período selecionado não tiveram erro operacional registrado.
+
+Fonte específica do indicador:
+
+- tabela lógica: `cr40f_errooperacional`;
+- conjunto consultado: `cr40f_errooperacionals`;
+- data da ocorrência: `cr40f_dataocorrencia`;
+- origem funcional: aba **Ocorrências** do repo irmão **Módulo Qualidade / Gestão de Erros Operacionais**.
+
+```text
+Dias sem ocorrências = dias do período - dias distintos com pelo menos uma ocorrência
+```
+
+Regras:
+
+- qualquer ocorrência com `cr40f_dataocorrencia` ocupa o dia, independentemente do status ser Novo, Em tratamento, Resolvido, Encerrado ou Cancelado;
+- duas ou mais ocorrências no mesmo dia contam como um único dia com ocorrência;
+- registros sem `cr40f_dataocorrencia` ficam fora, porque não podem ser posicionados no calendário;
+- com filtro de data, usa exatamente o intervalo selecionado, inclusive o primeiro e o último dia;
+- sem filtro de data, usa 1º de janeiro até hoje, seguindo o período padrão do dashboard.
+
+O card é operacional: quanto maior o número de dias sem ocorrência, melhor. Ele não mede quantidade de erros nem tempo de resolução.
 
 ## 6. Análises da página Resumo
 
@@ -433,7 +446,7 @@ O resumo operacional reúne:
 
 - total de serviços: `rv.length`;
 - concluídos: serviços reconhecidos como concluídos/realizados/finalizados;
-- pendentes/programados: status contendo pendente, programado, programação ou solicitação;
+- total de serviços, concluídos e cancelados;
 - cancelados: status contendo cancelado ou recusado.
 
 ### Financeiro
@@ -660,6 +673,8 @@ Principais pontos do código que sustentam esta documentação:
 - `renderAll()`: cria a base Serviço e calcula os KPIs executivos;
 - `getTicketStats()`: calcula ticket médio elegível;
 - `getRecebimentoStats()`: calcula recebido, base e percentual de recebimento;
+- `countDaysWithoutOperationalErrors()`: calcula dias do período sem ocorrência operacional;
+- `loadErrosOperacionais()`: carrega somente no Resumo a tabela `cr40f_errooperacionals` do Módulo Qualidade;
 - `getMetaParaPeriodoProporcional()`: calcula meta proporcional por dias;
 - `calcularMetaMensal()`: aplica a fórmula histórica da meta;
 - `renderFaturamento()`: renderiza faturamento, clientes e status de faturamento;
@@ -667,5 +682,9 @@ Principais pontos do código que sustentam esta documentação:
 - `renderFrota()`: renderiza frota própria, uso e manutenção;
 - `renderMotoristas()`: renderiza ranking e serviços por motorista;
 - `renderManutencoes()`, `renderMultas()`, `renderTrocas()` e `renderMarketing()`: renderizam as páginas operacionais correspondentes.
+
+### Cards removidos
+
+O dashboard não possui mais card **Programados** nem indicador **Pendentes/Prog.**. Também não existe mais cálculo ou percentual baseado nesses conceitos. Status como `Programado` continuam documentados apenas quando fazem parte de outra regra existente, como a identificação de serviços sem motorista; isso não recria o card removido.
 
 Este documento descreve o comportamento do código atual. Qualquer alteração em campos Dataverse, status, categorias, fórmula de meta ou regra de filtro deve atualizar esta documentação junto com o dashboard.
