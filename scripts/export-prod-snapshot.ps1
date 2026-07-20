@@ -101,6 +101,7 @@ $api = "$environmentBaseUrl/api/data/v9.2"
 
 $queries = [ordered]@{
   reservas = "$api/cr40f_reservadeveculoses?`$expand=cr40f_Motorista(`$select=cr40f_funcionariosid,cr40f_nomecompleto,new_apelido),cr40f_Cliente(`$select=cr40f_nomedocliente)&`$orderby=cr40f_dataehorriodesada desc"
+  errosOperacionais = "$api/cr40f_errooperacionals?`$select=cr40f_dataocorrencia&`$orderby=cr40f_dataocorrencia desc"
   precos = "$api/cr40f_composicaodeprecoses"
   manutencoes = "$api/cr40f_manutencoeses?`$orderby=cr40f_datamanutencao desc"
   multas = "$api/cr40f_multases?`$expand=cr40f_Codigodainfracao(`$select=cr40f_codigodainfracao,cr40f_descricaodainfracao)&`$orderby=cr40f_dataehorario desc"

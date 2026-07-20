@@ -4643,7 +4643,7 @@
           </section>
           <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
             <p class="section-label">Opera&ccedil;&atilde;o</p>
-            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertDiasSemOcorrencias"><div><strong>&mdash;</strong><span>Dias sem ocorr&ecirc;ncias</span></div><b>Opera&ccedil;&atilde;o</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
             <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
@@ -5754,6 +5754,7 @@
 
         const mock = {
           reservas: [],
+          errosOperacionais: [],
           precos: [],
           manutencoes: [],
           multas: [],
@@ -5989,7 +5990,7 @@
           }
         }
 
-        DB = snapshot.data;
+        DB = { ...snapshot.data, errosOperacionais: snapshot.data.errosOperacionais || [] };
         const exportedAt = new Date(snapshot.exportedAt);
         const timestamp = Number.isNaN(exportedAt.getTime()) ? "data desconhecida" : exportedAt.toLocaleString("pt-BR");
         showAlert("warn", `<strong>SNAPSHOT PROD:</strong> dados reais exportados em ${timestamp}. Atualize com <code>npm run snapshot:prod</code>.`);
@@ -6076,6 +6077,7 @@
           name: redactLogText(error.name || "Error"),
           code: redactLogText(error.code || ""),
         };
+
         if (typeof error === "string") return { message: redactLogText(error), stack: "", name: "Error", code: "" };
         return { message: redactLogText(safeLogJson(error) || "Erro inesperado."), stack: "", name: "Error", code: "" };
       }
@@ -6232,6 +6234,7 @@
 
       const T = {
         reservas: "cr40f_reservadeveculoses",
+        errosOperacionais: "cr40f_errooperacionals",
         precos: "cr40f_composicaodeprecoses",
         manutencoes: "cr40f_manutencoeses",
         multas: "cr40f_multases",
@@ -6273,6 +6276,7 @@
           status: "cr40f_status",
           tipo: "cr40f_codigodainfracao",
         },
+        erroOperacional: { data: "cr40f_dataocorrencia" },
         inf: {
           id: "cr40f_infracaodetransitoid",
           codigo: "cr40f_codigodainfracao",
@@ -6318,6 +6322,7 @@
 
       let DB = {
         reservas: [],
+        errosOperacionais: [],
         precos: [],
         manutencoes: [],
         multas: [],
@@ -6366,6 +6371,32 @@
           : "—";
       const fmtD = (v) => (v ? new Date(v).toLocaleDateString("pt-BR") : "—");
       const pct = (v, t) => (t ? Math.round((v / t) * 100) : 0);
+
+      function countDaysWithoutOperationalErrors(records, startValue, endValue) {
+        const now = new Date();
+        const start = startValue
+          ? new Date(`${startValue}T00:00:00-03:00`)
+          : new Date(now.getFullYear(), 0, 1);
+        const end = endValue
+          ? new Date(`${endValue}T23:59:59-03:00`)
+          : now;
+        if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end < start) return 0;
+        const startDay = new Date(start);
+        startDay.setHours(0, 0, 0, 0);
+        const endDay = new Date(end);
+        endDay.setHours(0, 0, 0, 0);
+        const totalDays = Math.floor((endDay - startDay) / 86400000) + 1;
+        const occurrenceDays = new Set(
+          (records || [])
+            .map((record) => String(record[F.erroOperacional.data] || "").slice(0, 10))
+            .filter(Boolean),
+        );
+        const scopedOccurrenceDays = [...occurrenceDays].filter((day) => {
+          const date = new Date(`${day}T00:00:00-03:00`);
+          return date >= startDay && date <= endDay;
+        });
+        return Math.max(0, totalDays - scopedOccurrenceDays.length);
+      }
 
       function mK(v) {
         if (!v) return null;
@@ -7045,7 +7076,7 @@ function setAppVersion() {
       const loadedDataSets = new Set();
       const dataLoadPromises = new Map();
       const tabDataDependencies = {
-        resumo: ["reservas", "precos", "manutencoes", "multas", "infracoes", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"],
+        resumo: ["reservas", "errosOperacionais", "precos", "manutencoes", "multas", "infracoes", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"],
         servicos: ["reservas", "precos", "funcionarios"],
         faturamento: ["reservas", "precos"],
         pagantes: ["reservas", "precos", "pagantes"],
@@ -7168,6 +7199,11 @@ function setAppVersion() {
           `${API()}/${T.reservas}?$select=${sel}&$expand=${exp}&$orderby=${F.res.data} desc`,
         );
       }
+      async function loadErrosOperacionais() {
+        DB.errosOperacionais = await fetchAll(
+          `${API()}/${T.errosOperacionais}?$select=${F.erroOperacional.data}&$orderby=${F.erroOperacional.data} desc`,
+        );
+      }
       async function loadPrecos() {
         const sel = [
           `cr40f_composicaodeprecosid`,
@@ -7219,6 +7255,7 @@ function setAppVersion() {
 
       const dataSetLoaders = {
         reservas: loadReservas,
+        errosOperacionais: loadErrosOperacionais,
         precos: loadPrecos,
         manutencoes: loadManutencoes,
         multas: loadMultas,
@@ -8056,6 +8093,7 @@ function setAppVersion() {
             <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
+            <div class="exec-alert" id="alertDiasSemOcorrencias"><div><strong>&mdash;</strong><span>Dias sem ocorr&ecirc;ncias</span></div><b>Operacao</b></div>
           </div>
           <div class="exec-alerts">
             <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
@@ -8290,12 +8328,144 @@ function setAppVersion() {
           .replace(/_fatStL|fatStatus/g, "status de faturamento")
           .replace(/isProducedReservation\(\)/g, "serviço produzido")
           .replace(/maintenanceCategory\(tipo\)/g, "categoria do reparo")
-          .replace(/grp\(rv, campo do componente\)/g, "agrupamento por campo do gráfico");
+          .replace(/grp\(rv, campo do componente\)/g, "agrupamento por campo do gráfico")
+          .replace(/\bDB\b|\bVW\b/g, "fontes de dados")
+          .replace(/\bF\.[A-Za-z0-9_.]+\b/g, "campo correspondente")
+          .replace(/\bDV_[A-Z0-9_]+\b/g, "valor configurado");
+        const getCardUserDetails = (cardTitle) => {
+          if (["dqSemVeiculo", "dqSemOp", "dqSemMotorista", "dqSemCliente"].includes(card.id)) {
+            const qualityDetails = {
+              dqSemVeiculo: [
+                "Fonte: Reservas de serviços.",
+                "Campos: Data de saída, Motorista e Veículo.",
+                "Valores e condições: considera serviços com data de saída registrada, motorista informado e veículo não preenchido; registros sem motorista ficam fora deste alerta.",
+              ],
+              dqSemOp: [
+                "Fonte: Reservas de serviços e informações de faturamento.",
+                "Campos: Status do serviço, Status de faturamento, Ordem de produção e Valor total.",
+                "Valores e condições: considera serviços concluídos ou finalizados, com faturamento pendente e sem Ordem de produção vinculada.",
+              ],
+              dqSemMotorista: [
+                "Fonte: Reservas de serviços.",
+                "Campos: Data de saída, Categoria do item, Status do serviço e Motorista.",
+                "Valores e condições: considera itens classificados como Serviço, a partir de 10/04/2026, nos status Confirmado, Programado ou Concluído, quando o Motorista não está preenchido.",
+              ],
+              dqSemCliente: [
+                "Fonte: Reservas de serviços.",
+                "Campos: Data de saída e Cliente.",
+                "Valores e condições: considera serviços a partir de 01/04/2026 cujo Cliente aparece como Sem cliente.",
+              ],
+            };
+            return qualityDetails[card.id];
+          }
+          if (card.id === "alertCnh" || cardTitle.includes("cnh")) return [
+            "Fonte: Funcionários e motoristas ativos.",
+            "Campos: Nome, Função, Status e Validade da CNH.",
+            "Valores e condições: considera documentos sem validade, já vencidos ou com vencimento nos próximos 90 dias.",
+          ];
+          if (card.id === "alertMultas" || cardTitle.includes("multa")) return [
+            "Fonte: Multas.",
+            "Campos: Data da multa, Status da multa, Motorista, Placa e Tipo de infração.",
+            "Valores e condições: o total conta as multas do período; a parte pendente identifica o status de notificação configurado para acompanhamento do condutor.",
+          ];
+          if (card.id === "alertDiasSemOcorrencias" || cardTitle.includes("dias sem ocorrencias")) return [
+            "Fonte: Ocorrências operacionais.",
+            "Campo: Data da ocorrência.",
+            "Valores e condições: conta os dias do período selecionado que não possuem nenhuma ocorrência registrada; várias ocorrências no mesmo dia ocupam apenas um dia.",
+          ];
+          if (card.id === "alertSemValor" || cardTitle.includes("cp pendente") || cardTitle.includes("sem valor")) return [
+            "Fonte: Reservas de serviços e Composição de preço.",
+            "Campos: Categoria do item, Status da composição de preço, Status de faturamento, Ordem de produção e Valor total.",
+            "Valores e condições: considera itens Serviço já produzidos, com composição de preço pendente e faturamento pendente; cada composição é contada uma vez.",
+          ];
+          if (cardTitle.includes("total produzido") || cardTitle.includes("meta x realizado")) return [
+            "Fonte: Reservas de serviços e histórico de faturamento.",
+            "Campos: Data de saída, Categoria do item, Valor total e Meta mensal.",
+            "Valores e condições: compara o faturamento dos serviços no período com uma meta baseada no histórico; em períodos parciais, a meta acompanha a quantidade de dias.",
+          ];
+          if (cardTitle.includes("faturamento por cliente") || cardTitle.includes("top clientes faturamento")) return [
+            "Fonte: Reservas de serviços.",
+            "Campos: Cliente, Categoria do item e Valor total.",
+            "Valores e condições: agrupa os serviços por Cliente, soma o Valor total e ordena os maiores faturamentos; a participação é a parcela de cada cliente no total.",
+          ];
+          if (cardTitle.includes("top clientes volume") || cardTitle.includes("clientes ativos")) return [
+            "Fonte: Reservas de serviços e cadastro de clientes.",
+            "Campos: Cliente, Categoria do item e Data de saída.",
+            "Valores e condições: conta serviços por cliente e desconsidera registros exibidos como Sem cliente no ranking de clientes ativos.",
+          ];
+          if (cardTitle.includes("ticket")) return [
+            "Fonte: Reservas de serviços e Composição de preço.",
+            "Campos: Valor total, Status da composição de preço e Data de saída.",
+            "Valores e condições: soma os serviços com composição concluída e Valor total maior que R$ 0,00 e divide pelo número desses serviços.",
+          ];
+          if (cardTitle.includes("recebimento")) return [
+            "Fonte: Reservas de serviços e informações de faturamento.",
+            "Campos: Valor total, Status de faturamento, Status da composição de preço e Ordem de produção.",
+            "Valores e condições: considera valores maiores que zero; recebido é o que está como Pago, enquanto Pagante em viagem e Mensal ficam fora da base de comparação.",
+          ];
+          if (cardTitle.includes("a receber")) return [
+            "Fonte: Reservas de serviços e informações de faturamento.",
+            "Campos: Valor total, Status da composição de preço, Ordem de produção e Status de faturamento.",
+            "Valores e condições: considera serviços concluídos, com Ordem de produção, valor maior que zero e ainda não marcados como Pago.",
+          ];
+          if ((cardTitle.includes("manuten") || cardTitle.includes("custo frota") || cardTitle.includes("reparo")) && !cardTitle.includes("kpis de manutencao")) return [
+            "Fonte: Manutenções.",
+            "Campos: Data da manutenção, Valor da manutenção, Tipo de reparo, Status e Veículo.",
+            "Valores e condições: conta registros pela Data da manutenção, soma os valores informados e separa custo total, custo médio e participação por tipo de reparo.",
+          ];
+          if (cardTitle.includes("frota propria") || cardTitle.includes("uso mensal da frota")) return [
+            "Fonte: Veículos e Reservas de serviços.",
+            "Campos: Categoria do veículo, Status do veículo, Veículo e Data de saída.",
+            "Valores e condições: considera veículos da categoria Própria com serviço no dia; cancelados e recusados não contam, e o resultado separa dias úteis de fins de semana.",
+          ];
+          if (cardTitle.includes("preventiva") || cardTitle.includes("corretiva") || cardTitle.includes("conservacao") || cardTitle.includes("avaria") || cardTitle.includes("kpis de manutencao")) return [
+            "Fonte: Manutenções.",
+            "Campos: Tipo de reparo, Data da manutenção, Data de aprovação e Status.",
+            "Valores e condições: classifica os registros como Preventiva, Corretiva, Conservação ou Avaria e compara cada grupo com sua meta operacional.",
+          ];
+          if (cardTitle.includes("pagamento") || cardTitle.includes("cartao") || cardTitle.includes("forma de pagamento")) return [
+            "Fonte: Pagamentos.",
+            "Campos: Valor do pagamento, Status do pagamento e Forma de pagamento.",
+            "Valores e condições: agrupa os registros por forma ou status; o grupo recebido usa o status Pago e as formas são reconhecidas pelos nomes exibidos, como Cartão, Crédito, Link e Máquina.",
+            "Limite: não há cálculo de prazo ou atraso porque as datas de vencimento e baixa não são carregadas.",
+          ];
+          if (cardTitle.includes("frota") || cardTitle.includes("blindad") || cardTitle.includes("veiculo") || cardTitle.includes("dispon") || cardTitle.includes("por marca")) return [
+            "Fonte: Veículos.",
+            "Campos: Status do veículo, Categoria, Marca, Modelo, Ano, Placa e Blindagem.",
+            "Valores e condições: agrupa a frota por status, marca ou blindagem; disponíveis consideram os status exibidos como Disponível, Ativo ou Livre, e em manutenção consideram o status correspondente.",
+          ];
+          if (cardTitle.includes("troca")) return [
+            "Fonte: Trocas.",
+            "Campos: Data da troca, Status da troca e Tipo de troca.",
+            "Valores e condições: conta as trocas do período e separa os grupos pelos nomes exibidos de status e tipo; não há valor financeiro nesta página.",
+          ];
+          if (cardTitle.includes("publica") || cardTitle.includes("marketing")) return [
+            "Fonte: Publicações de marketing.",
+            "Campos: Data, Categoria e Status da publicação.",
+            "Valores e condições: conta os registros carregados e agrupa o conteúdo pelos nomes exibidos de categoria e status, como Publicada, Em produção ou Pendente.",
+          ];
+          if (cardTitle.includes("status dos servicos") || cardTitle.includes("por status")) return [
+            "Fonte: Reservas de serviços.",
+            "Campos: Status do serviço, Categoria do item, Cliente, Motorista e Data de saída.",
+            "Valores e condições: agrupa os serviços pelos nomes exibidos de status e calcula a participação de cada grupo no total filtrado.",
+          ];
+          if (cardTitle.includes("servico") || cardTitle.includes("operacao") || cardTitle.includes("por tipo")) return [
+            "Fonte: Reservas de serviços.",
+            "Campos: Data de saída, Categoria do item, Status do serviço, Cliente, Motorista, Veículo e Valor total.",
+            "Valores e condições: considera itens classificados como Serviço e aplica o período, o status e os filtros escolhidos antes de contar, agrupar ou somar.",
+          ];
+          return [
+            "Fonte: Dados carregados para a seção atual do dashboard.",
+            "Campos: período, status, categoria, valores e relacionamentos exibidos no card ou gráfico.",
+            "Valores e condições: o resultado usa os nomes de exibição dos registros e respeita os filtros globais aplicados na tela.",
+          ];
+        };
         const applyFilter = (rule) => ({
           ...rule,
           conditions: ["Filtros globais neste momento: " + filterText].concat(rule.conditions || [], rule.codeChoices || []),
           limitations: rule.limitations || ["Sem registros elegíveis, o dashboard mostra zero ou s/dado."],
           userSource: toUserText(rule.userSource || rule.source),
+          userDetails: rule.userDetails || getCardUserDetails(title),
           userConditions: ["O resultado respeita os filtros globais mostrados acima."].concat(
             (rule.userConditions || rule.conditions || []).map(toUserText),
           ),
@@ -8367,6 +8537,15 @@ function setAppVersion() {
             codeChoices: ["F.res.catItem: 100000000 = serviço; _cpPendente vem do status da composição de preço."],
             conditions: ["Cada composição é contada uma única vez.", "A projeção usa o ticket atual."],
             limitations: ["A projeção é estimativa, não faturamento confirmado."],
+          });
+        }
+        if (card.id === "alertDiasSemOcorrencias" || title.includes("dias sem ocorr")) {
+          return applyFilter({
+            user: "Conta quantos dias do período selecionado não tiveram erro operacional registrado.",
+            source: "DB.errosOperacionais, tabela lógica cr40f_errooperacional do Módulo Qualidade.",
+            formula: "diasSemOcorrencias = diasDoPeriodo - quantidadeDeDiasDistintosCom(cr40f_dataocorrencia)",
+            conditions: ["Qualquer ocorrência registrada no dia ocupa aquele dia, independentemente do status.", "Ocorrências sem data não entram porque não podem ser posicionadas no calendário."],
+            limitations: ["Sem filtro de data, o período considerado é de 1º de janeiro até hoje."],
           });
         }
         if (title.includes("total produzido") || title.includes("meta x realizado")) {
@@ -8541,6 +8720,7 @@ function setAppVersion() {
         userMode.dataset.cardDetailLogicMode = "user";
         const userGrid = createCardDetailElement("div", "card-detail-logic-grid");
         appendLogicSection(userGrid, "O que este número significa", logic.user, { wide: true });
+        appendLogicSection(userGrid, "Detalhamento para você", logic.userDetails, { wide: true });
         appendLogicSection(userGrid, "Como ele chega ao resultado", logic.steps, { wide: true });
         appendLogicSection(userGrid, "De onde vem", logic.userSource);
         appendLogicSection(userGrid, "O que entra na conta", logic.userConditions);
@@ -8868,6 +9048,13 @@ function setAppVersion() {
           (r) =>
             stL(r._stL).includes("cancel") || stL(r._stL).includes("recus"),
         );
+        const diasSemOcorrencias = dvDisabled
+          ? null
+          : countDaysWithoutOperationalErrors(
+            DB.errosOperacionais,
+            start,
+            end,
+          );
 
         const now = new Date();
         const brNow = new Date(now.getTime() - 3 * 60 * 60 * 1000);
@@ -9071,6 +9258,7 @@ function setAppVersion() {
         setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
+        setExecAlert("alertDiasSemOcorrencias", dvDisabled ? "—" : diasSemOcorrencias, "Dias sem ocorrências", diasSemOcorrencias ? "Sem erro operacional" : "Ocorrência todos os dias", diasSemOcorrencias ? "ok" : "danger");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
         const dqSemVeiculo = rv.filter((r) => {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
