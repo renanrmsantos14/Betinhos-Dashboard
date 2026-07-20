@@ -6987,7 +6987,7 @@ function setAppVersion() {
       }
       async function loadMultas() {
         DB.multas = await fetchAll(
-          `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.tipo}_value,_${F.mul.mot}_value,_${F.mul.placa}_value&$orderby=${F.mul.data} desc`,
+          `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.tipo}_value,_${F.mul.mot}_value,_${F.mul.placa}_value&$expand=cr40f_Codigodainfracao($select=${F.inf.codigo},${F.inf.descricao})&$orderby=${F.mul.data} desc`,
         );
       }
       async function loadInfracoes() {
@@ -9321,7 +9321,10 @@ function setAppVersion() {
         const byMulSt = grp(muls, (r) => String(mulFv(r, F.mul.status) || "—"));
         const multaTipo = (r) => {
           const id = String(r[`_${F.mul.tipo}_value`] || "").toLowerCase();
-          return infracaoMapGlobal.get(id) || String(lookupValue(r, F.mul.tipo) || "Sem tipo");
+          const expanded = r[F.mul.tipo] || r.cr40f_Codigodainfracao;
+          const codigo = String(expanded?.[F.inf.codigo] || lookupValue(r, F.mul.tipo) || "").trim();
+          const descricao = String(expanded?.[F.inf.descricao] || "").trim();
+          return infracaoMapGlobal.get(id) || [codigo, descricao].filter(Boolean).join(" - ") || "Sem tipo";
         };
         const byMulTipo = grp(muls, multaTipo);
         const byMulMot = grp(muls, (r) => {
