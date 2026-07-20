@@ -2026,10 +2026,10 @@
       .ov {
         display: none;
         position: fixed;
-        top: 0;
+        top: var(--topbar-h);
         right: 0;
         bottom: 0;
-        left: 0;
+        left: 220px;
         background: rgba(240, 242, 245, 0.85);
         backdrop-filter: none;
         z-index: 6000;
@@ -2137,6 +2137,9 @@
         }
       }
       @media (max-width: 960px) {
+        .ov {
+          left: 0;
+        }
         .kpi-6,
         .kpi-5,
         .kpi-4 {
@@ -6886,6 +6889,7 @@ function setAppVersion() {
       async function loadAll(options = {}) {
         if (dashboardLoadInProgress) return;
         const silent = options.silent === true;
+        const requestedTab = options.tabId || document.querySelector(".page.on")?.id.replace(/^page-/, "") || "resumo";
         dashboardLoadInProgress = true;
         dashboardSilentLoad = silent;
         hideDashboardLoadError();
@@ -6902,6 +6906,7 @@ function setAppVersion() {
             USING_MOCK_DATA = true;
             const mock = generateMockData();
             DB = { ...mock };
+            markAllDataSetsLoaded();
             showAlert(
               "warn",
               "<strong>MODO DESENVOLVIMENTO:</strong> Você está visualizando dados <strong>FICTÍCIOS</strong> gerados apenas para testes. Nenhum dado real está sendo exibido.",
@@ -6919,18 +6924,7 @@ function setAppVersion() {
             });
           } else {
             USING_MOCK_DATA = false;
-            await Promise.all([
-              loadReservas(),
-              loadPrecos(),
-              loadManutencoes(),
-              loadMultas(),
-              loadTrocas(),
-              loadPagantes(),
-              loadVeiculos(),
-              loadFuncionarios(),
-              loadMarketing(),
-              loadInfracoes(),
-            ]);
+            await loadDataSets(tabDataDependencies[requestedTab] || tabDataDependencies.resumo);
           }
           console.log("Dados carregados:", {
             reservas: DB.reservas.length,
@@ -6943,7 +6937,6 @@ function setAppVersion() {
             funcionarios: DB.funcionarios.length,
             marketing: DB.marketing.length,
           });
-          markAllDataSetsLoaded();
           buildFuncMap();
           buildInfracaoMap();
           enrichReservas();
@@ -7057,6 +7050,24 @@ function setAppVersion() {
         Object.keys(dataSetLoaders).forEach((key) => loadedDataSets.add(key));
       }
 
+      async function loadDataSets(keys) {
+        if (shouldUseProdSnapshot() || USING_MOCK_DATA) {
+          markAllDataSetsLoaded();
+          return;
+        }
+        const missing = keys.filter((key) => !loadedDataSets.has(key));
+        if (!missing.length) return;
+        await Promise.all(missing.map((key) => {
+          if (!dataLoadPromises.has(key)) {
+            const promise = dataSetLoaders[key]().then(() => {
+              loadedDataSets.add(key);
+            }).finally(() => dataLoadPromises.delete(key));
+            dataLoadPromises.set(key, promise);
+          }
+          return dataLoadPromises.get(key);
+        }));
+      }
+
       function setTabLoading(tabId, loading) {
         const page = document.getElementById(`page-${tabId}`);
         if (!page) return;
@@ -7065,22 +7076,12 @@ function setAppVersion() {
       }
 
       async function ensureTabData(tabId) {
-        if (dashboardLoadInProgress) return;
         const keys = tabDataDependencies[tabId] || tabDataDependencies.resumo;
-        const missing = keys.filter((key) => !loadedDataSets.has(key));
-        if (!missing.length) return;
+        if (!keys.some((key) => !loadedDataSets.has(key))) return;
 
         setTabLoading(tabId, true);
         try {
-          await Promise.all(missing.map((key) => {
-            if (!dataLoadPromises.has(key)) {
-              const promise = dataSetLoaders[key]().then(() => {
-                loadedDataSets.add(key);
-              }).finally(() => dataLoadPromises.delete(key));
-              dataLoadPromises.set(key, promise);
-            }
-            return dataLoadPromises.get(key);
-          }));
+          await loadDataSets(keys);
           buildFuncMap();
           buildInfracaoMap();
           enrichReservas();
