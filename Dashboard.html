@@ -5639,6 +5639,8 @@
             cr40f_funcionariosid: `mock-func-${i}`,
             cr40f_nomecompleto: motores[i],
             new_apelido: motores[i].split(" ")[0],
+            cr40f_status: "Ativo",
+            "cr40f_status@OData.Community.Display.V1.FormattedValue": "Ativo",
             cr40f_funcao: r([
               "Motorista",
               "Gerente",
@@ -6153,6 +6155,7 @@
         },
         fun: {
           nome: "cr40f_nomecompleto",
+          status: "cr40f_status",
           funcao: "cr40f_funcao",
           cnh: "cr40f_validadedacnh",
           apelido: "new_apelido",
@@ -6236,6 +6239,8 @@
       };
       const fv = (r, f) =>
         r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
+      const isActiveFuncionario = (r) =>
+        stL(String(fv(r, F.fun.status) || "")) === "ativo";
       const sumV = (a) => a.reduce((s, r) => s + (r._valor || 0), 0);
       async function copyToClipboard(text) {
         try {
@@ -7061,7 +7066,7 @@ function setAppVersion() {
       }
       async function loadFuncionarios() {
         DB.funcionarios = await fetchAll(
-          `${API()}/${T.funcionarios}?$select=cr40f_funcionariosid,${F.fun.nome},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido}`,
+          `${API()}/${T.funcionarios}?$select=cr40f_funcionariosid,${F.fun.nome},${F.fun.status},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido}`,
         );
       }
       async function loadMarketing() {
@@ -8507,11 +8512,11 @@ function setAppVersion() {
           `<span class="receipt-separator">recebido de</span>` +
           `<span class="receipt-base">${brlS(baseRecebimento)}</span>`);
         html("kRecebPctD", "");
-        const cnhWarn = DB.funcionarios.filter((r) => {
+        const cnhWarn = DB.funcionarios.filter((r) => isActiveFuncionario(r) && (() => {
           const cnhDate = r[F.fun.cnh] ? new Date(r[F.fun.cnh]).getTime() : NaN;
           if (!Number.isFinite(cnhDate)) return false;
           return (cnhDate - Date.now()) / (1000 * 60 * 60 * 24) <= 90;
-        });
+        })());
         set("kCnhW", dvDisabled ? "—" : cnhWarn.length);
         html("kCnhWD", dvDisabled
           ? ""
@@ -9281,8 +9286,9 @@ function setAppVersion() {
         renderFrotaTable(tblCache.tbFrota);
       }
       function renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap) {
-        set("mTot", dvDisabled ? "—" : DB.funcionarios.length);
-        const cnhWarn = DB.funcionarios.filter((r) => {
+        const funcionariosAtivos = DB.funcionarios.filter(isActiveFuncionario);
+        set("mTot", dvDisabled ? "—" : funcionariosAtivos.length);
+        const cnhWarn = funcionariosAtivos.filter((r) => {
           const cnhDate = r[F.fun.cnh] ? new Date(r[F.fun.cnh]).getTime() : NaN;
           if (!Number.isFinite(cnhDate)) return false;
           return (cnhDate - Date.now()) / (1000 * 60 * 60 * 24) <= 90;
@@ -9296,7 +9302,7 @@ function setAppVersion() {
         const mots = [...motMap.entries()].map(([key, label]) => ({ key, label }));
 
         renderMotMesTable(mots, mks, mls, byM);
-        const motRows = DB.funcionarios
+        const motRows = funcionariosAtivos
           .map((f) => {
             const funcId = String(f.cr40f_funcionariosid || "").toLowerCase();
             const apelido = f[F.fun.apelido] || "";
@@ -9317,7 +9323,7 @@ function setAppVersion() {
         tblCache.tbMot = motRows;
         set(
           "metaMot",
-          dvDisabled ? "—" : `${DB.funcionarios.length} motoristas`,
+          dvDisabled ? "—" : `${funcionariosAtivos.length} motoristas ativos`,
         );
         renderMotTable(motRows, fat);
       }
