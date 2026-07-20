@@ -4643,7 +4643,7 @@
           </section>
           <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
             <p class="section-label">Opera&ccedil;&atilde;o</p>
-            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertDiasSemOcorrencias"><div><strong>&mdash;</strong><span>Dias sem ocorr&ecirc;ncias</span></div><b>Opera&ccedil;&atilde;o</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>N&uacute;mero de ocorr&ecirc;ncias</span></div><b>Opera&ccedil;&atilde;o</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
             <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
@@ -6372,32 +6372,6 @@
       const fmtD = (v) => (v ? new Date(v).toLocaleDateString("pt-BR") : "—");
       const pct = (v, t) => (t ? Math.round((v / t) * 100) : 0);
 
-      function countDaysWithoutOperationalErrors(records, startValue, endValue) {
-        const now = new Date();
-        const start = startValue
-          ? new Date(`${startValue}T00:00:00-03:00`)
-          : new Date(now.getFullYear(), 0, 1);
-        const end = endValue
-          ? new Date(`${endValue}T23:59:59-03:00`)
-          : now;
-        if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end < start) return 0;
-        const startDay = new Date(start);
-        startDay.setHours(0, 0, 0, 0);
-        const endDay = new Date(end);
-        endDay.setHours(0, 0, 0, 0);
-        const totalDays = Math.floor((endDay - startDay) / 86400000) + 1;
-        const occurrenceDays = new Set(
-          (records || [])
-            .map((record) => String(record[F.erroOperacional.data] || "").slice(0, 10))
-            .filter(Boolean),
-        );
-        const scopedOccurrenceDays = [...occurrenceDays].filter((day) => {
-          const date = new Date(`${day}T00:00:00-03:00`);
-          return date >= startDay && date <= endDay;
-        });
-        return Math.max(0, totalDays - scopedOccurrenceDays.length);
-      }
-
       function mK(v) {
         if (!v) return null;
         // Extrai ano-mês diretamente da string ISO para evitar problemas de fuso horário
@@ -8093,7 +8067,7 @@ function setAppVersion() {
             <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
-            <div class="exec-alert" id="alertDiasSemOcorrencias"><div><strong>&mdash;</strong><span>Dias sem ocorr&ecirc;ncias</span></div><b>Operacao</b></div>
+            <div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>N&uacute;mero de ocorr&ecirc;ncias</span></div><b>Operacao</b></div>
           </div>
           <div class="exec-alerts">
             <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
@@ -8368,10 +8342,10 @@ function setAppVersion() {
             "Campos: Data da multa, Status da multa, Motorista, Placa e Tipo de infração.",
             "Valores e condições: o total conta as multas do período; a parte pendente identifica o status de notificação configurado para acompanhamento do condutor.",
           ];
-          if (card.id === "alertDiasSemOcorrencias" || cardTitle.includes("dias sem ocorrencias")) return [
+          if (card.id === "alertOcorrencias" || cardTitle.includes("numero de ocorrencias")) return [
             "Fonte: Ocorrências operacionais.",
-            "Campo: Data da ocorrência.",
-            "Valores e condições: conta os dias do período selecionado que não possuem nenhuma ocorrência registrada; várias ocorrências no mesmo dia ocupam apenas um dia.",
+            "Campo: Data da ocorrência e data de saída dos serviços.",
+            "Valores e condições: conta as ocorrências do período, compara com o total de serviços e mostra a frequência média no formato 1 a cada X serviços.",
           ];
           if (card.id === "alertSemValor" || cardTitle.includes("cp pendente") || cardTitle.includes("sem valor")) return [
             "Fonte: Reservas de serviços e Composição de preço.",
@@ -8539,13 +8513,13 @@ function setAppVersion() {
             limitations: ["A projeção é estimativa, não faturamento confirmado."],
           });
         }
-        if (card.id === "alertDiasSemOcorrencias" || title.includes("dias sem ocorr")) {
+        if (card.id === "alertOcorrencias" || title.includes("numero de ocorrencias")) {
           return applyFilter({
-            user: "Conta quantos dias do período selecionado não tiveram erro operacional registrado.",
+            user: "Conta os erros operacionais registrados no período e mostra a frequência deles entre os serviços.",
             source: "DB.errosOperacionais, tabela lógica cr40f_errooperacional do Módulo Qualidade.",
-            formula: "diasSemOcorrencias = diasDoPeriodo - quantidadeDeDiasDistintosCom(cr40f_dataocorrencia)",
-            conditions: ["Qualquer ocorrência registrada no dia ocupa aquele dia, independentemente do status.", "Ocorrências sem data não entram porque não podem ser posicionadas no calendário."],
-            limitations: ["Sem filtro de data, o período considerado é de 1º de janeiro até hoje."],
+            formula: "ocorrencias = count(erros no período); percentual = ocorrencias / rv.length x 100; frequencia = rv.length / ocorrencias",
+            conditions: ["O denominador é o total de serviços filtrados no mesmo período.", "Ocorrências sem data ficam fora quando há filtro de data.", "O valor de X é arredondado para o número inteiro mais próximo."],
+            limitations: ["Se não houver serviços ou ocorrências, a frequência aparece como s/dado."],
           });
         }
         if (title.includes("total produzido") || title.includes("meta x realizado")) {
@@ -9048,13 +9022,15 @@ function setAppVersion() {
           (r) =>
             stL(r._stL).includes("cancel") || stL(r._stL).includes("recus"),
         );
-        const diasSemOcorrencias = dvDisabled
-          ? null
-          : countDaysWithoutOperationalErrors(
-            DB.errosOperacionais,
-            start,
-            end,
-          );
+        const ocorrenciasOperacionais = dvDisabled
+          ? []
+          : filterByDate(DB.errosOperacionais, F.erroOperacional.data);
+        const ocorrenciasPct = rv.length
+          ? (ocorrenciasOperacionais.length / rv.length * 100)
+          : 0;
+        const ocorrenciasFrequencia = ocorrenciasOperacionais.length && rv.length
+          ? Math.round(rv.length / ocorrenciasOperacionais.length)
+          : null;
 
         const now = new Date();
         const brNow = new Date(now.getTime() - 3 * 60 * 60 * 1000);
@@ -9258,7 +9234,7 @@ function setAppVersion() {
         setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
-        setExecAlert("alertDiasSemOcorrencias", dvDisabled ? "—" : diasSemOcorrencias, "Dias sem ocorrências", diasSemOcorrencias ? "Sem erro operacional" : "Ocorrência todos os dias", diasSemOcorrencias ? "ok" : "danger");
+        setExecAlert("alertOcorrencias", dvDisabled ? "—" : ocorrenciasOperacionais.length, "Número de ocorrências", rv.length && ocorrenciasOperacionais.length ? `${ocorrenciasPct.toFixed(1)}% dos serviços · 1 a cada ${ocorrenciasFrequencia}` : "s/dado", ocorrenciasOperacionais.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
         const dqSemVeiculo = rv.filter((r) => {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
