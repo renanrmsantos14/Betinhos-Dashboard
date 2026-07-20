@@ -1,12 +1,22 @@
 {
   "name": "dashboard-betinhos",
-  "version": "1.0.0",
+  "version": "1.0.57",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-server.js",
-    "build": "powershell -NoProfile -Command \"Write-Host 'Sem build local; deploy usa Dashboard.html direto.'\"",
+    "build": "node scripts/update-app-version.mjs && node scripts/build-dashboard-tv-compatible.cjs",
+    "test:tv": "node scripts/test-dashboard-tv-build.cjs",
+    "test:tv-compat": "node scripts/test-tv-compat.cjs",
     "graphify": "powershell -ExecutionPolicy Bypass -File scripts/build-graphify-code.ps1",
+    "snapshot:prod": "powershell -ExecutionPolicy Bypass -File scripts/export-prod-snapshot.ps1",
+    "snapshot:prod:device": "powershell -ExecutionPolicy Bypass -File scripts/export-prod-snapshot.ps1 -DeviceCode",
     "deploy:webresource": "powershell -ExecutionPolicy Bypass -File scripts/deploy-webresource.ps1",
     "push": "powershell -ExecutionPolicy Bypass -File scripts/deploy-webresource.ps1 -EnvironmentUrl https://org23b93544.crm2.dynamics.com/ -WebResourceName new_dashboard"
+  },
+  "devDependencies": {
+    "chart.js": "4.4.1",
+    "chartjs-plugin-datalabels": "2.2.0",
+    "esbuild": "^0.27.7",
+    "resize-observer-polyfill": "1.5.1"
   }
 }

@@ -1,17 +1,17 @@
 {
-  "dashboard-inline-current.js": {
-    "mtime": 1783955582.4235435,
-    "ast_hash": "f133eb2ab45667f13a2eeddfacb297e0",
-    "semantic_hash": "f133eb2ab45667f13a2eeddfacb297e0"
+  "dashboard-inline.js": {
+    "mtime": 1784286746.6480253,
+    "ast_hash": "fdffee11a750b32a580e9f021cf7713f",
+    "semantic_hash": "fdffee11a750b32a580e9f021cf7713f"
   },
   "dataverse-export-metadata-console.js": {
     "mtime": 1783539473.8651261,
     "ast_hash": "1d9c2c5506346360687e9d23fb512b5c",
     "semantic_hash": "1d9c2c5506346360687e9d23fb512b5c"
   },
-  "scripts/dev-server.js": {
-    "mtime": 1783539473.8944416,
-    "ast_hash": "07c1f2452451c84cce66caefb4baa995",
-    "semantic_hash": "07c1f2452451c84cce66caefb4baa995"
+  "scripts/deploy-webresource.ps1": {
+    "mtime": 1783539473.8931165,
+    "ast_hash": "275a183e839cca43065d61ffea72f8f1",
+    "semantic_hash": "275a183e839cca43065d61ffea72f8f1"
   }
 }

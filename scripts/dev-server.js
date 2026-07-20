@@ -8,6 +8,7 @@ if (tvPreview) require("./build-dashboard-tv-compatible.cjs");
 const defaultFile = tvPreview
   ? path.join(repoRoot, "dist", "Dashboard.html")
   : path.join(repoRoot, "Dashboard.html");
+const snapshotFile = path.join(repoRoot, "data", "dashboard-prod-snapshot.json");
 const host = "127.0.0.1";
 const requestedPort = Number(process.env.PORT || 0);
 
@@ -61,7 +62,11 @@ const server = http.createServer((request, response) => {
 
 server.listen(requestedPort, host, () => {
   const address = server.address();
-  const query = tvPreview ? "?mock=1&tv=1" : "?mock=1";
+  const hasSnapshot = fs.existsSync(snapshotFile);
+  const query = tvPreview
+    ? (hasSnapshot ? "?snapshot=1&tv=1" : "?mock=1&tv=1")
+    : (hasSnapshot ? "?snapshot=1" : "?mock=1");
   const mode = tvPreview ? "TV/Tizen legado" : "desktop";
-  console.log(`[dev] Dashboard ${mode}: http://localhost:${address.port}/${query}`);
+  const dataMode = hasSnapshot ? "snapshot PROD" : "mock";
+  console.log(`[dev] Dashboard ${mode} (${dataMode}): http://localhost:${address.port}/${query}`);
 });

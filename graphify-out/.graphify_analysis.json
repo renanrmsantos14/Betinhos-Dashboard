@@ -1,116 +1,153 @@
 {
   "communities": {
     "0": [
-      "dashboard_inline_current_badge",
-      "dashboard_inline_current_brl",
-      "dashboard_inline_current_brls",
-      "dashboard_inline_current_daysbetweenvalues",
-      "dashboard_inline_current_emptyrow",
-      "dashboard_inline_current_fmtd",
-      "dashboard_inline_current_fmtdt",
-      "dashboard_inline_current_grp",
-      "dashboard_inline_current_html",
-      "dashboard_inline_current_maintenancecategory",
-      "dashboard_inline_current_maintenancekpirows",
-      "dashboard_inline_current_metricsplit",
-      "dashboard_inline_current_mkchart",
-      "dashboard_inline_current_ml",
-      "dashboard_inline_current_opts0",
-      "dashboard_inline_current_progresscell",
-      "dashboard_inline_current_renderdistributiontable",
-      "dashboard_inline_current_renderfaturamento",
-      "dashboard_inline_current_renderfleetusagerows",
-      "dashboard_inline_current_renderfrota",
-      "dashboard_inline_current_renderfrotatable",
-      "dashboard_inline_current_rendermanutencoes",
-      "dashboard_inline_current_rendermarketing",
-      "dashboard_inline_current_rendermetriclines",
-      "dashboard_inline_current_rendermotoristas",
-      "dashboard_inline_current_rendermottable",
-      "dashboard_inline_current_rendermultas",
-      "dashboard_inline_current_renderpagamentos",
-      "dashboard_inline_current_rendersrvtable",
-      "dashboard_inline_current_rendersumtable",
-      "dashboard_inline_current_rendertrocas",
-      "dashboard_inline_current_srchtbl",
-      "dashboard_inline_current_srt",
-      "dashboard_inline_current_stl",
-      "dashboard_inline_current_trunc"
+      "dashboard_inline_badge",
+      "dashboard_inline_brl",
+      "dashboard_inline_brls",
+      "dashboard_inline_emptyrow",
+      "dashboard_inline_fmtd",
+      "dashboard_inline_fmtdt",
+      "dashboard_inline_getfilteredmonthlydata",
+      "dashboard_inline_grp",
+      "dashboard_inline_html",
+      "dashboard_inline_isdataversedisabled",
+      "dashboard_inline_isreceivedpayment",
+      "dashboard_inline_metricmobileprogress",
+      "dashboard_inline_metricsplit",
+      "dashboard_inline_mk",
+      "dashboard_inline_mkeys",
+      "dashboard_inline_ml",
+      "dashboard_inline_opts0",
+      "dashboard_inline_paymentop",
+      "dashboard_inline_paymentvalue",
+      "dashboard_inline_pct",
+      "dashboard_inline_progresscell",
+      "dashboard_inline_renderall",
+      "dashboard_inline_renderdistributiontable",
+      "dashboard_inline_renderfaturamento",
+      "dashboard_inline_renderfleetusagerows",
+      "dashboard_inline_renderfrota",
+      "dashboard_inline_renderfrotatable",
+      "dashboard_inline_rendermanutencoes",
+      "dashboard_inline_rendermarketing",
+      "dashboard_inline_rendermetriclines",
+      "dashboard_inline_rendermottable",
+      "dashboard_inline_rendermultas",
+      "dashboard_inline_renderpagamentos",
+      "dashboard_inline_rendersharetable",
+      "dashboard_inline_rendersrvtable",
+      "dashboard_inline_rendersumtable",
+      "dashboard_inline_rendertrocas",
+      "dashboard_inline_setexecalert",
+      "dashboard_inline_sharesortclass",
+      "dashboard_inline_sharesortvalue",
+      "dashboard_inline_srchtbl",
+      "dashboard_inline_srt",
+      "dashboard_inline_srtshare",
+      "dashboard_inline_stl",
+      "dashboard_inline_takeuntilshare",
+      "dashboard_inline_trunc"
     ],
     "1": [
-      "dashboard_inline_current",
-      "dashboard_inline_current_charthasdata",
-      "dashboard_inline_current_charts",
-      "dashboard_inline_current_db",
-      "dashboard_inline_current_detectenv",
-      "dashboard_inline_current_envs",
-      "dashboard_inline_current_f",
-      "dashboard_inline_current_fat2023",
-      "dashboard_inline_current_fat2024",
-      "dashboard_inline_current_fat2025",
-      "dashboard_inline_current_font",
-      "dashboard_inline_current_funcmapglobal",
-      "dashboard_inline_current_lookupvalue",
-      "dashboard_inline_current_monthslabelsall",
-      "dashboard_inline_current_msstate",
-      "dashboard_inline_current_nav",
-      "dashboard_inline_current_pal",
-      "dashboard_inline_current_set",
-      "dashboard_inline_current_sparks",
-      "dashboard_inline_current_srchreg",
-      "dashboard_inline_current_srtst",
-      "dashboard_inline_current_t",
-      "dashboard_inline_current_tablesortdefaults",
-      "dashboard_inline_current_tblcache",
-      "dashboard_inline_current_togglems",
-      "dashboard_inline_current_vw"
+      "dashboard_inline",
+      "dashboard_inline_charts",
+      "dashboard_inline_compactstandalonekpis",
+      "dashboard_inline_db",
+      "dashboard_inline_detectenv",
+      "dashboard_inline_ensureexecutivelayout",
+      "dashboard_inline_envs",
+      "dashboard_inline_f",
+      "dashboard_inline_fat2023",
+      "dashboard_inline_fat2024",
+      "dashboard_inline_fat2025",
+      "dashboard_inline_font",
+      "dashboard_inline_funcmapglobal",
+      "dashboard_inline_lookupvalue",
+      "dashboard_inline_monthslabelsall",
+      "dashboard_inline_msstate",
+      "dashboard_inline_pal",
+      "dashboard_inline_set",
+      "dashboard_inline_sparks",
+      "dashboard_inline_srchreg",
+      "dashboard_inline_srtst",
+      "dashboard_inline_t",
+      "dashboard_inline_tablesortdefaults",
+      "dashboard_inline_tblcache",
+      "dashboard_inline_togglems",
+      "dashboard_inline_vw"
     ],
     "2": [
-      "dashboard_inline_current_ensureexecutivelayout",
-      "dashboard_inline_current_getfilteredmonthlydata",
-      "dashboard_inline_current_getlmvalueandcount",
-      "dashboard_inline_current_getlyvalueandcount",
-      "dashboard_inline_current_getmonthlydatafromdataverse",
-      "dashboard_inline_current_getperiodvalueandcount",
-      "dashboard_inline_current_getticketstats",
-      "dashboard_inline_current_getticketstatsforperiod",
-      "dashboard_inline_current_gettotalforperiod",
-      "dashboard_inline_current_indaterange",
-      "dashboard_inline_current_isdataversedisabled",
-      "dashboard_inline_current_isticketeligiblereservation",
-      "dashboard_inline_current_mk",
-      "dashboard_inline_current_mkeys",
-      "dashboard_inline_current_passesactivefilters",
-      "dashboard_inline_current_paymentop",
-      "dashboard_inline_current_paymentvalue",
-      "dashboard_inline_current_pct",
-      "dashboard_inline_current_renderall",
-      "dashboard_inline_current_setexecalert",
-      "dashboard_inline_current_sumv",
-      "dashboard_inline_current_takeuntilshare"
+      "dashboard_inline_api",
+      "dashboard_inline_buildfuncmap",
+      "dashboard_inline_clearalerts",
+      "dashboard_inline_fetchall",
+      "dashboard_inline_generatemockdata",
+      "dashboard_inline_loadall",
+      "dashboard_inline_loadfuncionarios",
+      "dashboard_inline_loadmanutencoes",
+      "dashboard_inline_loadmarketing",
+      "dashboard_inline_loadmultas",
+      "dashboard_inline_loadpagantes",
+      "dashboard_inline_loadprecos",
+      "dashboard_inline_loadreservas",
+      "dashboard_inline_loadtrocas",
+      "dashboard_inline_loadveiculos",
+      "dashboard_inline_populatefilters",
+      "dashboard_inline_setloading",
+      "dashboard_inline_shouldusemockdata"
     ],
     "3": [
-      "dashboard_inline_current_api",
-      "dashboard_inline_current_buildfuncmap",
-      "dashboard_inline_current_clearalerts",
-      "dashboard_inline_current_fetchall",
-      "dashboard_inline_current_generatemockdata",
-      "dashboard_inline_current_loadall",
-      "dashboard_inline_current_loadfuncionarios",
-      "dashboard_inline_current_loadmanutencoes",
-      "dashboard_inline_current_loadmarketing",
-      "dashboard_inline_current_loadmultas",
-      "dashboard_inline_current_loadpagantes",
-      "dashboard_inline_current_loadprecos",
-      "dashboard_inline_current_loadreservas",
-      "dashboard_inline_current_loadtrocas",
-      "dashboard_inline_current_loadveiculos",
-      "dashboard_inline_current_makeheaders",
-      "dashboard_inline_current_populatefilters",
-      "dashboard_inline_current_setloading",
-      "dashboard_inline_current_shouldusemockdata"
+      "dashboard_inline_calcularmetamensal",
+      "dashboard_inline_clampdate",
+      "dashboard_inline_daysbetween",
+      "dashboard_inline_daysinmonth",
+      "dashboard_inline_eachdatebetween",
+      "dashboard_inline_gethistoricalfat",
+      "dashboard_inline_getlyvalueandcount",
+      "dashboard_inline_getmetaparaperiodo",
+      "dashboard_inline_getmetaparaperiodoproporcional",
+      "dashboard_inline_gettotalforperiod",
+      "dashboard_inline_pad2",
+      "dashboard_inline_parsebrdate",
+      "dashboard_inline_sameperiodlastmonth",
+      "dashboard_inline_sameperiodlastyear",
+      "dashboard_inline_shouldshowlm",
+      "dashboard_inline_ymd"
     ],
     "4": [
+      "dashboard_inline_builderrorlogrecord",
+      "dashboard_inline_createerrorlogrecord",
+      "dashboard_inline_flusherrorlogqueue",
+      "dashboard_inline_getdashboardxrm",
+      "dashboard_inline_geterrorlogentityset",
+      "dashboard_inline_installdashboarderrorlogger",
+      "dashboard_inline_makeheaders",
+      "dashboard_inline_normalizedashboarderror",
+      "dashboard_inline_readerrorlogqueue",
+      "dashboard_inline_redactlogtext",
+      "dashboard_inline_redactlogvalue",
+      "dashboard_inline_reportdashboarderror",
+      "dashboard_inline_safelogjson",
+      "dashboard_inline_truncatelog",
+      "dashboard_inline_writeerrorlogqueue"
+    ],
+    "5": [
+      "dashboard_inline_charthasdata",
+      "dashboard_inline_getlmvalueandcount",
+      "dashboard_inline_getmonthlydatafromdataverse",
+      "dashboard_inline_getperiodvalueandcount",
+      "dashboard_inline_getticketstats",
+      "dashboard_inline_getticketstatsforperiod",
+      "dashboard_inline_indaterange",
+      "dashboard_inline_isticketeligiblereservation",
+      "dashboard_inline_mkchart",
+      "dashboard_inline_mkspark",
+      "dashboard_inline_passesactivefilters",
+      "dashboard_inline_rendermotoristas",
+      "dashboard_inline_setchartemptystate",
+      "dashboard_inline_sumv"
+    ],
+    "6": [
       "dataverse_export_metadata_console",
       "dataverse_export_metadata_console_exportmetadata",
       "dataverse_export_metadata_console_getall",
@@ -126,99 +163,74 @@
       "dataverse_export_metadata_console_pick",
       "dataverse_export_metadata_console_request"
     ],
-    "5": [
-      "dashboard_inline_current_buildownfleetusagerows",
-      "dashboard_inline_current_enrichreservas",
-      "dashboard_inline_current_fv",
-      "dashboard_inline_current_iscardpayment",
-      "dashboard_inline_current_isownvehicle",
-      "dashboard_inline_current_ispendingscheduledreservation",
-      "dashboard_inline_current_isproducedreservation",
-      "dashboard_inline_current_isreceivedpayment",
-      "dashboard_inline_current_isreservableservice",
-      "dashboard_inline_current_istravelreservation",
-      "dashboard_inline_current_norml"
-    ],
-    "6": [
-      "dashboard_inline_current_clampdate",
-      "dashboard_inline_current_daysbetween",
-      "dashboard_inline_current_daysinmonth",
-      "dashboard_inline_current_eachdatebetween",
-      "dashboard_inline_current_getmetaparaperiodoproporcional",
-      "dashboard_inline_current_pad2",
-      "dashboard_inline_current_parsebrdate",
-      "dashboard_inline_current_sameperiodlastmonth",
-      "dashboard_inline_current_sameperiodlastyear",
-      "dashboard_inline_current_shouldshowlm",
-      "dashboard_inline_current_ymd"
-    ],
     "7": [
-      "dashboard_inline_current_applyf",
-      "dashboard_inline_current_clearf",
-      "dashboard_inline_current_closemultiselects",
-      "dashboard_inline_current_filtermsoptions",
-      "dashboard_inline_current_msselectall",
-      "dashboard_inline_current_mstoggle",
-      "dashboard_inline_current_quickfilter",
-      "dashboard_inline_current_togglefilterpanel",
-      "dashboard_inline_current_updatefiltersummary",
-      "dashboard_inline_current_updatemsbutton"
+      "dashboard_inline_buildownfleetusagerows",
+      "dashboard_inline_daysbetweenvalues",
+      "dashboard_inline_enrichreservas",
+      "dashboard_inline_fv",
+      "dashboard_inline_iscardpayment",
+      "dashboard_inline_isownvehicle",
+      "dashboard_inline_ispendingscheduledreservation",
+      "dashboard_inline_isproducedreservation",
+      "dashboard_inline_isreservableservice",
+      "dashboard_inline_istravelreservation",
+      "dashboard_inline_maintenancecategory",
+      "dashboard_inline_maintenancekpirows",
+      "dashboard_inline_norml"
     ],
     "8": [
-      "scripts_dev_server",
-      "scripts_dev_server_defaultfile",
-      "scripts_dev_server_fs",
-      "scripts_dev_server_http",
-      "scripts_dev_server_mimetypes",
-      "scripts_dev_server_path",
-      "scripts_dev_server_reporoot",
-      "scripts_dev_server_requestedport",
-      "scripts_dev_server_resolvefilepath",
-      "scripts_dev_server_server"
+      "dashboard_inline_applyf",
+      "dashboard_inline_clearf",
+      "dashboard_inline_closemultiselects",
+      "dashboard_inline_filtermsoptions",
+      "dashboard_inline_msselectall",
+      "dashboard_inline_mstoggle",
+      "dashboard_inline_quickfilter",
+      "dashboard_inline_updatefiltersummary",
+      "dashboard_inline_updatemsbutton"
     ],
     "9": [
-      "dashboard_inline_current_enhancesortabletables",
-      "dashboard_inline_current_marktablesort",
-      "dashboard_inline_current_parsetablevalue",
-      "dashboard_inline_current_sortdomtable",
-      "dashboard_inline_current_tablesortkey"
+      "dashboard_inline_enhancesortabletables",
+      "dashboard_inline_marktablesort",
+      "dashboard_inline_parsetablevalue",
+      "dashboard_inline_sortdomtable",
+      "dashboard_inline_tablesortkey"
     ],
     "10": [
-      "dashboard_inline_current_rendersharetable",
-      "dashboard_inline_current_sharesortclass",
-      "dashboard_inline_current_sharesortvalue",
-      "dashboard_inline_current_srtshare"
+      "dashboard_inline_animatefilteractions",
+      "dashboard_inline_cancelfilteractionsanimation",
+      "dashboard_inline_togglefilterpanel"
     ],
     "11": [
-      "dashboard_inline_current_calcularmetamensal",
-      "dashboard_inline_current_gethistoricalfat",
-      "dashboard_inline_current_getmetaparaperiodo"
+      "scripts_deploy_webresource",
+      "scripts_deploy_webresource_escape_odatastring",
+      "scripts_deploy_webresource_write_step"
     ],
     "12": [
-      "dashboard_inline_current_copytoclipboard",
-      "dashboard_inline_current_showalert"
+      "dashboard_inline_copytoclipboard",
+      "dashboard_inline_showalert"
     ],
     "13": [
-      "dashboard_inline_current_ensurereviewlayouts",
-      "dashboard_inline_current_replacecanvaswithtable"
+      "dashboard_inline_ensurereviewlayouts",
+      "dashboard_inline_replacecanvaswithtable"
     ],
     "14": [
-      "dashboard_inline_current_mkspark",
-      "dashboard_inline_current_setchartemptystate"
+      "dashboard_inline_nav",
+      "dashboard_inline_togglemobilemore"
     ]
   },
   "cohesion": {
-    "0": 0.16974789915966387,
+    "0": 0.12753623188405797,
     "1": 0.07692307692307693,
-    "2": 0.12554112554112554,
-    "3": 0.2046783625730994,
-    "4": 0.38461538461538464,
-    "5": 0.2545454545454545,
-    "6": 0.2545454545454545,
-    "7": 0.26666666666666666,
-    "8": 0.2,
+    "2": 0.2222222222222222,
+    "3": 0.16666666666666666,
+    "4": 0.23809523809523808,
+    "5": 0.17582417582417584,
+    "6": 0.38461538461538464,
+    "7": 0.1794871794871795,
+    "8": 0.3055555555555556,
     "9": 0.5,
-    "10": 0.5,
+    "10": 0.6666666666666666,
     "11": 0.6666666666666666,
     "12": 1.0,
     "13": 1.0,
@@ -226,148 +238,148 @@
   },
   "gods": [
     {
-      "id": "dashboard_inline_current_renderall",
+      "id": "dashboard_inline_renderall",
       "label": "renderAll()",
-      "degree": 57
+      "degree": 55
     },
     {
-      "id": "dashboard_inline_current_loadall",
+      "id": "dashboard_inline_loadall",
       "label": "loadAll()",
       "degree": 19
     },
     {
-      "id": "dashboard_inline_current_renderdistributiontable",
+      "id": "dashboard_inline_renderdistributiontable",
       "label": "renderDistributionTable()",
       "degree": 16
     },
     {
-      "id": "dashboard_inline_current_renderfrota",
+      "id": "dashboard_inline_renderfrota",
       "label": "renderFrota()",
       "degree": 15
     },
     {
-      "id": "dashboard_inline_current_emptyrow",
+      "id": "dashboard_inline_emptyrow",
       "label": "emptyRow()",
       "degree": 15
     },
     {
-      "id": "dashboard_inline_current_rendermanutencoes",
+      "id": "dashboard_inline_rendermanutencoes",
       "label": "renderManutencoes()",
       "degree": 13
     },
     {
-      "id": "dashboard_inline_current_renderpagamentos",
+      "id": "dashboard_inline_api",
+      "label": "API()",
+      "degree": 12
+    },
+    {
+      "id": "dashboard_inline_renderpagamentos",
       "label": "renderPagamentos()",
       "degree": 12
     },
     {
-      "id": "dashboard_inline_current_brls",
+      "id": "dashboard_inline_brls",
       "label": "brlS()",
       "degree": 11
     },
     {
-      "id": "dashboard_inline_current_sumv",
+      "id": "dashboard_inline_sumv",
       "label": "sumV()",
-      "degree": 11
-    },
-    {
-      "id": "dashboard_inline_current_norml",
-      "label": "normL()",
       "degree": 11
     }
   ],
   "surprises": [
     {
       "source": "renderAll()",
-      "target": "mL()",
-      "source_files": [
-        "dashboard-inline-current.js",
-        "dashboard-inline-current.js"
-      ],
-      "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 0 → community 2"
-    },
-    {
-      "source": "renderAll()",
       "target": "isProducedReservation()",
       "source_files": [
-        "dashboard-inline-current.js",
-        "dashboard-inline-current.js"
+        "dashboard-inline.js",
+        "dashboard-inline.js"
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 5 → community 2"
+      "note": "Bridges community 7 → community 0"
     },
     {
-      "source": "renderPagamentos()",
-      "target": "isReceivedPayment()",
+      "source": "createErrorLogRecord()",
+      "target": "API()",
       "source_files": [
-        "dashboard-inline-current.js",
-        "dashboard-inline-current.js"
-      ],
-      "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 5 → community 0"
-    },
-    {
-      "source": "renderShareTable()",
-      "target": "brlS()",
-      "source_files": [
-        "dashboard-inline-current.js",
-        "dashboard-inline-current.js"
+        "dashboard-inline.js",
+        "dashboard-inline.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 0 → community 10"
+      "note": "Bridges community 2 → community 4"
     },
     {
       "source": "updateFilterSummary()",
       "target": "fmtD()",
       "source_files": [
-        "dashboard-inline-current.js",
-        "dashboard-inline-current.js"
+        "dashboard-inline.js",
+        "dashboard-inline.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 0 → community 7"
+      "note": "Bridges community 0 → community 8"
+    },
+    {
+      "source": "getLYValueAndCount()",
+      "target": "sumV()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 5 → community 3"
+    },
+    {
+      "source": "renderAll()",
+      "target": "sumV()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 5 → community 0"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `renderAll()` connect `Community 2` to `Community 0`, `Community 1`, `Community 5`, `Community 6`, `Community 7`, `Community 9`, `Community 10`, `Community 11`, `Community 13`, `Community 14`?",
-      "why": "High betweenness centrality (0.045) - this node is a cross-community bridge."
+      "question": "Why does `renderAll()` connect `renderAll` to `dashboard-inline.js`, `parseBRDate`, `sumV`, `normL`, `applyF`, `enhanceSortableTables`?",
+      "why": "High betweenness centrality (0.036) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `loadAll()` connect `Community 3` to `Community 1`, `Community 12`, `Community 5`, `Community 7`?",
+      "question": "Why does `loadAll()` connect `loadAll` to `applyF`, `dashboard-inline.js`, `showAlert`, `normL`?",
       "why": "High betweenness centrality (0.004) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `renderFrota()` connect `Community 0` to `Community 1`, `Community 2`, `Community 5`?",
+      "question": "Why does `renderFrota()` connect `renderAll` to `dashboard-inline.js`, `normL`?",
       "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
     },
     {
       "type": "verify_inferred",
-      "question": "Are the 7 inferred relationships involving `renderAll()` (e.g. with `isPendingScheduledReservation()` and `isProducedReservation()`) actually correct?",
-      "why": "`renderAll()` has 7 INFERRED edges - model-reasoned connections that need verification."
+      "question": "Are the 6 inferred relationships involving `renderAll()` (e.g. with `isPendingScheduledReservation()` and `isProducedReservation()`) actually correct?",
+      "why": "`renderAll()` has 6 INFERRED edges - model-reasoned connections that need verification."
     },
     {
       "type": "isolated_nodes",
       "question": "What connects `fat2023`, `fat2024`, `fat2025` to the rest of the system?",
-      "why": "26 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "why": "18 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "question": "Should `renderAll` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12753623188405797 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `dashboard-inline.js` be split into smaller, more focused modules?",
       "why": "Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Community 2` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.12554112554112554 - nodes in this community are weakly interconnected."
     }
   ]
 }

@@ -5816,6 +5816,31 @@
         return IS_LOCAL || params.get("mock") === "1";
       }
 
+      function shouldUseProdSnapshot() {
+        const params = new URLSearchParams(window.location.search);
+        return IS_LOCAL && params.get("snapshot") === "1";
+      }
+
+      async function loadProdSnapshot() {
+        const response = await fetch("data/dashboard-prod-snapshot.json", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Snapshot PROD indisponível (HTTP ${response.status}). Rode npm run snapshot:prod.`);
+
+        const snapshot = await response.json();
+        const requiredCollections = ["reservas", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
+        if (snapshot?.schemaVersion !== 1 || !snapshot?.data) throw new Error("Snapshot PROD inválido. Rode npm run snapshot:prod novamente.");
+
+        for (const collection of requiredCollections) {
+          if (!Array.isArray(snapshot.data[collection])) {
+            throw new Error(`Snapshot PROD inválido: coleção '${collection}' ausente.`);
+          }
+        }
+
+        DB = snapshot.data;
+        const exportedAt = new Date(snapshot.exportedAt);
+        const timestamp = Number.isNaN(exportedAt.getTime()) ? "data desconhecida" : exportedAt.toLocaleString("pt-BR");
+        showAlert("warn", `<strong>SNAPSHOT PROD:</strong> dados reais exportados em ${timestamp}. Atualize com <code>npm run snapshot:prod</code>.`);
+      }
+
       function makeHeaders(wantAnno, wantPage) {
         const h = new Headers({
           Accept: "application/json",
@@ -6296,14 +6321,16 @@
         const day = String(dateValue).slice(0, 10);
         return day >= startStr && day <= endStr;
       };
-      const daysBetween = (startStr, endStr) => {
+      const shouldShowLM = (startStr, endStr) => {
         const s = parseBRDate(startStr);
         const e = parseBRDate(endStr);
-        if (!s || !e || e < s) return 0;
-        return Math.floor((e - s) / 86400000) + 1;
+        const today = new Date();
+        return !!s && !!e &&
+          s.getFullYear() === today.getFullYear() &&
+          e.getFullYear() === today.getFullYear() &&
+          s.getMonth() === today.getMonth() &&
+          e.getMonth() === today.getMonth();
       };
-      const shouldShowLM = (startStr, endStr) =>
-        !!startStr && !!endStr && daysBetween(startStr, endStr) <= 62;
       const isProducedReservation = (r) => {
         const k = normL(r?._stL);
         return k.includes("conclu") || k.includes("realiz") || k.includes("finaliz");
@@ -6901,7 +6928,11 @@ function setAppVersion() {
           btn.classList.add("spin");
         }
         try {
-          if (shouldUseMockData()) {
+          if (shouldUseProdSnapshot()) {
+            USING_MOCK_DATA = false;
+            await loadProdSnapshot();
+            markAllDataSetsLoaded();
+          } else if (shouldUseMockData()) {
             // Usar dados fictícios para desenvolvimento local
             USING_MOCK_DATA = true;
             const mock = generateMockData();
@@ -8343,11 +8374,20 @@ function setAppVersion() {
         const activeStart = start || `${currentYear}-01-01`;
         const activeEnd = end || `${currentYear}-12-31`;
         const showLM = shouldShowLM(start, end);
+        const showLY = showLM;
         const lmPeriod = samePeriodLastMonth(activeStart, activeEnd);
         const lyPeriod = samePeriodLastYear(activeStart, activeEnd);
         const lmData = lmPeriod ? getPeriodValueAndCount(lmPeriod.start, lmPeriod.end) : { value: 0, count: null, hasData: false };
         const lmValue = lmData.hasData ? lmData.value : 0;
         const lmSrvCount = lmData.count !== null ? lmData.count : 0;
+        const producedPeriodData = getPeriodValueAndCount(activeStart, activeEnd);
+        const producedPeriodValue = producedPeriodData.value;
+        const hardcodedFaturamentoTotal = Object.values(yearDataMap)
+          .flat()
+          .reduce((sum, value) => sum + (value || 0), 0);
+        const faturamentoProduzido = start || end
+          ? producedPeriodValue
+          : fat + hardcodedFaturamentoTotal;
 
         // LY deve comparar o período atual com o mesmo período do ano anterior
         let lyValue = 0;
@@ -8409,14 +8449,15 @@ function setAppVersion() {
         set("kSrv", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
         html("kSrvD", dvDisabled ? "" :
           (showLM ? (lmSrvCount ? fmtCntChip(rv.length, lmSrvCount, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
-          (lySrvCount ? fmtCntChip(rv.length, lySrvCount, "LY", "badge-ly") : ndChip("LY", "badge-ly")));
-        set("kFat", dvDisabled ? "—" : brlS(fat));
+          (showLY ? (lySrvCount ? fmtCntChip(rv.length, lySrvCount, "LY", "badge-ly") : ndChip("LY", "badge-ly")) : ""));
+        set("kFat", dvDisabled ? "—" : brlS(faturamentoProduzido));
         html("kFatD", dvDisabled ? "" :
-          (showLM ? fmtKpiChip(fat, lmValue, "LM", "badge-lm") : "") + fmtKpiChip(fat, lyValue, "LY", "badge-ly"));
+          (showLM ? fmtKpiChip(faturamentoProduzido, lmValue, "LM", "badge-lm") : "") +
+          (showLY ? fmtKpiChip(faturamentoProduzido, lyValue, "LY", "badge-ly") : ""));
         set("kTk", dvDisabled ? "—" : brl(curTk));
         html("kTkD", dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
-          (lyTkVal ? fmtKpiChip(curTk, lyTkVal, "LY", "badge-ly") : ndChip("LY", "badge-ly")));
+          (showLY ? (lyTkVal ? fmtKpiChip(curTk, lyTkVal, "LY", "badge-ly") : ndChip("LY", "badge-ly")) : ""));
         set("kMan", dvDisabled ? "—" : VW.manutencoes.length);
         const custoTotal = dvDisabled
           ? 0
@@ -8642,9 +8683,9 @@ function setAppVersion() {
           options: { ...opts0({ noLegend: false, yBrl: true, datalabels: false }), maintainAspectRatio: false },
         });
 
-        // Cards de Total Produzido
+        // Cards de Total Produzido: para anos históricos, usa o faturamento mensal hardcoded.
         const meta = getMetaParaPeriodoProporcional(start, end);
-        const accumulated = dvDisabled ? 0 : fat;
+        const accumulated = dvDisabled ? 0 : faturamentoProduzido;
         const metaProgress = meta ? (accumulated / meta) * 100 : 0;
         const lyDelta = lyValue ? ((accumulated - lyValue) / lyValue) * 100 : 0;
         const lmDelta = lmValue ? ((accumulated - lmValue) / lmValue) * 100 : 0;
@@ -8665,7 +8706,7 @@ function setAppVersion() {
           document.getElementById("v_totalProd").textContent = dvDisabled ? "—" : brlS(accumulated);
         document.getElementById("indicatorsLM_LY_META").innerHTML =
           (showLM ? mkChip("LM", lmValue, lmDelta, "badge-lm") : "") +
-          mkChip("LY", lyValue, lyDelta, "badge-ly") +
+          (showLY ? mkChip("LY", lyValue, lyDelta, "badge-ly") : "") +
           metaChip;
 
         // Barra de progresso da meta
@@ -8710,7 +8751,7 @@ function setAppVersion() {
         // Ticket Médio chips: LM only if last month is in current period; LY not available (count unknown)
         document.getElementById("ind_tm").innerHTML = dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
-          ndChip("LY", "badge-ly");
+          (showLY ? ndChip("LY", "badge-ly") : "");
 
         // Meta x Realizado por Mês
         {
@@ -8744,7 +8785,7 @@ function setAppVersion() {
           `);
           document.getElementById("ind_mvr").innerHTML = dvDisabled ? "" :
             (totalMvrMeta > 0 ? `<span class="badge-kpi badge-meta${mvrAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(totalMvrMeta)}</span><span class="bk-pct" style="font-weight:800;">${pctGlobal.toFixed(0)}%${mvrAchieved ? " ✓" : ""}</span></span>` : "") +
-            fmtKpiChip(totalMvrReal, lyValue, "LY", "badge-ly");
+            (showLY ? fmtKpiChip(totalMvrReal, lyValue, "LY", "badge-ly") : "");
         }
 
         // Faturamento por Cliente por Mês
@@ -10673,6 +10714,7 @@ function setAppVersion() {
           && /(?:^|[?&])tv=1(?:&|$)/i.test(location.search || "");
       }
       function startDashboardAutoRefresh() {
+        if (shouldUseProdSnapshot()) return;
         if (dashboardAutoRefreshTimer) window.clearInterval(dashboardAutoRefreshTimer);
         dashboardAutoRefreshTimer = window.setInterval(() => {
           if (window.__DASHBOARD_TV_MODE) {

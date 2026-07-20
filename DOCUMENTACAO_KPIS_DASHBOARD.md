@@ -107,7 +107,7 @@ Com início ou fim preenchido, o sistema calcula o valor das reservas do interva
 
 **Não entra:** reservas fora da categoria Serviço. Registros sem valor entram na contagem operacional, mas somam zero.
 
-### Serviços
+### Serviços - VALIDADO
 
 **O que responde:** quantos serviços Serviço existem no recorte.
 
@@ -117,7 +117,7 @@ Serviços = quantidade de reservas Serviço filtradas
 
 Não depende de o serviço ter valor, OP, cliente, motorista ou veículo preenchido. Esses problemas são tratados nos indicadores de qualidade.
 
-### Ticket médio
+### Ticket médio - VALIDADO
 
 **O que responde:** valor médio dos serviços com composição de preço concluída.
 
@@ -154,7 +154,7 @@ O percentual exibido ao lado é:
 
 Se o faturamento for zero, o percentual é zero.
 
-### CP pendente
+### CP pendente - VALIDADO
 
 **CP** significa composição de preço.
 
@@ -198,7 +198,7 @@ O cartão também mostra os valores no formato **recebido de base**. A base pode
 
 **Status de validação:** o card de **Recebimento** está completamente validado e correto para a regra, os status e a base de dados atualmente implementados no dashboard.
 
-### Manutenções
+### Manutenções - VALIDADO
 
 **O que responde:** quantidade de registros de manutenção no período aplicado à data da manutenção.
 

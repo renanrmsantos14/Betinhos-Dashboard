@@ -1,5 +1,34 @@
 ﻿// Gerado por scripts/build-graphify-code.ps1
 // Fonte: Dashboard.html
+(() => {
+        const earlyErrors = (window.__DASHBOARD_EARLY_ERRORS = window.__DASHBOARD_EARLY_ERRORS || []);
+        window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = true;
+        const capture = (entry) => {
+          if (window.__DASHBOARD_EARLY_CAPTURE_ACTIVE && earlyErrors.length < 20) earlyErrors.push(entry);
+        };
+        window.addEventListener("error", (event) => {
+          const target = event.target;
+          if (target && target !== window) {
+            capture({
+              source: "window.resourceerror",
+              action: target.currentSrc || target.src || target.href || "",
+              phase: String(target.tagName || "resource").toLowerCase(),
+              message: "Falha ao carregar recurso.",
+            });
+            return;
+          }
+          capture({
+            source: "window.error",
+            action: event.filename || "",
+            phase: `${event.lineno || 0}:${event.colno || 0}`,
+            message: event.message || "Erro inesperado antes da inicializacao.",
+          });
+        }, true);
+        window.addEventListener("unhandledrejection", (event) => {
+          capture({ source: "window.unhandledrejection", message: String(event.reason || "Promise rejeitada sem tratamento.") });
+        });
+      })();
+
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // DADOS HARDCODED
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -159,7 +188,7 @@
         // PreÃ§os
         for (let i = 0; i < 60; i++) {
           const id = `mock-preco-${i}`;
-          const st = r(["Faturado", "Pendente", "Pago"]);
+          const st = r(["ConcluÃ­da", "Pendente"]);
           mock.precos.push({
             cr40f_composicaodeprecosid: id,
             new_valortotal: randF(150, 3500),
@@ -189,7 +218,7 @@
 
         // Pagantes (deve vir antes de Reservas para que possam ser referenciados)
         for (let i = 0; i < 40; i++) {
-          const st = r(["Pago", "Pendente"]);
+          const st = r(["Paga", "Pendente"]);
           mock.pagantes.push({
             cr40f_pagantesid: `mock-pag-${i}`,
             _cr40f_financeiro_value: `mock-op-${i}`,
@@ -362,6 +391,226 @@
         return h;
       }
 
+      // Logs App Motoristas: mesmo contrato do webresource App Motoristas.
+      const ERROR_LOG_TABLE = "new_appmotoristaslog";
+      const ERROR_LOG_QUEUE_KEY = "dashboard-betinhos-error-log-queue-v1";
+      const ERROR_LOG_MAX_QUEUE = 50;
+      let errorLogEntitySetPromise = null;
+      let originalDashboardConsoleError = null;
+
+      const truncateLog = (value, max) => String(value ?? "").slice(0, max);
+      const redactLogText = (value) => String(value ?? "")
+        .replace(/data:[^;,]+;base64,[A-Za-z0-9+/=\s]{40,}/gi, "data:[redacted-base64]")
+        .replace(/\b[A-Za-z0-9+/]{160,}={0,2}\b/g, "[redacted-base64]")
+        .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[redacted-email]")
+        .replace(/https?:\/\/[^\s"'<>)]*/gi, (url) => {
+          try {
+            const parsed = new URL(url);
+            return `${parsed.origin}${parsed.pathname}${parsed.search ? "?[redacted-query]" : ""}`;
+          } catch {
+            return "[redacted-url]";
+          }
+        });
+
+      function redactLogValue(value, key = "", depth = 0) {
+        if (value === null || value === undefined) return value;
+        if (/(token|secret|senha|password|authorization|email|mail|telefone|phone|foto|photo|imagem|image|base64|content|conteudo|link)/i.test(key)) return "[redacted]";
+        if (depth > 6) return "[max-depth]";
+        if (typeof value === "string") return redactLogText(value);
+        if (Array.isArray(value)) return value.map((item) => redactLogValue(item, key, depth + 1));
+        if (typeof value === "object") {
+          return Object.fromEntries(Object.entries(value).map(([entryKey, entryValue]) => [entryKey, redactLogValue(entryValue, entryKey, depth + 1)]));
+        }
+        return value;
+      }
+
+      function safeLogJson(value) {
+        try {
+          const seen = new WeakSet();
+          return truncateLog(JSON.stringify(redactLogValue(value), (_key, item) => {
+            if (typeof item === "object" && item !== null) {
+              if (seen.has(item)) return "[circular]";
+              seen.add(item);
+            }
+            if (typeof item === "function") return `[function ${item.name || "anonymous"}]`;
+            return item;
+          }), 20000);
+        } catch {
+          return "[payload indisponivel]";
+        }
+      }
+
+      function getDashboardXrm() {
+        try {
+          if (window.Xrm?.WebApi) return window.Xrm;
+          if (window.parent?.Xrm?.WebApi) return window.parent.Xrm;
+        } catch {
+          return window.Xrm?.WebApi ? window.Xrm : null;
+        }
+        return null;
+      }
+
+      function normalizeDashboardError(error) {
+        if (error instanceof Error) return {
+          message: redactLogText(error.message || "Erro inesperado."),
+          stack: redactLogText(error.stack || ""),
+          name: redactLogText(error.name || "Error"),
+          code: redactLogText(error.code || ""),
+        };
+        if (typeof error === "string") return { message: redactLogText(error), stack: "", name: "Error", code: "" };
+        return { message: redactLogText(safeLogJson(error) || "Erro inesperado."), stack: "", name: "Error", code: "" };
+      }
+
+      function readErrorLogQueue() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(ERROR_LOG_QUEUE_KEY) || "[]");
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function writeErrorLogQueue(records) {
+        try {
+          localStorage.setItem(ERROR_LOG_QUEUE_KEY, JSON.stringify(records.slice(-ERROR_LOG_MAX_QUEUE)));
+        } catch {
+          // Falha de storage nunca deve interromper o dashboard.
+        }
+      }
+
+      function buildErrorLogRecord(error, context = {}) {
+        const xrm = getDashboardXrm();
+        const user = xrm?.Utility?.getGlobalContext?.().userSettings;
+        const normalized = normalizeDashboardError(error);
+        const severity = truncateLog(context.severity || "error", 30);
+        const source = truncateLog(context.source || "dashboard", 120);
+        return {
+          new_name: truncateLog(`${severity} | ${source} | ${normalized.message}`, 160),
+          new_occurredat: new Date().toISOString(),
+          new_severity: severity,
+          new_source: source,
+          new_action: truncateLog(redactLogText(context.action || ""), 180),
+          new_phase: truncateLog(redactLogText(context.phase || ""), 120),
+          new_message: truncateLog(normalized.message, 20000),
+          new_stack: truncateLog(normalized.stack, 100000),
+          new_errorname: truncateLog(normalized.name, 220),
+          new_errorcode: truncateLog(normalized.code, 120),
+          new_appname: "Dashboard Betinhos",
+          new_sessionid: truncateLog(window.__DASHBOARD_ERROR_SESSION || (window.__DASHBOARD_ERROR_SESSION = window.crypto?.randomUUID?.() || `dashboard-${Date.now()}-${Math.random().toString(16).slice(2)}`), 120),
+          new_userid: truncateLog(String(user?.userId || "").replace(/[{}]/g, ""), 120),
+          new_username: truncateLog(user?.userName || "", 300),
+          new_url: truncateLog(redactLogText(location.href), 4000),
+          new_referrer: truncateLog(redactLogText(document.referrer), 4000),
+          new_useragent: truncateLog(navigator.userAgent, 4000),
+          new_language: truncateLog(navigator.language, 80),
+          new_platform: truncateLog(navigator.platform, 160),
+          new_timezone: truncateLog(Intl.DateTimeFormat().resolvedOptions().timeZone || "", 120),
+          new_viewport: `${window.innerWidth}x${window.innerHeight}@${window.devicePixelRatio || 1}`,
+          new_visibilitystate: truncateLog(document.visibilityState, 40),
+          new_connectiontype: truncateLog(navigator.connection?.effectiveType || navigator.connection?.type || "", 80),
+          new_clienturl: truncateLog(xrm?.Utility?.getGlobalContext?.().getClientUrl?.() || BASE, 500),
+          new_isoffline: navigator.onLine === false ? "true" : "false",
+          new_payloadjson: safeLogJson(context.payload || {}),
+        };
+      }
+
+      async function getErrorLogEntitySet() {
+        if (!errorLogEntitySetPromise) {
+          errorLogEntitySetPromise = fetch(`${API()}/EntityDefinitions(LogicalName='${ERROR_LOG_TABLE}')?$select=EntitySetName`, {
+            credentials: "same-origin",
+            headers: makeHeaders(false, false),
+          }).then(async (response) => {
+            const data = await response.json();
+            if (!response.ok || !data?.EntitySetName) throw new Error("Tabela de logs indisponivel.");
+            return data.EntitySetName;
+          }).catch((error) => {
+            errorLogEntitySetPromise = null;
+            throw error;
+          });
+        }
+        return errorLogEntitySetPromise;
+      }
+
+      async function createErrorLogRecord(record) {
+        const xrm = getDashboardXrm();
+        if (xrm?.WebApi?.createRecord) {
+          await xrm.WebApi.createRecord(ERROR_LOG_TABLE, record);
+          return;
+        }
+        const entitySet = await getErrorLogEntitySet();
+        const headers = makeHeaders(false, false);
+        headers.set("Content-Type", "application/json; charset=utf-8");
+        const response = await fetch(`${API()}/${entitySet}`, {
+          method: "POST",
+          credentials: "same-origin",
+          headers,
+          body: JSON.stringify(record),
+        });
+        if (!response.ok) throw new Error(`Falha ao gravar log: HTTP ${response.status}`);
+      }
+
+      async function flushErrorLogQueue() {
+        if (IS_LOCAL) return;
+        const pending = [];
+        for (const record of readErrorLogQueue()) {
+          try {
+            await createErrorLogRecord(record);
+          } catch {
+            pending.push(record);
+          }
+        }
+        writeErrorLogQueue(pending);
+      }
+
+      function reportDashboardError(error, context = {}) {
+        if (IS_LOCAL) return;
+        const record = buildErrorLogRecord(error, context);
+        void createErrorLogRecord(record).then(flushErrorLogQueue).catch(() => {
+          writeErrorLogQueue([...readErrorLogQueue(), record]);
+        });
+      }
+
+      function installDashboardErrorLogger() {
+        window.__DASHBOARD_REPORT_ERROR = reportDashboardError;
+        if (window.__DASHBOARD_ERROR_LOGGER_INSTALLED) return;
+        window.__DASHBOARD_ERROR_LOGGER_INSTALLED = true;
+
+        window.addEventListener("error", (event) => {
+          const target = event.target;
+          if (target && target !== window) {
+            reportDashboardError(new Error(`Falha ao carregar recurso ${String(target.tagName || "resource").toLowerCase()}.`), {
+              source: "window.resourceerror",
+              action: target.currentSrc || target.src || target.href || "",
+              phase: String(target.tagName || "resource").toLowerCase(),
+            });
+            return;
+          }
+          reportDashboardError(event.error || event.message, {
+            severity: "critical",
+            source: "window.error",
+            action: event.filename || "",
+            phase: `${event.lineno || 0}:${event.colno || 0}`,
+          });
+        }, true);
+        window.addEventListener("unhandledrejection", (event) => {
+          reportDashboardError(event.reason, { severity: "critical", source: "window.unhandledrejection" });
+        });
+
+        originalDashboardConsoleError = console.error.bind(console);
+        console.error = (...args) => {
+          originalDashboardConsoleError(...args);
+          const error = args.find((item) => item instanceof Error) || new Error(args.map((item) => typeof item === "string" ? item : safeLogJson(item)).join(" "));
+          reportDashboardError(error, { source: "console.error", payload: args });
+        };
+
+        const earlyErrors = Array.isArray(window.__DASHBOARD_EARLY_ERRORS) ? window.__DASHBOARD_EARLY_ERRORS : [];
+        window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = false;
+        window.__DASHBOARD_EARLY_ERRORS = [];
+        earlyErrors.forEach((entry) => reportDashboardError(entry.message, entry));
+        window.addEventListener("online", () => { void flushErrorLogQueue(); });
+        void flushErrorLogQueue();
+      }
+
       const T = {
         reservas: "cr40f_reservadeveculoses",
         precos: "cr40f_composicaodeprecoses",
@@ -437,6 +686,7 @@
           data: "new_datadepublicacao",
         },
       };
+      const DV_STATUS_FAT_PAGO = 202410010;
 
       let DB = {
         reservas: [],
@@ -509,7 +759,7 @@
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(text);
-            showAlert("suc", "âœ… Copiado para a Ã¡rea de transferÃªncia!");
+            showAlert("suc", "Copiado para a Ã¡rea de transferÃªncia.");
             return true;
           }
         } catch (err) {
@@ -524,11 +774,11 @@
           textarea.select();
           document.execCommand("copy");
           document.body.removeChild(textarea);
-          showAlert("suc", "âœ… Copiado para a Ã¡rea de transferÃªncia!");
+          showAlert("suc", "Copiado para a Ã¡rea de transferÃªncia.");
           return true;
         } catch (err) {
           console.error("Copy failed:", err);
-          showAlert("err", "âŒ NÃ£o foi possÃ­vel copiar. Tente manualmente.");
+          showAlert("err", "NÃ£o foi possÃ­vel copiar. Tente manualmente.");
           return false;
         }
       }
@@ -612,8 +862,19 @@
         return k.includes("pend") || k.includes("progr") || k.includes("program") || k.includes("solicit");
       };
       const isReceivedPayment = (r) => {
-        const k = normL(fv(r, F.pag.status));
-        return k.includes("pago") || k.includes("receb");
+        return r[F.pag.status] === 202410002;
+      };
+      const isTicketEligibleReservation = (r) =>
+        r?._cpConcluida === true && (parseFloat(r?._valor) || 0) > 0;
+      const getTicketStats = (rows) => {
+        const eligible = rows.filter(isTicketEligibleReservation);
+        const value = sumV(eligible);
+        return {
+          rows: eligible,
+          value,
+          count: eligible.length,
+          ticket: eligible.length ? value / eligible.length : 0,
+        };
       };
       const isCardPayment = (r) => {
         const k = normL(fv(r, F.pag.forma));
@@ -730,7 +991,13 @@
         const pctText = `${Number(pctValue || 0).toFixed(1)}%`;
         return `<div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, Math.round(pctValue || 0))}%;background:${color}"></div></div><span class="prg-pct">${metricSplit(pctText, secondary, "r")}</span></div>`;
       }
+      function metricMobileProgress(pctValue, color) {
+        const pct = Number(pctValue || 0);
+        return `<div class="metric-mobile-progress"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, Math.round(pct))}%;background:${color}"></div></div><span>${pct.toFixed(1)}%</span></div>`;
+      }
       function renderDistributionTable(targetId, rows, total, options = {}) {
+        const el = document.getElementById(targetId);
+        if (!el) return;
         const {
           label = "Categoria",
           countLabel = "Registros",
@@ -746,19 +1013,37 @@
           ? rows.reduce((s, r) => s + Number(r.value || 0), 0)
           : total;
         const cols = hasValue ? 4 : 3;
-        html(targetId, `
-          <table><thead><tr><th>${label}</th><th class="r">${countLabel}</th>${hasValue ? `<th class="r">${valueLabel}</th>` : ""}<th>Participacao</th></tr></thead>
-          <tbody>${tableRows.map((r, i) => {
+        const mobileRows = tableRows
+          .map((r, i) => {
             const qtd = Number(r.qtd || 0);
             const value = Number(r.value || 0);
             const partValue = participationByValue ? value : qtd;
             const part = partBase ? (partValue / partBase) * 100 : 0;
-            const secondary = participationByValue && hasValue
-              ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
-              : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
-            return `<tr><td class="em">${badgeLabels ? badge(r.label) : trunc(r.label, 28)}</td><td class="r">${qtd.toLocaleString("pt-BR")}</td>${hasValue ? `<td class="r em">${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</td>` : ""}<td>${progressCell(part, secondary, PAL[i % PAL.length])}</td></tr>`;
-          }).join("") || emptyRow(cols)}</tbody></table>
-        `);
+            const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, 28);
+            const valueStat = hasValue
+              ? `<span><small>${valueLabel}</small><b>${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</b></span>`
+              : "";
+            return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${labelHtml}</span><div class="metric-mobile-stats"><span><small>${countLabel}</small><b>${qtd.toLocaleString("pt-BR")}</b></span>${valueStat}</div></div>${metricMobileProgress(part, PAL[i % PAL.length])}</div>`;
+          })
+          .join("");
+        const mobileMarkup = mobileRows || '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
+        const valueHead = hasValue ? '<th class="r">' + valueLabel + '</th>' : '';
+        const tableHead = '<thead><tr><th>' + label + '</th><th class="r">' + countLabel + '</th>' + valueHead + '<th>Participacao</th></tr></thead>';
+        const tableBody = tableRows.map((r, i) => {
+          const qtd = Number(r.qtd || 0);
+          const value = Number(r.value || 0);
+          const partValue = participationByValue ? value : qtd;
+          const part = partBase ? (partValue / partBase) * 100 : 0;
+          const secondary = participationByValue && hasValue
+            ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
+            : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
+          const valueCell = hasValue
+            ? '<td class="r em">' + (moneyValue ? brl(value) : value.toLocaleString("pt-BR")) + '</td>'
+            : '';
+          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, 28)) + '</td><td class="r">' + qtd.toLocaleString("pt-BR") + '</td>' + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
+        }).join("") || emptyRow(cols);
+        el.classList.add("has-mobile-list");
+        el.innerHTML = '<table>' + tableHead + '<tbody>' + tableBody + '</tbody></table><div class="metric-mobile-list">' + mobileMarkup + '</div>';
       }
       function renderShareTable(targetId, rows, totalQtd, totalFat) {
         const el = document.getElementById(targetId);
@@ -780,7 +1065,17 @@
               })
               .join("")
           : emptyRow(4);
-        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participacao</th></tr></thead><tbody>${body}</tbody></table>`;
+        const mobileBody = sortedRows.length
+          ? sortedRows
+              .map((r, i) => {
+                const pctQtd = totalQtd ? (r.qtd / totalQtd) * 100 : 0;
+                const pctFat = totalFat ? (r.fat / totalFat) * 100 : 0;
+                return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${trunc(r.nome, 24)}</span><div class="metric-mobile-stats"><span><small>QT</small><b>${pctQtd.toFixed(1)}%</b><em>${r.qtd.toLocaleString("pt-BR")}</em></span><span><small>R$</small><b>${pctFat.toFixed(1)}%</b><em>${brlS(r.fat)}</em></span></div></div>${metricMobileProgress(pctFat, PAL[i % PAL.length])}</div>`;
+              })
+              .join("")
+          : `<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>`;
+        el.classList.add("has-mobile-list");
+        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participacao</th></tr></thead><tbody>${body}</tbody></table><div class="metric-mobile-list">${mobileBody}</div>`;
       }
       function srtShare(targetId, field) {
         const key = `share:${targetId}`;
@@ -1048,7 +1343,7 @@ function detectEnv(){
             DB = { ...mock };
             showAlert(
               "warn",
-              "<strong>âš ï¸ MODO DESENVOLVIMENTO:</strong> VocÃª estÃ¡ visualizando dados <strong>FICTÃCIOS</strong> gerados apenas para testes. Nenhum dado real estÃ¡ sendo exibido.",
+              "<strong>MODO DESENVOLVIMENTO:</strong> VocÃª estÃ¡ visualizando dados <strong>FICTÃCIOS</strong> gerados apenas para testes. Nenhum dado real estÃ¡ sendo exibido.",
             );
             console.log("[MOCK] Dados fictÃ­cios gerados:", {
               reservas: DB.reservas.length,
@@ -1193,8 +1488,10 @@ function detectEnv(){
           const id = p["cr40f_composicaodeprecosid"]?.toLowerCase();
           if (id) {
             const valor = parseFloat(p[F.preco.valorTotal]) || 0;
-            const pendente = normL(fv(p, F.preco.status)).includes("pend");
-            precoMap.set(id, { valor, pendente });
+            const status = p[F.preco.status];
+            const pendente = status === 100000000;
+            const concluida = status === 100000001;
+            precoMap.set(id, { valor, pendente, concluida });
           }
         }
         console.log(
@@ -1228,6 +1525,7 @@ function detectEnv(){
             _veiNome: String(fv(r, F.res.veiculo) || "â€”"),
             _valor: valor,
             _cpPendente: cpPendente,
+            _cpConcluida: entry?.concluida ?? false,
             _opId: F.res.lookupOP ? (r[F.res.lookupOP] || "").toLowerCase() : "",
             _ts: r[F.res.data] ? new Date(r[F.res.data]).getTime() : 0,
           };
@@ -1321,6 +1619,7 @@ function detectEnv(){
         if (idx > -1) state.splice(idx, 1);
         else state.push(val);
         updateMSButton(id);
+        applyF(true);
       }
       function msSelectAll(id, sel) {
         const key = id.replace("ms", "");
@@ -1336,6 +1635,7 @@ function detectEnv(){
           opts.forEach((o) => (o.checked = false));
         }
         updateMSButton(id);
+        applyF(true);
       }
       function updateMSButton(id) {
         const key = id.replace("ms", "");
@@ -1350,25 +1650,119 @@ function detectEnv(){
         if (state.length === 0) btn.innerHTML = ph[id];
         else
           btn.innerHTML = `${ph[id]} <span class="sel-count">${state.length}</span>`;
+        updateFilterSummary();
       }
-      document.addEventListener("click", (e) => {
-        if (!e.target.closest(".ms-wrap")) {
-          document
-            .querySelectorAll(".ms-dd")
-            .forEach((d) => d.classList.remove("open"));
-          document
-            .querySelectorAll(".ms-btn")
-            .forEach((b) => b.classList.remove("open"));
-        }
-      });
-
-      function applyF() {
+      function closeMultiselects() {
         document
           .querySelectorAll(".ms-dd")
           .forEach((d) => d.classList.remove("open"));
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+      }
+      let filterActionsAnimation = null;
+      let filterActionsFrame = 0;
+      function cancelFilterActionsAnimation() {
+        cancelAnimationFrame(filterActionsFrame);
+        if (filterActionsAnimation) {
+          filterActionsAnimation.cancel();
+          filterActionsAnimation = null;
+        }
+      }
+      function animateFilterActions(actions, wasOpen, first) {
+        if (
+          !actions ||
+          typeof actions.animate !== "function" ||
+          window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+        )
+          return;
+        filterActionsFrame = requestAnimationFrame(() => {
+          const last = actions.getBoundingClientRect();
+          const dx = first.left - last.left;
+          const dy = first.top - last.top;
+          if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+          filterActionsAnimation = actions.animate(
+            [
+              { transform: `translate(${dx}px, ${dy}px)` },
+              { transform: "translate(0, 0)" },
+            ],
+            {
+              duration: wasOpen ? 190 : 240,
+              easing: "cubic-bezier(0.23, 1, 0.32, 1)",
+              fill: "both",
+            },
+          );
+          filterActionsAnimation.onfinish = () => {
+            filterActionsAnimation = null;
+          };
+          filterActionsAnimation.oncancel = () => {
+            filterActionsAnimation = null;
+          };
+        });
+      }
+      function toggleFilterPanel(forceOpen) {
+        const panel = document.getElementById("filterPanel");
+        const btn = document.getElementById("filterToggle");
+        const scrim = document.getElementById("filterMobileScrim");
+        if (!panel || !btn) return;
+        const wasOpen = panel.classList.contains("open");
+        const open =
+          typeof forceOpen === "boolean"
+            ? forceOpen
+            : !panel.classList.contains("open");
+        if (open === wasOpen) return;
+        const actions = panel.querySelector(".filter-head-actions");
+        cancelFilterActionsAnimation();
+        const first = actions?.getBoundingClientRect();
+        panel.classList.toggle("open", open);
+        btn.setAttribute("aria-expanded", String(open));
+        scrim?.classList.toggle("is-visible", open);
+        scrim?.setAttribute("aria-hidden", String(!open));
+        document.body.classList.toggle("filter-sheet-open", open);
+        if (!open) closeMultiselects();
+        animateFilterActions(actions, wasOpen, first);
+      }
+      function updateFilterSummary() {
+        const summary = document.getElementById("filterSummary");
+        const countEl = document.getElementById("filterCount");
+        if (!summary || !countEl) return;
+
+        const start = document.getElementById("fS")?.value || "";
+        const end = document.getElementById("fE")?.value || "";
+        const fmtFilterDate = (value) =>
+          value ? fmtD(`${value}T12:00:00-03:00`) : "...";
+        const parts = [];
+        let activeCount = 0;
+
+        if (start || end) {
+          activeCount += 1;
+          parts.push(`Periodo: ${fmtFilterDate(start)} ate ${fmtFilterDate(end)}`);
+        }
+
+        const labels = {
+          St: "status",
+          Cl: "clientes",
+          Mo: "motoristas",
+          Tp: "tipos",
+        };
+        Object.entries(msState).forEach(([key, values]) => {
+          if (!values.length) return;
+          activeCount += 1;
+          parts.push(`${values.length} ${labels[key]}`);
+        });
+
+        summary.textContent = parts.length ? parts.join(" | ") : "Nenhum filtro ativo";
+        countEl.textContent = activeCount;
+        countEl.classList.toggle("is-empty", activeCount === 0);
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".ms-wrap")) {
+          closeMultiselects();
+        }
+      });
+
+      function applyF(keepMultiselectOpen) {
+        if (!keepMultiselectOpen) closeMultiselects();
         const dS = document.getElementById("fS").value;
         const dE = document.getElementById("fE").value;
         let d = [...DB.reservas];
@@ -1395,8 +1789,10 @@ function detectEnv(){
         VW.reservas = d;
         tblCache = {};
         renderAll();
+        updateFilterSummary();
       }
       function clearF() {
+        closeMultiselects();
         ["fS", "fE"].forEach((x) => (document.getElementById(x).value = ""));
         msState = { St: [], Cl: [], Mo: [], Tp: [] };
         ["msSt", "msCl", "msMo", "msTp"].forEach((id) => {
@@ -1423,6 +1819,7 @@ function detectEnv(){
         VW.reservas = [...DB.reservas];
         tblCache = {};
         renderAll();
+        updateFilterSummary();
       }
       function quickFilter(period, btnEl) {
         document
@@ -1755,18 +2152,27 @@ function detectEnv(){
         return { value, count: reservas.length, hasData: value > 0 || reservas.length > 0 };
       }
 
+      function getTicketStatsForPeriod(startStr, endStr) {
+        if (!startStr || !endStr) return getTicketStats([]);
+        return getTicketStats(
+          DB.reservas.filter((r) =>
+            inDateRange(r[F.res.data], startStr, endStr) && passesActiveFilters(r),
+          ),
+        );
+      }
+
       Chart.register(ChartDataLabels);
       const PAL = [
-        "#1a6cf5",
-        "#0a9396",
-        "#6c4fd8",
-        "#e07000",
-        "#1a7a40",
-        "#c9a227",
-        "#c0392b",
-        "#004e8c",
-        "#00b294",
-        "#c239b3",
+        "#2159d2",
+        "#2159d2",
+        "#6b4b9b",
+        "#9a4e12",
+        "#168f57",
+        "#b17a00",
+        "#c12f45",
+        "#0b2d5a",
+        "#168f57",
+        "#6b4b9b",
       ];
 const monthsLabelsAll = [
   "jan", "fev", "mar", "abr", "mai", "jun",
@@ -1788,33 +2194,33 @@ const monthsLabelsAll = [
               <div class="kpi-spark"><canvas id="spFat"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-teal">
-              <div class="kpi-accent" style="background: linear-gradient(135deg, #0a9396, #3dbdc1)"></div>
+              <div class="kpi-accent" style="background: var(--blue)"></div>
               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Servicos</div><div class="kpi-val" id="kSrv">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSrvD"></div></div></div>
               <div class="kpi-spark"><canvas id="spSrv"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-purple">
-              <div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div>
+              <div class="kpi-accent" style="background: var(--purple)"></div>
               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Ticket medio</div><div class="kpi-val sm" id="kTk">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kTkD"></div></div></div>
               <div class="kpi-spark"><canvas id="spTk"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-green">
-              <div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div>
+              <div class="kpi-accent" style="background: var(--green)"></div>
               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="kPPend">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kPPendD"></div></div></div>
               <div class="kpi-spark"><canvas id="spReceber"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-orange">
-              <div class="kpi-accent" style="background: linear-gradient(135deg, #e07000, #f59532)"></div>
-              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Sem valor</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
+              <div class="kpi-accent" style="background: var(--orange)"></div>
+              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP Pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
               <div class="kpi-spark"><canvas id="spSemValor"></canvas></div>
             </div>
             <div class="kpi executive kpi-tone-red">
-              <div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div>
+              <div class="kpi-accent" style="background: var(--green)"></div>
               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div>
               <div class="kpi-spark"><canvas id="spRecebPct"></canvas></div>
             </div>
           </div>
           <div class="exec-alerts">
-            <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>Sem valor</span></div><b>Conferir</b></div>
+            <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
           </div>
@@ -1851,7 +2257,7 @@ const monthsLabelsAll = [
                 <div class="metric-list" id="sOpMix"></div>
               </div>
               <div class="kpi executive kpi-tone-green">
-                <div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div>
+                <div class="kpi-accent" style="background: var(--green)"></div>
                 <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Financeiro</div><div class="kpi-val sm" id="sFinTotal">&mdash;</div></div></div>
                 <div class="metric-list" id="sFinMix"></div>
               </div>
@@ -1868,10 +2274,10 @@ const monthsLabelsAll = [
           row?.remove();
           pag.insertAdjacentHTML("afterbegin", `
             <div class="kpi-row kpi-4">
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #8a6200, #c9a227)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--yellow)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Cartao</div><div class="kpi-val sm" id="pCartao">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Tempo pagamento</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Tempo pagamento</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
             </div>
           `);
           const oldTable = pag.querySelector(".tc");
@@ -1891,19 +2297,19 @@ const monthsLabelsAll = [
           frota.insertAdjacentHTML("afterbegin", `
             <div class="kpi-row kpi-6">
               <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Preventiva programada</div><div class="kpi-val" id="frPrevProg">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #0a9396, #3dbdc1)"></div><div class="kpi-lbl">Preventiva condicao</div><div class="kpi-val" id="frPrevCond">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #e07000, #f59532)"></div><div class="kpi-lbl">Corretiva nao critica</div><div class="kpi-val" id="frCorrNaoCrit">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #c0392b, #e05a4e)"></div><div class="kpi-lbl">Corretiva critica</div><div class="kpi-val" id="frCorrCrit">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Conservacao</div><div class="kpi-val" id="frConserv">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--blue)"></div><div class="kpi-lbl">Preventiva condicao</div><div class="kpi-val" id="frPrevCond">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--orange)"></div><div class="kpi-lbl">Corretiva nao critica</div><div class="kpi-val" id="frCorrNaoCrit">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--red)"></div><div class="kpi-lbl">Corretiva critica</div><div class="kpi-val" id="frCorrCrit">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Conservacao</div><div class="kpi-val" id="frConserv">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
             </div>
             <div class="tc">
               <div class="tc-bar"><div><div class="tc-title">KPIs de manutencao</div><div class="tc-meta" id="metaFrotaKpis">Metas solicitadas na revisao</div></div></div>
               <div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div>
             </div>
             <div class="kpi-row kpi-2">
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #1a7a40, #2ecc71)"></div><div class="kpi-lbl">Frota propria - dias uteis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: linear-gradient(135deg, #6c4fd8, #9b7df0)"></div><div class="kpi-lbl">Frota propria - fim de semana</div><div class="kpi-val sm" id="frUsoFim">&mdash;</div><div class="metric-list" id="frUsoFimD"></div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Frota propria - dias uteis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Frota propria - fim de semana</div><div class="kpi-val sm" id="frUsoFim">&mdash;</div><div class="metric-list" id="frUsoFimD"></div></div>
             </div>
             <div class="tc">
               <div class="tc-bar"><div><div class="tc-title">Uso mensal da frota propria</div><div class="tc-meta" id="metaFrotaUso">Media diaria por mes</div></div></div>
@@ -1933,9 +2339,15 @@ const monthsLabelsAll = [
         el.innerHTML = `<div><strong>${value}</strong><span>${label}</span></div><b>${status}</b>`;
       }
 
+      function compactStandaloneKpis() {
+        document.querySelectorAll(".kpi").forEach((card) => {
+          const hasMain = card.querySelector(".kpi-main");
+          const hasSupportingMetrics = card.querySelector(".metric-list");
+          if (!hasMain && !hasSupportingMetrics) card.classList.add("kpi-compact");
+        });
+      }
+
       function renderAll() {
-        ensureExecutiveLayout();
-        ensureReviewLayouts();
         const dvDisabled = isDataverseDisabled();
         const rv = dvDisabled ? [] : VW.reservas;
         const fat = sumV(rv);
@@ -1967,13 +2379,6 @@ const monthsLabelsAll = [
         VW.multas = filterByDate(DB.multas, F.mul.data);
         VW.trocas = filterByDate(DB.trocas, F.trc.data);
 
-        // Construir opPagoSet â€” OP com status pago/recebido
-        const opPagoSet = new Set(
-          DB.pagantes
-            .filter(isReceivedPayment)
-            .map(paymentOp)
-            .filter(Boolean)
-        );
         const pagReceb = DB.pagantes.filter(isReceivedPayment);
 
         // Badges
@@ -2094,8 +2499,16 @@ const monthsLabelsAll = [
         const ndChip = (label, cls) =>
           `<span class="badge-kpi ${cls}" style="opacity:.45;"><span class="bk-label">${label}</span><span class="bk-val">â€”</span><span class="bk-pct" style="letter-spacing:.5px;">s/dado</span></span>`;
 
-        // Last-month ticket value (valor / count)
-        const lmTkVal = lmSrvCount > 0 ? lmValue / lmSrvCount : 0;
+        const ticketAtual = getTicketStats(rv);
+        const curTk = ticketAtual.ticket;
+        const lmTkStats = lmPeriod
+          ? getTicketStatsForPeriod(lmPeriod.start, lmPeriod.end)
+          : getTicketStats([]);
+        const lyTkStats = lyPeriod
+          ? getTicketStatsForPeriod(lyPeriod.start, lyPeriod.end)
+          : getTicketStats([]);
+        const lmTkVal = lmTkStats.ticket;
+        const lyTkVal = lyTkStats.ticket;
 
         // KPIs
         set("kSrv", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
@@ -2105,8 +2518,6 @@ const monthsLabelsAll = [
         set("kFat", dvDisabled ? "â€”" : brlS(fat));
         html("kFatD", dvDisabled ? "" :
           (showLM ? fmtKpiChip(fat, lmValue, "LM", "badge-lm") : "") + fmtKpiChip(fat, lyValue, "LY", "badge-ly"));
-        const curTk = rv.length ? fat / rv.length : 0;
-        const lyTkVal = lySrvCount > 0 ? lyValue / lySrvCount : 0;
         set("kTk", dvDisabled ? "â€”" : brl(curTk));
         html("kTkD", dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
@@ -2143,15 +2554,15 @@ const monthsLabelsAll = [
         const recebidoProduzido = pagReceb
           .filter((p) => producedOps.has(paymentOp(p)))
           .reduce((s, p) => s + paymentValue(p), 0);
-        const baseRecebimento = Math.max(0, produzidoValor - emViagemValor) + projecao;
+        const baseRecebimento = Math.max(0, produzidoValor - emViagemValor);
         const recebimentoPct = baseRecebimento ? (recebidoProduzido / baseRecebimento) * 100 : 0;
         html("kSemValD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">%</span><span class="bk-val">${semValor.length}</span><span class="bk-pct">${semValPct}% tot</span></span>` +
           (semValor.length > 0 ? `<span class="badge-kpi badge-meta"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span><span class="bk-pct">potencial</span></span>` : ""));
         const aReceber = dvDisabled ? 0 :
-          conclServices
-            .filter(r => (!r._opId || !opPagoSet.has(r._opId)) && r._valor > 0)
-            .reduce((s, r) => s + r._valor, 0) + projecao;
+          rv
+            .filter(r => r._cpConcluida === true && r._opId && r[F.res.fatStatus] !== DV_STATUS_FAT_PAGO && r._valor > 0)
+            .reduce((s, r) => s + r._valor, 0);
         set("kPPend", dvDisabled ? "â€”" : brlS(aReceber));
         const aReceberPct = fat > 0 ? (aReceber / fat * 100).toFixed(0) : 0;
         html("kPPendD", dvDisabled ? "" :
@@ -2194,21 +2605,17 @@ const monthsLabelsAll = [
         const trendSrv = trendKeys.map((k) => (byM[k] || []).length);
         const trendTk = trendKeys.map((k) => {
           const rows = byM[k] || [];
-          return rows.length ? sumV(rows) / rows.length : 0;
+          return getTicketStats(rows).ticket;
         });
         const trendReceber = trendKeys.map((k) => {
-          const rows = (byM[k] || []).filter(isProducedReservation);
-          const rowsTk = rows.length ? sumV(rows) / rows.length : 0;
-          const rowsProj = getSemValorRows(byM[k] || []).length * rowsTk;
+          const rows = (byM[k] || []).filter(r => r._cpConcluida === true && r._opId);
           return rows
-            .filter((r) => (!r._opId || !opPagoSet.has(r._opId)) && r._valor > 0)
-            .reduce((s, r) => s + r._valor, 0) + rowsProj;
+            .filter((r) => r[F.res.fatStatus] !== DV_STATUS_FAT_PAGO && r._valor > 0)
+            .reduce((s, r) => s + r._valor, 0);
         });
         const trendRecebPct = trendKeys.map((k) => {
           const rows = (byM[k] || []).filter(isProducedReservation);
-          const rowsTk = rows.length ? sumV(rows) / rows.length : 0;
-          const rowsProj = getSemValorRows(byM[k] || []).length * rowsTk;
-          const base = sumV(rows) + rowsProj;
+          const base = sumV(rows);
           const ops = new Set(rows.map((r) => r._opId).filter(Boolean));
           const recebido = pagReceb
             .filter((p) => ops.has(paymentOp(p)))
@@ -2218,14 +2625,14 @@ const monthsLabelsAll = [
         const trendSemValor = trendKeys.map((k) =>
           getSemValorRows(byM[k] || []).length
         );
-        mkSpark("spFat", trendLabels, trendFat, "#1a6cf5");
-        mkSpark("spSrv", trendLabels, trendSrv, "#0a9396");
-        mkSpark("spTk", trendLabels, trendTk, "#6c4fd8");
-        mkSpark("spReceber", trendLabels, trendReceber, "#1a7a40");
-        mkSpark("spSemValor", trendLabels, trendSemValor, "#e07000");
-        mkSpark("spRecebPct", trendLabels, trendRecebPct, "#1a7a40");
+        mkSpark("spFat", trendLabels, trendFat, "#2159d2");
+        mkSpark("spSrv", trendLabels, trendSrv, "#2159d2");
+        mkSpark("spTk", trendLabels, trendTk, "#6b4b9b");
+        mkSpark("spReceber", trendLabels, trendReceber, "#168f57");
+        mkSpark("spSemValor", trendLabels, trendSemValor, "#9a4e12");
+        mkSpark("spRecebPct", trendLabels, trendRecebPct, "#168f57");
 
-        setExecAlert("alertSemValor", semValor.length, "Sem valor", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
+        setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
@@ -2300,35 +2707,35 @@ const monthsLabelsAll = [
               {
                 label: String(year3),
                 data: seriesYear3,
-                borderColor: "#c9a227",
+                borderColor: "#b17a00",
                 backgroundColor: "rgba(201,162,39,0.18)",
                 fill: true,
                 tension: 0.4,
                 pointRadius: 2,
-                pointBackgroundColor: "#c9a227",
+                pointBackgroundColor: "#b17a00",
                 borderWidth: 2,
                 borderDash: [4, 3],
               },
               {
                 label: String(year2),
                 data: seriesYear2,
-                borderColor: "#1a6cf5",
+                borderColor: "#2159d2",
                 backgroundColor: "rgba(26,108,245,0.18)",
                 fill: true,
                 tension: 0.4,
                 pointRadius: 2,
-                pointBackgroundColor: "#1a6cf5",
+                pointBackgroundColor: "#2159d2",
                 borderWidth: 2,
               },
               {
                 label: String(year1),
                 data: seriesYear1,
-                borderColor: "#1a7a40",
+                borderColor: "#168f57",
                 backgroundColor: "rgba(26,122,64,0.22)",
                 fill: true,
                 tension: 0.4,
                 pointRadius: 3,
-                pointBackgroundColor: "#1a7a40",
+                pointBackgroundColor: "#168f57",
                 borderWidth: 2.5,
               },
             ],
@@ -2380,7 +2787,7 @@ const monthsLabelsAll = [
         const ticketMedioMensal = (mks.length > 0 ? mks : monthsLabelsAll).map((k, idx) => {
           if (mks.length > 0) {
             const md = byM[k];
-            return md.length ? sumV(md) / md.length : 0;
+            return getTicketStats(md).ticket;
           }
           return null;
         });
@@ -2392,7 +2799,7 @@ const monthsLabelsAll = [
               {
                 label: "Ticket MÃ©dio",
                 data: ticketMedioMensal,
-                backgroundColor: "#6c4fd8",
+                backgroundColor: "#6b4b9b",
                 borderRadius: 5,
               },
             ],
@@ -2440,8 +2847,8 @@ const monthsLabelsAll = [
             data: {
               labels: mvrLabels,
               datasets: [
-                { label: "Realizado", data: mvrReal, backgroundColor: "#1a6cf5", borderRadius: 4 },
-                { label: "Meta", data: mvrMeta, backgroundColor: "rgba(201,162,39,0.35)", borderColor: "#c9a227", borderWidth: 1.5, borderRadius: 4, type: "bar" },
+                { label: "Realizado", data: mvrReal, backgroundColor: "#2159d2", borderRadius: 4 },
+                { label: "Meta", data: mvrMeta, backgroundColor: "rgba(201,162,39,0.35)", borderColor: "#b17a00", borderWidth: 1.5, borderRadius: 4, type: "bar" },
               ],
             },
             options: opts0({ yBrl: true, datalabels: false }),
@@ -2459,7 +2866,7 @@ const monthsLabelsAll = [
             .filter(([k]) => k !== "__null__" && k !== "Sem cliente")
             .sort((a, b) => sumV(b[1]) - sumV(a[1]))
             .slice(0, 6);
-          const cliColors = ["#1a6cf5","#0a9396","#6c4fd8","#e07000","#1a7a40","#c9a227"];
+          const cliColors = ["#2159d2","#2159d2","#6b4b9b","#9a4e12","#168f57","#b17a00"];
           const fcDatasets = cliEntries.map(([cliName, recs], i) => {
             const byMCli = grp(recs, r => mK(r[F.res.data]));
             return {
@@ -2529,7 +2936,7 @@ const monthsLabelsAll = [
         set("v_cf", dvDisabled ? "â€”" : brlS(custoTotal));
         set("sub_cf", dvDisabled ? "â€”" : `${VW.manutencoes.length} manutenÃ§Ãµes Â· ${cfPctRec}% da receita`);
         document.getElementById("ind_cf").innerHTML = dvDisabled ? "" :
-          `<span class="badge-kpi badge-meta"><span class="bk-label">% REC</span><span class="bk-val">${cfPctRec}%</span><span class="bk-pct ${parseFloat(cfPctRec) <= 10 ? "du" : "dd"}">${parseFloat(cfPctRec) <= 10 ? "âœ“ OK" : "âš  alto"}</span></span>` +
+          `<span class="badge-kpi badge-meta"><span class="bk-label">% REC</span><span class="bk-val">${cfPctRec}%</span><span class="bk-pct ${parseFloat(cfPctRec) <= 10 ? "du" : "dd"}">${parseFloat(cfPctRec) <= 10 ? "OK" : "Alto"}</span></span>` +
           (VW.manutencoes.length ? `<span class="badge-kpi badge-ly"><span class="bk-label">MAN</span><span class="bk-val">${VW.manutencoes.length}</span><span class="bk-pct">serviÃ§os</span></span>` : "");
         mkChart("cCF", {
           type: "bar",
@@ -2539,7 +2946,7 @@ const monthsLabelsAll = [
               {
                 label: "Custo R$",
                 data: cfData,
-                backgroundColor: "#e07000",
+                backgroundColor: "#9a4e12",
                 borderRadius: 5,
               },
             ],
@@ -2582,7 +2989,7 @@ const monthsLabelsAll = [
           <tbody>${topFatRows.map(([nome, rows], i) => {
             const val = sumV(rows);
             const p = fat ? (val / fat) * 100 : 0;
-            return `<tr><td class="em">${trunc(nome, 26)}</td><td class="r em">${brl(val)}</td><td class="r dim">${brl(rows.length ? val / rows.length : 0)}</td><td>${progressCell(p, brlS(val), PAL[i % PAL.length])}</td></tr>`;
+            return `<tr><td class="em">${trunc(nome, 26)}</td><td class="r em">${brl(val)}</td><td class="r dim">${brl(getTicketStats(rows).ticket)}</td><td>${progressCell(p, brlS(val), PAL[i % PAL.length])}</td></tr>`;
           }).join("") || emptyRow(4)}</tbody></table>
         `);
 
@@ -2613,7 +3020,7 @@ const monthsLabelsAll = [
                   data: monthsLabelsAll.map((m, i) =>
                     Math.round((yearDataMap[2025]?.[i] || 0) / 50),
                   ),
-                  backgroundColor: "#1a6cf5",
+                  backgroundColor: "#2159d2",
                   stack: "m",
                 },
               ];
@@ -2657,7 +3064,7 @@ const monthsLabelsAll = [
         set("sFinTotal", dvDisabled ? "Ã¢â‚¬â€" : brlS(fat));
         html("sFinMix", dvDisabled ? "" : renderMetricLines([
           ["Ticket medio", brl(curTk)],
-          ["Sem valor", semValor.length.toLocaleString("pt-BR")],
+          ["CP pendente", semValor.length.toLocaleString("pt-BR")],
           ["A receber", brlS(aReceber)],
         ]));
         const byTipo = grp(rv, (r) => r._tipoL);
@@ -2741,12 +3148,12 @@ const monthsLabelsAll = [
               {
                 label: "Fat.",
                 data: fmData,
-                borderColor: "#0a9396",
+                borderColor: "#2159d2",
                 backgroundColor: "rgba(10,147,150,.08)",
                 fill: true,
                 tension: 0.45,
                 pointRadius: 2,
-                pointBackgroundColor: "#0a9396",
+                pointBackgroundColor: "#2159d2",
               },
             ],
           },
@@ -2767,7 +3174,7 @@ const monthsLabelsAll = [
             nome: n,
             qtd: v.length,
             fat: sumV(v),
-            ticket: v.length ? sumV(v) / v.length : 0,
+            ticket: getTicketStats(v).ticket,
           }))
           .sort((a, b) => b.fat - a.fat);
         tblCache.tbFat = cliRows;
@@ -2977,7 +3384,7 @@ const monthsLabelsAll = [
                   data: monthsLabelsAll.map((m, i) =>
                     Math.round((yearDataMap[currentYear]?.[i] || 0) / 50000),
                   ),
-                  backgroundColor: "#1a6cf5",
+                  backgroundColor: "#2159d2",
                   stack: "m",
                 },
               ];
@@ -2999,7 +3406,7 @@ const monthsLabelsAll = [
               funcao: f[F.fun.funcao] || "â€”",
               qtd: srvs.length,
               fat: sumV(srvs),
-              ticket: srvs.length ? sumV(srvs) / srvs.length : 0,
+              ticket: getTicketStats(srvs).ticket,
               cnh: f[F.fun.cnh],
             };
           })
@@ -3046,7 +3453,7 @@ const monthsLabelsAll = [
               {
                 label: "Custo",
                 data: mmData,
-                backgroundColor: "#e07000",
+                backgroundColor: "#9a4e12",
                 borderRadius: 5,
               },
             ],
@@ -3247,7 +3654,7 @@ const monthsLabelsAll = [
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // CHART HELPERS
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      const FONT = { family: "'Plus Jakarta Sans',system-ui,sans-serif" };
+      const FONT = { family: "'Manrope',system-ui,sans-serif" };
       function opts0({
         noLegend,
         yBrl,
@@ -3269,7 +3676,7 @@ const monthsLabelsAll = [
               display: !noLegend,
               position: legendRight ? "right" : "top",
               labels: {
-                color: "#4a5068",
+                color: "#475569",
                 font: { ...FONT, size: 11 },
                 boxWidth: 10,
                 boxHeight: 10,
@@ -3277,10 +3684,10 @@ const monthsLabelsAll = [
               },
             },
             tooltip: {
-              backgroundColor: "#0f1117",
+              backgroundColor: "#0f172a",
               titleColor: "#ffffff",
-              bodyColor: "#a0a8c0",
-              borderColor: "#2a2d3a",
+              bodyColor: "#94a3b8",
+              borderColor: "#172033",
               borderWidth: 1,
               padding: 12,
               cornerRadius: 8,
@@ -3293,7 +3700,7 @@ const monthsLabelsAll = [
                   anchor: hBar ? "end" : "end",
                   align: hBar ? "right" : "top",
                   offset: 4,
-                  color: "#4a5068",
+                  color: "#475569",
                   font: { ...FONT, size: 9, weight: "600" },
                   formatter: (value) => {
                     if (value === 0 || value === null || value === undefined)
@@ -3309,19 +3716,19 @@ const monthsLabelsAll = [
             x: {
               type: "category",
               ticks: {
-                color: "#8a91a8",
+                color: "#94a3b8",
                 font: { ...FONT, size: 10 },
                 callback: xBrl ? (v) => brlS(v) : function(value) { return this.getLabelForValue(value); },
               },
-              grid: { color: "#f0f2f5", drawBorder: false },
+              grid: { color: "#f0f0f0", drawBorder: false },
             },
             y: {
               ticks: {
-                color: "#8a91a8",
+                color: "#94a3b8",
                 font: { ...FONT, size: 10 },
                 callback: yBrl ? (v) => brlS(v) : undefined,
               },
-              grid: { color: "#f0f2f5", drawBorder: false },
+              grid: { color: "#f0f0f0", drawBorder: false },
               beginAtZero: true,
             },
           },
@@ -3330,17 +3737,17 @@ const monthsLabelsAll = [
           baseOpts.indexAxis = "y";
           baseOpts.scales.y = {
             type: "category",
-            ticks: { color: "#8a91a8", font: { ...FONT, size: 10 } },
+            ticks: { color: "#94a3b8", font: { ...FONT, size: 10 } },
             grid: { display: false },
           };
           baseOpts.scales.x = {
             type: "linear",
             ticks: {
-              color: "#8a91a8",
+              color: "#94a3b8",
               font: { ...FONT, size: 10 },
               callback: xBrl ? (v) => brlS(v) : undefined,
             },
-            grid: { color: "#f0f2f5" },
+            grid: { color: "#f0f0f0" },
             beginAtZero: true,
           };
         }
@@ -3350,6 +3757,10 @@ const monthsLabelsAll = [
         const el = document.getElementById(id);
         if (!el) return;
         if (charts[id]) charts[id].destroy();
+        const mobileHeight = Number(el.dataset.mobileHeight || 0);
+        if (mobileHeight && window.matchMedia("(max-width: 540px)").matches) {
+          el.height = mobileHeight;
+        }
         setChartEmptyState(el, !chartHasData(cfg?.data?.datasets || []));
         charts[id] = new Chart(el, cfg);
       }
@@ -3629,15 +4040,46 @@ const monthsLabelsAll = [
         }
         return `<span class="bd" style="background:${bg};color:${c}"><span class="dot" style="background:${c}"></span>${s}</span>`;
       }
+      function toggleMobileMore(forceOpen) {
+        const sheet = document.getElementById("mobileMoreSheet");
+        const trigger = document.querySelector(".mobile-more-trigger");
+        if (!sheet) return;
+        const open =
+          typeof forceOpen === "boolean"
+            ? forceOpen
+            : !sheet.classList.contains("is-open");
+        sheet.classList.toggle("is-open", open);
+        sheet.setAttribute("aria-hidden", String(!open));
+        document.body.classList.toggle("mobile-sheet-open", open);
+        trigger?.setAttribute("aria-expanded", String(open));
+      }
+
       function nav(id, el) {
         document
-          .querySelectorAll(".sb-item")
+          .querySelectorAll(".sb-item, .mobile-nav-item, .mobile-more-item")
           .forEach((n) => n.classList.remove("act"));
         document
           .querySelectorAll(".page")
           .forEach((p) => p.classList.remove("on"));
-        el.classList.add("act");
+        document
+          .querySelectorAll("[data-nav]")
+          .forEach((n) => n.removeAttribute("aria-current"));
+        if (el) el.classList.add("act");
+        document
+          .querySelectorAll(`[data-nav="${id}"]`)
+          .forEach((n) => {
+            n.classList.add("act");
+            n.setAttribute("aria-current", "page");
+          });
+        document
+          .querySelector(".mobile-more-trigger")
+          ?.classList.toggle(
+            "act",
+            !["resumo", "servicos", "faturamento", "frota"].includes(id),
+          );
         document.getElementById("page-" + id).classList.add("on");
+        document.querySelector(".content")?.scrollTo({ top: 0, behavior: "auto" });
+        toggleMobileMore(false);
       }
       function set(id, v) {
         const el = document.getElementById(id);
@@ -3652,8 +4094,11 @@ const monthsLabelsAll = [
         if (msg) document.getElementById("ovLbl").textContent = msg;
       }
       function showAlert(type, html) {
+        const icon = type === "err"
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 3.5-8 14A2 2 0 0 0 4 20.5h16a2 2 0 0 0 1.7-3l-8-14a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4M12 17h.01"></path></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v5M12 7h.01"></path></svg>';
         document.getElementById("alertArea").innerHTML =
-          `<div class="alert al-${type}"><span>${type === "err" ? "âš ï¸" : "â„¹ï¸"}</span><div>${html}</div></div>`;
+          `<div class="alert al-${type}"><span class="alert-icon" aria-hidden="true">${icon}</span><div>${html}</div></div>`;
       }
       function clearAlerts() {
         document.getElementById("alertArea").innerHTML = "";
@@ -3665,6 +4110,18 @@ const monthsLabelsAll = [
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // INIT
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      ["fS", "fE"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.addEventListener("change", () => applyF(true));
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          toggleMobileMore(false);
+          toggleFilterPanel(false);
+        }
+      });
+      updateFilterSummary();
       detectEnv();
+      installDashboardErrorLogger();
       loadAll();
 
