@@ -2033,6 +2033,7 @@
         background: rgba(240, 242, 245, 0.85);
         backdrop-filter: none;
         z-index: 6000;
+        pointer-events: none;
         align-items: center;
         justify-content: center;
       }
@@ -6855,6 +6856,21 @@ function setAppVersion() {
       let dashboardLoadInProgress = false;
       let dashboardSilentLoad = false;
       let dashboardAutoRefreshTimer = null;
+      const loadedDataSets = new Set();
+      const dataLoadPromises = new Map();
+      const tabDataDependencies = {
+        resumo: ["reservas", "precos", "manutencoes", "multas", "infracoes", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"],
+        servicos: ["reservas", "precos", "funcionarios"],
+        faturamento: ["reservas", "precos"],
+        pagantes: ["reservas", "precos", "pagantes"],
+        frota: ["reservas", "precos", "manutencoes", "veiculos", "funcionarios"],
+        motoristas: ["reservas", "precos", "funcionarios"],
+        manutencoes: ["manutencoes"],
+        multas: ["multas", "infracoes", "funcionarios"],
+        trocas: ["trocas"],
+        marketing: ["marketing"],
+        tvdiagnostico: [],
+      };
 
       function setDashboardLastUpdated(date) {
         const value = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
@@ -6924,6 +6940,7 @@ function setAppVersion() {
             funcionarios: DB.funcionarios.length,
             marketing: DB.marketing.length,
           });
+          markAllDataSetsLoaded();
           buildFuncMap();
           buildInfracaoMap();
           enrichReservas();
@@ -6951,7 +6968,6 @@ function setAppVersion() {
       }
 
       async function loadReservas() {
-        setLoading(true, "Carregando serviços…");
         const sel = [
           F.res.id,
           F.res.data,
@@ -7019,6 +7035,57 @@ function setAppVersion() {
         DB.marketing = await fetchAll(
           `${API()}/${T.marketing}?$select=${F.mkt.status},${F.mkt.cat},${F.mkt.data}&$orderby=${F.mkt.data} desc`,
         );
+      }
+
+      const dataSetLoaders = {
+        reservas: loadReservas,
+        precos: loadPrecos,
+        manutencoes: loadManutencoes,
+        multas: loadMultas,
+        infracoes: loadInfracoes,
+        trocas: loadTrocas,
+        pagantes: loadPagantes,
+        veiculos: loadVeiculos,
+        funcionarios: loadFuncionarios,
+        marketing: loadMarketing,
+      };
+
+      function markAllDataSetsLoaded() {
+        Object.keys(dataSetLoaders).forEach((key) => loadedDataSets.add(key));
+      }
+
+      function setTabLoading(tabId, loading) {
+        const page = document.getElementById(`page-${tabId}`);
+        if (!page) return;
+        page.classList.toggle("tab-loading", loading);
+        page.setAttribute("aria-busy", loading ? "true" : "false");
+      }
+
+      async function ensureTabData(tabId) {
+        if (dashboardLoadInProgress) return;
+        const keys = tabDataDependencies[tabId] || tabDataDependencies.resumo;
+        const missing = keys.filter((key) => !loadedDataSets.has(key));
+        if (!missing.length) return;
+
+        setTabLoading(tabId, true);
+        try {
+          await Promise.all(missing.map((key) => {
+            if (!dataLoadPromises.has(key)) {
+              const promise = dataSetLoaders[key]().then(() => {
+                loadedDataSets.add(key);
+              }).finally(() => dataLoadPromises.delete(key));
+              dataLoadPromises.set(key, promise);
+            }
+            return dataLoadPromises.get(key);
+          }));
+          buildFuncMap();
+          buildInfracaoMap();
+          enrichReservas();
+          populateFilters();
+          if (document.querySelector(`#page-${tabId}.on`)) applyF(true);
+        } finally {
+          setTabLoading(tabId, false);
+        }
       }
 
       function buildFuncMap() {
@@ -9957,6 +10024,10 @@ function setAppVersion() {
           else content.scrollTop = 0;
         }
         toggleMobileMore(false);
+        void ensureTabData(id).catch((error) => {
+          reportDashboardError(error, { source: "dashboard", action: "load-tab", phase: id });
+          showAlert("err", `<strong>Erro ao carregar ${TV_NAV_LABELS[id] || id}:</strong> ${error.message}`);
+        });
       }
       const TV_NAV_IDS = [
         "resumo", "servicos", "faturamento", "pagantes", "frota",
@@ -10128,7 +10199,6 @@ function setAppVersion() {
         const tagName = String(target?.tagName || "").toLowerCase();
         if (["input", "select", "textarea"].includes(tagName) || target?.isContentEditable) return true;
         if (document.body.classList.contains("tv-diagnostic-active")) return true;
-        if (document.getElementById("ov")?.classList.contains("on")) return true;
         const errorPanel = document.getElementById("dashboardLoadError");
         return Boolean(errorPanel && !errorPanel.hidden);
       }
