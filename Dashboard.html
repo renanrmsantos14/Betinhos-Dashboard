@@ -6490,11 +6490,12 @@
             const value = Number(r.value || 0);
             const partValue = participationByValue ? value : qtd;
             const part = partBase ? (partValue / partBase) * 100 : 0;
+            const countPct = total ? (qtd / total) * 100 : 0;
             const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, labelMax);
             const valueStat = hasValue
               ? `<span><small>${valueLabel}</small><b>${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</b></span>`
               : "";
-            return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${labelHtml}</span><div class="metric-mobile-stats"><span><small>${countLabel}</small><b>${qtd.toLocaleString("pt-BR")}</b></span>${valueStat}</div></div>${metricMobileProgress(part, PAL[i % PAL.length])}</div>`;
+            return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${labelHtml}</span><div class="metric-mobile-stats"><span><small>${countLabel}</small><b>${countPct.toFixed(1)}%</b><em>${qtd.toLocaleString("pt-BR")}</em></span>${valueStat}</div></div>${metricMobileProgress(part, PAL[i % PAL.length])}</div>`;
           })
           .join("");
         const mobileMarkup = mobileRows || '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
@@ -6505,13 +6506,14 @@
           const value = Number(r.value || 0);
           const partValue = participationByValue ? value : qtd;
           const part = partBase ? (partValue / partBase) * 100 : 0;
+          const countPct = total ? (qtd / total) * 100 : 0;
           const secondary = participationByValue && hasValue
             ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
             : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
           const valueCell = hasValue
             ? '<td class="r em">' + (moneyValue ? brl(value) : value.toLocaleString("pt-BR")) + '</td>'
             : '';
-          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, 28)) + '</td><td class="r">' + qtd.toLocaleString("pt-BR") + '</td>' + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
+          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, labelMax)) + '</td><td class="r">' + metricSplit(`${countPct.toFixed(1)}%`, qtd.toLocaleString("pt-BR"), "r") + '</td>' + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
         }).join("") || emptyRow(cols);
         el.classList.add("has-mobile-list");
         el.innerHTML = '<table>' + tableHead + '<tbody>' + tableBody + '</tbody></table><div class="metric-mobile-list">' + mobileMarkup + '</div>';
