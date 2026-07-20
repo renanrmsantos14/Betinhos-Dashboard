@@ -677,7 +677,7 @@ Principais pontos do código que sustentam esta documentação:
 - `getTicketStats()`: calcula ticket médio elegível;
 - `getRecebimentoStats()`: calcula recebido, base e percentual de recebimento;
 - `ocorrenciasOperacionais`: filtra os erros operacionais pelo período selecionado;
-- `loadErrosOperacionais()`: carrega somente no Resumo a tabela `cr40f_errooperacionals` do Módulo Qualidade;
+- `loadErrosOperacionais()`: carrega somente no Resumo a tabela `cr40f_errooperacionals` do Módulo Qualidade; a mesma coleção também é incluída no snapshot PROD;
 - `getMetaParaPeriodoProporcional()`: calcula meta proporcional por dias;
 - `calcularMetaMensal()`: aplica a fórmula histórica da meta;
 - `renderFaturamento()`: renderiza faturamento, clientes e status de faturamento;

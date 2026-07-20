@@ -5981,7 +5981,7 @@
         if (!response.ok) throw new Error(`Snapshot PROD indisponível (HTTP ${response.status}). Rode npm run snapshot:prod.`);
 
         const snapshot = await response.json();
-        const requiredCollections = ["reservas", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
+        const requiredCollections = ["reservas", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
         if (snapshot?.schemaVersion !== 1 || !snapshot?.data) throw new Error("Snapshot PROD inválido. Rode npm run snapshot:prod novamente.");
 
         for (const collection of requiredCollections) {
@@ -5990,7 +5990,7 @@
           }
         }
 
-        DB = { ...snapshot.data, errosOperacionais: snapshot.data.errosOperacionais || [] };
+        DB = snapshot.data;
         const exportedAt = new Date(snapshot.exportedAt);
         const timestamp = Number.isNaN(exportedAt.getTime()) ? "data desconhecida" : exportedAt.toLocaleString("pt-BR");
         showAlert("warn", `<strong>SNAPSHOT PROD:</strong> dados reais exportados em ${timestamp}. Atualize com <code>npm run snapshot:prod</code>.`);
