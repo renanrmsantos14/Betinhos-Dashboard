@@ -9978,6 +9978,34 @@ function setAppVersion() {
         tvdiagnostico: "Controle da TV",
       };
 
+      const TAB_QUERY_ALIASES = {
+        resumo: "resumo",
+        servicos: "servicos",
+        financeiro: "faturamento",
+        faturamento: "faturamento",
+        pagantes: "pagantes",
+        frota: "frota",
+        motoristas: "motoristas",
+        manutencoes: "manutencoes",
+        multas: "multas",
+        trocas: "trocas",
+        marketing: "marketing",
+        tvdiagnostico: "tvdiagnostico",
+      };
+
+      function getTabFromUrl() {
+        const value = new URLSearchParams(window.location.search).get("tab");
+        return TAB_QUERY_ALIASES[String(value || "").toLowerCase()] || "resumo";
+      }
+
+      function updateTabUrl(tabId) {
+        if (!window.history?.replaceState) return;
+        const publicTab = tabId === "faturamento" ? "financeiro" : tabId;
+        const url = new URL(window.location.href);
+        url.searchParams.set("tab", publicTab);
+        window.history.replaceState({ ...window.history.state, tab: publicTab }, "", url);
+      }
+
       function updateTvCurrentMenu(id) {
         if (!window.__DASHBOARD_TV_MODE) return;
         const label = document.getElementById("tvCurrentMenuLabel");
@@ -10028,6 +10056,7 @@ function setAppVersion() {
           else content.scrollTop = 0;
         }
         toggleMobileMore(false);
+        if (options.fromUrl !== true) updateTabUrl(id);
         void ensureTabData(id).catch((error) => {
           reportDashboardError(error, { source: "dashboard", action: "load-tab", phase: id });
           showAlert("err", `<strong>Erro ao carregar ${TV_NAV_LABELS[id] || id}:</strong> ${error.message}`);
@@ -10576,6 +10605,14 @@ function setAppVersion() {
         if (Date.now() - handledAt >= 1200) addTvPinDigit(digit);
       }
 
+      function openTabFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.has("tab")) return;
+        const tabId = getTabFromUrl();
+        const item = document.querySelector(`[data-nav="${tabId}"]`);
+        if (item) nav(tabId, item, { fromUrl: true });
+      }
+
       function installTvPinGate() {
         if (!window.__DASHBOARD_TV_MODE) {
           document.documentElement.classList.remove("tv-pin-pending");
@@ -10606,7 +10643,9 @@ function setAppVersion() {
           installCardDetailDialog();
           installTvNavigation();
           installTvInputDiagnostic();
+          window.addEventListener("popstate", openTabFromUrl);
           openRequestedTvDiagnostic();
+          openTabFromUrl();
           void loadAll();
           startDashboardAutoRefresh();
         } catch (error) {
