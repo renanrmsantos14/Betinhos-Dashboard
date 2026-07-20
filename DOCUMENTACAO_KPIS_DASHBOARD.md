@@ -196,6 +196,8 @@ Recebimento (%) = Recebido / Base de recebimento × 100
 
 O cartão também mostra os valores no formato **recebido de base**. A base pode ser diferente do faturamento total porque exclui modalidades que não fazem parte deste cálculo.
 
+**Status de validação:** o card de **Recebimento** está completamente validado e correto para a regra, os status e a base de dados atualmente implementados no dashboard.
+
 ### Manutenções
 
 **O que responde:** quantidade de registros de manutenção no período aplicado à data da manutenção.
