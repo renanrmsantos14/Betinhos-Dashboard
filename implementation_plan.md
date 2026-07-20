@@ -1,78 +1,35 @@
-# Plano — normalização visual integral do Dashboard Betinhos
+# Plano: explicação da lógica dos cards e gráficos
 
 ## Objetivo
 
-Organizar o dashboard inteiro em uma hierarquia visual única, com grupos explícitos, containers estáveis, grids previsíveis e três tipos de card consistentes. A fonte HTML deve ser a mesma estrutura exibida, sem reconstrução visual em runtime.
+Adicionar, ao detalhe já existente de todos os cards e gráficos clicáveis, uma opção para consultar:
 
-## Premissas
-
-- Preservar todos os IDs, `onclick`, campos, tabelas, canvases, filtros e funções de renderização existentes.
-- Não alterar regras Dataverse, cálculos, filtros ou payloads.
-- Trabalhar sobre o `Dashboard.html` atual, que já tem mudanças locais pendentes; não reverter mudanças alheias.
-- Manter o dashboard single-file e sem dependências novas.
-
-## Diagnóstico
-
-| Antes | Depois | Por quê |
-| --- | --- | --- |
-| Resumo, Serviços, Pagamentos e Frota removem e recriam partes do HTML por `ensureExecutiveLayout` / `ensureReviewLayouts`. | HTML estático já contém a estrutura final; render só popula conteúdo. | Fonte e tela passam a coincidir, sem nós duplicados temporários ou dependência de mutação visual. |
-| Grupos usam combinações soltas de `kpi-row`, `kpi-2` a `kpi-6`, `cgrid`, `g1`, `g2` e alertas sem rótulo estrutural. | Cada aba terá seções, grid de métricas, grid analítico e tabela como blocos nomeados. | Grade, ritmo vertical e leitura ficam previsíveis em todas as abas. |
-| Cards `kpi`, `cc` e `tc` repetem superfície, borda, sombra, raio e espaçamento. | Base visual compartilhada com variantes de métrica, análise e dados. | Mesma hierarquia sem apagar diferenças funcionais. |
-| Alertas executivos ficam em duas linhas com 3 e 4 colunas, sem grupo explícito. | Dois grupos semânticos e grades definidas: operação e qualidade de dados. | Evita desalinhamento e deixa prioridade legível. |
-| Entrada de abas aplica animação em página e em cada bloco, com duração longa e `will-change` persistente. | Uma entrada curta somente nos blocos, 180–220 ms, com stagger mínimo e redução de movimento. | Motion informa mudança de contexto sem pesar a navegação. |
+- uma explicação intuitiva para usuário;
+- uma explicação técnica com origem dos dados, filtros, condições e fórmula;
+- o mesmo contexto de período/filtros usado pelo indicador aberto.
 
 ## Arquivos
 
 - `[MODIFY] Dashboard.html`
-  - Consolidar tokens de espaçamento, superfície, grids e motion.
-  - Declarar containers semânticos por aba e aplicar layout final estático.
-  - Substituir os trechos de layout montados em runtime pelo mesmo HTML final, preservando IDs e ordem de dados.
-  - Remover `ensureExecutiveLayout`, `ensureReviewLayouts`, `replaceCanvasWithTable` e `compactStandaloneKpis`, mais suas chamadas em `renderAll()`.
-  - Padronizar responsividade de métricas, análises, alertas, filtros e tabelas.
-  - Ajustar animações para `transform` e `opacity`, com `prefers-reduced-motion`.
+  - adicionar navegação de abas no modal de detalhe;
+  - adicionar seletor `Para você` / `Técnica` na aba de lógica;
+  - criar um catálogo de lógica baseado nos títulos e nos cálculos reais do dashboard;
+  - renderizar a explicação para todos os tipos já abertos pelo delegado global (`.kpi`, `.cc`, `.tc`, `.exec-alert`);
+  - manter o gráfico, a tabela, o filtro de período e o fechamento atuais.
+- `[NEW] task.md`
+  - checklist executável após aprovação.
 
-- `[NEW] task.md` (somente após aprovação)
-  - Checklist de execução e validação, atualizado durante a implementação.
+## Decisões e limites
 
-## Estrutura alvo
+- Assumi que “aba ou opção” pode ficar dentro do modal existente, evitando outra navegação e preservando o fluxo atual.
+- A explicação técnica será textual e baseada nos cálculos atuais; não será criado um editor de fórmulas nem será alterada a regra de negócio.
+- Quando um indicador não tiver uma regra nominal específica, a interface informará a origem e a transformação observadas no render atual, sem inventar nomes lógicos ou condições.
+- As mudanças serão cirúrgicas em `Dashboard.html`; não vou reformatar o arquivo nem mexer nas alterações locais já existentes.
 
-```text
-.content
-  .fbar                         filtros globais
-  .page                         aba ativa
-    .page-section--metrics      KPIs principais
-      .dashboard-grid           grid definido por variante
-        .card--metric
-    .page-section--alerts       alertas operacionais ou de qualidade
-      .dashboard-grid
-        .card--alert
-    .page-section--analysis     gráficos, rankings e distribuições
-      .dashboard-grid
-        .card--analysis
-    .page-section--data         tabela principal
-      .card--table
-```
+## Critérios verificáveis
 
-## Sequência de execução
-
-1. Consolidar CSS e breakpoints em grids reutilizáveis.
-   Verificar: nenhuma grade depende de margem residual ou de largura fixa fora de tabelas.
-
-2. Converter Resumo, Serviços, Pagamentos, Frota e Multas para o DOM final estático.
-   Verificar: todos os IDs atuais continuam únicos e encontrados pelos renderizadores.
-
-3. Aplicar a mesma hierarquia a Faturamento, Motoristas, Manutenções, Trocas e Marketing.
-   Verificar: cada aba segue métrica → análise → dados, quando aplicável.
-
-4. Remover mutações de layout em JavaScript e manter somente renderização de dados.
-   Verificar: `renderAll()` não recria estrutura visual e não há funções de layout mortas.
-
-5. Ajustar motion e responsividade.
-   Verificar: desktop, tablet e celular não têm overflow horizontal fora das tabelas; `prefers-reduced-motion` reduz deslocamento.
-
-6. Validar localmente.
-   Verificar: sintaxe do script inline, `npm run build`, `git diff --check -- Dashboard.html` e smoke visual de todas as abas em desktop e celular, sem erros de console.
-
-## Risco controlado
-
-Maior risco é ID duplicado ou removido ao transformar o HTML dinâmico em estático. A execução manterá os mesmos IDs e fará busca de unicidade antes do smoke visual.
+1. Todo elemento aberto pelo detalhe atual exibe as opções `Visão geral` e `Como foi calculado`.
+2. A aba de lógica exibe os modos `Para você` e `Técnica` para qualquer card/gráfico aberto.
+3. A explicação acompanha o título e o valor do indicador, respeita o período aplicado e não quebra quando não há dados.
+4. O gráfico/tabela continua funcionando e os gráficos temporários são destruídos no fechamento.
+5. `npm run build`, `npm run test:tv` e `npm run test:tv-compat` passam.

@@ -3198,6 +3198,160 @@
         background: var(--blue);
         color: #fff;
       }
+      .card-detail-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 18px;
+        padding: 4px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        background: var(--surf2);
+      }
+      .card-detail-tab,
+      .card-detail-mode {
+        min-height: 36px;
+        border: 1px solid transparent;
+        border-radius: var(--r8);
+        padding: 0 14px;
+        background: transparent;
+        color: var(--t2);
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out, transform 120ms ease-out;
+      }
+      .card-detail-tab[aria-selected="true"],
+      .card-detail-mode[aria-selected="true"] {
+        border-color: var(--b1);
+        background: var(--surf);
+        color: var(--blue);
+        box-shadow: var(--s1);
+      }
+      .card-detail-tab:active,
+      .card-detail-mode:active,
+      .card-detail-filter button:active,
+      .card-detail-close:active {
+        transform: scale(.98);
+      }
+      .card-detail-view[hidden],
+      .card-detail-logic-mode[hidden] {
+        display: none;
+      }
+      .card-detail-logic {
+        display: grid;
+        gap: 16px;
+      }
+      .card-detail-logic-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        background: var(--surf);
+        box-shadow: var(--s1);
+      }
+      .card-detail-logic-title {
+        margin: 0;
+        color: var(--t1);
+        font-size: 18px;
+        font-weight: 800;
+      }
+      .card-detail-logic-subtitle {
+        max-width: 680px;
+        margin: 6px 0 0;
+        color: var(--t2);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .card-detail-mode-switch {
+        display: flex;
+        flex: 0 0 auto;
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r8);
+        background: var(--surf2);
+      }
+      .card-detail-logic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .card-detail-logic-section {
+        min-width: 0;
+        padding: 18px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        background: var(--surf);
+        box-shadow: var(--s1);
+      }
+      .card-detail-logic-section--wide {
+        grid-column: 1 / -1;
+      }
+      .card-detail-logic-label {
+        margin: 0 0 8px;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .card-detail-logic-copy,
+      .card-detail-logic-list {
+        margin: 0;
+        color: var(--t1);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .card-detail-logic-list {
+        display: grid;
+        gap: 8px;
+        padding-left: 18px;
+      }
+      .card-detail-logic-code {
+        display: block;
+        overflow-x: auto;
+        margin: 0;
+        padding: 14px;
+        border: 1px solid var(--b1);
+        border-radius: var(--r8);
+        background: var(--bg);
+        color: var(--navy);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .card-detail-tab:hover,
+        .card-detail-mode:hover {
+          border-color: var(--b2);
+          color: var(--blue);
+        }
+      }
+      @media (max-width: 700px) {
+        .card-detail-tabs,
+        .card-detail-mode-switch {
+          overflow-x: auto;
+        }
+        .card-detail-tab,
+        .card-detail-mode {
+          flex: 0 0 auto;
+        }
+        .card-detail-logic-head,
+        .card-detail-logic-grid {
+          grid-template-columns: 1fr;
+        }
+        .card-detail-logic-head {
+          display: grid;
+        }
+        .card-detail-logic-section--wide {
+          grid-column: auto;
+        }
+      }
       @media (hover: hover) and (pointer: fine) {
         .card-detail-filter button:hover {
           border-color: var(--blue);
@@ -8041,10 +8195,24 @@ function setAppVersion() {
         return card.querySelector(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .exec-alert span")?.textContent.trim() || "Detalhes do indicador";
       }
 
+      function repairCardDetailText(value) {
+        const raw = String(value ?? "");
+        if (!/[ÃÂâ]/.test(raw)) return raw;
+        try {
+          const encoded = Array.from(raw)
+            .map((char) => "%" + char.charCodeAt(0).toString(16).padStart(2, "0"))
+            .join("");
+          const repaired = decodeURIComponent(encoded);
+          return repaired.includes("\ufffd") ? raw : repaired;
+        } catch {
+          return raw;
+        }
+      }
+
       function createCardDetailElement(tag, className, text) {
         const element = document.createElement(tag);
         if (className) element.className = className;
-        if (text != null) element.textContent = text;
+        if (text != null) element.textContent = repairCardDetailText(text);
         return element;
       }
 
@@ -8093,6 +8261,306 @@ function setAppVersion() {
         if (!Number.isFinite(numericValue)) return String(rawValue ?? "—");
         if (/fatur|ticket|custo|receb|meta|produz/i.test(title)) return brl(numericValue);
         return numericValue.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+      }
+
+      function getCardLogic(card) {
+        const title = normL(getCardDetailTitle(card));
+        const filterText = document.getElementById("filterSummary")?.textContent.trim() || "Todos os dados";
+        const toUserText = (value) => repairCardDetailText(String(value ?? ""))
+          .replace(/DB\.funcionarios/g, "cadastro de funcionários")
+          .replace(/DB\.pagantes/g, "registros de pagamento")
+          .replace(/DB\.veiculos/g, "cadastro de veículos")
+          .replace(/DB\.marketing/g, "publicações de marketing")
+          .replace(/DB\.reservas|VW\.reservas/g, "serviços e reservas do período")
+          .replace(/VW\.multas/g, "registros de multas do período")
+          .replace(/VW\.manutencoes/g, "registros de manutenção do período")
+          .replace(/VW\.trocas/g, "registros de trocas do período")
+          .replace(/F\.res\.catItem/g, "categoria do item")
+          .replace(/DV_CAT_ITEM_SERVICO/g, "categoria de serviço")
+          .replace(/F\.mul\.status/g, "status da multa")
+          .replace(/DV_STATUS_MUL_NOTIFICAR/g, "status de notificação")
+          .replace(/F\.pag\.status/g, "status do pagamento")
+          .replace(/F\.pag\.valor/g, "valor do pagamento")
+          .replace(/F\.man\.valor/g, "valor da manutenção")
+          .replace(/_cpConcluida/g, "composição de preço concluída")
+          .replace(/_opId/g, "ordem de produção")
+          .replace(/_motId/g, "motorista vinculado")
+          .replace(/r\._mot/g, "motorista")
+          .replace(/r\._cli/g, "cliente")
+          .replace(/_fatStL|fatStatus/g, "status de faturamento")
+          .replace(/isProducedReservation\(\)/g, "serviço produzido")
+          .replace(/maintenanceCategory\(tipo\)/g, "categoria do reparo")
+          .replace(/grp\(rv, campo do componente\)/g, "agrupamento por campo do gráfico");
+        const applyFilter = (rule) => ({
+          ...rule,
+          conditions: ["Filtros globais neste momento: " + filterText].concat(rule.conditions || [], rule.codeChoices || []),
+          limitations: rule.limitations || ["Sem registros elegíveis, o dashboard mostra zero ou s/dado."],
+          userSource: toUserText(rule.userSource || rule.source),
+          userConditions: ["O resultado respeita os filtros globais mostrados acima."].concat(
+            (rule.userConditions || rule.conditions || []).map(toUserText),
+          ),
+          steps: rule.steps || [
+            "1. O dashboard parte da fonte indicada.",
+            "2. Aplica o período e os recortes compatíveis com essa fonte.",
+            "3. Executa a contagem, soma, média ou agrupamento descrito.",
+            "4. Exibe o resultado final neste card ou gráfico.",
+          ],
+          reading: rule.reading || "O valor deve ser lido junto com o período, os filtros e as condições acima; se qualquer um deles mudar, o resultado pode mudar.",
+        });
+        const reservations = "Reservas de serviço enriquecidas em DB.reservas e filtradas em VW.reservas.";
+
+        if (card.id === "dqSemVeiculo") {
+          return applyFilter({
+            user: "Conta serviços já realizados ou vencidos que ainda não têm veículo vinculado.",
+            source: reservations,
+            formula: "count(rv.filter(r._mot != 'Sem motorista' && !r[F.res.veiculo] && data_saida <= agora))",
+            conditions: ["A data de saída precisa existir.", "Registros sem motorista ficam fora."],
+          });
+        }
+        if (card.id === "dqSemOP") {
+          return applyFilter({
+            user: "Conta serviços concluídos que continuam pendentes no faturamento e sem OP financeira.",
+            source: reservations,
+            formula: "count(rv.filter(isProducedReservation && fatStatus inclui 'pend' && !_opId))",
+            conditions: ["O status do serviço precisa indicar concluído, realizado ou finalizado."],
+          });
+        }
+        if (card.id === "dqSemMotorista") {
+          return applyFilter({
+            user: "Mostra serviços do intervalo monitorado que seguem sem motorista.",
+            source: reservations,
+            formula: "count(!r._motId && 10/04/2026 <= data_saida <= agora && status in {202410001,202410005,202410008})",
+            codeChoices: ["F.res.status: 202410001, 202410005 e 202410008; F.res.catItem: 100000000."],
+            conditions: ["O período monitorado começa em 10/04/2026.", "A categoria precisa ser DV_CAT_ITEM_SERVICO."],
+          });
+        }
+        if (card.id === "dqSemCliente") {
+          return applyFilter({
+            user: "Conta serviços a partir de 01/04/2026 que ainda aparecem sem cliente.",
+            source: reservations,
+            formula: "count(rv.filter(data_saida >= '2026-04-01' && r._cli == 'Sem cliente'))",
+            conditions: ["O nome do cliente é o valor enriquecido em r._cli."],
+          });
+        }
+        if (card.id === "alertCnh" || title.includes("cnh")) {
+          return applyFilter({
+            user: "Conta motoristas ativos com CNH vencida ou vencendo nos próximos 90 dias.",
+            source: "DB.funcionarios, somente registros classificados como ativos.",
+            formula: "count(ativos.filter(cnhDate existe && (cnhDate - agora) / 86400000 <= 90))",
+            conditions: ["CNH sem data válida não entra.", "Datas vencidas também entram."],
+          });
+        }
+        if (card.id === "alertMultas" || title.includes("multa")) {
+          return applyFilter({
+            user: "Conta multas e destaca como pendentes as que têm o status de notificação configurado.",
+            source: "VW.multas, preenchido pela tabela de multas e filtrado por data.",
+            formula: "total = muls.length; pendentes = count(Number(F.mul.status) == DV_STATUS_MUL_NOTIFICAR)",
+            codeChoices: ["F.mul.status: 202410000 = DV_STATUS_MUL_NOTIFICAR (notificar o condutor)."],
+            conditions: ["O percentual é pendentes / total x 100."],
+          });
+        }
+        if (card.id === "alertSemValor" || title.includes("cp pendente") || title.includes("sem valor")) {
+          return applyFilter({
+            user: "Conta composições de preço pendentes que já têm serviço produzido e faturamento pendente.",
+            source: reservations + " O preço é identificado pelo lookup da composição.",
+            formula: "semValor = count(distinct precoId where _cpPendente && isProducedReservation && _fatStL inclui 'pend'); projecao = ticketAtual x semValor",
+            codeChoices: ["F.res.catItem: 100000000 = serviço; _cpPendente vem do status da composição de preço."],
+            conditions: ["Cada composição é contada uma única vez.", "A projeção usa o ticket atual."],
+            limitations: ["A projeção é estimativa, não faturamento confirmado."],
+          });
+        }
+        if (title.includes("total produzido") || title.includes("meta x realizado")) {
+          return applyFilter({
+            user: "Compara o faturamento realizado com uma meta mensal baseada no histórico.",
+            source: reservations + " Períodos históricos também usam fat2023, fat2024 e fat2025.",
+            formula: "realizado = periodo ? getPeriodValueAndCount().value : sumV(rv) + soma(historico); atingimento = realizado / meta x 100",
+            conditions: ["Meta mensal = 50% ano anterior + 40% de dois anos atrás + 10% de três anos atrás, com +13%.", "Períodos parciais recebem meta proporcional aos dias."],
+            limitations: ["O histórico está fixo no código."],
+          });
+        }
+        if (title.includes("faturamento por cliente") || title.includes("top clientes faturamento")) {
+          return applyFilter({
+            user: "Agrupa serviços por cliente, soma o faturamento e ordena do maior para o menor.",
+            source: reservations + " O cliente é r._cli.",
+            formula: "byCli = grp(rv, r => r._cli); valorCliente = sumV(byCli[cliente]); ranking = sort(desc); exibido = topByShare(ranking, fat)",
+            conditions: ["Participação = valor do cliente / faturamento total x 100."],
+          });
+        }
+        if (title.includes("top clientes volume") || title.includes("clientes ativos")) {
+          return applyFilter({
+            user: "Conta quantos serviços cada cliente possui e mostra os mais representativos.",
+            source: reservations + " O cliente é r._cli.",
+            formula: "byCli = grp(rv, r => r._cli); volume = rows.length; ranking = sort(desc); exibido = topByShare(ranking, rv.length)",
+            conditions: ["Participação = serviços do cliente / serviços totais x 100."],
+          });
+        }
+        if (title.includes("ticket")) {
+          return applyFilter({
+            user: "É o valor médio dos serviços elegíveis para ticket.",
+            source: reservations,
+            formula: "elegiveis = rows.filter(_cpConcluida == true && _valor > 0); ticket = sumV(elegiveis) / elegiveis.length",
+            conditions: ["Só entram composição concluída e valor maior que zero.", "No gráfico mensal, a conta é repetida dentro de cada mês."],
+          });
+        }
+        if (title.includes("recebimento")) {
+          return applyFilter({
+            user: "Mostra quanto do valor elegível já foi recebido.",
+            source: reservations,
+            formula: "recebido = sum(_valor where fatStatus == PAGO); base = sum(_valor where fatStatus != PAGANTE_EM_VIAGEM && fatStatus != MENSAL); percentual = recebido / base x 100",
+            codeChoices: ["F.res.fatStatus: 202410010 = pago; 202410006 = pagante em viagem; 202410008 = mensal."],
+            conditions: ["Só valores maiores que zero entram.", "Pagante em viagem e Mensal ficam fora da base."],
+          });
+        }
+        if (title.includes("a receber")) {
+          return applyFilter({
+            user: "Soma serviços concluídos que têm OP, ainda não estão pagos e têm valor.",
+            source: reservations,
+            formula: "aReceber = sum(_valor where _cpConcluida && _opId && fatStatus != PAGO && _valor > 0)",
+            codeChoices: ["F.res.fatStatus: 202410010 = pago."],
+            conditions: ["O percentual pendente compara este valor com o faturamento total."],
+          });
+        }
+        if (title.includes("manuten") || title.includes("custo frota") || title.includes("reparo")) {
+          return applyFilter({
+            user: "Conta registros de manutenção e soma o valor informado para mostrar custo e média.",
+            source: "VW.manutencoes, filtrado pelo período global; valores vêm de F.man.valor.",
+            formula: "custoTotal = sum(parseFloat(r[F.man.valor]) || 0); custoMedio = custoTotal / mans.length; categoria = maintenanceCategory(tipo)",
+            conditions: ["A porcentagem do resumo é custoTotal / faturamento x 100.", "A categoria é definida por palavras do tipo de reparo."],
+          });
+        }
+        if (title.includes("frota propria") || title.includes("uso mensal da frota")) {
+          return applyFilter({
+            user: "Mede quantos carros próprios têm serviço em cada dia e calcula a média por dia útil e fim de semana.",
+            source: "DB.veiculos + VW.reservas, somente veículos cuja categoria é própria.",
+            formula: "ocupacao diaria = carros com serviço / carros proprios x 100; media final = media ponderada pelos dias",
+            conditions: ["Cancelados e recusados não contam.", "Sem período, a janela usa o ano atual."],
+          });
+        }
+        if (title.includes("preventiva") || title.includes("corretiva") || title.includes("conservacao") || title.includes("avaria") || title.includes("kpis de manutencao")) {
+          return applyFilter({
+            user: "Classifica manutenções pelo tipo de reparo e compara cada categoria com sua meta.",
+            source: "VW.manutencoes e maintenanceKpiRows().",
+            formula: "categoria = maintenanceCategory(tipo); cobertura = medidos / total da categoria; OK = resultado atende a meta",
+            conditions: ["Preventiva programada mede aprovação até data em até 10 dias.", "Corretiva crítica tem meta zero; não crítica tem meta de até 5 no mês."],
+            limitations: ["Categorias sem campo de medição aparecem como s/dado."],
+          });
+        }
+        if (title.includes("pagamento") || title.includes("cartao") || title.includes("forma de pagamento")) {
+          return applyFilter({
+            user: "Usa os registros de pagamento para somar valores, contar registros e agrupar por forma ou status.",
+            source: "DB.pagantes; o valor usa parseFloat(F.pag.valor) ou zero.",
+            formula: "recebidos = pags.filter(isReceivedPayment); cartao = sum(paymentValue where forma inclui cartao/credito/link/maquina); grupos = grp(pags, forma/status)",
+            conditions: ["Recebido usa F.pag.status == 202410002.", "Tempo de pagamento permanece s/dado por falta de datas no fetch."],
+            limitations: ["Não há cálculo de prazo ou atraso sem data de baixa e vencimento."],
+          });
+        }
+        if (title.includes("frota") || title.includes("blindad") || title.includes("veiculo") || title.includes("dispon") || title.includes("por marca")) {
+          return applyFilter({
+            user: "Conta veículos e os agrupa por status, marca, blindagem ou situação operacional.",
+            source: "DB.veiculos, usando valores formatados do Dataverse quando disponíveis.",
+            formula: "disponiveis = status inclui dispon/ativo/livre; blindados = blindado == true/'true'/1; manutencao = status inclui manut; grupos = grp(veiculos, campo)",
+            conditions: ["Os totais de frota não usam reservas para contar veículos."],
+          });
+        }
+        if (title.includes("troca")) {
+          return applyFilter({
+            user: "Conta registros de troca e separa pendentes, concluídos e agrupamentos por status ou tipo.",
+            source: "VW.trocas, filtrado pelo período global.",
+            formula: "pendentes = status inclui pend/aguard; concluidas = status inclui conclu/realiz; total = trcs.length",
+            conditions: ["A tabela detalha os registros retornados pela consulta."],
+          });
+        }
+        if (title.includes("publica") || title.includes("marketing")) {
+          return applyFilter({
+            user: "Conta publicações e agrupa o conteúdo por categoria ou status.",
+            source: "DB.marketing, com status e categoria formatados do Dataverse.",
+            formula: "publicadas = status inclui public/ativo; producao = status inclui produc/pend/rascunho; grupos = grp(mkts, categoria/status)",
+            conditions: ["O total representa os registros disponíveis no retorno atual."],
+          });
+        }
+        if (title.includes("status dos servicos") || title.includes("por status")) {
+          return applyFilter({
+            user: "Agrupa os serviços pelo status e mostra a participação de cada grupo.",
+            source: reservations + " O status é r._stL.",
+            formula: "bySt = grp(rv, r => r._stL); participacao = quantidade do status / rv.length x 100",
+            conditions: ["Concluídos usam isProducedReservation().", "Cancelados contam status contendo cancel ou recus."],
+          });
+        }
+        if (title.includes("servico") || title.includes("operacao") || title.includes("por tipo")) {
+          return applyFilter({
+            user: "Conta ou agrupa serviços conforme o recorte mostrado no card ou gráfico.",
+            source: reservations,
+            formula: "rv = VW.reservas filtradas; contagem = rv.length; agrupamento = grp(rv, campo do componente); soma = sumV(grupo)",
+            codeChoices: ["F.res.catItem: 100000000 = serviço (DV_CAT_ITEM_SERVICO)."],
+            conditions: ["A reserva entra como serviço quando F.res.catItem == DV_CAT_ITEM_SERVICO.", "Período, status, cliente, motorista e tipo de veículo são aplicados antes da renderização."],
+          });
+        }
+        return applyFilter({
+          user: "Este detalhe usa os registros e transformações que o componente já renderizou para a aba atual.",
+          source: "Estado de dados do dashboard (DB/VW) e o renderizador da seção.",
+          formula: "dados carregados -> filtros ativos -> filtro/agrupamento do componente -> valor exibido",
+          conditions: ["O valor respeita o período e os filtros globais atuais."],
+          limitations: ["Este indicador não possui uma regra nominal específica no catálogo; a cadeia comum é exibida de forma transparente."],
+        });
+      }
+
+      function appendLogicSection(container, label, value, options = {}) {
+        const section = createCardDetailElement("section", "card-detail-logic-section" + (options.wide ? " card-detail-logic-section--wide" : ""));
+        section.appendChild(createCardDetailElement("p", "card-detail-logic-label", label));
+        if (Array.isArray(value)) {
+          const list = createCardDetailElement("ul", "card-detail-logic-list");
+          value.forEach((item) => list.appendChild(createCardDetailElement("li", "", item)));
+          section.appendChild(list);
+        } else {
+          section.appendChild(createCardDetailElement(options.code ? "code" : "p", options.code ? "card-detail-logic-code" : "card-detail-logic-copy", value));
+        }
+        container.appendChild(section);
+      }
+
+      function buildCardLogic(card) {
+        const title = getCardDetailTitle(card);
+        const logic = getCardLogic(card);
+        const root = createCardDetailElement("section", "card-detail-logic");
+        const head = createCardDetailElement("div", "card-detail-logic-head");
+        const copy = createCardDetailElement("div");
+        copy.append(
+          createCardDetailElement("h3", "card-detail-logic-title", "Como este dado foi calculado"),
+          createCardDetailElement("p", "card-detail-logic-subtitle", title + ": escolha Usuário para entender o resultado ou Código para conferir a implementação."),
+        );
+        const modes = createCardDetailElement("div", "card-detail-mode-switch");
+        [["user", "Usuário"], ["technical", "Código"]].forEach(([mode, label], index) => {
+          const button = createCardDetailElement("button", "card-detail-mode", label);
+          button.type = "button";
+          button.dataset.cardDetailMode = mode;
+          button.setAttribute("aria-selected", String(index === 0));
+          modes.appendChild(button);
+        });
+        head.append(copy, modes);
+
+        const userMode = createCardDetailElement("div", "card-detail-logic-mode");
+        userMode.dataset.cardDetailLogicMode = "user";
+        const userGrid = createCardDetailElement("div", "card-detail-logic-grid");
+        appendLogicSection(userGrid, "O que este número significa", logic.user, { wide: true });
+        appendLogicSection(userGrid, "Como ele chega ao resultado", logic.steps, { wide: true });
+        appendLogicSection(userGrid, "De onde vem", logic.userSource);
+        appendLogicSection(userGrid, "O que entra na conta", logic.userConditions);
+        appendLogicSection(userGrid, "Como interpretar", logic.reading, { wide: true });
+        appendLogicSection(userGrid, "Cuidados e limites", logic.limitations);
+        userMode.appendChild(userGrid);
+
+        const technicalMode = createCardDetailElement("div", "card-detail-logic-mode");
+        technicalMode.dataset.cardDetailLogicMode = "technical";
+        technicalMode.hidden = true;
+        const technicalGrid = createCardDetailElement("div", "card-detail-logic-grid");
+        appendLogicSection(technicalGrid, "Fonte e escopo", logic.source);
+        appendLogicSection(technicalGrid, "Fórmula / transformação", logic.formula, { code: true });
+        appendLogicSection(technicalGrid, "Fluxo de execução", logic.steps, { wide: true });
+        appendLogicSection(technicalGrid, "Condições", logic.conditions);
+        appendLogicSection(technicalGrid, "Limitações conhecidas", logic.limitations);
+        technicalMode.appendChild(technicalGrid);
+
+        root.append(head, userMode, technicalMode);
+        return root;
       }
 
       function createChartDataTable(chart, title) {
@@ -8205,7 +8673,25 @@ function setAppVersion() {
         }
 
         layout.append(main, side);
-        return layout;
+        const overview = createCardDetailElement("div", "card-detail-view");
+        overview.dataset.cardDetailView = "overview";
+        overview.appendChild(layout);
+        const logicView = createCardDetailElement("div", "card-detail-view");
+        logicView.dataset.cardDetailView = "logic";
+        logicView.hidden = true;
+        logicView.appendChild(buildCardLogic(card));
+        const tabs = createCardDetailElement("nav", "card-detail-tabs");
+        tabs.setAttribute("aria-label", "Navegação do detalhamento");
+        [["overview", "Visão geral"], ["logic", "Como foi calculado"]].forEach(([view, label], index) => {
+          const button = createCardDetailElement("button", "card-detail-tab", label);
+          button.type = "button";
+          button.dataset.cardDetailTab = view;
+          button.setAttribute("aria-selected", String(index === 0));
+          tabs.appendChild(button);
+        });
+        const shell = createCardDetailElement("div", "card-detail-shell");
+        shell.append(tabs, overview, logicView);
+        return shell;
       }
 
       function installCardDetailDialog() {
@@ -8224,9 +8710,13 @@ function setAppVersion() {
         const renderActiveCard = () => {
           if (!activeCard) return;
           const selector = `.${activeCard.type}`;
-          const card = [...document.querySelectorAll(selector)].find((item) => getCardDetailTitle(item) === activeCard.title);
+          const candidates = [...document.querySelectorAll(selector)];
+          const card = (activeCard.id && document.getElementById(activeCard.id)) ||
+            candidates.find((item, index) => index === activeCard.index && getCardDetailTitle(item) === activeCard.title) ||
+            candidates.find((item) => getCardDetailTitle(item) === activeCard.title);
           if (!card) return;
           title.textContent = getCardDetailTitle(card);
+          destroyDetailCharts();
           body.replaceChildren(buildCardDetail(card));
         };
         const syncAndApplyPeriod = () => {
@@ -8244,6 +8734,27 @@ function setAppVersion() {
           end.value = "";
           syncAndApplyPeriod();
         });
+        body.addEventListener("click", (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          const tab = target?.closest("[data-card-detail-tab]");
+          const mode = target?.closest("[data-card-detail-mode]");
+          if (tab) {
+            body.querySelectorAll("[data-card-detail-tab]").forEach((button) => {
+              button.setAttribute("aria-selected", String(button === tab));
+            });
+            body.querySelectorAll("[data-card-detail-view]").forEach((view) => {
+              view.hidden = view.dataset.cardDetailView !== tab.dataset.cardDetailTab;
+            });
+          }
+          if (mode) {
+            body.querySelectorAll("[data-card-detail-mode]").forEach((button) => {
+              button.setAttribute("aria-selected", String(button === mode));
+            });
+            body.querySelectorAll("[data-card-detail-logic-mode]").forEach((view) => {
+              view.hidden = view.dataset.cardDetailLogicMode !== mode.dataset.cardDetailMode;
+            });
+          }
+        });
         dialog.addEventListener("click", (event) => {
           if (event.target === dialog) closeDialog();
         });
@@ -8259,7 +8770,13 @@ function setAppVersion() {
           if (target.closest("a, button, input, select, textarea, th, [contenteditable='true']")) return;
           const card = target.closest(".kpi, .cc, .tc, .exec-alert");
           if (!card) return;
-          activeCard = { title: getCardDetailTitle(card), type: getCardType(card) };
+          const cardType = getCardType(card);
+          activeCard = {
+            title: getCardDetailTitle(card),
+            type: cardType,
+            id: card.id || "",
+            index: [...document.querySelectorAll("." + cardType)].indexOf(card),
+          };
           start.value = document.getElementById("fS").value;
           end.value = document.getElementById("fE").value;
           renderActiveCard();
