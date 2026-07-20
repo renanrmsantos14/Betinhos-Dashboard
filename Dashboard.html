@@ -8157,7 +8157,7 @@ function setAppVersion() {
           if (!start && !end) return records;
           return records.filter(r => {
             const rDate = r[dateField];
-            if (!rDate) return true; // Incluir se não tem data
+            if (!rDate) return false; // Com filtro de data, registro sem data fica fora
             if (start) {
               const startDate = new Date(start + "T00:00:00-03:00");
               if (new Date(rDate) < startDate) return false;
