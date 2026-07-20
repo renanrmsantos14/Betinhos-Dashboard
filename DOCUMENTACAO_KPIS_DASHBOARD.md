@@ -1,7 +1,7 @@
 # Dashboard Betinhos — lógica dos KPIs e valores
 
-**Versão da documentação:** 20/07/2026  
-**Fonte:** estado atual de `Dashboard.html`  
+**Versão da documentação:** 20/07/2026
+**Fonte:** estado atual de `Dashboard.html`
 **Objetivo:** explicar, em linguagem de gestão, como cada indicador é calculado, quais registros entram na conta e quais cuidados devem ser considerados na leitura.
 
 ## 1. Como ler o dashboard
