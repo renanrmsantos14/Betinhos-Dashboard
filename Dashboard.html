@@ -1917,6 +1917,12 @@
         font-size: 11px;
         font-weight: 400;
       }
+      .cnh-expired {
+        color: var(--red);
+      }
+      .cnh-warning {
+        color: var(--yellow);
+      }
       td.em {
         font-weight: 700;
       }
@@ -4994,7 +5000,7 @@
               <div class="cc-hdr">
                 <div class="cc-title">Serviços por motorista por mês</div>
               </div>
-              <canvas id="cMotMes" height="100" data-mobile-height="136"></canvas>
+              <div id="tblMotMes" class="metric-table-wrap"></div>
             </div>
           </div>
           <div class="tc">
@@ -8382,9 +8388,15 @@ function setAppVersion() {
         const lmSrvCount = lmData.count !== null ? lmData.count : 0;
         const producedPeriodData = getPeriodValueAndCount(activeStart, activeEnd);
         const producedPeriodValue = producedPeriodData.value;
-        const hardcodedFaturamentoTotal = Object.values(yearDataMap)
-          .flat()
-          .reduce((sum, value) => sum + (value || 0), 0);
+        const hardcodedFaturamentoTotal = Object.keys(yearDataMap).reduce(
+          (total, year) =>
+            total +
+            (yearDataMap[year] || []).reduce(
+              (sum, value) => sum + (value || 0),
+              0,
+            ),
+          0,
+        );
         const faturamentoProduzido = start || end
           ? producedPeriodValue
           : fat + hardcodedFaturamentoTotal;
@@ -8496,10 +8508,9 @@ function setAppVersion() {
           `<span class="receipt-base">${brlS(baseRecebimento)}</span>`);
         html("kRecebPctD", "");
         const cnhWarn = DB.funcionarios.filter((r) => {
-          if (!r[F.fun.cnh]) return true;
-          return (
-            (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24) < 90
-          );
+          const cnhDate = r[F.fun.cnh] ? new Date(r[F.fun.cnh]).getTime() : NaN;
+          if (!Number.isFinite(cnhDate)) return false;
+          return (cnhDate - Date.now()) / (1000 * 60 * 60 * 24) <= 90;
         });
         set("kCnhW", dvDisabled ? "—" : cnhWarn.length);
         html("kCnhWD", dvDisabled
@@ -9272,10 +9283,9 @@ function setAppVersion() {
       function renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap) {
         set("mTot", dvDisabled ? "—" : DB.funcionarios.length);
         const cnhWarn = DB.funcionarios.filter((r) => {
-          if (!r[F.fun.cnh]) return true;
-          return (
-            (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24) < 90
-          );
+          const cnhDate = r[F.fun.cnh] ? new Date(r[F.fun.cnh]).getTime() : NaN;
+          if (!Number.isFinite(cnhDate)) return false;
+          return (cnhDate - Date.now()) / (1000 * 60 * 60 * 24) <= 90;
         });
         set("mCnh", dvDisabled ? "—" : cnhWarn.length);
         set("mSrv", dvDisabled ? "—" : rv.length);
@@ -9284,50 +9294,8 @@ function setAppVersion() {
           if (r._mot !== "Sem motorista") motMap.set(r._motKey || r._mot, r._mot);
         });
         const mots = [...motMap.entries()].map(([key, label]) => ({ key, label }));
-        const monthsLabelsAll = [
-          "Jan",
-          "Fev",
-          "Mar",
-          "Abr",
-          "Mai",
-          "Jun",
-          "Jul",
-          "Ago",
-          "Set",
-          "Out",
-          "Nov",
-          "Dez",
-        ];
-        const motLabels = mks.length > 0
-          ? mls.map(label => label.split(" ")[0].charAt(0).toUpperCase() + label.split(" ")[0].slice(1))
-          : monthsLabelsAll;
-        const motDatasets =
-          mots.length > 0
-            ? mots.map((m, i) => ({
-                label: trunc(m.label, 16),
-                data: (mks.length > 0 ? mks : monthsLabelsAll).map((k, idx) =>
-                  mks.length > 0
-                    ? (byM[k] || []).filter((r) => (r._motKey || r._mot) === m.key).length
-                    : null,
-                ),
-                backgroundColor: PAL[i % PAL.length],
-                stack: "m",
-              }))
-            : [] || [
-                {
-                  label: "Dados médios",
-                  data: monthsLabelsAll.map((m, i) =>
-                    Math.round((yearDataMap[currentYear]?.[i] || 0) / 50000),
-                  ),
-                  backgroundColor: "#2159d2",
-                  stack: "m",
-                },
-              ];
-        mkChart("cMotMes", {
-          type: "bar",
-          data: { labels: motLabels, datasets: motDatasets },
-          options: opts0({ legendRight: true }),
-        });
+
+        renderMotMesTable(mots, mks, mls, byM);
         const motRows = DB.funcionarios
           .map((f) => {
             const funcId = String(f.cr40f_funcionariosid || "").toLowerCase();
@@ -9338,7 +9306,7 @@ function setAppVersion() {
             );
             return {
               nome,
-              funcao: f[F.fun.funcao] || "—",
+              funcao: fv(f, F.fun.funcao) || "—",
               qtd: srvs.length,
               fat: sumV(srvs),
               ticket: getTicketStats(srvs).ticket,
@@ -9352,6 +9320,20 @@ function setAppVersion() {
           dvDisabled ? "—" : `${DB.funcionarios.length} motoristas`,
         );
         renderMotTable(motRows, fat);
+      }
+      function renderMotMesTable(mots, monthKeys, monthLabels, byM) {
+        const headers = monthLabels.map((label) => `<th class="r">${label}</th>`).join("");
+        const rows = monthKeys.length ? mots.map((motorista) => {
+          const counts = monthKeys.map((key) =>
+            (byM[key] || []).filter((r) => (r._motKey || r._mot) === motorista.key).length,
+          );
+          const total = counts.reduce((sum, count) => sum + count, 0);
+          return `<tr><td class="em">${motorista.label}</td>${counts
+            .map((count) => `<td class="r em">${count.toLocaleString("pt-BR")}</td>`)
+            .join("")}<td class="r em">${total.toLocaleString("pt-BR")}</td></tr>`;
+        }).join("") : "";
+        const empty = monthKeys.length ? emptyRow(monthKeys.length + 2) : emptyRow(2);
+        html("tblMotMes", `<table><thead><tr><th>Motorista</th>${headers}<th class="r">Total</th></tr></thead><tbody>${rows || empty}</tbody></table>`);
       }
       function renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap) {
         const monthsLabelsAll = getDashboardMonthLabels();
@@ -9818,19 +9800,21 @@ function setAppVersion() {
             .join("") || emptyRow(6);
       }
       function renderMotTable(rows, totalFat) {
-        const hoje = new Date();
         document.getElementById("tbMot").innerHTML =
           rows
             .map((r, i) => {
-              let cnhCls = "dim",
-                cnhTxt = "—";
-              if (r.cnh) {
-                const d = new Date(r.cnh);
-                const diff = (d - hoje) / (1000 * 60 * 60 * 24);
-                cnhTxt = fmtD(r.cnh);
-                if (diff < 0) cnhCls = 'em" style="color:var(--red)';
-                else if (diff < 90) cnhCls = 'em" style="color:var(--yellow)';
-              }
+              const cnhDate = r.cnh ? new Date(r.cnh).getTime() : NaN;
+              const cnhDiff = Number.isFinite(cnhDate)
+                ? (cnhDate - Date.now()) / (1000 * 60 * 60 * 24)
+                : NaN;
+              const cnhCls = !Number.isFinite(cnhDate)
+                ? "dim"
+                : cnhDiff < 0
+                  ? "em cnh-expired"
+                  : cnhDiff <= 90
+                    ? "em cnh-warning"
+                    : "dim";
+              const cnhTxt = Number.isFinite(cnhDate) ? fmtD(r.cnh) : "Não informado";
               const part = totalFat ? (r.fat / totalFat) * 100 : 0;
               return `<tr>
       <td><span class="rn ${i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : ""}">${i + 1}</span></td>

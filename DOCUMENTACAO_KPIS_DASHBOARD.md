@@ -218,7 +218,7 @@ O percentual de custo da receita é:
 Custo / Faturamento × 100
 ```
 
-### Multas
+### Multas - VALIDADO
 
 **O que responde:** quantidade de multas no período aplicado à data da multa.
 
