@@ -8312,7 +8312,7 @@ function setAppVersion() {
               dqSemVeiculo: [
                 "Fonte: Reservas de serviços.",
                 "Campos: Data de saída, Motorista e Veículo.",
-                "Valores e condições: considera serviços com data de saída registrada, motorista informado e veículo não preenchido; registros sem motorista ficam fora deste alerta.",
+                "Valores e condições: considera serviços com saída a partir de 01/06/2026, vínculo de motorista preenchido e veículo não preenchido; a validação usa o lookup do motorista, não o nome exibido.",
               ],
               dqSemOp: [
                 "Fonte: Reservas de serviços e informações de faturamento.",
@@ -8455,10 +8455,10 @@ function setAppVersion() {
 
         if (card.id === "dqSemVeiculo") {
           return applyFilter({
-            user: "Conta serviços já realizados ou vencidos que ainda não têm veículo vinculado.",
+            user: "Conta serviços desde 01/06/2026 já realizados ou vencidos que ainda não têm veículo vinculado.",
             source: reservations,
-            formula: "count(rv.filter(r._mot != 'Sem motorista' && !r[F.res.veiculo] && data_saida <= agora))",
-            conditions: ["A data de saída precisa existir.", "Registros sem motorista ficam fora."],
+            formula: "count(rv.filter(r._motId && !r[F.res.veiculo] && '2026-06-01' <= data_saida <= agora))",
+            conditions: ["A data de saída precisa existir e ser igual ou posterior a 01/06/2026.", "O lookup de motorista (_motId) precisa estar preenchido.", "O veículo precisa estar vazio."],
           });
         }
         if (card.id === "dqSemOP") {
@@ -9236,9 +9236,10 @@ function setAppVersion() {
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
         setExecAlert("alertOcorrencias", dvDisabled ? "—" : ocorrenciasOperacionais.length, "Ocorrências", rv.length && ocorrenciasOperacionais.length ? `${ocorrenciasPct.toFixed(1)}% dos serviços · 1 a cada ${ocorrenciasFrequencia}` : "s/dado", ocorrenciasOperacionais.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
+        const inicioSemVeiculo = new Date("2026-06-01T00:00:00-03:00").getTime();
         const dqSemVeiculo = rv.filter((r) => {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
-          return r._mot !== "Sem motorista" && !r[F.res.veiculo] && Number.isFinite(saida) && saida <= Date.now();
+          return Boolean(r._motId) && !r[F.res.veiculo] && Number.isFinite(saida) && saida >= inicioSemVeiculo && saida <= Date.now();
         }).length;
         const dqSemOP = rv.filter((r) =>
           isProducedReservation(r) &&
