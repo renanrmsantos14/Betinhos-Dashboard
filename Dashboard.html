@@ -4489,7 +4489,7 @@
           </section>
           <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
             <p class="section-label">Opera&ccedil;&atilde;o</p>
-            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
             <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
@@ -4627,14 +4627,6 @@
               ></div>
               <div class="kpi-lbl">Concluídos</div>
               <div class="kpi-val" id="sCon">—</div>
-            </div>
-            <div class="kpi">
-              <div
-                class="kpi-accent"
-                style="background: var(--yellow)"
-              ></div>
-              <div class="kpi-lbl">Pendentes/Prog.</div>
-              <div class="kpi-val" id="sPen">—</div>
             </div>
             <div class="kpi">
               <div
@@ -6350,10 +6342,6 @@
         const k = normL(r?._stL);
         return k.includes("viagem") || k.includes("transit") || k.includes("execu");
       };
-      const isPendingScheduledReservation = (r) => {
-        const k = normL(r?._stL);
-        return k.includes("pend") || k.includes("progr") || k.includes("program") || k.includes("solicit");
-      };
       const isReceivedPayment = (r) => {
         return r[F.pag.status] === 202410002;
       };
@@ -7914,7 +7902,6 @@ function setAppVersion() {
             <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
-            <div class="exec-alert" id="alertProgramados"><div><strong>&mdash;</strong><span>Programados</span></div><b>Agenda</b></div>
           </div>
           <div class="exec-alerts">
             <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
@@ -8360,8 +8347,6 @@ function setAppVersion() {
           });
         };
         const semValor = getSemValorRows(rv);
-        const pendentes = rv.filter(isPendingScheduledReservation);
-        const programados = rv.filter((r) => normL(r?._stL).includes("progr"));
         const cancelados = rv.filter(
           (r) =>
             stL(r._stL).includes("cancel") || stL(r._stL).includes("recus"),
@@ -8569,8 +8554,6 @@ function setAppVersion() {
         setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
-        const programadosPct = rv.length ? ((programados.length / rv.length) * 100).toFixed(0) : 0;
-        setExecAlert("alertProgramados", programados.length, "Programados", programados.length ? `${programadosPct}% do período` : "Sem agenda", programados.length ? "ok" : "warn");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
         const dqSemVeiculo = rv.filter((r) => {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
@@ -8999,7 +8982,6 @@ function setAppVersion() {
         // ===== PÁGINA SERVIÇOS =====
         set("sT", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
         set("sCon", dvDisabled ? "—" : conclServices.length);
-        set("sPen", dvDisabled ? "—" : pendentes.length);
         set("sCan", dvDisabled ? "—" : cancelados.length);
         set("sTk", dvDisabled ? "—" : brl(curTk));
         set("sSemVal", dvDisabled ? "—" : semValor.length);
@@ -9007,7 +8989,6 @@ function setAppVersion() {
         set("sOpTotal", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
         html("sOpMix", dvDisabled ? "" : renderMetricLines([
           ["Concluídos", conclServices.length.toLocaleString("pt-BR")],
-          ["Pendentes/Prog.", pendentes.length.toLocaleString("pt-BR")],
           ["Cancelados", cancelados.length.toLocaleString("pt-BR")],
         ]));
         set("sFinTotal", dvDisabled ? "â€”" : brlS(fat));
