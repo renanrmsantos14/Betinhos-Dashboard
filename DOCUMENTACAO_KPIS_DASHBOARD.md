@@ -232,7 +232,7 @@ O cartão de pendências usa o status interno `cr40f_status = 202410000`, corres
 % multas pendentes = multas pendentes / multas totais × 100
 ```
 
-### CNH próxima ou vencida
+### CNH próxima ou vencida - VALIDADO
 
 **O que responde:** quantos funcionários estão com risco documental.
 
@@ -248,7 +248,7 @@ CNH em atenção = funcionários sem validade ou com validade < 90 dias
 
 Este indicador usa a tabela de funcionários e não é limitado pelo número de serviços do período.
 
-### Frota ativa
+### Frota ativa - VALIDADO
 
 **O que responde:** quantos veículos estão em condição operacional conforme o status cadastrado.
 
