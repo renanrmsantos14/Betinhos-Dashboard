@@ -4643,7 +4643,7 @@
           </section>
           <section class="dashboard-section dashboard-section--alerts" aria-label="Alertas executivos">
             <p class="section-label">Opera&ccedil;&atilde;o</p>
-            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>N&uacute;mero de ocorr&ecirc;ncias</span></div><b>Opera&ccedil;&atilde;o</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>Ocorr&ecirc;ncias</span></div><b>Opera&ccedil;&atilde;o</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
             <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
@@ -8067,7 +8067,7 @@ function setAppVersion() {
             <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
-            <div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>N&uacute;mero de ocorr&ecirc;ncias</span></div><b>Operacao</b></div>
+            <div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>Ocorr&ecirc;ncias</span></div><b>Operacao</b></div>
           </div>
           <div class="exec-alerts">
             <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
@@ -9234,7 +9234,7 @@ function setAppVersion() {
         setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
-        setExecAlert("alertOcorrencias", dvDisabled ? "—" : ocorrenciasOperacionais.length, "Número de ocorrências", rv.length && ocorrenciasOperacionais.length ? `${ocorrenciasPct.toFixed(1)}% dos serviços · 1 a cada ${ocorrenciasFrequencia}` : "s/dado", ocorrenciasOperacionais.length ? "danger" : "ok");
+        setExecAlert("alertOcorrencias", dvDisabled ? "—" : ocorrenciasOperacionais.length, "Ocorrências", rv.length && ocorrenciasOperacionais.length ? `${ocorrenciasPct.toFixed(1)}% dos serviços · 1 a cada ${ocorrenciasFrequencia}` : "s/dado", ocorrenciasOperacionais.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
         const dqSemVeiculo = rv.filter((r) => {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
