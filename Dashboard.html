@@ -9322,6 +9322,8 @@ function setAppVersion() {
         renderMotTable(motRows, fat);
       }
       function renderMotMesTable(mots, monthKeys, monthLabels, byM) {
+        const monthTotals = monthKeys.map((key) => (byM[key] || []).length);
+        const periodTotal = monthTotals.reduce((sum, count) => sum + count, 0);
         const headers = monthLabels.map((label) => `<th class="r">${label}</th>`).join("");
         const rows = monthKeys.length ? mots.map((motorista) => {
           const counts = monthKeys.map((key) =>
@@ -9329,8 +9331,16 @@ function setAppVersion() {
           );
           const total = counts.reduce((sum, count) => sum + count, 0);
           return `<tr><td class="em">${motorista.label}</td>${counts
-            .map((count) => `<td class="r em">${count.toLocaleString("pt-BR")}</td>`)
-            .join("")}<td class="r em">${total.toLocaleString("pt-BR")}</td></tr>`;
+            .map((count, index) => `<td class="r">${metricSplit(
+              `${monthTotals[index] ? ((count / monthTotals[index]) * 100).toFixed(1) : 0}%`,
+              count.toLocaleString("pt-BR"),
+              "r",
+            )}</td>`)
+            .join("")}<td class="r">${metricSplit(
+              `${periodTotal ? ((total / periodTotal) * 100).toFixed(1) : 0}%`,
+              total.toLocaleString("pt-BR"),
+              "r",
+            )}</td></tr>`;
         }).join("") : "";
         const empty = monthKeys.length ? emptyRow(monthKeys.length + 2) : emptyRow(2);
         html("tblMotMes", `<table><thead><tr><th>Motorista</th>${headers}<th class="r">Total</th></tr></thead><tbody>${rows || empty}</tbody></table>`);
