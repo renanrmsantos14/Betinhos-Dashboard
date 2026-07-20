@@ -266,16 +266,17 @@ O texto secundário mostra o total geral de veículos cadastrados, que pode incl
 
 Conta reservas Serviço que:
 
+- não possuem status de cancelamento;
 - possuem lookup de motorista preenchido;
 - não possuem veículo relacionado;
 - possuem data de saída válida a partir de 01/06/2026;
 - possuem saída até o momento atual.
 
 ```text
-OS sem veículo = lookup de motorista preenchido + veículo vazio + 01/06/2026 <= saída <= agora
+OS sem veículo = status não cancelado + lookup de motorista preenchido + veículo vazio + 01/06/2026 <= saída <= agora
 ```
 
-O motorista é validado pelo vínculo `_motId`, e não pelo texto exibido no nome. O alerta indica falha de alocação ou de cadastro. Não representa automaticamente indisponibilidade de frota.
+O motorista é validado pelo vínculo `_motId`, e não pelo texto exibido no nome. Status contendo “cancel” ficam fora. O alerta indica falha de alocação ou de cadastro. Não representa automaticamente indisponibilidade de frota.
 
 ### Sem OP
 

@@ -8312,7 +8312,7 @@ function setAppVersion() {
               dqSemVeiculo: [
                 "Fonte: Reservas de serviços.",
                 "Campos: Data de saída, Motorista e Veículo.",
-                "Valores e condições: considera serviços com saída a partir de 01/06/2026, vínculo de motorista preenchido e veículo não preenchido; a validação usa o lookup do motorista, não o nome exibido.",
+                "Valores e condições: considera serviços não cancelados com saída a partir de 01/06/2026, vínculo de motorista preenchido e veículo não preenchido; a validação usa o lookup do motorista, não o nome exibido.",
               ],
               dqSemOp: [
                 "Fonte: Reservas de serviços e informações de faturamento.",
@@ -8455,10 +8455,10 @@ function setAppVersion() {
 
         if (card.id === "dqSemVeiculo") {
           return applyFilter({
-            user: "Conta serviços desde 01/06/2026 já realizados ou vencidos que ainda não têm veículo vinculado.",
+            user: "Conta serviços não cancelados desde 01/06/2026 já realizados ou vencidos que ainda não têm veículo vinculado.",
             source: reservations,
-            formula: "count(rv.filter(r._motId && !r[F.res.veiculo] && '2026-06-01' <= data_saida <= agora))",
-            conditions: ["A data de saída precisa existir e ser igual ou posterior a 01/06/2026.", "O lookup de motorista (_motId) precisa estar preenchido.", "O veículo precisa estar vazio."],
+            formula: "count(rv.filter(!status_cancelado && r._motId && !r[F.res.veiculo] && '2026-06-01' <= data_saida <= agora))",
+            conditions: ["A data de saída precisa existir e ser igual ou posterior a 01/06/2026.", "O status não pode conter 'cancel'.", "O lookup de motorista (_motId) precisa estar preenchido.", "O veículo precisa estar vazio."],
           });
         }
         if (card.id === "dqSemOP") {
@@ -9239,7 +9239,7 @@ function setAppVersion() {
         const inicioSemVeiculo = new Date("2026-06-01T00:00:00-03:00").getTime();
         const dqSemVeiculo = rv.filter((r) => {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
-          return Boolean(r._motId) && !r[F.res.veiculo] && Number.isFinite(saida) && saida >= inicioSemVeiculo && saida <= Date.now();
+          return !stL(r._stL).includes("cancel") && Boolean(r._motId) && !r[F.res.veiculo] && Number.isFinite(saida) && saida >= inicioSemVeiculo && saida <= Date.now();
         }).length;
         const dqSemOP = rv.filter((r) =>
           isProducedReservation(r) &&
