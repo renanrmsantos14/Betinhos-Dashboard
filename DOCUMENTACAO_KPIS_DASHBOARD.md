@@ -132,7 +132,7 @@ Um serviço é elegível quando:
 
 Serviços sem preço ou com valor zero não entram no numerador nem no denominador.
 
-### A receber
+### A receber - VALIDADO
 
 **O que responde:** quanto ainda pode ser recebido de serviços já precificados e com OP/financeiro vinculado.
 
@@ -179,7 +179,7 @@ Projeção CP pendente = Ticket médio atual × quantidade de CPs pendentes
 
 É projeção, não valor confirmado de venda.
 
-### Recebimento
+### Recebimento - VALIDADO
 
 **O que responde:** qual percentual da base elegível já foi marcado como pago.
 
