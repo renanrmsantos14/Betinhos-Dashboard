@@ -8308,7 +8308,7 @@ function setAppVersion() {
           .replace(/F\.pag\.valor/g, "valor do pagamento")
           .replace(/F\.man\.valor/g, "valor da manutenção")
           .replace(/_cpConcluida/g, "composição de preço concluída")
-          .replace(/_opId/g, "ordem de produção")
+          .replace(/_opId/g, "ordem de pagamento")
           .replace(/_motId/g, "motorista vinculado")
           .replace(/r\._mot/g, "motorista")
           .replace(/r\._cli/g, "cliente")
@@ -8362,7 +8362,7 @@ function setAppVersion() {
           ];
           if (card.id === "alertSemValor" || cardTitle.includes("cp pendente") || cardTitle.includes("sem valor")) return [
             "Fonte: Reservas de serviços e Composição de preço.",
-            "Campos: Categoria do item, Status da composição de preço, Status de faturamento, Ordem de produção e Valor total.",
+            "Campos: Categoria do item, Status da composição de preço, Status de faturamento, Ordem de pagamento e Valor total.",
             "Valores e condições: considera itens Serviço já produzidos, com composição de preço pendente e faturamento pendente; cada composição é contada uma vez.",
           ];
           if (cardTitle.includes("total produzido") || cardTitle.includes("meta x realizado")) return [
@@ -8387,13 +8387,13 @@ function setAppVersion() {
           ];
           if (cardTitle.includes("recebimento")) return [
             "Fonte: Reservas de serviços e informações de faturamento.",
-            "Campos: Valor total, Status de faturamento, Status da composição de preço e Ordem de produção.",
+            "Campos: Valor total, Status de faturamento, Status da composição de preço e Ordem de pagamento.",
             "Valores e condições: considera valores maiores que zero; recebido é o que está como Pago, enquanto Pagante em viagem e Mensal ficam fora da base de comparação.",
           ];
           if (cardTitle.includes("a receber")) return [
             "Fonte: Reservas de serviços e informações de faturamento.",
-            "Campos: Valor total, Status da composição de preço, Ordem de produção e Status de faturamento.",
-            "Valores e condições: considera serviços concluídos, com Ordem de produção, valor maior que zero e ainda não marcados como Pago.",
+            "Campos: Valor total, Status da composição de preço, Ordem de pagamento e Status de faturamento.",
+            "Valores e condições: considera serviços concluídos, com Ordem de pagamento, valor maior que zero e ainda não marcados como Pago.",
           ];
           if ((cardTitle.includes("manuten") || cardTitle.includes("custo frota") || cardTitle.includes("reparo")) && !cardTitle.includes("kpis de manutencao")) return [
             "Fonte: Manutenções.",
