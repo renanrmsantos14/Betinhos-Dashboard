@@ -851,12 +851,13 @@
         font-weight: 600;
       }
       .passenger-ranking-table {
-        width: max-content;
-        min-width: 100%;
-        table-layout: auto;
+        width: auto;
+        min-width: 0;
+        table-layout: fixed;
       }
       .passenger-ranking-table th,
       .passenger-ranking-table td {
+        box-sizing: border-box;
         white-space: nowrap;
       }
       @keyframes toast-in {
@@ -10733,6 +10734,57 @@ function setAppVersion() {
           <td class="dim">${item.serviceType}</td><td class="dim">${item.vehicleType}</td><td class="dim">${item.driver}</td><td class="r">${brl(item.count ? item.total / item.count : 0)}</td><td class="r em">${brl(item.total)}</td>
         </tr>`).join("") || emptyRow(11);
         set("metaSrv", top.length ? `Top ${top.length} de ${allRanked.length} | ${totalLinks.toLocaleString("pt-BR")} vínculos serviço-passageiro` : "Nenhum vínculo serviço-passageiro no período");
+        const fitColumns = () => fitPassengerRankingColumns();
+        window.requestAnimationFrame ? window.requestAnimationFrame(fitColumns) : fitColumns();
+      }
+
+      function fitPassengerRankingColumns() {
+        const rankingTable = document.querySelector(".passenger-ranking-table");
+        const header = rankingTable?.tHead?.rows[0];
+        if (!rankingTable || !header) return;
+        const widths = Array.from(header.cells, () => 0);
+        const context = document.createElement("canvas").getContext("2d");
+        const styles = new Map();
+        rankingTable.querySelectorAll("thead tr, tbody tr").forEach((row) => {
+          Array.from(row.cells).forEach((cell, index) => {
+            if (cell.colSpan !== 1 || index >= widths.length) return;
+            const contents = cell.children.length ? Array.from(cell.children) : [cell];
+            const contentWidth = contents.reduce((widest, content) => {
+              const key = `${index}:${content.tagName}`;
+              let style = styles.get(key);
+              if (!style) {
+                const contentStyle = getComputedStyle(content);
+                style = { font: contentStyle.font, letterSpacing: parseFloat(contentStyle.letterSpacing) || 0 };
+                styles.set(key, style);
+              }
+              context.font = style.font;
+              const text = content.textContent.trim();
+              const textWidth = context.measureText(text).width + Math.max(0, text.length - 1) * style.letterSpacing;
+              return Math.max(widest, textWidth);
+            }, 0);
+            const paddingKey = `${index}:padding`;
+            let padding = styles.get(paddingKey);
+            if (padding === undefined) {
+              const cellStyle = getComputedStyle(cell);
+              padding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+              styles.set(paddingKey, padding);
+            }
+            widths[index] = Math.max(widths[index], Math.ceil(contentWidth + padding + 1));
+          });
+        });
+        let colgroup = rankingTable.querySelector("colgroup");
+        if (!colgroup) {
+          colgroup = document.createElement("colgroup");
+          rankingTable.prepend(colgroup);
+        }
+        colgroup.replaceChildren(...widths.map((width) => {
+          const col = document.createElement("col");
+          col.style.width = `${width}px`;
+          return col;
+        }));
+        const tableWidth = widths.reduce((total, width) => total + width, 0);
+        rankingTable.style.width = `${tableWidth}px`;
+        rankingTable.style.minWidth = `${tableWidth}px`;
       }
 
       function renderSrvTable(rows) {
