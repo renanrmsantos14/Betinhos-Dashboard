@@ -870,9 +870,13 @@
       }
       .passenger-ranking-table th:last-child { border-right: 0; }
       .passenger-ranking-header-title {
-        display: block;
+        display: -webkit-box;
         font-size: 9.5px;
         line-height: 1.25;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
         overflow-wrap: anywhere;
         white-space: normal;
       }
