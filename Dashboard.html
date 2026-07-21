@@ -3331,6 +3331,16 @@
         line-height: 1.2;
         white-space: nowrap;
       }
+      .card-detail-logic-condition-detail {
+        display: inline;
+        padding: 2px 4px;
+        border-radius: 5px;
+        background: #f5f8ff;
+        color: var(--blue-d);
+        font-weight: 700;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
       .card-detail-logic-code {
         display: block;
         overflow-x: auto;
@@ -8689,7 +8699,8 @@ function setAppVersion() {
             const itemElement = createCardDetailElement("li", "");
             if (match) {
               itemElement.appendChild(createCardDetailElement("strong", "card-detail-logic-emphasis", match[1] + ":"));
-              itemElement.appendChild(document.createTextNode(" " + match[2]));
+              itemElement.appendChild(document.createTextNode(" "));
+              itemElement.appendChild(createCardDetailElement("span", "card-detail-logic-condition-detail", match[2]));
             } else {
               itemElement.textContent = text;
             }
