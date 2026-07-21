@@ -505,7 +505,7 @@ Faturamento do cliente / faturamento total × 100
 
 ### Status de faturamento
 
-Agrupa os serviços pelo status de faturamento. Para cada status, apresenta quantidade de serviços, valor acumulado e participação sobre o total filtrado.
+Agrupa os serviços pelo status de faturamento. Para cada status, apresenta quantidade de serviços, valor acumulado e participação sobre o total filtrado. A base deste quadro considera somente serviços com data de saída a partir de **01/04/2026**, inclusive; registros anteriores ficam fora da quantidade, do faturamento e da participação.
 
 ## 9. Página Pagamentos
 

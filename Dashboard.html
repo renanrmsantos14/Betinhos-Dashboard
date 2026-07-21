@@ -10067,33 +10067,55 @@ function setAppVersion() {
           mks.length > 0
             ? mks.map((k) => sumV(byM[k]))
             : monthsLabelsAll.map((m, i) => yearDataMap[currentYear]?.[i] || 0);
+        const fmChartOptions = opts0({ noLegend: true, yBrl: true });
+        fmChartOptions.plugins.datalabels = {
+          ...fmChartOptions.plugins.datalabels,
+          display: (context) => Number(context.dataset.data[context.dataIndex] || 0) > 0,
+          anchor: "end",
+          align: "top",
+          offset: 3,
+          color: "#334155",
+          font: { ...FONT, size: 9, weight: "700" },
+        };
+        fmChartOptions.scales.x = {
+          ...fmChartOptions.scales.x,
+          grid: { display: false },
+          ticks: { ...fmChartOptions.scales.x.ticks, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+        };
+        fmChartOptions.scales.y = {
+          ...fmChartOptions.scales.y,
+          grace: "12%",
+          ticks: { ...fmChartOptions.scales.y.ticks, maxTicksLimit: 5 },
+        };
         mkChart("cFM2", {
-          type: "line",
+          type: "bar",
           data: {
             labels: fmLabels,
             datasets: [
               {
-                label: "Fat.",
+                label: "Faturamento",
                 data: fmData,
                 borderColor: "#2159d2",
-                backgroundColor: "rgba(10,147,150,.08)",
-                fill: true,
-                tension: 0.45,
-                pointRadius: 2,
-                pointBackgroundColor: "#2159d2",
+                backgroundColor: "rgba(33,89,210,.78)",
+                borderWidth: 0,
+                borderRadius: 6,
+                borderSkipped: false,
+                barPercentage: 0.72,
+                categoryPercentage: 0.78,
               },
             ],
           },
-          options: opts0({ noLegend: true, yBrl: true }),
+          options: fmChartOptions,
         });
-        const byFatSt = grp(rv, (r) => r._fatStL);
+        const fatStatusRows = rv.filter((r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01");
+        const byFatSt = grp(fatStatusRows, (r) => r._fatStL);
         const fsK = Object.keys(byFatSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byFatSt[b].length - byFatSt[a].length);
         renderDistributionTable(
           "tblFatStatus",
           fsK.map((k) => ({ label: k, qtd: byFatSt[k].length, value: sumV(byFatSt[k]) })),
-          rv.length,
+          fatStatusRows.length,
           { label: "Status", countLabel: "Servicos", valueLabel: "Faturamento", badgeLabels: true, moneyValue: true },
         );
         const cliRows = Object.entries(byCli)
