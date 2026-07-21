@@ -119,7 +119,7 @@ $queries = [ordered]@{
   servicosPassageiro = "$api/cr40f_servicosporpassageiros?`$select=_cr40f_bancodedados_value,_cr40f_geral_value"
   errosOperacionais = "$api/cr40f_errooperacionals?`$select=cr40f_dataocorrencia&`$orderby=cr40f_dataocorrencia desc"
   precos = "$api/cr40f_composicaodeprecoses?`$select=cr40f_composicaodeprecosid,new_valortotal,new_status"
-  manutencoes = "$api/cr40f_manutencoeses?`$select=cr40f_datamanutencao,cr40f_datadaaprovacao,cr40f_valor,cr40f_status,cr40f_tipodoreparo,_cr40f_placa_carro_value&`$orderby=cr40f_datamanutencao desc"
+  manutencoes = "$api/cr40f_manutencoeses?`$select=createdon,cr40f_datamanutencao,cr40f_datadaaprovacao,cr40f_valor,cr40f_status,cr40f_tipodoreparo,_cr40f_placa_carro_value&`$orderby=cr40f_datamanutencao desc"
   multas = "$api/cr40f_multases?`$select=cr40f_dataehorario,cr40f_status,_cr40f_codigodainfracao_value,_cr40f_motorista_value,_cr40f_placa_value&`$expand=cr40f_Codigodainfracao(`$select=cr40f_codigodainfracao,cr40f_descricaodainfracao)&`$orderby=cr40f_dataehorario desc"
   trocas = "$api/cr40f_trocasdecarros?`$select=cr40f_dataehorariodatroca,cr40f_statusdatroca,new_tipodetroca&`$orderby=cr40f_dataehorariodatroca desc"
   pagantes = "$api/cr40f_paganteses?`$select=cr40f_pagantesid,_cr40f_financeiro_value,cr40f_status,cr40f_valor,cr40f_formadepagamento"
