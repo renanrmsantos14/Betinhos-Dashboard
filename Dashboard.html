@@ -814,6 +814,72 @@
       #alertArea:empty {
         display: none;
       }
+      .toast-area {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 1200;
+        display: grid;
+        gap: 10px;
+        width: min(380px, calc(100vw - 40px));
+      }
+      .toast {
+        padding: 14px 16px;
+        border: 1px solid #b7e4c7;
+        border-left: 4px solid var(--green);
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, .16);
+        color: var(--t1);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.4;
+        animation: toast-in 180ms ease-out;
+      }
+      .toast small {
+        display: block;
+        margin-top: 3px;
+        color: var(--t2);
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .passenger-birthday {
+        display: block;
+        margin-top: 2px;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .passenger-ranking-table {
+        width: max-content;
+        min-width: 100%;
+        table-layout: auto;
+      }
+      .passenger-ranking-table th,
+      .passenger-ranking-table td {
+        white-space: nowrap;
+      }
+      .passenger-ranking-table th:nth-child(1),
+      .passenger-ranking-table td:nth-child(1) { width: 52px; }
+      .passenger-ranking-table th:nth-child(2),
+      .passenger-ranking-table td:nth-child(2) { min-width: 210px; }
+      .passenger-ranking-table th:nth-child(3),
+      .passenger-ranking-table td:nth-child(3) { min-width: 150px; }
+      .passenger-ranking-table th:nth-child(6),
+      .passenger-ranking-table td:nth-child(6) { min-width: 120px; }
+      .passenger-ranking-table th:nth-child(7),
+      .passenger-ranking-table td:nth-child(7),
+      .passenger-ranking-table th:nth-child(8),
+      .passenger-ranking-table td:nth-child(8),
+      .passenger-ranking-table th:nth-child(9),
+      .passenger-ranking-table td:nth-child(9) { min-width: 190px; }
+      @keyframes toast-in {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .toast { animation: none; }
+      }
       .quick-filters {
         display: flex;
         gap: 6px;
@@ -4363,6 +4429,7 @@
 
       <div class="content">
         <div id="alertArea"></div>
+        <div id="toastArea" class="toast-area" aria-live="polite" aria-atomic="true"></div>
         <div class="fbar" id="filterPanel">
           <div class="filter-head">
             <div class="filter-head-left">
@@ -5798,6 +5865,9 @@
 
         const mock = {
           reservas: [],
+          clientes: [],
+          passageiros: [],
+          servicosPassageiro: [],
           errosOperacionais: [],
           precos: [],
           manutencoes: [],
@@ -5876,6 +5946,19 @@
           });
         }
 
+        clientes.forEach((nome, i) => mock.clientes.push({
+          cr40f_clientes1id: `mock-cliente-${i}`,
+          cr40f_nomedocliente: nome,
+        }));
+        for (let i = 0; i < 25; i++) {
+          mock.passageiros.push({
+            cr40f_bancodedadosid: `mock-passageiro-${i}`,
+            cr40f_nomedopassageiro: `Passageiro ${String(i + 1).padStart(2, "0")}`,
+            cr40f_datadenascimento: i === 0 ? new Date(now).toISOString().slice(0, 10) : `198${i % 10}-0${(i % 9) + 1}-1${i % 8}`,
+            _cr40f_cliente_value: `mock-cliente-${i % clientes.length}`,
+          });
+        }
+
         // Reservas
         for (let i = 0; i < 120; i++) {
           const dias = rand(0, 180);
@@ -5912,6 +5995,10 @@
               new_apelido: mot.split(" ")[0],
             },
             cr40f_Cliente: { cr40f_nomedocliente: cli },
+          });
+          mock.servicosPassageiro.push({
+            cr40f_geral: `mock-res-${i}`,
+            cr40f_bancodedados: mock.passageiros[i % mock.passageiros.length].cr40f_bancodedadosid,
           });
         }
 
@@ -6025,7 +6112,7 @@
         if (!response.ok) throw new Error(`Snapshot PROD indisponível (HTTP ${response.status}). Rode npm run snapshot:prod.`);
 
         const snapshot = await response.json();
-        const requiredCollections = ["reservas", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
+        const requiredCollections = ["reservas", "clientes", "passageiros", "servicosPassageiro", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
         if (snapshot?.schemaVersion !== 1 || !snapshot?.data) throw new Error("Snapshot PROD inválido. Rode npm run snapshot:prod novamente.");
 
         for (const collection of requiredCollections) {
@@ -6034,7 +6121,12 @@
           }
         }
 
-        DB = snapshot.data;
+        DB = {
+          clientes: [],
+          passageiros: [],
+          servicosPassageiro: [],
+          ...snapshot.data,
+        };
         const exportedAt = new Date(snapshot.exportedAt);
         const timestamp = Number.isNaN(exportedAt.getTime()) ? "data desconhecida" : exportedAt.toLocaleString("pt-BR");
         showAlert("warn", `<strong>SNAPSHOT PROD:</strong> dados reais exportados em ${timestamp}. Atualize com <code>npm run snapshot:prod</code>.`);
@@ -6278,6 +6370,9 @@
 
       const T = {
         reservas: "cr40f_reservadeveculoses",
+        clientes: "cr40f_clientes1s",
+        passageiros: "cr40f_bancodedadoses",
+        servicosPassageiro: "cr40f_servicosporpassageiros",
         errosOperacionais: "cr40f_errooperacionals",
         precos: "cr40f_composicaodeprecoses",
         manutencoes: "cr40f_manutencoeses",
@@ -6304,6 +6399,13 @@
           lookupPreco: "_new_composicaodepreco_value",
           lookupOP: "_cr40f_financeiro_value",
         },
+        passageiro: {
+          id: "cr40f_bancodedadosid",
+          nome: "cr40f_nomedopassageiro",
+          nascimento: "cr40f_datadenascimento",
+          cliente: "_cr40f_cliente_value",
+        },
+        cliente: { id: "cr40f_clientes1id", nome: "cr40f_nomedocliente" },
         preco: { valorTotal: "new_valortotal", status: "new_status" },
         man: {
           data: "cr40f_datamanutencao",
@@ -6366,6 +6468,9 @@
 
       let DB = {
         reservas: [],
+        clientes: [],
+        passageiros: [],
+        servicosPassageiro: [],
         errosOperacionais: [],
         precos: [],
         manutencoes: [],
@@ -7130,8 +7235,8 @@ function setAppVersion() {
       const loadedDataSets = new Set();
       const dataLoadPromises = new Map();
       const tabDataDependencies = {
-        resumo: ["reservas", "errosOperacionais", "precos", "manutencoes", "multas", "infracoes", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"],
-        servicos: ["reservas", "precos", "funcionarios"],
+        resumo: ["reservas", "clientes", "passageiros", "servicosPassageiro", "errosOperacionais", "precos", "manutencoes", "multas", "infracoes", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"],
+        servicos: ["reservas", "precos", "funcionarios", "clientes", "passageiros", "servicosPassageiro"],
         faturamento: ["reservas", "precos"],
         pagantes: ["reservas", "precos", "pagantes"],
         frota: ["reservas", "precos", "manutencoes", "veiculos", "funcionarios"],
@@ -7253,6 +7358,21 @@ function setAppVersion() {
           `${API()}/${T.reservas}?$select=${sel}&$expand=${exp}&$orderby=${F.res.data} desc`,
         );
       }
+      async function loadPassageiros() {
+        DB.passageiros = await fetchAll(
+          `${API()}/${T.passageiros}?$select=${F.passageiro.id},${F.passageiro.nome},${F.passageiro.nascimento},${F.passageiro.cliente}`,
+        );
+      }
+      async function loadClientes() {
+        DB.clientes = await fetchAll(
+          `${API()}/${T.clientes}?$select=${F.cliente.id},${F.cliente.nome}`,
+        );
+      }
+      async function loadServicosPassageiro() {
+        DB.servicosPassageiro = await fetchAll(
+          `${API()}/${T.servicosPassageiro}?$select=_cr40f_bancodedados_value,_cr40f_geral_value`,
+        );
+      }
       async function loadErrosOperacionais() {
         DB.errosOperacionais = await fetchAll(
           `${API()}/${T.errosOperacionais}?$select=${F.erroOperacional.data}&$orderby=${F.erroOperacional.data} desc`,
@@ -7309,6 +7429,9 @@ function setAppVersion() {
 
       const dataSetLoaders = {
         reservas: loadReservas,
+        clientes: loadClientes,
+        passageiros: loadPassageiros,
+        servicosPassageiro: loadServicosPassageiro,
         errosOperacionais: loadErrosOperacionais,
         precos: loadPrecos,
         manutencoes: loadManutencoes,
@@ -9264,7 +9387,7 @@ function setAppVersion() {
         const aReceberPct = fat > 0 ? (aReceber / fat * 100).toFixed(0) : 0;
         html("kPPendD", dvDisabled ? "" :
           `<span class="badge-kpi badge-ly"><span class="bk-label">%FAT</span><span class="bk-val">${aReceberPct}%</span><span class="bk-pct">pendente</span></span>`);
-        set("kRecebPct", dvDisabled ? "â€”" : `${recebimentoPct.toFixed(0)}%`);
+        set("kRecebPct", dvDisabled ? "—" : `${recebimentoPct.toFixed(0)}%`);
         html("kRecebPctSub", dvDisabled ? "" :
           `<span class="receipt-value">${brlS(recebidoProduzido)}</span>` +
           `<span class="receipt-separator">recebido de</span>` +
@@ -9786,12 +9909,12 @@ function setAppVersion() {
         set("sTk", dvDisabled ? "—" : brl(curTk));
         set("sSemVal", dvDisabled ? "—" : semValor.length);
         set("sFat", dvDisabled ? "—" : brlS(fat));
-        set("sOpTotal", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
+        set("sOpTotal", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
         html("sOpMix", dvDisabled ? "" : renderMetricLines([
           ["Concluídos", conclServices.length.toLocaleString("pt-BR")],
           ["Cancelados", cancelados.length.toLocaleString("pt-BR")],
         ]));
-        set("sFinTotal", dvDisabled ? "â€”" : brlS(fat));
+        set("sFinTotal", dvDisabled ? "—" : brlS(fat));
         html("sFinMix", dvDisabled ? "" : renderMetricLines([
           ["Ticket médio", brl(curTk)],
           ["CP pendente", semValor.length.toLocaleString("pt-BR")],
@@ -9822,7 +9945,7 @@ function setAppVersion() {
           "metaSrv",
           dvDisabled ? "—" : `${rv.length.toLocaleString("pt-BR")} registros`,
         );
-        renderSrvTable(rv);
+        renderPassengerRanking(rv);
 
         // Demais abas
         renderFaturamento(dvDisabled, rv, fat, curTk, mks, mls, byM, byCli, currentYear, yearDataMap);
@@ -10556,6 +10679,76 @@ function setAppVersion() {
       // ════════════════════════════════════════════
       // TABLE RENDERERS
       // ════════════════════════════════════════════
+      function renderPassengerRanking(rows) {
+        const normalizeId = (value) => String(value || "").replace(/[{}]/g, "").toLowerCase();
+        const serviceMap = new Map(rows.map((row) => [normalizeId(row[F.res.id]), row]));
+        const clientMap = new Map((DB.clientes || []).map((client) => [normalizeId(client[F.cliente.id]), client]));
+        const passengerMap = new Map((DB.passageiros || []).map((passenger) => [normalizeId(passenger[F.passageiro.id]), passenger]));
+        const ranking = new Map();
+        (DB.servicosPassageiro || []).forEach((link) => {
+          const service = serviceMap.get(normalizeId(link._cr40f_geral_value));
+          const passengerId = normalizeId(link._cr40f_bancodedados_value);
+          const passenger = passengerMap.get(passengerId);
+          if (!service || !passenger) return;
+          const client = clientMap.get(normalizeId(passenger[F.passageiro.cliente]));
+          const item = ranking.get(passengerId) || {
+            name: passenger[F.passageiro.nome] || "Passageiro sem nome",
+            birthday: passenger[F.passageiro.nascimento] || "",
+            client: client?.[F.cliente.nome] || "Cliente não informado",
+            count: 0,
+            total: 0,
+            latest: 0,
+            serviceTypes: new Map(),
+            vehicleTypes: new Map(),
+            drivers: new Map(),
+          };
+          const serviceType = String(service._tipoL || "N&atilde;o informado").trim() || "N&atilde;o informado";
+          const vehicleType = String(service._veiL || "N&atilde;o informado").trim() || "N&atilde;o informado";
+          const driver = String(service._mot || "N&atilde;o informado").trim() || "N&atilde;o informado";
+          item.count += 1;
+          item.total += service._valor || 0;
+          item.latest = Math.max(item.latest, service._ts || 0);
+          item.serviceTypes.set(serviceType, (item.serviceTypes.get(serviceType) || 0) + 1);
+          item.vehicleTypes.set(vehicleType, (item.vehicleTypes.get(vehicleType) || 0) + 1);
+          item.drivers.set(driver, (item.drivers.get(driver) || 0) + 1);
+          ranking.set(passengerId, item);
+        });
+        const totalLinks = [...ranking.values()].reduce((sum, item) => sum + item.count, 0);
+        const allRanked = [...ranking.values()].map((item) => ({
+          ...item,
+          serviceType: [...item.serviceTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
+          vehicleType: [...item.vehicleTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
+          driver: [...item.drivers.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
+        })).sort((a, b) => b.count - a.count || b.total - a.total || a.name.localeCompare(b.name));
+        const ranked = allRanked.slice(0, 50);
+        const top = ranked.slice(0, 20);
+        const formatBirthday = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString("pt-BR") : "Nascimento não informado";
+        const isBirthdayToday = (value) => {
+          if (!value) return false;
+          const date = new Date(`${String(value).slice(0, 10)}T12:00:00`);
+          const today = new Date();
+          return date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
+        };
+        const birthdayPeople = ranked.filter((item) => isBirthdayToday(item.birthday));
+        const birthdayKey = new Date().toISOString().slice(0, 10);
+        if (birthdayPeople.length && window.__DASHBOARD_BIRTHDAY_TOAST_DATE !== birthdayKey) {
+          const toastArea = document.getElementById("toastArea");
+          if (toastArea) {
+            toastArea.innerHTML = `<div class="toast">Hoje é aniversário de ${birthdayPeople.map((item) => item.name).join(", ")}!<small>Essa pessoa está entre os 50 passageiros que mais viajam com a Betinhos.</small></div>`;
+            window.setTimeout(() => { toastArea.replaceChildren(); }, 9000);
+          }
+          window.__DASHBOARD_BIRTHDAY_TOAST_DATE = birthdayKey;
+        }
+        document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
+          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
+          <td class="em"><div>${item.name}</div><small class="passenger-birthday">${formatBirthday(item.birthday)}</small></td><td class="dim">${item.client}</td>
+          <td class="r em">${item.count.toLocaleString("pt-BR")}</td><td class="r">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</td>
+          <td class="dim">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</td>
+          <td class="dim">${item.serviceType}</td><td class="dim">${item.vehicleType}</td><td class="dim">${item.driver}</td><td class="r">${brl(item.count ? item.total / item.count : 0)}</td><td class="r em">${brl(item.total)}</td>
+        </tr>`).join("") || emptyRow(11);
+        set("metaSrv", top.length ? `Top ${top.length} de ${allRanked.length} | ${totalLinks.toLocaleString("pt-BR")} vínculos serviço-passageiro` : "Nenhum vínculo serviço-passageiro no período");
+      }
+
       function renderSrvTable(rows) {
         document.getElementById("tbSrv").innerHTML =
           rows
@@ -11452,6 +11645,20 @@ function setAppVersion() {
         return true;
       }
 
+      function ensurePassengerRankingLayout() {
+        const table = document.getElementById("tbSrv")?.closest(".tc");
+        if (!table || table.dataset.passengerRanking === "1") return;
+        const title = table.querySelector(".tc-title");
+        const search = table.querySelector(".tc-search");
+        const head = table.querySelector("thead");
+        const rankingTable = table.querySelector("table");
+        if (title) title.textContent = "Passageiros que mais viajaram com a Betinhos";
+        search?.remove();
+        rankingTable?.classList.add("passenger-ranking-table");
+        if (head) head.innerHTML = `<tr><th>Pos.</th><th>Passageiro</th><th>Cliente</th><th style="text-align:right">Servi&ccedil;os</th><th style="text-align:right">Participa&ccedil;&atilde;o</th><th>&Uacute;ltimo servi&ccedil;o</th><th>Tipo de servi&ccedil;o mais frequente</th><th>Tipo de ve&iacute;culo mais frequente</th><th>Motorista mais frequente</th><th style="text-align:right">Ticket m&eacute;dio</th><th style="text-align:right">Faturamento</th></tr>`;
+        table.dataset.passengerRanking = "1";
+      }
+
       function initializeDashboardAfterAccess() {
         if (window.__DASHBOARD_AFTER_ACCESS_STARTED) return;
         window.__DASHBOARD_AFTER_ACCESS_STARTED = true;
@@ -11462,6 +11669,7 @@ function setAppVersion() {
           setBrandLogo();
           setAppVersion();
           installDashboardErrorLogger();
+          ensurePassengerRankingLayout();
           addKpiGoalDirections();
           installCardDetailDialog();
           installTvNavigation();

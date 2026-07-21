@@ -9,7 +9,7 @@ param(
   [string] $ClientId = "51f81489-12ee-4a9e-aaae-a2591f45987d",
 
   [ValidateRange(1, 9)]
-  [int] $MaxParallelJobs = 4,
+  [int] $MaxParallelJobs = 8,
 
   [switch] $DeviceCode
 )
@@ -31,17 +31,30 @@ $downloadWorker = {
 
   while ($nextUrl) {
     $pages++
-    try {
-      $response = Invoke-RestMethod -Method Get -Uri $nextUrl -Headers $Headers
-    } catch {
-      throw "Falha ao baixar '$Name' na pagina ${pages}: $($_.Exception.Message)"
+    $response = $null
+    $lastError = $null
+    for ($attempt = 1; $attempt -le 4 -and $null -eq $response; $attempt++) {
+      try {
+        $response = Invoke-RestMethod -Method Get -Uri $nextUrl -Headers $Headers -TimeoutSec 120
+      } catch {
+        $lastError = $_.Exception
+        $statusCode = $null
+        if ($lastError.Response) { $statusCode = [int] $lastError.Response.StatusCode }
+        if ($statusCode -ge 400 -and $statusCode -lt 500) { break }
+        if ($attempt -lt 4) {
+          Start-Sleep -Seconds ([Math]::Pow(2, $attempt - 1))
+        }
+      }
+    }
+    if ($null -eq $response) {
+      throw "Falha ao baixar '$Name' na pagina ${pages} apos 4 tentativas: $($lastError.Message)"
     }
     foreach ($row in @($response.value)) { [void] $rows.Add($row) }
     $nextLinkProperty = $response.PSObject.Properties['@odata.nextLink']
     $nextUrl = if ($null -eq $nextLinkProperty) { $null } else { [string] $nextLinkProperty.Value }
   }
 
-  $json = ConvertTo-Json -InputObject $rows.ToArray() -Depth 100
+  $json = ConvertTo-Json -InputObject $rows.ToArray() -Depth 100 -Compress
   [System.IO.File]::WriteAllText($TempPath, $json, [System.Text.UTF8Encoding]::new($false))
   [pscustomobject]@{ Name = $Name; Count = $rows.Count; Pages = $pages; TempPath = $TempPath }
 }
@@ -95,21 +108,24 @@ $headers = @{
   Accept = "application/json"
   "OData-MaxVersion" = "4.0"
   "OData-Version" = "4.0"
-  Prefer = "odata.include-annotations=*,odata.maxpagesize=5000"
+  Prefer = 'odata.include-annotations="OData.Community.Display.V1.FormattedValue",odata.maxpagesize=5000'
 }
 $api = "$environmentBaseUrl/api/data/v9.2"
 
 $queries = [ordered]@{
-  reservas = "$api/cr40f_reservadeveculoses?`$expand=cr40f_Motorista(`$select=cr40f_funcionariosid,cr40f_nomecompleto,new_apelido),cr40f_Cliente(`$select=cr40f_nomedocliente)&`$orderby=cr40f_dataehorriodesada desc"
+  reservas = "$api/cr40f_reservadeveculoses?`$select=cr40f_reservadeveculosid,cr40f_dataehorriodesada,cr40f_status,cr40f_statusdefaturamento,cr40f_tipodoservico,cr40f_tipodeveiculo,_cr40f_veiculo_value,new_categoriadoitem,_new_composicaodepreco_value,_cr40f_financeiro_value&`$expand=cr40f_Motorista(`$select=cr40f_funcionariosid,cr40f_nomecompleto,new_apelido),cr40f_Cliente(`$select=cr40f_nomedocliente)&`$orderby=cr40f_dataehorriodesada desc"
+  clientes = "$api/cr40f_clientes1s?`$select=cr40f_clientes1id,cr40f_nomedocliente"
+  passageiros = "$api/cr40f_bancodedadoses?`$select=cr40f_bancodedadosid,cr40f_nomedopassageiro,cr40f_datadenascimento,_cr40f_cliente_value"
+  servicosPassageiro = "$api/cr40f_servicosporpassageiros?`$select=_cr40f_bancodedados_value,_cr40f_geral_value"
   errosOperacionais = "$api/cr40f_errooperacionals?`$select=cr40f_dataocorrencia&`$orderby=cr40f_dataocorrencia desc"
-  precos = "$api/cr40f_composicaodeprecoses"
-  manutencoes = "$api/cr40f_manutencoeses?`$orderby=cr40f_datamanutencao desc"
-  multas = "$api/cr40f_multases?`$expand=cr40f_Codigodainfracao(`$select=cr40f_codigodainfracao,cr40f_descricaodainfracao)&`$orderby=cr40f_dataehorario desc"
-  trocas = "$api/cr40f_trocasdecarros?`$orderby=cr40f_dataehorariodatroca desc"
-  pagantes = "$api/cr40f_paganteses"
-  veiculos = "$api/cr40f_veiculoses"
-  funcionarios = "$api/cr40f_funcionarioses"
-  marketing = "$api/new_marketings?`$orderby=new_datadepublicacao desc"
+  precos = "$api/cr40f_composicaodeprecoses?`$select=cr40f_composicaodeprecosid,new_valortotal,new_status"
+  manutencoes = "$api/cr40f_manutencoeses?`$select=cr40f_datamanutencao,cr40f_datadaaprovacao,cr40f_valor,cr40f_status,cr40f_tipodoreparo,_cr40f_placa_carro_value&`$orderby=cr40f_datamanutencao desc"
+  multas = "$api/cr40f_multases?`$select=cr40f_dataehorario,cr40f_status,_cr40f_codigodainfracao_value,_cr40f_motorista_value,_cr40f_placa_value&`$expand=cr40f_Codigodainfracao(`$select=cr40f_codigodainfracao,cr40f_descricaodainfracao)&`$orderby=cr40f_dataehorario desc"
+  trocas = "$api/cr40f_trocasdecarros?`$select=cr40f_dataehorariodatroca,cr40f_statusdatroca,new_tipodetroca&`$orderby=cr40f_dataehorariodatroca desc"
+  pagantes = "$api/cr40f_paganteses?`$select=cr40f_pagantesid,_cr40f_financeiro_value,cr40f_status,cr40f_valor,cr40f_formadepagamento"
+  veiculos = "$api/cr40f_veiculoses?`$select=cr40f_veiculosid,cr40f_placa,cr40f_marca,cr40f_modelo,cr40f_statusdoveiculo,cr40f_blindado,cr40f_anodefabricacao,new_categoriadoveiculo"
+  funcionarios = "$api/cr40f_funcionarioses?`$select=cr40f_funcionariosid,cr40f_nomecompleto,cr40f_status,cr40f_funcao,cr40f_validadedacnh,new_apelido"
+  marketing = "$api/new_marketings?`$select=new_status,new_categoria,new_datadepublicacao&`$orderby=new_datadepublicacao desc"
   infracoes = "$api/cr40f_infracaodetransitos?`$select=cr40f_infracaodetransitoid,cr40f_codigodainfracao,cr40f_descricaodainfracao"
 }
 
