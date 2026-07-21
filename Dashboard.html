@@ -4053,15 +4053,13 @@
         cursor: none !important;
       }
       .tv-browser .tv-cursor-magnet {
-        --tv-magnet-x: 0px;
-        --tv-magnet-y: 0px;
         position: relative;
         z-index: 8;
         border-color: #ffffff !important;
         outline: 3px solid #2159d2;
         outline-offset: 3px;
         box-shadow: 0 0 0 7px rgba(33, 89, 210, 0.18), 0 10px 24px rgba(13, 31, 67, 0.22);
-        transform: translate(var(--tv-magnet-x), var(--tv-magnet-y)) scale(1.08);
+        transform: scale(1.08);
         transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out;
       }
       .tv-browser .filter-row {
@@ -5974,13 +5972,12 @@
           <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores de manutenção">
             <div class="kpi-row kpi-6">
               <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Preventiva programada</div><div class="kpi-val" id="frPrevProg">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--blue)"></div><div class="kpi-lbl">Preventiva condi&ccedil;&atilde;o</div><div class="kpi-val" id="frPrevCond">&mdash;</div></div>
+              <div class="kpi executive kpi-tone-blue"><div class="kpi-accent" style="background: var(--blue)"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Tempo at&eacute; manuten&ccedil;&atilde;o</div><div class="kpi-val sm" id="frPrazoMedio">&mdash;</div></div></div><div class="metric-list"><div class="metric-line"><span>Em at&eacute; 10 dias</span><b id="frPrazoAte10">&mdash;</b></div><div class="metric-line"><span>Base medida</span><b id="frPrazoBase">&mdash;</b></div></div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--orange)"></div><div class="kpi-lbl">Corretiva n&atilde;o cr&iacute;tica</div><div class="kpi-val" id="frCorrNaoCrit">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--red)"></div><div class="kpi-lbl">Corretiva cr&iacute;tica</div><div class="kpi-val" id="frCorrCrit">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Conserva&ccedil;&atilde;o</div><div class="kpi-val" id="frConserv">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
             </div>
-            <div class="tc"><div class="tc-bar"><div><div class="tc-title">KPIs de manuten&ccedil;&atilde;o</div><div class="tc-meta" id="metaFrotaKpis">Metas mensais</div></div></div><div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div></div>
           </section>
           <div class="kpi-row kpi-4">
             <div class="kpi">
@@ -6699,6 +6696,7 @@
           const st = r(["Concluído", "Em Andamento", "Pendente"]);
           mock.manutencoes.push({
             cr40f_manutencoesid: `mock-man-${i}`,
+            createdon: dt(rand(91, 120)),
             cr40f_datamanutencao: dt(rand(0, 90)),
             cr40f_datadaaprovacao: dt(rand(91, 120)),
             cr40f_valor: randF(200, 4500),
@@ -7400,68 +7398,6 @@
         if (k.includes("prevent") || k.includes("revis") || k.includes("oleo")) return "Preventiva programada";
         return "Corretiva nao critica";
       };
-      function maintenanceKpiRows(mans, manFv) {
-        const byCat = grp(mans, (r) => maintenanceCategory(manFv(r, F.man.tipo)));
-        const catRows = (cat) => byCat[cat] || [];
-        const prevProg = catRows("Preventiva programada");
-        const prevProgMeasured = prevProg.filter((r) => daysBetweenValues(r[F.man.aprovacao], r[F.man.data]) !== null);
-        const prevProgOk = prevProgMeasured.filter((r) => {
-          const days = daysBetweenValues(r[F.man.aprovacao], r[F.man.data]);
-          return days >= 0 && days <= 10;
-        }).length;
-        const prevProgPct = prevProgMeasured.length ? (prevProgOk / prevProgMeasured.length) * 100 : null;
-        const cond = catRows("Preventiva condicao");
-        const corrNaoCrit = catRows("Corretiva nao critica");
-        const corrCrit = catRows("Corretiva critica");
-        const conserv = catRows("Conservacao");
-        const avaria = catRows("Avaria");
-        const fmtPct = (v) => v == null ? "s/dado" : `${v.toFixed(1)}%`;
-        const coverage = (measured, total) => total ? `${measured}/${total}` : "0/0";
-        return [
-          {
-            categoria: "Preventiva programada",
-            resultado: metricSplit(fmtPct(prevProgPct), `${prevProgOk}/${prevProgMeasured.length || prevProg.length} ate 10 dias`),
-            meta: ">= 98%",
-            cobertura: coverage(prevProgMeasured.length, prevProg.length),
-            ok: prevProgPct == null ? null : prevProgPct >= 98,
-          },
-          {
-            categoria: "Preventiva por condicao",
-            resultado: metricSplit(cond.length.toLocaleString("pt-BR"), "sem campo de pane vinculada"),
-            meta: "0 panes",
-            cobertura: "tipo reparo",
-            ok: null,
-          },
-          {
-            categoria: "Corretiva nao critica",
-            resultado: corrNaoCrit.length.toLocaleString("pt-BR"),
-            meta: "<= 5 no mes",
-            cobertura: "tipo reparo",
-            ok: corrNaoCrit.length <= 5,
-          },
-          {
-            categoria: "Corretiva critica/emergencial",
-            resultado: corrCrit.length.toLocaleString("pt-BR"),
-            meta: "0 no mes",
-            cobertura: "tipo reparo",
-            ok: corrCrit.length === 0,
-          },
-          {
-            categoria: "Conservacao, conforto e imagem",
-            resultado: metricSplit(conserv.length.toLocaleString("pt-BR"), "sem campo de inspecao aprovada"),
-            meta: ">= 95%",
-            cobertura: "tipo reparo",
-            ok: null,
-          },
-          {
-            categoria: "Avaria ou sinistro preventavel",
-            resultado: avaria.length.toLocaleString("pt-BR"),
-            meta: "0 no mes",
-            cobertura: "tipo reparo",
-            ok: avaria.length === 0,
-          },
-        ];
-      }
       function renderMetricLines(rows) {
         return rows
           .map(([label, value]) => `<div class="metric-line"><span>${label}</span><b>${value}</b></div>`)
@@ -8113,7 +8049,7 @@ function setAppVersion() {
       }
       async function loadManutencoes() {
         DB.manutencoes = await fetchAll(
-          `${API()}/${T.manutencoes}?$select=${F.man.data},${F.man.aprovacao},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`,
+          `${API()}/${T.manutencoes}?$select=createdon,${F.man.data},${F.man.aprovacao},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`,
         );
       }
       async function loadMultas() {
@@ -9500,10 +9436,10 @@ function setAppVersion() {
             conditions: ["Cancelados e recusados não contam.", "Sem período, a janela usa o ano atual."],
           });
         }
-        if (title.includes("preventiva") || title.includes("corretiva") || title.includes("conservacao") || title.includes("avaria") || title.includes("kpis de manutencao")) {
+        if (title.includes("preventiva") || title.includes("corretiva") || title.includes("conservacao") || title.includes("avaria")) {
           return applyFilter({
             user: "Classifica manutenções pelo tipo de reparo e compara cada categoria com sua meta.",
-            source: "VW.manutencoes e maintenanceKpiRows().",
+            source: "VW.manutencoes.",
             formula: "categoria = maintenanceCategory(tipo); cobertura = medidos / total da categoria; OK = resultado atende a meta",
             conditions: ["Preventiva programada mede aprovação até data em até 10 dias.", "Corretiva crítica tem meta zero; não crítica tem meta de até 5 no mês."],
             limitations: ["Categorias sem campo de medição aparecem como s/dado."],
@@ -10876,11 +10812,22 @@ function setAppVersion() {
           maintenanceCategory(manFvInFrota(r, F.man.tipo))
         );
         set("frPrevProg", dvDisabled ? "—" : (manutPorCategoria["Preventiva programada"] || []).length);
-        set("frPrevCond", dvDisabled ? "—" : (manutPorCategoria["Preventiva condicao"] || []).length);
         set("frCorrNaoCrit", dvDisabled ? "—" : (manutPorCategoria["Corretiva nao critica"] || []).length);
         set("frCorrCrit", dvDisabled ? "—" : (manutPorCategoria["Corretiva critica"] || []).length);
         set("frConserv", dvDisabled ? "—" : (manutPorCategoria["Conservacao"] || []).length);
         set("frAvaria", dvDisabled ? "—" : (manutPorCategoria["Avaria"] || []).length);
+        const prazosManutencao = (dvDisabled ? [] : VW.manutencoes)
+          .map((r) => daysBetweenValues(r.createdon, r[F.man.data]))
+          .filter((dias) => dias !== null && dias >= 0);
+        const prazoMedio = prazosManutencao.length
+          ? prazosManutencao.reduce((total, dias) => total + dias, 0) / prazosManutencao.length
+          : null;
+        const percentualAte10Dias = prazosManutencao.length
+          ? (prazosManutencao.filter((dias) => dias <= 10).length / prazosManutencao.length) * 100
+          : null;
+        set("frPrazoMedio", prazoMedio === null ? "s/dado" : `${prazoMedio.toFixed(1)} dias`);
+        set("frPrazoAte10", percentualAte10Dias === null ? "s/dado" : `${percentualAte10Dias.toFixed(1)}%`);
+        set("frPrazoBase", `${prazosManutencao.length}/${dvDisabled ? 0 : VW.manutencoes.length}`);
         const selectedUsageStart = document.getElementById("fS")?.value || `${new Date().getFullYear()}-01-01`;
         const usageStart = selectedUsageStart > "2026-06-01" ? selectedUsageStart : "2026-06-01";
         const usageEnd = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
@@ -10889,12 +10836,6 @@ function setAppVersion() {
           : buildOwnFleetUsageRows(vei, VW.reservas, usageStart, usageEnd);
         set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} proprios ativos · ${usage.totalThird} terceiros ativos · ${usage.totalRental} aluguel ativos · desde 01/06/2026 · media diaria por mes`);
         renderFleetUsageRows(usage.rows);
-        const kpiRows = dvDisabled ? [] : maintenanceKpiRows(VW.manutencoes, manFvInFrota);
-        set("metaFrotaKpis", dvDisabled ? "—" : `${VW.manutencoes.length} manutencoes no filtro atual`);
-        html("tblFrotaKpis", kpiRows.map((row) => {
-          const status = row.ok === null ? badge("Sem dado") : badge(row.ok ? "OK" : "Atencao");
-          return `<tr><td class="em">${row.categoria}</td><td class="r">${row.resultado}</td><td>${row.meta}</td><td>${metricSplit(row.cobertura, status)}</td></tr>`;
-        }).join("") || emptyRow(4));
         const byVSt = grp(vei, (r) => String(vFv(r, F.vei.status) || "—"));
         const byMarca = grp(vei, (r) => r[F.vei.marca] || "—");
         const vsK = Object.keys(byVSt)
@@ -11902,7 +11843,7 @@ function setAppVersion() {
         document.querySelectorAll(".tc-wrap").forEach((wrap) => {
           wrap.dataset.tvLimit = detailedLimit;
         });
-        ["tblFrotaUso", "tblFrotaKpis"].forEach((id) => {
+        ["tblFrotaUso"].forEach((id) => {
           const tableBody = document.getElementById(id);
           const wrap = tableBody?.closest(".tc-wrap, .metric-table-wrap");
           if (wrap) wrap.dataset.tvLimit = "3";
@@ -11994,6 +11935,9 @@ function setAppVersion() {
           else content.scrollTop = 0;
         }
         applyTvViewportLayout();
+        if (window.__DASHBOARD_TV_MODE && id !== "tvdiagnostico") {
+          window.requestAnimationFrame(ensureTvDirectionalTarget);
+        }
         toggleMobileMore(false);
         if (options.fromUrl !== true) updateTabUrl(id);
         void ensureTabData(id).catch((error) => {
@@ -12022,43 +11966,29 @@ function setAppVersion() {
         "0": "marketing",
       };
       const tvNavigationKeyDownAt = {};
-      const TV_POINTER_NAV_THRESHOLD = 4;
-      const TV_POINTER_IDLE_MS = 120;
-      const TV_POINTER_CLICKS_REQUIRED = 3;
-      const TV_POINTER_CLICK_WINDOW_MS = 2500;
-      const TV_POINTER_MAX_GESTURE_MS = 650;
-      const TV_POINTER_MAX_GESTURE_DISTANCE = 160;
+      const TV_DIRECTIONAL_MOVE_THRESHOLD = 4;
+      const TV_DIRECTIONAL_IDLE_MS = 110;
+      const TV_DIRECTIONAL_AXIS_DOMINANCE = 1.15;
+      const TV_DIRECTIONAL_PERPENDICULAR_WEIGHT = 4;
       const TV_POINTER_DUPLICATE_EVENT_MS = 24;
-      const TV_POINTER_MAGNET_RADIUS = 160;
-      const TV_POINTER_MAGNET_RELEASE_RADIUS = 220;
-      const TV_POINTER_MAGNET_SWITCH_ADVANTAGE = 28;
-      const TV_POINTER_MAGNET_PULL_PX = 10;
-      const TV_MAGNETIC_TARGET_SELECTOR = "button:not([disabled]), a[href], .ms-btn, .sb-item, [role='button'], [tabindex]:not([tabindex='-1']):not(input):not(select):not(textarea)";
-      const TV_SIDEBAR_HOT_EDGE_PX = 4;
-      const TV_SIDEBAR_WIDTH_PX = 250;
+      const TV_MAGNETIC_TARGET_SELECTOR = "button:not(.tv-nav-edge):not([disabled]), a[href], .ms-btn, .sb-item, [role='button'], [tabindex]:not([tabindex='-1']):not(input):not(select):not(textarea)";
       let tvPointerLastX = null;
       let tvPointerLastY = null;
-      let tvPointerLastAt = 0;
-      let tvPointerGestureStartedAt = 0;
       let tvPointerAccumX = 0;
       let tvPointerAccumY = 0;
       let tvPointerIdleTimer = 0;
-      let tvPointerClickDirection = 0;
-      let tvPointerClickCount = 0;
-      let tvPointerLastClickAt = 0;
+      let tvPointerDirectionLocked = false;
       let tvPointerLastEventType = "";
       let tvPointerLastEventX = null;
       let tvPointerLastEventY = null;
       let tvPointerLastEventAt = 0;
-      let tvSidebarHideTimer = 0;
       let tvMagneticTarget = null;
       let tvMagneticFocusOwned = false;
+      let tvMagneticClickForwarding = false;
       function clearTvMagneticTarget() {
         if (!tvMagneticTarget) return;
         const previousTarget = tvMagneticTarget;
         tvMagneticTarget.classList.remove("tv-cursor-magnet");
-        tvMagneticTarget.style.removeProperty("--tv-magnet-x");
-        tvMagneticTarget.style.removeProperty("--tv-magnet-y");
         tvMagneticTarget = null;
         if (tvMagneticFocusOwned && document.activeElement === previousTarget) previousTarget.blur();
         tvMagneticFocusOwned = false;
@@ -12067,76 +11997,84 @@ function setAppVersion() {
         if (!target || !target.isConnected || target.disabled || target.getAttribute("aria-hidden") === "true") return false;
         const page = target.closest(".page");
         if (page && !page.classList.contains("on")) return false;
+        const sidebar = target.closest(".sidebar");
+        if (sidebar && !document.documentElement.classList.contains("tv-sidebar-revealed")) return false;
+        const openDialog = document.querySelector("dialog[open]");
+        if (openDialog && !openDialog.contains(target)) return false;
         const style = window.getComputedStyle(target);
         if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
         const rect = target.getBoundingClientRect();
         return rect.width > 0 && rect.height > 0 && rect.right >= 0 && rect.bottom >= 0
           && rect.left <= window.innerWidth && rect.top <= window.innerHeight;
       }
-      function tvPointerDistanceToRect(x, y, rect) {
-        const dx = Math.max(rect.left - x, 0, x - rect.right);
-        const dy = Math.max(rect.top - y, 0, y - rect.bottom);
-        return Math.sqrt(dx * dx + dy * dy);
+      function getTvMagneticTargets() {
+        return Array.from(document.querySelectorAll(TV_MAGNETIC_TARGET_SELECTOR)).filter(isTvMagneticTargetVisible);
       }
-      function updateTvMagneticTarget(x, y) {
+      function setTvMagneticTarget(target) {
+        if (!target || !isTvMagneticTargetVisible(target) || target === tvMagneticTarget) return Boolean(target);
+        clearTvMagneticTarget();
+        tvMagneticTarget = target;
+        tvMagneticTarget.classList.add("tv-cursor-magnet");
+        const scrollX = window.pageXOffset;
+        const scrollY = window.pageYOffset;
+        tvMagneticTarget.focus();
+        tvMagneticFocusOwned = document.activeElement === tvMagneticTarget;
+        if (window.pageXOffset !== scrollX || window.pageYOffset !== scrollY) window.scrollTo(scrollX, scrollY);
+        return true;
+      }
+      function ensureTvDirectionalTarget() {
         if (!window.__DASHBOARD_TV_MODE || document.body.classList.contains("tv-diagnostic-active")) {
           clearTvMagneticTarget();
-          return;
+          return null;
         }
-        const targets = document.querySelectorAll(TV_MAGNETIC_TARGET_SELECTOR);
-        let nearest = null;
-        let nearestDistance = TV_POINTER_MAGNET_RADIUS + 1;
-        for (let index = 0; index < targets.length; index += 1) {
-          const target = targets[index];
-          if (!isTvMagneticTargetVisible(target)) continue;
-          const rect = target.getBoundingClientRect();
-          const distance = tvPointerDistanceToRect(x, y, rect);
-          if (distance < nearestDistance) {
-            nearest = target;
-            nearestDistance = distance;
+        if (isTvMagneticTargetVisible(tvMagneticTarget)) return tvMagneticTarget;
+        const targets = getTvMagneticTargets();
+        const preferred = targets.find((target) => target.id === "filterToggle")
+          || targets.find((target) => target.closest(".page.on"))
+          || targets[0];
+        setTvMagneticTarget(preferred);
+        return tvMagneticTarget;
+      }
+      function tvTargetCenter(target) {
+        const rect = target.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      }
+      function moveTvDirectionalTarget(direction) {
+        const current = ensureTvDirectionalTarget();
+        if (!current) return false;
+        const origin = tvTargetCenter(current);
+        let bestTarget = null;
+        let bestScore = Infinity;
+        getTvMagneticTargets().forEach((target) => {
+          if (target === current) return;
+          const center = tvTargetCenter(target);
+          const dx = center.x - origin.x;
+          const dy = center.y - origin.y;
+          const primary = direction === "right" ? dx : direction === "left" ? -dx : direction === "down" ? dy : -dy;
+          if (primary <= 6) return;
+          const perpendicular = direction === "right" || direction === "left" ? Math.abs(dy) : Math.abs(dx);
+          if (primary < perpendicular * 0.25) return;
+          const score = primary + perpendicular * TV_DIRECTIONAL_PERPENDICULAR_WEIGHT;
+          if (score < bestScore) {
+            bestScore = score;
+            bestTarget = target;
           }
-        }
-        if (isTvMagneticTargetVisible(tvMagneticTarget)) {
-          const currentDistance = tvPointerDistanceToRect(x, y, tvMagneticTarget.getBoundingClientRect());
-          const shouldKeepCurrent = currentDistance <= TV_POINTER_MAGNET_RELEASE_RADIUS
-            && (!nearest || currentDistance <= nearestDistance + TV_POINTER_MAGNET_SWITCH_ADVANTAGE);
-          if (shouldKeepCurrent) {
-            nearest = tvMagneticTarget;
-            nearestDistance = currentDistance;
-          }
-        }
-        const allowedRadius = nearest === tvMagneticTarget ? TV_POINTER_MAGNET_RELEASE_RADIUS : TV_POINTER_MAGNET_RADIUS;
-        if (!nearest || nearestDistance > allowedRadius) {
-          clearTvMagneticTarget();
-          return;
-        }
-        if (tvMagneticTarget !== nearest) {
-          clearTvMagneticTarget();
-          tvMagneticTarget = nearest;
-          tvMagneticTarget.classList.add("tv-cursor-magnet");
-          const scrollX = window.pageXOffset;
-          const scrollY = window.pageYOffset;
-          tvMagneticTarget.focus();
-          tvMagneticFocusOwned = document.activeElement === tvMagneticTarget;
-          if (window.pageXOffset !== scrollX || window.pageYOffset !== scrollY) window.scrollTo(scrollX, scrollY);
-        }
-        const rect = nearest.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const pullX = Math.max(-TV_POINTER_MAGNET_PULL_PX, Math.min(TV_POINTER_MAGNET_PULL_PX, (x - centerX) * 0.08));
-        const pullY = Math.max(-TV_POINTER_MAGNET_PULL_PX, Math.min(TV_POINTER_MAGNET_PULL_PX, (y - centerY) * 0.08));
-        nearest.style.setProperty("--tv-magnet-x", `${pullX}px`);
-        nearest.style.setProperty("--tv-magnet-y", `${pullY}px`);
+        });
+        return bestTarget ? setTvMagneticTarget(bestTarget) : false;
       }
       function handleTvMagneticClick(event) {
-        if (!window.__DASHBOARD_TV_MODE || !tvMagneticTarget || event.defaultPrevented) return;
-        const directTarget = event.target.closest?.(TV_MAGNETIC_TARGET_SELECTOR);
-        if (directTarget) return;
-        const target = tvMagneticTarget;
+        if (!window.__DASHBOARD_TV_MODE || tvMagneticClickForwarding || event.defaultPrevented || event.detail === 0) return;
+        const target = ensureTvDirectionalTarget();
+        if (!target) return;
         event.preventDefault();
         event.stopPropagation();
-        clearTvMagneticTarget();
-        target.click();
+        tvMagneticClickForwarding = true;
+        try {
+          target.click();
+        } finally {
+          tvMagneticClickForwarding = false;
+        }
+        window.requestAnimationFrame(ensureTvDirectionalTarget);
       }
       function navigateTv(direction) {
         if (!window.__DASHBOARD_TV_MODE) return;
@@ -12162,82 +12100,30 @@ function setAppVersion() {
         const nextItem = document.querySelector(`.sidebar .sb-item[data-nav="${nextId}"]`);
         nav(nextId, nextItem, { automatic: true });
       }
-      function handleTvSidebarReveal(event) {
-        const root = document.documentElement;
-        const x = Number(event.clientX || 0);
-        const revealed = root.classList.contains("tv-sidebar-revealed");
-        if (!revealed && x <= TV_SIDEBAR_HOT_EDGE_PX) {
-          window.clearTimeout(tvSidebarHideTimer);
-          root.classList.add("tv-sidebar-revealed");
-          resetTvPointerGesture();
-          return true;
-        }
-        if (!revealed) return false;
-        window.clearTimeout(tvSidebarHideTimer);
-        if (x > TV_SIDEBAR_WIDTH_PX) {
-          tvSidebarHideTimer = window.setTimeout(() => {
-            root.classList.remove("tv-sidebar-revealed");
-            resetTvPointerGesture();
-          }, 260);
-        }
-        return true;
-      }
       function resetTvPointerGesture() {
         tvPointerLastX = null;
         tvPointerLastY = null;
-        tvPointerLastAt = 0;
-        tvPointerGestureStartedAt = 0;
+        releaseTvPointerDirection();
+      }
+      function releaseTvPointerDirection() {
         tvPointerAccumX = 0;
         tvPointerAccumY = 0;
+        tvPointerDirectionLocked = false;
       }
-      function finishTvPointerGesture() {
-        const horizontal = Math.abs(tvPointerAccumX);
-        const vertical = Math.abs(tvPointerAccumY);
-        const duration = tvPointerGestureStartedAt ? Date.now() - tvPointerGestureStartedAt : 0;
-        const isShortClick = duration <= TV_POINTER_MAX_GESTURE_MS && horizontal <= TV_POINTER_MAX_GESTURE_DISTANCE;
-        if (isShortClick && horizontal >= TV_POINTER_NAV_THRESHOLD && horizontal >= vertical * 1.4) {
-          const direction = tvPointerAccumX < 0 ? -1 : 1;
-          const now = Date.now();
-          if (direction === tvPointerClickDirection && now - tvPointerLastClickAt <= TV_POINTER_CLICK_WINDOW_MS) {
-            tvPointerClickCount += 1;
-          } else {
-            tvPointerClickDirection = direction;
-            tvPointerClickCount = 1;
-          }
-          tvPointerLastClickAt = now;
-          if (tvPointerClickCount >= TV_POINTER_CLICKS_REQUIRED) {
-            navigateTv(direction);
-            reportDashboardError(new Error(`Navegacao por tres movimentos: ${direction < 0 ? "esquerda" : "direita"}`), {
-              severity: "info",
-              source: "tv-navigation",
-              action: "pointer-triple-click",
-              phase: direction < 0 ? "previous" : "next",
-              payload: { clicks: tvPointerClickCount, direction },
-            });
-            tvPointerClickCount = 0;
-            tvPointerClickDirection = 0;
-          }
-        } else if (Date.now() - tvPointerLastClickAt > TV_POINTER_CLICK_WINDOW_MS) {
-          tvPointerClickCount = 0;
-          tvPointerClickDirection = 0;
-        }
-        resetTvPointerGesture();
+      function trackTvPointerBaseline(event) {
+        if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
+        tvPointerLastX = Number(event.clientX || 0);
+        tvPointerLastY = Number(event.clientY || 0);
       }
       function handleTvPointerNavigation(event) {
         if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
-        const x = Number(event.clientX || 0);
-        const y = Number(event.clientY || 0);
-        const sidebarHandled = handleTvSidebarReveal(event);
-        updateTvMagneticTarget(x, y);
-        if (sidebarHandled) {
-          resetTvPointerGesture();
-          return;
-        }
         if (isTvNavigationBlocked(event)) {
           resetTvPointerGesture();
           return;
         }
         const now = Date.now();
+        const x = Number(event.clientX || 0);
+        const y = Number(event.clientY || 0);
         const isDuplicate = event.type !== tvPointerLastEventType
           && x === tvPointerLastEventX
           && y === tvPointerLastEventY
@@ -12247,21 +12133,31 @@ function setAppVersion() {
         tvPointerLastEventY = y;
         tvPointerLastEventAt = now;
         if (isDuplicate) return;
-        if (tvPointerLastX === null || now - tvPointerLastAt > TV_POINTER_IDLE_MS) {
-          resetTvPointerGesture();
-          tvPointerLastX = x;
-          tvPointerLastY = y;
-          tvPointerLastAt = now;
-          tvPointerGestureStartedAt = now;
-        } else {
-          tvPointerAccumX += x - tvPointerLastX;
-          tvPointerAccumY += y - tvPointerLastY;
-          tvPointerLastX = x;
-          tvPointerLastY = y;
-          tvPointerLastAt = now;
+        let deltaX = Number(event.movementX || 0);
+        let deltaY = Number(event.movementY || 0);
+        if (deltaX === 0 && deltaY === 0 && tvPointerLastX !== null) {
+          deltaX = x - tvPointerLastX;
+          deltaY = y - tvPointerLastY;
         }
+        tvPointerLastX = x;
+        tvPointerLastY = y;
+        ensureTvDirectionalTarget();
         window.clearTimeout(tvPointerIdleTimer);
-        tvPointerIdleTimer = window.setTimeout(finishTvPointerGesture, TV_POINTER_IDLE_MS);
+        tvPointerIdleTimer = window.setTimeout(releaseTvPointerDirection, TV_DIRECTIONAL_IDLE_MS);
+        if (tvPointerDirectionLocked) return;
+        tvPointerAccumX += deltaX;
+        tvPointerAccumY += deltaY;
+        const horizontal = Math.abs(tvPointerAccumX);
+        const vertical = Math.abs(tvPointerAccumY);
+        if (Math.max(horizontal, vertical) < TV_DIRECTIONAL_MOVE_THRESHOLD) return;
+        const horizontalMove = horizontal >= vertical * TV_DIRECTIONAL_AXIS_DOMINANCE;
+        const direction = horizontalMove
+          ? (tvPointerAccumX > 0 ? "right" : "left")
+          : (tvPointerAccumY > 0 ? "down" : "up");
+        moveTvDirectionalTarget(direction);
+        tvPointerAccumX = 0;
+        tvPointerAccumY = 0;
+        tvPointerDirectionLocked = true;
       }
       function isTvNavigationBlocked(event) {
         const target = event.target;
@@ -12274,6 +12170,8 @@ function setAppVersion() {
       function installTvNavigation() {
         if (!window.__DASHBOARD_TV_MODE) return;
         document.documentElement.classList.add("tv-cursor-hidden");
+        document.removeEventListener("mousemove", trackTvPointerBaseline, true);
+        if (window.PointerEvent) document.removeEventListener("pointermove", trackTvPointerBaseline, true);
         document.addEventListener("keydown", (event) => {
           if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
           const key = event.key || ({ 37: "ArrowLeft", 39: "ArrowRight" })[event.keyCode];
@@ -12313,7 +12211,7 @@ function setAppVersion() {
         }, true);
         document.addEventListener("mousemove", handleTvPointerNavigation, true);
         document.addEventListener("click", handleTvMagneticClick, true);
-        document.documentElement.addEventListener("mouseleave", clearTvMagneticTarget);
+        window.requestAnimationFrame(ensureTvDirectionalTarget);
         if (window.PointerEvent) {
           document.addEventListener("pointermove", handleTvPointerNavigation, true);
         }
@@ -12664,6 +12562,8 @@ function setAppVersion() {
         document.getElementById("tvPinDelete")?.addEventListener("click", deleteTvPinDigit);
         document.addEventListener("keydown", handleTvPinKeydown, true);
         document.addEventListener("keyup", handleTvPinKeyup, true);
+        document.addEventListener("mousemove", trackTvPointerBaseline, true);
+        if (window.PointerEvent) document.addEventListener("pointermove", trackTvPointerBaseline, true);
         renderTvPin();
         window.setTimeout(() => focusTvPinKey(0), 0);
         return true;

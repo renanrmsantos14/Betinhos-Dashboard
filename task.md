@@ -25,12 +25,13 @@
 
 ## Cursor magnetico da TV
 
-- [x] Atrair foco para o botao mais proximo em um raio amplo
-- [x] Aplicar destaque e deslocamento visual somente no modo TV
-- [x] Permitir clique assistido imediatamente fora da borda do botao
+- [x] Ignorar a posicao absoluta do cursor
+- [x] Converter pequenas rajadas em direita, esquerda, cima ou baixo
+- [x] Selecionar espacialmente o proximo controle naquela direcao
+- [x] Aplicar destaque visual somente no modo TV
+- [x] Redirecionar o clique ao controle destacado
 - [x] Manter desktop e mobile sem magnetismo
-- [x] Validar foco, clique e ausencia de scroll com ponteiro real
+- [x] Remover o gesto antigo de tres movimentos para trocar abas
 - [x] Ocultar o cursor somente apos liberar o dashboard TV
 - [x] Manter o cursor visivel na tela de PIN e no diagnostico
 - [x] Remover foco fantasma quando nenhum botao estiver magnetizado
-- [x] Manter magnetismo ativo dentro do menu lateral

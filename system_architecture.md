@@ -30,12 +30,16 @@
 
 ## Cursor magnetico da TV
 
-- `updateTvMagneticTarget()` procura apenas controles acionaveis visiveis em um raio de 160 CSS px do ponteiro.
-- Depois de capturado, o controle permanece preso ate 220 CSS px e so cede para outro alvo pelo criterio de vantagem de 28 px.
-- O controle mais proximo recebe foco, contorno reforcado, escala curta e deslocamento maximo de 10 px em direcao ao cursor.
-- Um clique no espaco imediatamente proximo e redirecionado ao alvo magnetizado; cliques sobre outro controle mantem o comportamento nativo.
+- A posicao absoluta do cursor nao participa da selecao do alvo.
+- `handleTvPointerNavigation()` acumula apenas `movementX` e `movementY`; uma rajada de 4 px gera um passo direcional.
+- `moveTvDirectionalTarget()` escolhe o proximo controle visivel na direcao informada usando cone direcional, distancia no eixo e penalidade perpendicular.
+- Cards analiticos e setas laterais de troca de aba nao participam do direcional; apenas controles acionaveis da interface entram na rota.
+- Cada rajada gera no maximo um passo e libera a proxima apos 110 ms sem movimento, evitando saltos entre varios botoes.
+- A ultima coordenada e preservada apenas para calcular o delta quando o Tizen informa `movementX = 0`; ela nunca participa da escolha do alvo.
+- O rastreamento da origem comeca na tela do PIN, permitindo que o primeiro movimento apos o desbloqueio ja navegue.
+- O controle selecionado recebe foco, contorno reforcado e escala curta. O gesto antigo de tres movimentos foi removido.
+- Todo clique de ponteiro e redirecionado ao controle destacado, independentemente da coordenada fisica do cursor.
 - O efeito e exclusivo de `.tv-browser`, e removido ao sair da janela e respeita `prefers-reduced-motion`.
 - A pagina nao movimenta o cursor do sistema operacional: o magnetismo e uma resposta visual e funcional implementada no documento.
 - `tv-cursor-hidden` oculta o ponteiro apenas depois da liberacao do PIN; `tv-cursor-visible` o restaura no diagnostico.
 - Ao perder o alvo, o foco criado pelo magnetismo e removido para nao deixar um botao antigo falsamente destacado.
-- A deteccao magnetica roda antes do bloqueio de gesto do menu lateral, mantendo os itens do menu acionaveis com o cursor oculto.

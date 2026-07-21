@@ -1,6 +1,6 @@
 {
   "name": "dashboard-betinhos",
-  "version": "1.0.144",
+  "version": "1.0.154",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-server.js",
