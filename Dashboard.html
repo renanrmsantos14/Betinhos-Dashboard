@@ -860,6 +860,15 @@
         box-sizing: border-box;
         white-space: nowrap;
       }
+      .passenger-ranking-table th {
+        overflow: hidden;
+      }
+      .passenger-ranking-header-title {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
       @keyframes toast-in {
         from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
@@ -10746,6 +10755,7 @@ function setAppVersion() {
         const context = document.createElement("canvas").getContext("2d");
         const styles = new Map();
         rankingTable.querySelectorAll("thead tr, tbody tr").forEach((row) => {
+          const isHeader = row.parentElement === rankingTable.tHead;
           Array.from(row.cells).forEach((cell, index) => {
             if (cell.colSpan !== 1 || index >= widths.length) return;
             const contents = cell.children.length ? Array.from(cell.children) : [cell];
@@ -10769,7 +10779,8 @@ function setAppVersion() {
               padding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
               styles.set(paddingKey, padding);
             }
-            widths[index] = Math.max(widths[index], Math.ceil(contentWidth + padding + 1));
+            const width = Math.min(contentWidth + padding + 1, isHeader ? 152 : Infinity);
+            widths[index] = Math.max(widths[index], Math.ceil(width));
           });
         });
         let colgroup = rankingTable.querySelector("colgroup");
@@ -11693,7 +11704,7 @@ function setAppVersion() {
         if (title) title.textContent = "Passageiros que mais viajaram com a Betinhos";
         search?.remove();
         rankingTable?.classList.add("passenger-ranking-table");
-        if (head) head.innerHTML = `<tr><th>Pos.</th><th>Passageiro</th><th>Cliente</th><th style="text-align:right">Servi&ccedil;os</th><th style="text-align:right">Participa&ccedil;&atilde;o</th><th>&Uacute;ltimo servi&ccedil;o</th><th>Tipo de servi&ccedil;o mais frequente</th><th>Tipo de ve&iacute;culo mais frequente</th><th>Motorista mais frequente</th><th style="text-align:right">Ticket m&eacute;dio</th><th style="text-align:right">Faturamento</th></tr>`;
+        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Participa&ccedil;&atilde;o">Participa&ccedil;&atilde;o</span></th><th><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista mais frequente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
         table.dataset.passengerRanking = "1";
       }
 
