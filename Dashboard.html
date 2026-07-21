@@ -10806,7 +10806,9 @@ function setAppVersion() {
           const driver = String(service._mot || "N&atilde;o informado").trim() || "N&atilde;o informado";
           item.count += 1;
           item.total += service._valor || 0;
-          item.latest = Math.max(item.latest, service._ts || 0);
+          if (isProducedReservation(service)) {
+            item.latest = Math.max(item.latest, service._ts || 0);
+          }
           if (meaningfulRankingValue(serviceType)) {
             item.serviceTypes.set(serviceType, (item.serviceTypes.get(serviceType) || 0) + 1);
           }
