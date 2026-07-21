@@ -597,6 +597,7 @@ Para cada dia do período:
 Veículos usados = quantidade de veículos próprios distintos com serviço naquele dia
 Veículos ociosos = total de veículos próprios ativos - veículos próprios ativos usados
 Veículos terceiros = quantidade de veículos terceiros ativos distintos com serviço naquele dia
+Veículos aluguel = quantidade de veículos de aluguel ativos distintos com serviço naquele dia
 Uso diário (%) = veículos usados / total de veículos próprios × 100
 ```
 
