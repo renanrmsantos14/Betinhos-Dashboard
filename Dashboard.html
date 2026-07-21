@@ -9258,10 +9258,11 @@ function setAppVersion() {
           );
         }).length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
-        setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veículo", "OS sem veículo", dqSemVeiculo ? "warn" : "ok");
-        setExecAlert("dqSemTipoVeiculo", dqSemTipoVeiculo, "Sem tipo de veículo", "corrigir cadastro", dqSemTipoVeiculo ? "warn" : "ok");
-        setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", dqSemMotorista ? "Corrigir" : "OK", dqSemMotorista ? "warn" : "ok");
-        setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", dqSemCliente ? "Corrigir" : "OK", dqSemCliente ? "warn" : "ok");
+        const qualityShare = (count) => rv.length ? `${(count / rv.length * 100).toFixed(1)}% dos serviços` : "s/dado";
+        setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veículo", qualityShare(dqSemVeiculo), dqSemVeiculo ? "warn" : "ok");
+        setExecAlert("dqSemTipoVeiculo", dqSemTipoVeiculo, "Sem tipo de veículo", qualityShare(dqSemTipoVeiculo), dqSemTipoVeiculo ? "warn" : "ok");
+        setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", qualityShare(dqSemMotorista), dqSemMotorista ? "warn" : "ok");
+        setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", qualityShare(dqSemCliente), dqSemCliente ? "warn" : "ok");
 
         const monthsLabels = [
           "Jan",
