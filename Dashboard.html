@@ -5217,7 +5217,6 @@
               <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
             </div>
             <div class="tc"><div class="tc-bar"><div><div class="tc-title">KPIs de manuten&ccedil;&atilde;o</div><div class="tc-meta" id="metaFrotaKpis">Metas mensais</div></div></div><div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div></div>
-            <div class="kpi-row kpi-2"><div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Frota pr&oacute;pria &mdash; dias &uacute;teis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div><div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Frota pr&oacute;pria &mdash; fim de semana</div><div class="kpi-val sm" id="frUsoFim">&mdash;</div><div class="metric-list" id="frUsoFimD"></div></div></div>
             <div class="tc"><div class="tc-bar"><div><div class="tc-title">Uso mensal da frota pr&oacute;pria</div><div class="tc-meta" id="metaFrotaUso">M&eacute;dia di&aacute;ria por m&ecirc;s</div></div></div><div class="tc-wrap"><table><thead><tr><th>M&ecirc;s</th><th>Dias &uacute;teis</th><th>Fim de semana</th></tr></thead><tbody id="tblFrotaUso"></tbody></table></div></div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de frota">
@@ -7002,8 +7001,8 @@
           if (!byMonth.has(key)) {
             byMonth.set(key, {
               mes: key,
-              weekday: { days: 0, pctSum: 0, withSum: 0, withoutSum: 0, thirdSum: 0, rentalSum: 0 },
-              weekend: { days: 0, pctSum: 0, withSum: 0, withoutSum: 0, thirdSum: 0, rentalSum: 0 },
+              weekday: { days: 0, pctSum: 0, withoutSum: 0, thirdSum: 0, rentalSum: 0 },
+              weekend: { days: 0, pctSum: 0, withoutSum: 0, thirdSum: 0, rentalSum: 0 },
             });
           }
           const dayRows = rowsByDay.get(day);
@@ -7013,7 +7012,6 @@
           const free = Math.max(0, totalOwn - used);
           const bucket = byMonth.get(key)[type];
           bucket.days += 1;
-          bucket.withSum += used;
           bucket.withoutSum += free;
           bucket.thirdSum += third;
           bucket.rentalSum += rental;
@@ -7022,7 +7020,6 @@
         const fmtBucket = (b) => ({
           days: b.days,
           pct: b.days ? b.pctSum / b.days : 0,
-          withAvg: b.days ? b.withSum / b.days : 0,
           withoutAvg: b.days ? b.withoutSum / b.days : 0,
           thirdAvg: b.days ? b.thirdSum / b.days : 0,
           rentalAvg: b.days ? b.rentalSum / b.days : 0,
@@ -8426,10 +8423,6 @@ function setAppVersion() {
             <div class="tc">
               <div class="tc-bar"><div><div class="tc-title">KPIs de manutencao</div><div class="tc-meta" id="metaFrotaKpis">Metas solicitadas na revisao</div></div></div>
               <div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div>
-            </div>
-            <div class="kpi-row kpi-2">
-              <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Frota propria - dias uteis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Frota propria - fim de semana</div><div class="kpi-val sm" id="frUsoFim">&mdash;</div><div class="metric-list" id="frUsoFimD"></div></div>
             </div>
             <div class="tc">
               <div class="tc-bar"><div><div class="tc-title">Uso mensal da frota propria</div><div class="tc-meta" id="metaFrotaUso">Media diaria por mes</div></div></div>
@@ -10223,28 +10216,6 @@ function setAppVersion() {
         const usage = dvDisabled
           ? { totalOwn: 0, rows: [] }
           : buildOwnFleetUsageRows(vei, VW.reservas, usageStart, usageEnd);
-        const avgUsage = (part) => {
-          const valid = usage.rows.map((r) => r[part]).filter((b) => b.days);
-          if (!valid.length) return null;
-          const days = valid.reduce((s, b) => s + b.days, 0);
-          return {
-            pct: valid.reduce((s, b) => s + b.pct * b.days, 0) / days,
-            withAvg: valid.reduce((s, b) => s + b.withAvg * b.days, 0) / days,
-            withoutAvg: valid.reduce((s, b) => s + b.withoutAvg * b.days, 0) / days,
-            thirdAvg: valid.reduce((s, b) => s + b.thirdAvg * b.days, 0) / days,
-            rentalAvg: valid.reduce((s, b) => s + b.rentalAvg * b.days, 0) / days,
-          };
-        };
-        const weekUse = avgUsage("weekday");
-        const weekendUse = avgUsage("weekend");
-        set("frUsoSemana", dvDisabled || !weekUse ? "—" : `${weekUse.pct.toFixed(1)}%`);
-        set("frUsoFim", dvDisabled || !weekendUse ? "—" : `${weekendUse.pct.toFixed(1)}%`);
-        html("frUsoSemanaD", dvDisabled || !weekUse ? "" : renderMetricLines([
-          ["Média diária", `${weekUse.withoutAvg.toFixed(1)} ociosos / ${weekUse.thirdAvg.toFixed(1)} terceiros / ${weekUse.rentalAvg.toFixed(1)} aluguel`],
-        ]));
-        html("frUsoFimD", dvDisabled || !weekendUse ? "" : renderMetricLines([
-          ["Média diária", `${weekendUse.withoutAvg.toFixed(1)} ociosos / ${weekendUse.thirdAvg.toFixed(1)} terceiros / ${weekendUse.rentalAvg.toFixed(1)} aluguel`],
-        ]));
         set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} proprios ativos · ${usage.totalThird} terceiros ativos · ${usage.totalRental} aluguel ativos · desde 01/06/2026 · media diaria por mes`);
         renderFleetUsageRows(usage.rows);
         const kpiRows = dvDisabled ? [] : maintenanceKpiRows(VW.manutencoes, manFvInFrota);
