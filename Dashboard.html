@@ -10775,6 +10775,11 @@ function setAppVersion() {
       // ════════════════════════════════════════════
       function renderPassengerRanking(rows) {
         const normalizeId = (value) => String(value || "").replace(/[{}]/g, "").toLowerCase();
+        const meaningfulRankingValue = (value) => {
+          const label = String(value || "").trim();
+          const normalized = normL(label);
+          return Boolean(label) && normalized !== "-" && normalized !== "—" && !normalized.startsWith("sem ") && !normalized.includes("nao informado");
+        };
         const serviceMap = new Map(rows.map((row) => [normalizeId(row[F.res.id]), row]));
         const clientMap = new Map((DB.clientes || []).map((client) => [normalizeId(client[F.cliente.id]), client]));
         const passengerMap = new Map((DB.passageiros || []).map((passenger) => [normalizeId(passenger[F.passageiro.id]), passenger]));
@@ -10802,9 +10807,15 @@ function setAppVersion() {
           item.count += 1;
           item.total += service._valor || 0;
           item.latest = Math.max(item.latest, service._ts || 0);
-          item.serviceTypes.set(serviceType, (item.serviceTypes.get(serviceType) || 0) + 1);
-          item.vehicleTypes.set(vehicleType, (item.vehicleTypes.get(vehicleType) || 0) + 1);
-          item.drivers.set(driver, (item.drivers.get(driver) || 0) + 1);
+          if (meaningfulRankingValue(serviceType)) {
+            item.serviceTypes.set(serviceType, (item.serviceTypes.get(serviceType) || 0) + 1);
+          }
+          if (meaningfulRankingValue(vehicleType)) {
+            item.vehicleTypes.set(vehicleType, (item.vehicleTypes.get(vehicleType) || 0) + 1);
+          }
+          if (meaningfulRankingValue(driver)) {
+            item.drivers.set(driver, (item.drivers.get(driver) || 0) + 1);
+          }
           ranking.set(passengerId, item);
         });
         const totalLinks = [...ranking.values()].reduce((sum, item) => sum + item.count, 0);
