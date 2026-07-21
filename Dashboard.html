@@ -4687,7 +4687,7 @@
               </div>
               <div class="inline-indicators" id="ind_fatcli"></div>
             </div>
-            <canvas id="cFatCli" height="80" data-mobile-height="136"></canvas>
+            <div id="tblFatCliResumo" class="metric-table-wrap"></div>
           </div>
 
           <div class="cgrid g2">
@@ -9478,17 +9478,6 @@ function setAppVersion() {
             .filter(([k]) => k !== "__null__" && k !== "Sem cliente")
             .sort((a, b) => sumV(b[1]) - sumV(a[1]))
             .slice(0, 6);
-          const cliColors = ["#2159d2","#2159d2","#6b4b9b","#9a4e12","#168f57","#b17a00"];
-          const fcDatasets = cliEntries.map(([cliName, recs], i) => {
-            const byMCli = grp(recs, r => mK(r[F.res.data]));
-            return {
-              label: trunc(cliName, 14),
-              data: allMks2.map(k => sumV(byMCli[k] || [])),
-              backgroundColor: cliColors[i % cliColors.length],
-              stack: "c",
-              borderRadius: 3,
-            };
-          });
           if (cliEntries.length > 0) {
             const top1Fat = sumV(cliEntries[0][1]);
             const top1Pct = fat > 0 ? (top1Fat / fat * 100).toFixed(1) : 0;
@@ -9500,13 +9489,16 @@ function setAppVersion() {
           } else {
             set("sub_fatcli", `${cliEntries.length} clientes`);
           }
-          if (fcDatasets.length > 0) {
-            mkChart("cFatCli", {
-              type: "bar",
-              data: { labels: fcLabels, datasets: fcDatasets },
-              options: opts0({ yBrl: true, datalabels: false }),
-            });
-          }
+          const fatCliCols = allMks2.length + 3;
+          const fatCliHead = `<thead><tr><th>Cliente</th>${fcLabels.map((label) => `<th class="r">${label}</th>`).join("")}<th class="r">Total</th><th>Participação</th></tr></thead>`;
+          const fatCliBody = cliEntries.map(([cliName, recs], i) => {
+            const byMCli = grp(recs, r => mK(r[F.res.data]));
+            const clientTotal = sumV(recs);
+            const clientPct = fat > 0 ? (clientTotal / fat) * 100 : 0;
+            const monthCells = allMks2.map((monthKey) => `<td class="r">${brlS(sumV(byMCli[monthKey] || []))}</td>`).join("");
+            return `<tr><td class="em">${trunc(cliName, 28)}</td>${monthCells}<td class="r em">${brlS(clientTotal)}</td><td>${progressCell(clientPct, brlS(clientTotal), PAL[i % PAL.length])}</td></tr>`;
+          }).join("") || emptyRow(fatCliCols);
+          html("tblFatCliResumo", `<table><thead>${fatCliHead.replace("<thead>", "").replace("</thead>", "")}</thead><tbody>${fatCliBody}</tbody></table>`);
         }
 
         // Status dos serviços
