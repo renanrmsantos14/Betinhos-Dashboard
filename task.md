@@ -35,3 +35,8 @@
 - [x] Ocultar o cursor somente apos liberar o dashboard TV
 - [x] Manter o cursor visivel na tela de PIN e no diagnostico
 - [x] Remover foco fantasma quando nenhum botao estiver magnetizado
+- [x] Unificar cursor invisivel, setas e OK no mesmo foco visual
+- [x] Priorizar controles alinhados antes de saltos diagonais
+- [x] Permitir navegacao direcional pelos cards clicaveis
+- [x] Repetir movimentos sustentados a cada 80 ms
+- [x] Exibir snap de foco, pressao e limite de rota

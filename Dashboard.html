@@ -4056,11 +4056,45 @@
         position: relative;
         z-index: 8;
         border-color: #ffffff !important;
-        outline: 3px solid #2159d2;
+        outline: 4px solid #2159d2;
         outline-offset: 3px;
-        box-shadow: 0 0 0 7px rgba(33, 89, 210, 0.18), 0 10px 24px rgba(13, 31, 67, 0.22);
-        transform: scale(1.08);
-        transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out;
+        box-shadow: 0 0 0 8px rgba(33, 89, 210, 0.2), 0 12px 28px rgba(13, 31, 67, 0.24);
+        transform: scale(1.07);
+        transition: transform 90ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 90ms ease-out, box-shadow 90ms ease-out;
+        animation: tvFocusSnap 110ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        will-change: transform;
+      }
+      .tv-browser .tv-cursor-magnet.tv-control-pressed {
+        transform: scale(0.97);
+        box-shadow: 0 0 0 5px rgba(33, 89, 210, 0.28), 0 5px 12px rgba(13, 31, 67, 0.2);
+      }
+      .tv-browser .tv-cursor-magnet.tv-direction-blocked-left {
+        animation: tvBlockedLeft 130ms ease-out;
+      }
+      .tv-browser .tv-cursor-magnet.tv-direction-blocked-right {
+        animation: tvBlockedRight 130ms ease-out;
+      }
+      .tv-browser .tv-cursor-magnet.tv-direction-blocked-up {
+        animation: tvBlockedUp 130ms ease-out;
+      }
+      .tv-browser .tv-cursor-magnet.tv-direction-blocked-down {
+        animation: tvBlockedDown 130ms ease-out;
+      }
+      @keyframes tvFocusSnap {
+        from { transform: scale(0.97); opacity: 0.86; }
+        to { transform: scale(1.07); opacity: 1; }
+      }
+      @keyframes tvBlockedLeft {
+        50% { transform: translateX(-7px) scale(1.07); }
+      }
+      @keyframes tvBlockedRight {
+        50% { transform: translateX(7px) scale(1.07); }
+      }
+      @keyframes tvBlockedUp {
+        50% { transform: translateY(-7px) scale(1.07); }
+      }
+      @keyframes tvBlockedDown {
+        50% { transform: translateY(7px) scale(1.07); }
       }
       .tv-browser .filter-row {
         align-items: flex-end;
@@ -4274,6 +4308,7 @@
       @media (prefers-reduced-motion: reduce) {
         .tv-browser .tv-cursor-magnet {
           transform: none;
+          animation: none;
         }
         .tv-browser .sidebar {
           transition-duration: 0ms;
@@ -11967,16 +12002,19 @@ function setAppVersion() {
       };
       const tvNavigationKeyDownAt = {};
       const TV_DIRECTIONAL_MOVE_THRESHOLD = 4;
-      const TV_DIRECTIONAL_IDLE_MS = 110;
+      const TV_DIRECTIONAL_IDLE_MS = 120;
+      const TV_DIRECTIONAL_REPEAT_MS = 80;
       const TV_DIRECTIONAL_AXIS_DOMINANCE = 1.15;
       const TV_DIRECTIONAL_PERPENDICULAR_WEIGHT = 4;
+      const TV_DIRECTIONAL_PRESS_MS = 110;
       const TV_POINTER_DUPLICATE_EVENT_MS = 24;
-      const TV_MAGNETIC_TARGET_SELECTOR = "button:not(.tv-nav-edge):not([disabled]), a[href], .ms-btn, .sb-item, [role='button'], [tabindex]:not([tabindex='-1']):not(input):not(select):not(textarea)";
+      const TV_MAGNETIC_TARGET_SELECTOR = "button:not(.tv-nav-edge):not([disabled]), a[href], .ms-btn, .sb-item, .kpi, .cc, .tc, .exec-alert, [role='button'], [tabindex]:not([tabindex='-1']):not(input):not(select):not(textarea)";
       let tvPointerLastX = null;
       let tvPointerLastY = null;
       let tvPointerAccumX = 0;
       let tvPointerAccumY = 0;
       let tvPointerIdleTimer = 0;
+      let tvPointerUnlockTimer = 0;
       let tvPointerDirectionLocked = false;
       let tvPointerLastEventType = "";
       let tvPointerLastEventX = null;
@@ -11985,10 +12023,15 @@ function setAppVersion() {
       let tvMagneticTarget = null;
       let tvMagneticFocusOwned = false;
       let tvMagneticClickForwarding = false;
+      let tvMagneticClickPending = false;
       function clearTvMagneticTarget() {
         if (!tvMagneticTarget) return;
         const previousTarget = tvMagneticTarget;
-        tvMagneticTarget.classList.remove("tv-cursor-magnet");
+        tvMagneticTarget.classList.remove(
+          "tv-cursor-magnet", "tv-control-pressed",
+          "tv-direction-blocked-left", "tv-direction-blocked-right",
+          "tv-direction-blocked-up", "tv-direction-blocked-down",
+        );
         tvMagneticTarget = null;
         if (tvMagneticFocusOwned && document.activeElement === previousTarget) previousTarget.blur();
         tvMagneticFocusOwned = false;
@@ -12014,6 +12057,10 @@ function setAppVersion() {
         if (!target || !isTvMagneticTargetVisible(target) || target === tvMagneticTarget) return Boolean(target);
         clearTvMagneticTarget();
         tvMagneticTarget = target;
+        if (!target.matches("button, a[href], input, select, textarea, [tabindex]")) {
+          target.setAttribute("tabindex", "-1");
+          target.setAttribute("role", "button");
+        }
         tvMagneticTarget.classList.add("tv-cursor-magnet");
         const scrollX = window.pageXOffset;
         const scrollY = window.pageYOffset;
@@ -12035,46 +12082,82 @@ function setAppVersion() {
         setTvMagneticTarget(preferred);
         return tvMagneticTarget;
       }
-      function tvTargetCenter(target) {
-        const rect = target.getBoundingClientRect();
-        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      function tvDirectionalMetrics(originRect, targetRect, direction) {
+        const originCenter = { x: originRect.left + originRect.width / 2, y: originRect.top + originRect.height / 2 };
+        const targetCenter = { x: targetRect.left + targetRect.width / 2, y: targetRect.top + targetRect.height / 2 };
+        const dx = targetCenter.x - originCenter.x;
+        const dy = targetCenter.y - originCenter.y;
+        const horizontal = direction === "right" || direction === "left";
+        const primary = direction === "right" ? dx : direction === "left" ? -dx : direction === "down" ? dy : -dy;
+        const overlap = horizontal
+          ? Math.max(0, Math.min(originRect.bottom, targetRect.bottom) - Math.max(originRect.top, targetRect.top))
+          : Math.max(0, Math.min(originRect.right, targetRect.right) - Math.max(originRect.left, targetRect.left));
+        const minimumSize = horizontal
+          ? Math.min(originRect.height, targetRect.height)
+          : Math.min(originRect.width, targetRect.width);
+        const perpendicularGap = horizontal
+          ? Math.max(0, originRect.top - targetRect.bottom, targetRect.top - originRect.bottom)
+          : Math.max(0, originRect.left - targetRect.right, targetRect.left - originRect.right);
+        return {
+          primary,
+          aligned: overlap >= minimumSize * 0.25,
+          score: primary + perpendicularGap * TV_DIRECTIONAL_PERPENDICULAR_WEIGHT,
+        };
+      }
+      function showTvDirectionalBoundary(target, direction) {
+        if (!target) return;
+        const className = `tv-direction-blocked-${direction}`;
+        target.classList.remove(className);
+        void target.offsetWidth;
+        target.classList.add(className);
+        window.setTimeout(() => target.classList.remove(className), 150);
       }
       function moveTvDirectionalTarget(direction) {
         const current = ensureTvDirectionalTarget();
         if (!current) return false;
-        const origin = tvTargetCenter(current);
-        let bestTarget = null;
-        let bestScore = Infinity;
+        const originRect = current.getBoundingClientRect();
+        const candidates = [];
         getTvMagneticTargets().forEach((target) => {
           if (target === current) return;
-          const center = tvTargetCenter(target);
-          const dx = center.x - origin.x;
-          const dy = center.y - origin.y;
-          const primary = direction === "right" ? dx : direction === "left" ? -dx : direction === "down" ? dy : -dy;
-          if (primary <= 6) return;
-          const perpendicular = direction === "right" || direction === "left" ? Math.abs(dy) : Math.abs(dx);
-          if (primary < perpendicular * 0.25) return;
-          const score = primary + perpendicular * TV_DIRECTIONAL_PERPENDICULAR_WEIGHT;
-          if (score < bestScore) {
-            bestScore = score;
-            bestTarget = target;
-          }
+          const metrics = tvDirectionalMetrics(originRect, target.getBoundingClientRect(), direction);
+          if (metrics.primary <= 6) return;
+          candidates.push({ target, ...metrics });
         });
-        return bestTarget ? setTvMagneticTarget(bestTarget) : false;
+        const alignedCandidates = candidates.filter((candidate) => candidate.aligned);
+        const pool = alignedCandidates.length ? alignedCandidates : candidates;
+        pool.sort((a, b) => a.score - b.score);
+        if (!pool.length) {
+          showTvDirectionalBoundary(current, direction);
+          return false;
+        }
+        return setTvMagneticTarget(pool[0].target);
+      }
+      function activateTvDirectionalTarget() {
+        const target = ensureTvDirectionalTarget();
+        if (!target || tvMagneticClickPending) return false;
+        tvMagneticClickPending = true;
+        target.classList.add("tv-control-pressed");
+        window.requestAnimationFrame(() => {
+          tvMagneticClickForwarding = true;
+          try {
+            target.click();
+          } finally {
+            tvMagneticClickForwarding = false;
+          }
+          window.setTimeout(() => {
+            target.classList.remove("tv-control-pressed");
+            tvMagneticClickPending = false;
+            ensureTvDirectionalTarget();
+          }, TV_DIRECTIONAL_PRESS_MS);
+        });
+        return true;
       }
       function handleTvMagneticClick(event) {
         if (!window.__DASHBOARD_TV_MODE || tvMagneticClickForwarding || event.defaultPrevented || event.detail === 0) return;
-        const target = ensureTvDirectionalTarget();
-        if (!target) return;
         event.preventDefault();
         event.stopPropagation();
-        tvMagneticClickForwarding = true;
-        try {
-          target.click();
-        } finally {
-          tvMagneticClickForwarding = false;
-        }
-        window.requestAnimationFrame(ensureTvDirectionalTarget);
+        if (tvMagneticClickPending) return;
+        activateTvDirectionalTarget();
       }
       function navigateTv(direction) {
         if (!window.__DASHBOARD_TV_MODE) return;
@@ -12101,6 +12184,8 @@ function setAppVersion() {
         nav(nextId, nextItem, { automatic: true });
       }
       function resetTvPointerGesture() {
+        window.clearTimeout(tvPointerIdleTimer);
+        window.clearTimeout(tvPointerUnlockTimer);
         tvPointerLastX = null;
         tvPointerLastY = null;
         releaseTvPointerDirection();
@@ -12135,7 +12220,7 @@ function setAppVersion() {
         if (isDuplicate) return;
         let deltaX = Number(event.movementX || 0);
         let deltaY = Number(event.movementY || 0);
-        if (deltaX === 0 && deltaY === 0 && tvPointerLastX !== null) {
+        if (tvPointerLastX !== null) {
           deltaX = x - tvPointerLastX;
           deltaY = y - tvPointerLastY;
         }
@@ -12158,6 +12243,8 @@ function setAppVersion() {
         tvPointerAccumX = 0;
         tvPointerAccumY = 0;
         tvPointerDirectionLocked = true;
+        window.clearTimeout(tvPointerUnlockTimer);
+        tvPointerUnlockTimer = window.setTimeout(releaseTvPointerDirection, TV_DIRECTIONAL_REPEAT_MS);
       }
       function isTvNavigationBlocked(event) {
         const target = event.target;
@@ -12174,14 +12261,23 @@ function setAppVersion() {
         if (window.PointerEvent) document.removeEventListener("pointermove", trackTvPointerBaseline, true);
         document.addEventListener("keydown", (event) => {
           if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
-          const key = event.key || ({ 37: "ArrowLeft", 39: "ArrowRight" })[event.keyCode];
-          if (key === "ArrowLeft" || key === "ArrowRight") {
+          const key = event.key || ({ 13: "Enter", 37: "ArrowLeft", 38: "ArrowUp", 39: "ArrowRight", 40: "ArrowDown" })[event.keyCode];
+          const directionalKeys = {
+            ArrowLeft: "left",
+            ArrowRight: "right",
+            ArrowUp: "up",
+            ArrowDown: "down",
+          };
+          if (directionalKeys[key]) {
             event.preventDefault();
             event.stopPropagation();
-            if (!event.repeat) {
-              if (key === "ArrowLeft") navigateTv(-1);
-              if (key === "ArrowRight") navigateTv(1);
-            }
+            moveTvDirectionalTarget(directionalKeys[key]);
+            return;
+          }
+          if (key === "Enter" || Number(event.keyCode || 0) === 13) {
+            event.preventDefault();
+            event.stopPropagation();
+            activateTvDirectionalTarget();
             return;
           }
           if (TV_NUMERIC_NAV[key]) {

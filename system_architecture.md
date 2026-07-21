@@ -31,11 +31,12 @@
 ## Cursor magnetico da TV
 
 - A posicao absoluta do cursor nao participa da selecao do alvo.
-- `handleTvPointerNavigation()` acumula apenas `movementX` e `movementY`; uma rajada de 4 px gera um passo direcional.
+- `handleTvPointerNavigation()` acumula o delta relativo do movimento; uma rajada de 4 px gera um passo direcional.
 - `moveTvDirectionalTarget()` escolhe o proximo controle visivel na direcao informada usando cone direcional, distancia no eixo e penalidade perpendicular.
-- Cards analiticos e setas laterais de troca de aba nao participam do direcional; apenas controles acionaveis da interface entram na rota.
-- Cada rajada gera no maximo um passo e libera a proxima apos 110 ms sem movimento, evitando saltos entre varios botoes.
-- A ultima coordenada e preservada apenas para calcular o delta quando o Tizen informa `movementX = 0`; ela nunca participa da escolha do alvo.
+- Cards analiticos clicaveis participam da rota; setas laterais de troca de aba continuam excluidas.
+- Candidatos com sobreposicao no mesmo eixo sao avaliados antes dos diagonais, mantendo linhas e colunas previsiveis.
+- Movimento sustentado repete em intervalos de 80 ms; uma pausa de 120 ms limpa o acumulador e inicia uma nova rajada.
+- Coordenadas consecutivas calculam o delta de forma deterministica mesmo quando `movementX` e `movementY` sao inconsistentes; a posicao nunca participa da escolha do alvo.
 - O rastreamento da origem comeca na tela do PIN, permitindo que o primeiro movimento apos o desbloqueio ja navegue.
 - O controle selecionado recebe foco, contorno reforcado e escala curta. O gesto antigo de tres movimentos foi removido.
 - Todo clique de ponteiro e redirecionado ao controle destacado, independentemente da coordenada fisica do cursor.
@@ -43,3 +44,5 @@
 - A pagina nao movimenta o cursor do sistema operacional: o magnetismo e uma resposta visual e funcional implementada no documento.
 - `tv-cursor-hidden` oculta o ponteiro apenas depois da liberacao do PIN; `tv-cursor-visible` o restaura no diagnostico.
 - Ao perder o alvo, o foco criado pelo magnetismo e removido para nao deixar um botao antigo falsamente destacado.
+- Setas direcionais e OK/Enter do controle remoto usam `moveTvDirectionalTarget()` e `activateTvDirectionalTarget()`, compartilhando o mesmo foco do cursor invisivel.
+- O foco entra com snap de 110 ms, o OK comprime o alvo por 110 ms e uma tentativa sem vizinho produz um deslocamento curto na direcao bloqueada.
