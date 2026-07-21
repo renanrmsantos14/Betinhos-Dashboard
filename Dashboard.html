@@ -853,6 +853,8 @@
       .passenger-ranking-table {
         width: auto;
         min-width: 0;
+        border-collapse: separate;
+        border-spacing: 0;
         table-layout: fixed;
       }
       .passenger-ranking-table th,
@@ -861,13 +863,28 @@
         white-space: nowrap;
       }
       .passenger-ranking-table th {
-        overflow: hidden;
+        border-left: 0 !important;
+        border-right: 1px solid var(--b1);
+        background-clip: padding-box;
+        position: sticky;
       }
+      .passenger-ranking-table th:last-child { border-right: 0; }
       .passenger-ranking-header-title {
         display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        font-size: 9.5px;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        white-space: normal;
+      }
+      .passenger-ranking-resizer {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        right: -4px;
+        width: 8px;
+        height: 100%;
+        cursor: col-resize;
+        touch-action: none;
       }
       @keyframes toast-in {
         from { opacity: 0; transform: translateY(8px); }
@@ -10787,6 +10804,15 @@ function setAppVersion() {
             widths[index] = Math.max(widths[index], Math.ceil(width));
           });
         });
+        const manualWidths = (() => {
+          try { return JSON.parse(rankingTable.dataset.passengerRankingWidths || "[]"); }
+          catch { return []; }
+        })();
+        applyPassengerRankingColumnWidths(rankingTable, widths.map((width, index) => manualWidths[index] || width));
+        installPassengerRankingColumnResize(rankingTable);
+      }
+
+      function applyPassengerRankingColumnWidths(rankingTable, widths) {
         let colgroup = rankingTable.querySelector("colgroup");
         if (!colgroup) {
           colgroup = document.createElement("colgroup");
@@ -10800,6 +10826,39 @@ function setAppVersion() {
         const tableWidth = widths.reduce((total, width) => total + width, 0);
         rankingTable.style.width = `${tableWidth}px`;
         rankingTable.style.minWidth = `${tableWidth}px`;
+      }
+
+      function installPassengerRankingColumnResize(rankingTable) {
+        if (rankingTable.dataset.passengerRankingResizable === "1") return;
+        const headers = Array.from(rankingTable.tHead?.rows[0]?.cells || []);
+        headers.forEach((header, index) => {
+          if (index === headers.length - 1) return;
+          const resizer = document.createElement("span");
+          resizer.className = "passenger-ranking-resizer";
+          resizer.setAttribute("aria-hidden", "true");
+          resizer.addEventListener("click", (event) => event.stopPropagation());
+          resizer.addEventListener("pointerdown", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const colgroup = rankingTable.querySelector("colgroup");
+            const widths = Array.from(colgroup?.children || [], (column) => column.getBoundingClientRect().width);
+            const startX = event.clientX;
+            const startWidth = widths[index];
+            const resize = (moveEvent) => {
+              widths[index] = Math.max(64, Math.round(startWidth + moveEvent.clientX - startX));
+              applyPassengerRankingColumnWidths(rankingTable, widths);
+            };
+            const stopResize = () => {
+              rankingTable.dataset.passengerRankingWidths = JSON.stringify(widths);
+              document.removeEventListener("pointermove", resize);
+              document.removeEventListener("pointerup", stopResize);
+            };
+            document.addEventListener("pointermove", resize);
+            document.addEventListener("pointerup", stopResize, { once: true });
+          });
+          header.append(resizer);
+        });
+        rankingTable.dataset.passengerRankingResizable = "1";
       }
 
       function renderSrvTable(rows) {
