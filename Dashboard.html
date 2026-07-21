@@ -863,12 +863,17 @@
         white-space: nowrap;
       }
       .passenger-ranking-table th {
-        border-left: 0 !important;
-        border-right: 1px solid var(--b1);
+        border-right: 0;
         background-clip: padding-box;
         position: sticky;
       }
-      .passenger-ranking-table th:last-child { border-right: 0; }
+      .passenger-ranking-table th:not(:first-child),
+      .passenger-ranking-table td:not(:first-child) {
+        border-left: 1px solid var(--b1);
+      }
+      .passenger-ranking-table td {
+        border-bottom: 1px solid var(--b1);
+      }
       .passenger-ranking-header-title {
         display: -webkit-box;
         font-size: 9.5px;
@@ -877,7 +882,9 @@
         -webkit-line-clamp: 2;
         line-clamp: 2;
         overflow: hidden;
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
         white-space: normal;
       }
       .passenger-ranking-resizer {

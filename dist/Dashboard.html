@@ -14,7 +14,7 @@
     />
     <script>(()=>{document.documentElement.classList.add("dashboard-js-ready");const t=/^(localhost|127\.0\.0\.1|\[::1\])$/i.test(location.hostname||"")&&/(?:^|[?&])tv=1(?:&|$)/i.test(location.search||"");(/SMART-TV|SmartTV|Tizen|SmartHub|Maple|HbbTV|NetCast|Web0S|WebTV/i.test(navigator.userAgent||"")||t)&&document.documentElement.classList.add("tv-pin-pending");const o=window.__DASHBOARD_EARLY_ERRORS=window.__DASHBOARD_EARLY_ERRORS||[];window.__DASHBOARD_EARLY_CAPTURE_ACTIVE=!0;const a=e=>{window.__DASHBOARD_EARLY_CAPTURE_ACTIVE&&o.length<20&&o.push(e)};window.addEventListener("error",e=>{const r=e.target;if(r&&r!==window){a({source:"window.resourceerror",action:r.currentSrc||r.src||r.href||"",phase:String(r.tagName||"resource").toLowerCase(),message:"Falha ao carregar recurso."});return}a({source:"window.error",action:e.filename||"",phase:`${e.lineno||0}:${e.colno||0}`,message:e.message||"Erro inesperado antes da inicializacao."})},!0),window.addEventListener("unhandledrejection",e=>{a({source:"window.unhandledrejection",message:String(e.reason||"Promise rejeitada sem tratamento.")})})})();
 </script>
-    <script id="dashboard-build-info">window.__DASHBOARD_BUILD_INFO={version:"1.0.107",label:"v1.0.107 21/07/2026"};
+    <script id="dashboard-build-info">window.__DASHBOARD_BUILD_INFO={version:"1.0.108",label:"v1.0.108 21/07/2026"};
 </script>
     <script id="dashboard-tv-compat">(function(n,i){var l=i();typeof module=="object"&&module.exports&&(module.exports=l),n&&(n.DashboardTvCompat=l)})(typeof window!="undefined"?window:null,function(){function n(e){return/SMART-TV|SmartTV|Tizen|SmartHub|Maple|HbbTV|NetCast|Web0S|WebTV/i.test(String(e||""))}function i(e,t,s){return!!(e.CSS&&typeof e.CSS.supports=="function"&&e.CSS.supports(t,s))}function l(e){var t=e.document;if(!t||!t.body||typeof t.createElement!="function")return!1;var s=t.createElement("div"),o=t.createElement("div"),a=t.createElement("div");s.style.display="flex",s.style.flexDirection="column",s.style.rowGap="1px",s.style.position="absolute",s.style.visibility="hidden",s.appendChild(o),s.appendChild(a),t.body.appendChild(s);var u=s.scrollHeight===1;return t.body.removeChild(s),u}function r(e){if(!e||!n(e.navigator&&e.navigator.userAgent))return!1;var t=e.document&&e.document.documentElement;return!t||!t.classList?!1:(t.classList.add("tv-browser"),i(e,"display","grid")||t.classList.add("tv-no-grid"),i(e,"inset","0")||t.classList.add("tv-no-inset"),l(e)||t.classList.add("tv-no-flex-gap"),e.__DASHBOARD_TV_MODE=!0,!0)}return{install:r,isTvUserAgent:n}});
 </script>
@@ -834,12 +834,17 @@
         white-space: nowrap;
       }
       .passenger-ranking-table th {
-        border-left: 0 !important;
-        border-right: 1px solid var(--b1);
+        border-right: 0;
         background-clip: padding-box;
         position: sticky;
       }
-      .passenger-ranking-table th:last-child { border-right: 0; }
+      .passenger-ranking-table th:not(:first-child),
+      .passenger-ranking-table td:not(:first-child) {
+        border-left: 1px solid var(--b1);
+      }
+      .passenger-ranking-table td {
+        border-bottom: 1px solid var(--b1);
+      }
       .passenger-ranking-header-title {
         display: -webkit-box;
         font-size: 9.5px;
@@ -848,7 +853,9 @@
         -webkit-line-clamp: 2;
         line-clamp: 2;
         overflow: hidden;
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
         white-space: normal;
       }
       .passenger-ranking-resizer {
@@ -4406,7 +4413,7 @@
             >—</span
           >
         </div>
-        <small id="appVersion" class="sb-version" aria-label="Versão do app">v1.0.107 21/07/2026</small>
+        <small id="appVersion" class="sb-version" aria-label="Versão do app">v1.0.108 21/07/2026</small>
         <div class="sb-div tv-diagnostic-nav"></div>
         <div class="sb-section tv-diagnostic-nav">Diagn&oacute;stico</div>
         <div class="sb-item tv-diagnostic-nav" data-nav="tvdiagnostico" onclick="nav('tvdiagnostico', this)">
