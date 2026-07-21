@@ -4645,7 +4645,7 @@
             <p class="section-label">Opera&ccedil;&atilde;o</p>
             <div class="exec-alerts"><div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div><div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Opera&ccedil;&atilde;o</b></div><div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div><div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>Ocorr&ecirc;ncias</span></div><b>Opera&ccedil;&atilde;o</b></div></div>
             <p class="section-label">Qualidade dos dados</p>
-            <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
+            <div class="exec-alerts"><div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemTipoVeiculo"><div><strong>&mdash;</strong><span>Sem tipo de ve&iacute;culo</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div><div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div></div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises executivas">
           <div class="cgrid g2">
@@ -8071,7 +8071,7 @@ function setAppVersion() {
           </div>
           <div class="exec-alerts">
             <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
-            <div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div>
+            <div class="exec-alert" id="dqSemTipoVeiculo"><div><strong>&mdash;</strong><span>Sem tipo de ve&iacute;culo</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div>
           </div>
@@ -8307,17 +8307,17 @@ function setAppVersion() {
           .replace(/\bF\.[A-Za-z0-9_.]+\b/g, "campo correspondente")
           .replace(/\bDV_[A-Z0-9_]+\b/g, "valor configurado");
         const getCardUserDetails = (cardTitle) => {
-          if (["dqSemVeiculo", "dqSemOp", "dqSemMotorista", "dqSemCliente"].includes(card.id)) {
+          if (["dqSemVeiculo", "dqSemTipoVeiculo", "dqSemMotorista", "dqSemCliente"].includes(card.id)) {
             const qualityDetails = {
               dqSemVeiculo: [
                 "Fonte: Reservas de serviços.",
                 "Campos: Data de saída, Motorista e Veículo.",
                 "Valores e condições: considera serviços não cancelados com saída a partir de 01/06/2026, vínculo de motorista preenchido e veículo não preenchido; a validação usa o lookup do motorista, não o nome exibido.",
               ],
-              dqSemOp: [
-                "Fonte: Reservas de serviços e informações de faturamento.",
-                "Campos: Status do serviço, Status de faturamento, Ordem de produção e Valor total.",
-                "Valores e condições: considera serviços concluídos ou finalizados, com faturamento pendente e sem Ordem de produção vinculada.",
+              dqSemTipoVeiculo: [
+                "Fonte: Reservas de serviços.",
+                "Campos: Categoria do item e Tipo de veículo.",
+                "Valores e condições: considera itens da categoria Serviço cujo tipo de veículo não está preenchido.",
               ],
               dqSemMotorista: [
                 "Fonte: Reservas de serviços.",
@@ -8461,12 +8461,13 @@ function setAppVersion() {
             conditions: ["A data de saída precisa existir e ser igual ou posterior a 01/06/2026.", "O status não pode conter 'cancel'.", "O lookup de motorista (_motId) precisa estar preenchido.", "O veículo precisa estar vazio."],
           });
         }
-        if (card.id === "dqSemOP") {
+        if (card.id === "dqSemTipoVeiculo") {
           return applyFilter({
-            user: "Conta serviços concluídos que continuam pendentes no faturamento e sem OP financeira.",
+            user: "Conta serviços sem tipo de veículo definido.",
             source: reservations,
-            formula: "count(rv.filter(isProducedReservation && fatStatus inclui 'pend' && !_opId))",
-            conditions: ["O status do serviço precisa indicar concluído, realizado ou finalizado."],
+            formula: "count(rv.filter(!r[F.res.veiTipo]))",
+            codeChoices: ["F.res.catItem: 100000000 = Serviço."],
+            conditions: ["A categoria precisa ser DV_CAT_ITEM_SERVICO.", "O tipo de veículo precisa estar vazio."],
           });
         }
         if (card.id === "dqSemMotorista") {
@@ -9241,11 +9242,7 @@ function setAppVersion() {
           const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
           return !stL(r._stL).includes("cancel") && Boolean(r._motId) && !r[F.res.veiculo] && Number.isFinite(saida) && saida >= inicioSemVeiculo && saida <= Date.now();
         }).length;
-        const dqSemOP = rv.filter((r) =>
-          isProducedReservation(r) &&
-          normL(fv(r, F.res.fatStatus)).includes("pend") &&
-          !r._opId
-        ).length;
+        const dqSemTipoVeiculo = rv.filter((r) => !r[F.res.veiTipo]).length;
         const statusSemMotorista = new Set([202410001, 202410005, 202410008]);
         const inicioSemMotorista = new Date("2026-04-10T00:00:00-03:00").getTime();
         const agoraSemMotorista = Date.now();
@@ -9262,7 +9259,7 @@ function setAppVersion() {
         }).length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
         setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veículo", "OS sem veículo", dqSemVeiculo ? "warn" : "ok");
-        setExecAlert("dqSemOP", dqSemOP, "Sem OP", "sem financeiro vinculado", dqSemOP ? "warn" : "ok");
+        setExecAlert("dqSemTipoVeiculo", dqSemTipoVeiculo, "Sem tipo de veículo", "corrigir cadastro", dqSemTipoVeiculo ? "warn" : "ok");
         setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", dqSemMotorista ? "Corrigir" : "OK", dqSemMotorista ? "warn" : "ok");
         setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", dqSemCliente ? "Corrigir" : "OK", dqSemCliente ? "warn" : "ok");
 

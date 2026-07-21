@@ -262,7 +262,7 @@ O texto secundário mostra o total geral de veículos cadastrados, que pode incl
 
 ## 5. Alertas executivos e qualidade dos dados
 
-### OS sem veículo
+### OS sem veículo - VALIDADO
 
 Conta reservas Serviço que:
 
@@ -278,17 +278,18 @@ OS sem veículo = status não cancelado + lookup de motorista preenchido + veíc
 
 O motorista é validado pelo vínculo `_motId`, e não pelo texto exibido no nome. Status contendo “cancel” ficam fora. O alerta indica falha de alocação ou de cadastro. Não representa automaticamente indisponibilidade de frota.
 
-### Sem OP
+### Sem tipo de veículo
 
 Conta serviços que:
 
-- estão concluídos/realizados/finalizados;
-- têm faturamento pendente;
-- não possuem OP/financeiro vinculado.
+- pertencem à categoria Serviço;
+- não possuem tipo de veículo preenchido.
 
 ```text
-Sem OP = serviço produzido + faturamento pendente + financeiro vazio
+Sem tipo de veículo = categoria Serviço + tipo de veículo vazio
 ```
+
+É um indicador de qualidade cadastral. Não representa ausência de veículo físico vinculado; essa situação é medida separadamente pelo card **OS sem veículo**.
 
 ### Sem motorista
 
@@ -663,7 +664,7 @@ As tabelas agrupam publicações por categoria e status. A página não usa a ba
 1. **Faturamento não é recebimento.** Faturamento mede valor dos serviços; recebimento mede o que foi marcado como pago segundo regras próprias.
 2. **A receber não é dívida contábil definitiva.** É uma visão operacional baseada em composição concluída, OP vinculada, status não pago e valor positivo.
 3. **CP pendente é falha de preparação financeira.** A projeção associada usa ticket médio atual e não substitui a composição real.
-4. **Qualidade de dados depende do cadastro.** “Sem cliente”, “Sem OP”, “Sem motorista” e “OS sem veículo” indicam registros incompletos segundo os campos carregados.
+4. **Qualidade de dados depende do cadastro.** “Sem cliente”, “Sem tipo de veículo”, “Sem motorista” e “OS sem veículo” indicam registros incompletos segundo os campos carregados.
 5. **Tempo de pagamento não está calculado.** Faltam datas de baixa e vencimento no fetch atual.
 6. **Comparação histórica exige atenção à fonte.** 2023–2025 podem vir de dados históricos fixos, enquanto a operação atual vem do Dataverse.
 7. **Metas são gerenciais.** A fórmula histórica ponderada mais 13% é uma convenção de acompanhamento, não uma previsão estatística nem um valor contábil.
