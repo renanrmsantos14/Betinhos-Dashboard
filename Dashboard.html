@@ -874,6 +874,12 @@
       .passenger-ranking-table td {
         border-bottom: 1px solid var(--b1);
       }
+      .passenger-ranking-cell-value {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
       .passenger-ranking-table th:last-child,
       .passenger-ranking-table td:last-child {
         border-right: 1px solid var(--b1);
@@ -10773,10 +10779,10 @@ function setAppVersion() {
         }
         document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
           <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
-          <td class="em"><div>${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim">${item.client}</td>
-          <td class="r em">${item.count.toLocaleString("pt-BR")}</td><td class="r">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</td>
-          <td class="dim">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</td>
-          <td class="dim">${item.serviceType}</td><td class="dim">${item.vehicleType}</td><td class="dim">${item.driver}</td><td class="r">${brl(item.count ? item.total / item.count : 0)}</td><td class="r em">${brl(item.total)}</td>
+          <td class="em"><div class="passenger-ranking-cell-value">${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim"><span class="passenger-ranking-cell-value">${item.client}</span></td>
+          <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span></td><td class="r"><span class="passenger-ranking-cell-value">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td>
+          <td class="dim"><span class="passenger-ranking-cell-value">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</span></td>
+          <td class="dim"><span class="passenger-ranking-cell-value">${item.serviceType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.vehicleType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.driver}</span></td><td class="r"><span class="passenger-ranking-cell-value">${brl(item.count ? item.total / item.count : 0)}</span></td><td class="r em"><span class="passenger-ranking-cell-value">${brl(item.total)}</span></td>
         </tr>`).join("") || emptyRow(11);
         set("metaSrv", top.length ? `Top ${top.length} de ${allRanked.length} | ${totalLinks.toLocaleString("pt-BR")} vínculos serviço-passageiro` : "Nenhum vínculo serviço-passageiro no período");
         const fitColumns = () => fitPassengerRankingColumns();
