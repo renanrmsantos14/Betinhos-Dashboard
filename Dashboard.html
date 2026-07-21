@@ -874,6 +874,10 @@
       .passenger-ranking-table td {
         border-bottom: 1px solid var(--b1);
       }
+      .passenger-ranking-table th:last-child,
+      .passenger-ranking-table td:last-child {
+        border-right: 1px solid var(--b1);
+      }
       .passenger-ranking-header-title {
         display: -webkit-box;
         font-size: 9.5px;
@@ -10824,19 +10828,24 @@ function setAppVersion() {
       }
 
       function applyPassengerRankingColumnWidths(rankingTable, widths) {
+        const adjustedWidths = [...widths];
+        const minimumWidth = Math.ceil(rankingTable.closest(".tc-wrap")?.clientWidth || 0);
+        const missingWidth = minimumWidth - adjustedWidths.reduce((total, width) => total + width, 0);
+        if (missingWidth > 0) adjustedWidths[adjustedWidths.length - 1] += missingWidth;
         let colgroup = rankingTable.querySelector("colgroup");
         if (!colgroup) {
           colgroup = document.createElement("colgroup");
           rankingTable.prepend(colgroup);
         }
-        colgroup.replaceChildren(...widths.map((width) => {
+        colgroup.replaceChildren(...adjustedWidths.map((width) => {
           const col = document.createElement("col");
           col.style.width = `${width}px`;
           return col;
         }));
-        const tableWidth = widths.reduce((total, width) => total + width, 0);
+        const tableWidth = adjustedWidths.reduce((total, width) => total + width, 0);
         rankingTable.style.width = `${tableWidth}px`;
         rankingTable.style.minWidth = `${tableWidth}px`;
+        return adjustedWidths;
       }
 
       function installPassengerRankingColumnResize(rankingTable) {
@@ -10852,12 +10861,17 @@ function setAppVersion() {
             event.preventDefault();
             event.stopPropagation();
             const colgroup = rankingTable.querySelector("colgroup");
-            const widths = Array.from(colgroup?.children || [], (column) => column.getBoundingClientRect().width);
+            let widths = Array.from(colgroup?.children || [], (column) => column.getBoundingClientRect().width);
+            const baseWidths = [...widths];
+            const minimumWidth = Math.ceil(rankingTable.closest(".tc-wrap")?.clientWidth || 0);
             const startX = event.clientX;
-            const startWidth = widths[index];
+            const startWidth = baseWidths[index];
             const resize = (moveEvent) => {
-              widths[index] = Math.max(64, Math.round(startWidth + moveEvent.clientX - startX));
-              applyPassengerRankingColumnWidths(rankingTable, widths);
+              const resizedWidths = [...baseWidths];
+              resizedWidths[index] = Math.max(64, Math.round(startWidth + moveEvent.clientX - startX));
+              const missingWidth = minimumWidth - resizedWidths.reduce((total, width) => total + width, 0);
+              if (missingWidth > 0) resizedWidths[index + 1] += missingWidth;
+              widths = applyPassengerRankingColumnWidths(rankingTable, resizedWidths);
             };
             const stopResize = () => {
               rankingTable.dataset.passengerRankingWidths = JSON.stringify(widths);
