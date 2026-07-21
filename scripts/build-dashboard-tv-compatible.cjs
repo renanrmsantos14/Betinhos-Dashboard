@@ -32,7 +32,7 @@ const sourceWithBuildInfo = source.replace(
 if (sourceWithBuildInfo === source) throw new Error("Placeholder dashboard-build-info ausente.");
 
 const sourceWithVersion = sourceWithBuildInfo.replace(
-  /(<small\s+id="appVersion"[^>]*>)[\s\S]*?(<\/small>)/i,
+  /(<small\s+id="(?:appVersion|tvAppVersion|tvPinVersion)"[^>]*>)[\s\S]*?(<\/small>)/gi,
   (_match, openingTag, closingTag) => `${openingTag}${buildInfo.label}${closingTag}`
 );
 

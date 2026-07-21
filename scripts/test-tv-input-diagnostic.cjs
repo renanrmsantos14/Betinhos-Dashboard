@@ -8,7 +8,12 @@ const devServer = fs.readFileSync(path.join(root, "scripts", "dev-server.js"), "
 
 assert.match(html, /data-nav="tvdiagnostico"/i, "Aba de diagnostico ausente.");
 assert.match(html, /id="page-tvdiagnostico"/i, "Pagina de diagnostico ausente.");
+assert.match(html, /id="tvPinLogo"/i, "Logo da Betinhos ausente na tela de senha.");
+assert.match(html, /id="tvPinVersion"/i, "Versao ausente na tela de senha.");
+assert.match(html, /\.tv-pin-corner-brand\s*\{[^}]*right:\s*64px/i, "Logo nao esta no canto superior direito.");
+assert.match(html, /\.tv-pin-backdrop\s*\{[^}]*display:\s*none/i, "Fundo da senha ainda possui elementos decorativos.");
 assert.match(html, /function installTvInputDiagnostic\(/i, "Captura de eventos ausente.");
+assert.match(html, /__DASHBOARD_TIZEN_VERSION/i, "Versao da plataforma Tizen nao aparece no diagnostico.");
 assert.match(html, /location\.hash\s*!==\s*"#tvdiagnostico"/i, "Atalho direto para o diagnostico ausente.");
 assert.match(html, /source:\s*"tv-input-diagnostic"/i, "Envio ao App Log ausente.");
 assert.match(html, /addEventListener\("keydown"/i, "Captura de teclado ausente.");
@@ -48,6 +53,28 @@ assert.match(html, /\.tv-browser\s+\.filter-row\s+\.ms-wrap,[\s\S]*?\{[^}]*width
 assert.match(html, /\.tv-browser\s+\.quick-filters\s*>\s*\*\s*\{[^}]*margin:/i, "Botoes do filtro dependem de flex gap na TV.");
 assert.match(html, /\.tv-browser\s+\.cgrid[\s\S]*?grid-gap:/i, "Grids da TV nao possuem fallback de espacamento.");
 assert.match(html, /\.tv-browser\s+\.page\s*\{[^}]*min-width:\s*0[^}]*max-width:\s*100%/i, "Paginas da TV nao possuem contencao horizontal.");
+assert.match(html, /\.tv-browser\s+\.content\s*>\s*\.fbar,[\s\S]*?width:\s*100%/i, "Filtro e paginas nao ocupam a largura da TV.");
+assert.match(html, /\.tv-browser\s+\.filter-head-left\s*\{[^}]*flex:\s*1\s+1\s+360px/i, "Cabecalho do filtro nao possui largura adaptativa.");
+assert.match(html, /\.tv-browser\s+\.filter-body\s+\.quick-filters\s*\{[^}]*display:\s*none/i, "Atalhos rapidos duplicados no corpo do filtro.");
+assert.match(html, /\.tv-browser\s+button:focus,[\s\S]*?outline:\s*3px\s+solid/i, "Foco visivel do controle remoto ausente.");
+assert.match(html, /\.tv-browser\.tv-cursor-hidden:not\(\.tv-cursor-visible\)[\s\S]*?cursor:\s*none\s*!important/i, "Cursor nao e ocultado no modo TV.");
+assert.match(html, /classList\.add\("tv-cursor-hidden"\)/i, "Ocultacao do cursor nao e ativada apos o PIN.");
+assert.match(html, /classList\.toggle\("tv-cursor-visible",\s*id\s*===\s*"tvdiagnostico"\)/i, "Cursor nao reaparece no diagnostico.");
+assert.match(html, /TV_POINTER_MAGNET_RADIUS\s*=\s*160/i, "Raio ampliado do cursor magnetico ausente.");
+assert.match(html, /TV_POINTER_MAGNET_RELEASE_RADIUS\s*=\s*220/i, "Retencao do cursor magnetico ausente.");
+assert.match(html, /TV_POINTER_MAGNET_SWITCH_ADVANTAGE\s*=\s*28/i, "Histerese entre alvos magneticos ausente.");
+assert.match(html, /function updateTvMagneticTarget\(/i, "Calculo do controle mais proximo ausente.");
+assert.match(html, /classList\.add\("tv-cursor-magnet"\)/i, "Destaque do alvo magnetico ausente.");
+assert.match(html, /tvMagneticFocusOwned[\s\S]*?previousTarget\.blur\(\)/i, "Foco magnetico antigo pode ficar visivel.");
+assert.match(html, /const sidebarHandled\s*=\s*handleTvSidebarReveal\(event\)[\s\S]*?updateTvMagneticTarget\(x,\s*y\)/i, "Magnetismo nao funciona com o menu lateral aberto.");
+assert.match(html, /addEventListener\("click",\s*handleTvMagneticClick,\s*true\)/i, "Clique assistido do cursor magnetico ausente.");
+assert.match(html, /\.tv-browser\s+\.tv-cursor-magnet\s*\{[\s\S]*?scale\(1\.08\)/i, "Resposta visual do cursor magnetico ausente.");
+assert.match(html, /classList\.add\("ms-open"\)/i, "Fallback do filtro para navegadores sem :has ausente.");
+assert.match(html, /@media screen and \(max-width:\s*1600px\)[\s\S]*?\.tv-browser \.kpi-6/i, "Breakpoint da Samsung em zoom 125% ausente.");
+assert.match(html, /function installTvViewportLayout\(/i, "Layout TV sem scroll nao e inicializado.");
+assert.match(html, /applyTvViewportLayout\(\)/i, "Layout TV nao e reaplicado apos mudancas.");
+assert.match(html, /function rotateTvPage\([\s\S]*?automatic:\s*true/i, "Rotacao automatica foi removida no redesign TV.");
+assert.match(html, /note\.textContent\s*=\s*`TOP \$\{wrap\.dataset\.tvLimit\} NA TV`/i, "Limites Top 3\/5 nao sao informados na interface TV.");
 assert.doesNotMatch(html, /Object\.fromEntries\(/i, "Logger ainda usa Object.fromEntries, indisponivel no Chrome 63 da TV.");
 
 console.log("Dashboard TV: diagnostico de controle e App Log validados.");

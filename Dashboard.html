@@ -152,14 +152,7 @@
         z-index: 10000;
       }
       .tv-pin-backdrop {
-        background: rgba(33, 89, 210, 0.16);
-        border-radius: 50%;
-        height: 620px;
-        position: absolute;
-        right: -180px;
-        top: -260px;
-        transform: rotate(-12deg);
-        width: 620px;
+        display: none;
       }
       .tv-pin-backdrop-secondary {
         background: rgba(255, 255, 255, 0.045);
@@ -182,6 +175,30 @@
         text-align: center;
         width: 100%;
         z-index: 1;
+      }
+      .tv-pin-corner-brand {
+        position: absolute;
+        right: 64px;
+        top: 42px;
+        z-index: 2;
+      }
+      .tv-pin-corner-brand img {
+        display: block;
+        height: auto;
+        max-height: 96px;
+        max-width: 300px;
+        object-fit: contain;
+        width: 260px;
+      }
+      .tv-pin-version {
+        bottom: 28px;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 11px;
+        font-weight: 700;
+        left: 32px;
+        letter-spacing: 0.04em;
+        position: absolute;
+        z-index: 2;
       }
       @keyframes tvPinCardIn {
         from { opacity: 0; transform: translateY(18px) scale(0.97); }
@@ -552,6 +569,9 @@
         letter-spacing: 0.03em;
         text-align: center;
       }
+      .tv-version {
+        display: none;
+      }
       .sb-last-updated {
         display: none;
         font-size: 10px;
@@ -596,6 +616,9 @@
         box-shadow: var(--s1);
       }
       .fbar:has(.ms-dd.open) {
+        z-index: 5000;
+      }
+      .fbar.ms-open {
         z-index: 5000;
       }
       .filter-head {
@@ -3759,19 +3782,48 @@
         display: flex;
         flex-direction: column;
       }
+      .tv-browser body {
+        font-size: 15px;
+      }
+      .tv-browser .content {
+        box-sizing: border-box;
+        min-width: 0;
+        padding: 18px 64px 28px;
+        width: 100%;
+      }
+      .tv-browser .content > .fbar,
+      .tv-browser .content > .page {
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
+        max-width: none;
+        width: 100%;
+      }
+      .tv-browser .fbar {
+        box-sizing: border-box;
+        padding: 14px 16px;
+      }
       .tv-browser .filter-head {
-        display: block;
-        min-height: 0;
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin: -4px;
+        min-height: 44px;
       }
       .tv-browser .filter-head-left {
-        display: block;
-        width: 100%;
+        align-items: center;
+        display: flex;
+        flex: 1 1 360px;
+        margin: 4px;
+        min-width: 280px;
+        width: auto;
       }
       .tv-browser .filter-toggle {
         display: flex;
-        width: 100%;
-        min-height: 42px;
-        height: 42px;
+        flex: 0 0 auto;
+        width: auto;
+        min-height: 44px;
+        height: 44px;
         justify-content: flex-start;
       }
       .tv-browser .filter-chevron {
@@ -3779,25 +3831,40 @@
       }
       .tv-browser .filter-summary {
         display: block;
-        width: 100%;
-        margin-top: 8px;
+        flex: 1 1 220px;
+        margin-left: 12px;
+        margin-top: 0;
+        min-width: 180px;
         white-space: normal;
+        width: auto;
       }
       .tv-browser .filter-head-actions,
       .tv-browser .fbar.open .filter-head-actions {
-        display: block;
-        width: 100%;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid var(--b1);
+        align-items: center;
+        border-top: 0;
+        display: flex;
+        flex: 1 1 820px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin: 4px;
+        min-width: 0;
+        padding-top: 0;
+        width: auto;
       }
       .tv-browser .filter-head-actions .quick-filters {
         display: flex;
-        width: 100%;
-        justify-content: flex-start;
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        width: auto;
       }
       .tv-browser .filter-head-actions .filter-clear {
-        margin-top: 8px;
+        margin-left: 8px;
+        margin-top: 0;
+      }
+      .tv-browser .btn-qf,
+      .tv-browser .filter-clear {
+        font-size: 13px;
+        min-height: 40px;
       }
       .tv-browser .filter-body {
         display: none;
@@ -3829,6 +3896,18 @@
       .tv-browser:not(.tv-sidebar-revealed) .sidebar {
         transform: translateX(-230px);
       }
+      .tv-browser .tv-version {
+        bottom: 14px;
+        color: var(--t3);
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        left: 18px;
+        letter-spacing: 0.03em;
+        pointer-events: none;
+        position: fixed;
+        z-index: 270;
+      }
       .tv-browser:not(.tv-sidebar-revealed) .tv-current-menu {
         align-items: center;
         border-left: 1px solid var(--b1);
@@ -3856,10 +3935,6 @@
       .tv-current-menu-icon svg {
         height: 20px;
         width: 20px;
-      }
-      .tv-browser .content {
-        padding-left: 24px;
-        width: 100%;
       }
       .tv-browser .tv-auto-page-enter {
         animation: tvAutoPageEnter 280ms cubic-bezier(0.23, 1, 0.32, 1) both;
@@ -3924,13 +3999,15 @@
       .tv-browser .filter-body-inner > * + * {
         margin-top: 16px;
       }
-      .tv-browser .filter-head-actions .quick-filters,
-      .tv-browser .filter-body .quick-filters {
+      .tv-browser .filter-head-actions .quick-filters {
         display: flex;
         flex-wrap: wrap;
         margin: -4px;
         max-width: 100%;
         overflow: visible;
+      }
+      .tv-browser .filter-body .quick-filters {
+        display: none;
       }
       .tv-browser .quick-filters > * {
         flex: 0 0 auto;
@@ -3940,6 +4017,52 @@
       .tv-browser .filter-head-actions .filter-clear {
         display: inline-flex;
         max-width: 100%;
+      }
+      .tv-browser .kpi-lbl,
+      .tv-browser .section-label,
+      .tv-browser .cc-hdr2 .cc2-label,
+      .tv-browser thead th,
+      .tv-browser .cc-sub,
+      .tv-browser .tc-meta {
+        font-size: 12px;
+      }
+      .tv-browser .kpi-val,
+      .tv-browser .cc-hdr2 .cc2-bigval {
+        font-size: 30px;
+      }
+      .tv-browser .kpi-val.sm {
+        font-size: 25px;
+      }
+      .tv-browser .cc-title,
+      .tv-browser .tc-title {
+        font-size: 18px;
+      }
+      .tv-browser td {
+        font-size: 13px;
+      }
+      .tv-browser button:focus,
+      .tv-browser input:focus,
+      .tv-browser .ms-btn:focus,
+      .tv-browser .sb-item:focus {
+        border-color: #ffffff;
+        outline: 3px solid #2159d2;
+        outline-offset: 2px;
+      }
+      .tv-browser.tv-cursor-hidden:not(.tv-cursor-visible),
+      .tv-browser.tv-cursor-hidden:not(.tv-cursor-visible) * {
+        cursor: none !important;
+      }
+      .tv-browser .tv-cursor-magnet {
+        --tv-magnet-x: 0px;
+        --tv-magnet-y: 0px;
+        position: relative;
+        z-index: 8;
+        border-color: #ffffff !important;
+        outline: 3px solid #2159d2;
+        outline-offset: 3px;
+        box-shadow: 0 0 0 7px rgba(33, 89, 210, 0.18), 0 10px 24px rgba(13, 31, 67, 0.22);
+        transform: translate(var(--tv-magnet-x), var(--tv-magnet-y)) scale(1.08);
+        transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out;
       }
       .tv-browser .filter-row {
         align-items: flex-end;
@@ -3990,6 +4113,41 @@
       }
       .tv-browser .tb-right {
         flex: 0 0 auto;
+      }
+      @media screen and (max-width: 1366px) {
+        .tv-browser .content {
+          padding-left: 60px;
+          padding-right: 60px;
+        }
+        .tv-browser .filter-head-left,
+        .tv-browser .filter-head-actions,
+        .tv-browser .fbar.open .filter-head-actions {
+          flex-basis: 100%;
+        }
+        .tv-browser .filter-head-actions,
+        .tv-browser .fbar.open .filter-head-actions {
+          border-top: 1px solid var(--b1);
+          justify-content: flex-start;
+          margin-top: 8px;
+          padding-top: 8px;
+        }
+        .tv-browser .filter-head-actions .quick-filters {
+          justify-content: flex-start;
+        }
+      }
+      /* A Samsung aplica o zoom do navegador antes das media queries.
+         Em 125%, o painel Full HD passa a ter cerca de 1536 CSS px. */
+      @media screen and (max-width: 1600px) {
+        .tv-browser .kpi-6,
+        .tv-browser .kpi-5 {
+          --metric-columns: 3;
+        }
+        .tv-browser .exec-alerts {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .tv-browser .dashboard-section--alerts .exec-alert {
+          min-height: 64px;
+        }
       }
       .tv-diagnostic-nav {
         display: none;
@@ -4116,6 +4274,9 @@
         animation: none;
       }
       @media (prefers-reduced-motion: reduce) {
+        .tv-browser .tv-cursor-magnet {
+          transform: none;
+        }
         .tv-browser .sidebar {
           transition-duration: 0ms;
         }
@@ -4286,17 +4447,517 @@
         .card-detail-filter-label { flex: 1 1 140px; }
         .card-detail-filter button { flex: 1 1 120px; }
       }
+
+      /* TV broadcast layout: uma aba completa por viewport, sem scroll. */
+      html.tv-browser,
+      .tv-browser body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .tv-browser .shell {
+        height: calc(var(--tv-viewport-height, 100vh) - var(--topbar-h));
+        min-height: 0;
+        overflow: hidden;
+      }
+      .tv-browser .content {
+        --tv-filter-bar-height: 60px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+        padding: 12px 64px 14px;
+      }
+      .tv-browser body.filter-sheet-open .content::before {
+        content: "";
+        display: block;
+        flex: 0 0 var(--tv-filter-bar-height);
+        height: var(--tv-filter-bar-height);
+      }
+      .tv-browser .content > * + *,
+      .tv-browser .page.on > * + *,
+      .tv-browser .dashboard-section > * + * {
+        margin-top: 0;
+      }
+      .tv-browser #alertArea {
+        bottom: 18px;
+        left: auto;
+        max-height: 280px;
+        overflow: hidden;
+        position: fixed;
+        right: 72px;
+        top: auto;
+        width: 560px;
+        z-index: 5400;
+      }
+      .tv-browser #alertArea:empty,
+      .tv-browser .toast-area:empty {
+        display: none;
+      }
+      .tv-browser body.filter-sheet-open::before {
+        background: rgba(0, 26, 61, 0.28);
+        bottom: 0;
+        content: "";
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: var(--topbar-h);
+        z-index: 4900;
+      }
+      .tv-browser .fbar {
+        flex: 0 0 60px;
+        height: 60px;
+        min-height: 60px;
+        padding: 8px 12px;
+      }
+      .tv-browser .filter-head {
+        flex-wrap: nowrap;
+        height: 44px;
+        margin: 0;
+        min-height: 44px;
+      }
+      .tv-browser .filter-head-left {
+        flex: 1 1 390px;
+        margin: 0;
+        min-width: 300px;
+      }
+      .tv-browser .filter-head-actions,
+      .tv-browser .fbar.open .filter-head-actions {
+        flex: 0 1 auto;
+        flex-wrap: nowrap;
+        margin: 0 0 0 12px;
+      }
+      .tv-browser .filter-head-actions .quick-filters {
+        flex-wrap: nowrap;
+        margin: 0;
+      }
+      .tv-browser .quick-filters > * {
+        margin: 0 3px;
+      }
+      .tv-browser .filter-head-actions .filter-clear {
+        margin-left: 8px;
+      }
+      .tv-browser .fbar.open {
+        bottom: auto;
+        height: auto;
+        left: 64px;
+        max-height: calc(var(--tv-viewport-height, 100vh) - var(--topbar-h) - 24px);
+        overflow: visible;
+        position: fixed;
+        right: 64px;
+        top: calc(var(--topbar-h) + 12px);
+        width: auto;
+        z-index: 5000;
+      }
+      .tv-browser .fbar.open .filter-body {
+        max-height: calc(var(--tv-viewport-height, 100vh) - var(--topbar-h) - 110px);
+        overflow: visible;
+      }
+      .tv-browser .page.on {
+        display: grid;
+        flex: 0 0 var(--tv-page-height, 0px);
+        gap: 10px;
+        height: var(--tv-page-height, 0px);
+        margin-top: 10px;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .tv-browser .page.on > *,
+      .tv-browser .page.on .dashboard-section,
+      .tv-browser .page.on .cgrid,
+      .tv-browser .page.on .cc,
+      .tv-browser .page.on .tc,
+      .tv-browser .page.on .tc-wrap,
+      .tv-browser .page.on .metric-table-wrap,
+      .tv-browser .page.on .chart-fill,
+      .tv-browser .page.on .chart-box {
+        box-sizing: border-box;
+        min-height: 0;
+        min-width: 0;
+      }
+      .tv-browser .page.on .cc,
+      .tv-browser .page.on .tc {
+        height: 100%;
+        overflow: hidden;
+      }
+      .tv-browser .page.on .tc {
+        display: flex;
+        flex-direction: column;
+      }
+      .tv-browser .page.on .cc {
+        display: flex;
+        flex-direction: column;
+        padding: 12px 14px;
+      }
+      .tv-browser .page.on .cc-hdr,
+      .tv-browser .page.on .cc-hdr2 {
+        flex: 0 0 auto;
+        margin-bottom: 8px;
+        padding-bottom: 7px;
+      }
+      .tv-browser .page.on .chart-fill,
+      .tv-browser .page.on .chart-box,
+      .tv-browser .page.on .metric-table-wrap,
+      .tv-browser .page.on .tc-wrap {
+        flex: 1 1 auto;
+        height: auto;
+        overflow: hidden;
+      }
+      .tv-browser .page.on canvas {
+        max-height: 100% !important;
+        max-width: 100% !important;
+      }
+      .tv-browser .page.on .tc-bar {
+        min-height: 46px;
+        padding: 8px 12px;
+      }
+      .tv-browser .page.on .tc-search {
+        display: none;
+      }
+      .tv-browser .page.on table {
+        table-layout: fixed;
+        width: 100%;
+      }
+      .tv-browser .page.on thead th {
+        height: 34px;
+        padding: 7px 9px;
+      }
+      .tv-browser .page.on tbody td {
+        height: 30px;
+        line-height: 1.1;
+        overflow: hidden;
+        padding: 5px 8px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .tv-browser .page.on .tc tbody td {
+        height: 28px;
+        padding-bottom: 4px;
+        padding-top: 4px;
+      }
+      .tv-browser .page.on .prg-pct,
+      .tv-browser .page.on .prg,
+      .tv-browser .page.on .prg-bg,
+      .tv-browser .page.on .metric-split,
+      .tv-browser .page.on .metric-primary,
+      .tv-browser .page.on .metric-secondary,
+      .tv-browser .page.on .bd {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .tv-browser .page.on .prg-pct {
+        flex: 0 1 auto;
+      }
+      .tv-browser .page.on .prg,
+      .tv-browser .page.on .prg-bg {
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .tv-browser .passenger-ranking-table {
+        min-width: 0 !important;
+        table-layout: fixed !important;
+        width: 100% !important;
+      }
+      .tv-browser .passenger-ranking-table colgroup,
+      .tv-browser .passenger-ranking-table th:nth-child(n + 6):nth-child(-n + 10),
+      .tv-browser .passenger-ranking-table td:nth-child(n + 6):nth-child(-n + 10) {
+        display: none;
+      }
+      .tv-browser [data-tv-limit="3"] tbody tr:nth-child(n + 4),
+      .tv-browser [data-tv-limit="5"] tbody tr:nth-child(n + 6) {
+        display: none;
+      }
+      .tv-browser .tv-limit-note {
+        align-self: center;
+        border: 1px solid var(--b1);
+        border-radius: 999px;
+        color: var(--t2);
+        flex: 0 0 auto;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        margin-left: auto;
+        padding: 4px 7px;
+      }
+      .tv-browser .kpi-row {
+        height: 100%;
+      }
+      .tv-browser .kpi {
+        height: 100%;
+        min-height: 0;
+        padding: 12px 16px;
+      }
+      .tv-browser .kpi.executive {
+        height: 100%;
+        min-height: 0;
+        padding: 11px 14px;
+      }
+      .tv-browser .kpi-lbl {
+        font-size: 13px;
+        line-height: 1.15;
+      }
+      .tv-browser .kpi-val,
+      .tv-browser .kpi-val.sm,
+      .tv-browser .cc-hdr2 .cc2-bigval {
+        font-size: 36px;
+        line-height: 1.02;
+      }
+      .tv-browser .kpi-spark {
+        display: none;
+      }
+      .tv-browser .kpi-main,
+      .tv-browser .kpi.executive .kpi-main {
+        min-height: 0;
+      }
+      .tv-browser .cc-title,
+      .tv-browser .tc-title {
+        font-size: 19px;
+      }
+      .tv-browser .cc-sub,
+      .tv-browser .tc-meta,
+      .tv-browser td {
+        font-size: 13px;
+      }
+
+      /* Resumo: 6 KPIs, 8 excecoes e 2 analises prioritarias. */
+      .tv-browser #page-resumo {
+        grid-template-rows: 104px 118px minmax(0, 1fr);
+      }
+      .tv-browser #page-resumo .dashboard-section--metrics .kpi-6 {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+      .tv-browser #page-resumo .kpi-right {
+        display: none;
+      }
+      .tv-browser #page-resumo .kpi-receipt-detail {
+        font-size: 12px;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .tv-browser #page-resumo .dashboard-section--alerts {
+        display: grid;
+        gap: 6px 10px;
+        grid-template-columns: 96px minmax(0, 1fr);
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+      }
+      .tv-browser #page-resumo .dashboard-section--alerts .section-label {
+        align-self: center;
+        font-size: 11px;
+      }
+      .tv-browser #page-resumo .exec-alerts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        height: 100%;
+      }
+      .tv-browser #page-resumo .dashboard-section--alerts .exec-alert {
+        height: 100%;
+        min-height: 0;
+        padding: 7px 10px;
+      }
+      .tv-browser #page-resumo .dashboard-section--alerts .exec-alert strong {
+        font-size: 20px;
+      }
+      .tv-browser #page-resumo .dashboard-section--analysis > :not(:first-child) {
+        display: none;
+      }
+      .tv-browser #page-resumo .dashboard-section--analysis > .cgrid {
+        height: 100%;
+      }
+
+      /* Abas com KPIs: analise ampla + tabela Top 5 na mesma tela. */
+      .tv-browser #page-faturamento,
+      .tv-browser #page-motoristas,
+      .tv-browser #page-multas,
+      .tv-browser #page-trocas,
+      .tv-browser #page-marketing {
+        grid-template-columns: minmax(0, 1.65fr) minmax(420px, 1fr);
+        grid-template-rows: 104px minmax(0, 1fr);
+      }
+      .tv-browser #page-faturamento > .kpi-row,
+      .tv-browser #page-motoristas > .kpi-row,
+      .tv-browser #page-multas > .kpi-row,
+      .tv-browser #page-trocas > .kpi-row,
+      .tv-browser #page-marketing > .kpi-row {
+        grid-column: 1 / -1;
+      }
+      .tv-browser #page-faturamento > .cgrid,
+      .tv-browser #page-motoristas > .cgrid,
+      .tv-browser #page-multas > .cgrid,
+      .tv-browser #page-trocas > .cgrid,
+      .tv-browser #page-marketing > .cgrid {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .tv-browser #page-faturamento > .tc,
+      .tv-browser #page-motoristas > .tc,
+      .tv-browser #page-multas > .tc,
+      .tv-browser #page-trocas > .tc,
+      .tv-browser #page-marketing > .tc {
+        grid-column: 2;
+        grid-row: 2;
+      }
+      .tv-browser #page-multas > .cc {
+        display: none;
+      }
+
+      /* Servicos e pagamentos: faixa de resumo + analises e Top 5. */
+      .tv-browser #page-servicos,
+      .tv-browser #page-pagantes {
+        grid-template-rows: 104px minmax(0, 1fr);
+      }
+      .tv-browser #page-servicos .dashboard-section--analysis,
+      .tv-browser #page-pagantes .dashboard-section--analysis {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: minmax(0, 1.65fr) minmax(420px, 1fr);
+      }
+      .tv-browser #page-servicos .dashboard-section--analysis > .cgrid,
+      .tv-browser #page-pagantes .dashboard-section--analysis > .cgrid {
+        grid-column: 1;
+      }
+      .tv-browser #page-servicos .dashboard-section--analysis > .tc,
+      .tv-browser #page-pagantes .dashboard-section--analysis > .tc {
+        grid-column: 2;
+      }
+      .tv-browser #page-servicos .kpi-row.kpi-2 .kpi.executive {
+        height: 100%;
+        min-height: 0;
+      }
+
+      /* Frota: uso mensal + distribuicoes e Top 5 veiculos. */
+      .tv-browser #page-frota {
+        grid-template-columns: minmax(420px, .8fr) minmax(0, 2fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+      .tv-browser #page-frota .dashboard-section--metrics {
+        grid-column: 1;
+      }
+      .tv-browser #page-frota .dashboard-section--analysis {
+        display: grid;
+        gap: 10px;
+        grid-column: 2;
+        grid-template-rows: minmax(0, 1fr) 250px;
+      }
+
+      /* Manutencao: categorias/metas no topo, analise e Top 5 abaixo. */
+      .tv-browser #page-manutencoes {
+        grid-template-columns: minmax(0, 1.35fr) minmax(420px, 1fr);
+        grid-template-rows: 250px minmax(0, 1fr);
+      }
+      .tv-browser #page-manutencoes > .dashboard-section--metrics {
+        display: grid;
+        gap: 10px;
+        grid-column: 1 / -1;
+        grid-template-columns: minmax(0, 1.55fr) minmax(420px, 1fr);
+      }
+      .tv-browser #page-manutencoes > .dashboard-section--metrics .kpi-6 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .tv-browser #page-manutencoes > .kpi-row.kpi-4 {
+        display: none;
+      }
+      .tv-browser #page-manutencoes > .cgrid {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .tv-browser #page-manutencoes > .tc {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .tv-browser #page-tvdiagnostico {
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+      .tv-browser #page-tvdiagnostico .tv-diagnostic-grid {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      @media screen and (max-width: 1600px) {
+        .tv-browser .content {
+          --tv-filter-bar-height: 54px;
+          padding-bottom: 8px;
+          padding-top: 8px;
+        }
+        .tv-browser .fbar {
+          flex-basis: 54px;
+          height: 54px;
+          min-height: 54px;
+          padding: 5px 10px;
+        }
+        .tv-browser .filter-head-left {
+          flex-basis: 330px;
+          min-width: 250px;
+        }
+        .tv-browser .filter-summary {
+          min-width: 140px;
+        }
+        .tv-browser .btn-qf,
+        .tv-browser .filter-clear {
+          font-size: 11px;
+          min-height: 36px;
+          padding-left: 9px;
+          padding-right: 9px;
+        }
+        .tv-browser .page.on {
+          gap: 8px;
+          margin-top: 8px;
+        }
+        .tv-browser .kpi-val,
+        .tv-browser .kpi-val.sm,
+        .tv-browser .cc-hdr2 .cc2-bigval {
+          font-size: 32px;
+        }
+        .tv-browser #page-resumo {
+          grid-template-rows: 88px 96px minmax(0, 1fr);
+        }
+        .tv-browser #page-faturamento,
+        .tv-browser #page-motoristas,
+        .tv-browser #page-multas,
+        .tv-browser #page-trocas,
+        .tv-browser #page-marketing,
+        .tv-browser #page-servicos,
+        .tv-browser #page-pagantes {
+          grid-template-rows: 88px minmax(0, 1fr);
+        }
+        .tv-browser #page-frota {
+          grid-template-columns: minmax(330px, .8fr) minmax(0, 2fr);
+        }
+        .tv-browser #page-frota .dashboard-section--analysis {
+          grid-template-rows: minmax(0, 1fr) 190px;
+        }
+        .tv-browser #page-manutencoes {
+          grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr);
+          grid-template-rows: 180px minmax(0, 1fr);
+        }
+        .tv-browser #page-manutencoes > .dashboard-section--metrics {
+          grid-template-columns: minmax(0, 1.55fr) minmax(360px, 1fr);
+        }
+        .tv-browser [data-tv-limit="5"] tbody tr:nth-child(n + 4) {
+          display: none;
+        }
+        .tv-browser .page.on thead th,
+        .tv-browser .page.on tbody td {
+          height: 26px;
+          padding: 3px 7px;
+        }
+      }
     </style>
   </head>
   <body>
     <section id="tvPinGate" class="tv-pin-gate" aria-labelledby="tvPinTitle" aria-modal="true" role="dialog">
       <div class="tv-pin-backdrop" aria-hidden="true"></div>
       <div class="tv-pin-backdrop tv-pin-backdrop-secondary" aria-hidden="true"></div>
+      <div class="tv-pin-corner-brand">
+        <img id="tvPinLogo" data-webresource="cr40f_LogoBetinhosB" src="/WebResources/cr40f_LogoBetinhosB" alt="Betinhos" onerror="this.hidden = true">
+      </div>
+      <small id="tvPinVersion" class="tv-pin-version" aria-label="Versão do app na tela de senha">v1.0.0</small>
       <div class="tv-pin-card" id="tvPinCard">
-        <div class="tv-pin-brand">
-          <span class="tv-pin-brand-mark" aria-hidden="true">B</span>
-          <span class="tv-pin-brand-copy">Betinhos<small>Dashboard do Gestor</small></span>
-        </div>
         <h1 class="tv-pin-title" id="tvPinTitle">Acesso protegido</h1>
         <p class="tv-pin-subtitle">Digite o PIN de 4 d&iacute;gitos usando o controle remoto ou o teclado abaixo.</p>
         <div class="tv-pin-dots" id="tvPinDots" aria-label="Nenhum digito informado">
@@ -4460,6 +5121,7 @@
         </div>
         <small id="sidebarLastUpdated" class="sb-last-updated">Atualizando dados...</small>
       </div>
+      <small id="tvAppVersion" class="tv-version" aria-label="Versão do app na TV">v1.0.0</small>
 
       <div class="content">
         <div id="alertArea"></div>
@@ -5134,7 +5796,7 @@
               <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--yellow)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Cart&atilde;o</div><div class="kpi-val sm" id="pCartao">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Tempo de pagamento</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Atrasados +5 dias</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
             </div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de pagamentos">
@@ -5151,23 +5813,17 @@
               </div>
               <div id="tblStatusPag" class="metric-table-wrap"></div>
             </div>
-          </div>
-          <div class="tc">
-            <div class="tc-bar">
-              <div class="tc-title">Registros de pagamento</div>
-              <div class="tc-meta" id="metaPag"></div>
+            <div class="cc">
+              <div class="cc-hdr">
+                <div class="cc-title">Concentra&ccedil;&atilde;o por cliente</div>
+              </div>
+              <div id="tblPagCliente" class="metric-table-wrap"></div>
             </div>
-            <div class="tc-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Status</th>
-                    <th>Forma</th>
-                    <th>Valor</th>
-                  </tr>
-                </thead>
-                <tbody id="tbPag"></tbody>
-              </table>
+            <div class="cc">
+              <div class="cc-hdr">
+                <div class="cc-title">Atrasados h&aacute; mais de 5 dias</div>
+              </div>
+              <div id="tblPagAtrasados" class="metric-table-wrap"></div>
             </div>
           </div>
           </section>
@@ -5953,6 +6609,7 @@
           mock.pagantes.push({
             cr40f_pagantesid: `mock-pag-${i}`,
             _cr40f_financeiro_value: `mock-op-${i}`,
+            createdon: dt(rand(1, 12)),
             cr40f_status: st,
             "cr40f_status@OData.Community.Display.V1.FormattedValue": st,
             cr40f_valor: randF(150, 3500),
@@ -7282,12 +7939,15 @@ function setBrandLogo() {
 
 function setAppVersion() {
   const label = window.__DASHBOARD_BUILD_INFO?.label || "v—";
-  const version = document.getElementById("appVersion");
-  if (!version) return;
   const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(window.location.hostname || "");
-  version.textContent = isLocalHost ? `${label} · LOCAL` : label;
-  version.hidden = false;
-  version.style.display = "block";
+  const text = isLocalHost ? `${label} · LOCAL` : label;
+  const versions = document.querySelectorAll("#appVersion, #tvAppVersion, #tvPinVersion");
+  for (let index = 0; index < versions.length; index += 1) {
+    const version = versions[index];
+    version.textContent = text;
+    version.hidden = false;
+    version.style.display = "block";
+  }
 }
 
       // ════════════════════════════════════════════
@@ -7473,7 +8133,7 @@ function setAppVersion() {
       }
       async function loadPagantes() {
         DB.pagantes = await fetchAll(
-          `${API()}/${T.pagantes}?$select=cr40f_pagantesid,${F.pag.lookupOP},${F.pag.status},${F.pag.valor},${F.pag.forma}`,
+          `${API()}/${T.pagantes}?$select=cr40f_pagantesid,createdon,${F.pag.lookupOP},${F.pag.status},${F.pag.valor},${F.pag.forma}`,
         );
       }
       async function loadVeiculos() {
@@ -7699,6 +8359,7 @@ function setAppVersion() {
       function toggleMS(id) {
         const dd = document.getElementById(`${id}-dd`);
         const btn = document.getElementById(`${id}-btn`);
+        const panel = document.getElementById("filterPanel");
         const isOpen = dd.classList.contains("open");
         document
           .querySelectorAll(".ms-dd")
@@ -7706,9 +8367,11 @@ function setAppVersion() {
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+        panel?.classList.remove("ms-open");
         if (!isOpen) {
           dd.classList.add("open");
           btn.classList.add("open");
+          panel?.classList.add("ms-open");
           const inp = dd.querySelector(".ms-search");
           if (inp) setTimeout(() => inp.focus(), 50);
         }
@@ -7760,6 +8423,7 @@ function setAppVersion() {
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+        document.getElementById("filterPanel")?.classList.remove("ms-open");
       }
       let filterActionsAnimation = null;
       let filterActionsFrame = 0;
@@ -7822,6 +8486,7 @@ function setAppVersion() {
         document.body.classList.toggle("filter-sheet-open", open);
         if (!open) closeMultiselects();
         animateFilterActions(actions, wasOpen, first);
+        applyTvViewportLayout();
       }
       function updateFilterSummary() {
         const summary = document.getElementById("filterSummary");
@@ -8396,7 +9061,7 @@ function setAppVersion() {
               <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--yellow)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Cartao</div><div class="kpi-val sm" id="pCartao">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Tempo pagamento</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Atrasados +5 dias</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
             </div>
           `);
           const oldTable = pag.querySelector(".tc");
@@ -10006,6 +10671,7 @@ function setAppVersion() {
         renderMarketing(dvDisabled);
         addKpiGoalDirections();
         enhanceSortableTables();
+        applyTvViewportLayout();
       }
 
       // Funções de renderização das outras abas (implementação funcional)
@@ -10111,6 +10777,12 @@ function setAppVersion() {
         const cartaoRecebido = pagReceb
           .filter(isCardPayment)
           .reduce((s, r) => s + paymentValue(r), 0);
+        const limiteAtraso = 5 * 24 * 60 * 60 * 1000;
+        const agora = Date.now();
+        const atrasados = pags.filter((r) => {
+          const criadoEm = new Date(r.createdon || "").getTime();
+          return !isReceivedPayment(r) && Number.isFinite(criadoEm) && agora - criadoEm > limiteAtraso;
+        });
         set(
           "pTot",
           dvDisabled
@@ -10120,7 +10792,7 @@ function setAppVersion() {
         set("pPend", dvDisabled ? "—" : brlS(resumo.aReceber || 0));
         set("pQtd", dvDisabled ? "—" : pags.length);
         set("pCartao", dvDisabled ? "—" : brlS(cartaoRecebido));
-        set("pPrazo", dvDisabled ? "—" : "s/dado");
+        set("pPrazo", dvDisabled ? "—" : atrasados.length);
         html("paymentInsight", dvDisabled ? "" : "Para calcular nome e tempo de pagamento por cliente, falta incluir no fetch uma data de pagamento/baixa e, se existir, data de vencimento. Sem esse campo, qualquer ranking de atrasados seria falso.");
         const byForma = grp(pags, (r) => String(pgFv(r, F.pag.forma) || "—"));
         const byPagSt = grp(pags, (r) => String(pgFv(r, F.pag.status) || "—"));
@@ -10142,16 +10814,38 @@ function setAppVersion() {
           pags.length,
           { label: "Status", countLabel: "Registros", valueLabel: "Valor", badgeLabels: true, moneyValue: true, participationByValue: true },
         );
-        set("metaPag", dvDisabled ? "—" : `${pags.length} registros`);
-        const tbPag = document.getElementById("tbPag");
-        if (tbPag) tbPag.innerHTML =
-          pags
-            .slice(0, 300)
-            .map(
-              (r) =>
-                `<tr><td>${badge(String(pgFv(r, F.pag.status) || "—"))}</td><td>${String(pgFv(r, F.pag.forma) || "—")}</td><td class="r em">${brl(parseFloat(r[F.pag.valor]) || 0)}</td></tr>`,
-            )
-            .join("") || emptyRow(3);
+        const clientePorOp = new Map(
+          (DB.reservas || [])
+            .filter((r) => r._opId)
+            .map((r) => [r._opId, r._cli || "Sem cliente"]),
+        );
+        const clienteDoPagamento = (r) => clientePorOp.get(paymentOp(r)) || "Sem cliente";
+        const porCliente = grp(pags, clienteDoPagamento);
+        const clientes = Object.keys(porCliente)
+          .filter((k) => k !== "__null__")
+          .sort((a, b) =>
+            porCliente[b].reduce((s, r) => s + paymentValue(r), 0) -
+            porCliente[a].reduce((s, r) => s + paymentValue(r), 0),
+          );
+        renderDistributionTable(
+          "tblPagCliente",
+          clientes.map((k) => ({ label: k, qtd: porCliente[k].length, value: porCliente[k].reduce((s, r) => s + paymentValue(r), 0) })),
+          pags.length,
+          { label: "Cliente", countLabel: "Registros", valueLabel: "Valor", moneyValue: true, participationByValue: true },
+        );
+        const atrasadosPorCliente = grp(atrasados, clienteDoPagamento);
+        const clientesAtrasados = Object.keys(atrasadosPorCliente)
+          .filter((k) => k !== "__null__")
+          .sort((a, b) =>
+            atrasadosPorCliente[b].reduce((s, r) => s + paymentValue(r), 0) -
+            atrasadosPorCliente[a].reduce((s, r) => s + paymentValue(r), 0),
+          );
+        renderDistributionTable(
+          "tblPagAtrasados",
+          clientesAtrasados.map((k) => ({ label: k, qtd: atrasadosPorCliente[k].length, value: atrasadosPorCliente[k].reduce((s, r) => s + paymentValue(r), 0) })),
+          atrasados.length,
+          { label: "Cliente", countLabel: "Atrasados", valueLabel: "Valor", moneyValue: true, participationByValue: true },
+        );
       }
       function renderFrota(dvDisabled) {
         const vei = dvDisabled ? [] : DB.veiculos;
@@ -11197,7 +11891,70 @@ function setAppVersion() {
         if (icon && sourceIcon) icon.innerHTML = sourceIcon.innerHTML;
       }
 
+      let tvViewportLayoutFrame = 0;
+      let tvViewportResizeTimer = 0;
+      function markTvTableLimits() {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        const detailedLimit = window.innerWidth <= 1600 ? "3" : "5";
+        document.querySelectorAll(".metric-table-wrap").forEach((wrap) => {
+          wrap.dataset.tvLimit = "3";
+        });
+        document.querySelectorAll(".tc-wrap").forEach((wrap) => {
+          wrap.dataset.tvLimit = detailedLimit;
+        });
+        ["tblFrotaUso", "tblFrotaKpis"].forEach((id) => {
+          const tableBody = document.getElementById(id);
+          const wrap = tableBody?.closest(".tc-wrap, .metric-table-wrap");
+          if (wrap) wrap.dataset.tvLimit = "3";
+        });
+        document.querySelectorAll("[data-tv-limit]").forEach((wrap) => {
+          const card = wrap.closest(".cc, .tc");
+          const header = card?.querySelector(".cc-hdr, .cc-hdr2, .tc-bar");
+          if (!header) return;
+          let note = header.querySelector(".tv-limit-note");
+          if (!note) {
+            note = document.createElement("span");
+            note.className = "tv-limit-note";
+            header.appendChild(note);
+          }
+          note.textContent = `TOP ${wrap.dataset.tvLimit} NA TV`;
+        });
+      }
+      function resizeActiveTvCharts() {
+        if (!window.__DASHBOARD_TV_MODE || typeof charts !== "object") return;
+        Object.keys(charts).forEach((key) => {
+          const chart = charts[key];
+          if (!chart?.canvas?.closest(".page.on")) return;
+          if (typeof chart.resize === "function") chart.resize();
+        });
+      }
+      function applyTvViewportLayout() {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        window.cancelAnimationFrame(tvViewportLayoutFrame);
+        tvViewportLayoutFrame = window.requestAnimationFrame(() => {
+          const root = document.documentElement;
+          const activePage = document.querySelector(".page.on");
+          root.style.setProperty("--tv-viewport-height", `${window.innerHeight}px`);
+          markTvTableLimits();
+          if (!activePage) return;
+          const pageTop = Math.max(0, Math.ceil(activePage.getBoundingClientRect().top));
+          const pageHeight = Math.max(160, Math.floor(window.innerHeight - pageTop - 14));
+          root.style.setProperty("--tv-page-height", `${pageHeight}px`);
+          window.requestAnimationFrame(resizeActiveTvCharts);
+        });
+      }
+      function installTvViewportLayout() {
+        if (!window.__DASHBOARD_TV_MODE || window.__DASHBOARD_TV_VIEWPORT_INSTALLED) return;
+        window.__DASHBOARD_TV_VIEWPORT_INSTALLED = true;
+        window.addEventListener("resize", () => {
+          window.clearTimeout(tvViewportResizeTimer);
+          tvViewportResizeTimer = window.setTimeout(applyTvViewportLayout, 100);
+        });
+        applyTvViewportLayout();
+      }
+
       function nav(id, el, options = {}) {
+        if (window.__DASHBOARD_TV_MODE) clearTvMagneticTarget();
         document
           .querySelectorAll(".sb-item, .mobile-nav-item, .mobile-more-item")
           .forEach((n) => n.classList.remove("act"));
@@ -11230,11 +11987,13 @@ function setAppVersion() {
           window.setTimeout(() => nextPage.classList.remove("tv-auto-page-enter"), 320);
         }
         document.body.classList.toggle("tv-diagnostic-active", id === "tvdiagnostico");
+        document.documentElement.classList.toggle("tv-cursor-visible", id === "tvdiagnostico");
         const content = document.querySelector(".content");
         if (content) {
           if (typeof content.scrollTo === "function") content.scrollTo({ top: 0, behavior: "auto" });
           else content.scrollTop = 0;
         }
+        applyTvViewportLayout();
         toggleMobileMore(false);
         if (options.fromUrl !== true) updateTabUrl(id);
         void ensureTabData(id).catch((error) => {
@@ -11270,6 +12029,11 @@ function setAppVersion() {
       const TV_POINTER_MAX_GESTURE_MS = 650;
       const TV_POINTER_MAX_GESTURE_DISTANCE = 160;
       const TV_POINTER_DUPLICATE_EVENT_MS = 24;
+      const TV_POINTER_MAGNET_RADIUS = 160;
+      const TV_POINTER_MAGNET_RELEASE_RADIUS = 220;
+      const TV_POINTER_MAGNET_SWITCH_ADVANTAGE = 28;
+      const TV_POINTER_MAGNET_PULL_PX = 10;
+      const TV_MAGNETIC_TARGET_SELECTOR = "button:not([disabled]), a[href], .ms-btn, .sb-item, [role='button'], [tabindex]:not([tabindex='-1']):not(input):not(select):not(textarea)";
       const TV_SIDEBAR_HOT_EDGE_PX = 4;
       const TV_SIDEBAR_WIDTH_PX = 250;
       let tvPointerLastX = null;
@@ -11287,6 +12051,93 @@ function setAppVersion() {
       let tvPointerLastEventY = null;
       let tvPointerLastEventAt = 0;
       let tvSidebarHideTimer = 0;
+      let tvMagneticTarget = null;
+      let tvMagneticFocusOwned = false;
+      function clearTvMagneticTarget() {
+        if (!tvMagneticTarget) return;
+        const previousTarget = tvMagneticTarget;
+        tvMagneticTarget.classList.remove("tv-cursor-magnet");
+        tvMagneticTarget.style.removeProperty("--tv-magnet-x");
+        tvMagneticTarget.style.removeProperty("--tv-magnet-y");
+        tvMagneticTarget = null;
+        if (tvMagneticFocusOwned && document.activeElement === previousTarget) previousTarget.blur();
+        tvMagneticFocusOwned = false;
+      }
+      function isTvMagneticTargetVisible(target) {
+        if (!target || !target.isConnected || target.disabled || target.getAttribute("aria-hidden") === "true") return false;
+        const page = target.closest(".page");
+        if (page && !page.classList.contains("on")) return false;
+        const style = window.getComputedStyle(target);
+        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+        const rect = target.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && rect.right >= 0 && rect.bottom >= 0
+          && rect.left <= window.innerWidth && rect.top <= window.innerHeight;
+      }
+      function tvPointerDistanceToRect(x, y, rect) {
+        const dx = Math.max(rect.left - x, 0, x - rect.right);
+        const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+      function updateTvMagneticTarget(x, y) {
+        if (!window.__DASHBOARD_TV_MODE || document.body.classList.contains("tv-diagnostic-active")) {
+          clearTvMagneticTarget();
+          return;
+        }
+        const targets = document.querySelectorAll(TV_MAGNETIC_TARGET_SELECTOR);
+        let nearest = null;
+        let nearestDistance = TV_POINTER_MAGNET_RADIUS + 1;
+        for (let index = 0; index < targets.length; index += 1) {
+          const target = targets[index];
+          if (!isTvMagneticTargetVisible(target)) continue;
+          const rect = target.getBoundingClientRect();
+          const distance = tvPointerDistanceToRect(x, y, rect);
+          if (distance < nearestDistance) {
+            nearest = target;
+            nearestDistance = distance;
+          }
+        }
+        if (isTvMagneticTargetVisible(tvMagneticTarget)) {
+          const currentDistance = tvPointerDistanceToRect(x, y, tvMagneticTarget.getBoundingClientRect());
+          const shouldKeepCurrent = currentDistance <= TV_POINTER_MAGNET_RELEASE_RADIUS
+            && (!nearest || currentDistance <= nearestDistance + TV_POINTER_MAGNET_SWITCH_ADVANTAGE);
+          if (shouldKeepCurrent) {
+            nearest = tvMagneticTarget;
+            nearestDistance = currentDistance;
+          }
+        }
+        const allowedRadius = nearest === tvMagneticTarget ? TV_POINTER_MAGNET_RELEASE_RADIUS : TV_POINTER_MAGNET_RADIUS;
+        if (!nearest || nearestDistance > allowedRadius) {
+          clearTvMagneticTarget();
+          return;
+        }
+        if (tvMagneticTarget !== nearest) {
+          clearTvMagneticTarget();
+          tvMagneticTarget = nearest;
+          tvMagneticTarget.classList.add("tv-cursor-magnet");
+          const scrollX = window.pageXOffset;
+          const scrollY = window.pageYOffset;
+          tvMagneticTarget.focus();
+          tvMagneticFocusOwned = document.activeElement === tvMagneticTarget;
+          if (window.pageXOffset !== scrollX || window.pageYOffset !== scrollY) window.scrollTo(scrollX, scrollY);
+        }
+        const rect = nearest.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const pullX = Math.max(-TV_POINTER_MAGNET_PULL_PX, Math.min(TV_POINTER_MAGNET_PULL_PX, (x - centerX) * 0.08));
+        const pullY = Math.max(-TV_POINTER_MAGNET_PULL_PX, Math.min(TV_POINTER_MAGNET_PULL_PX, (y - centerY) * 0.08));
+        nearest.style.setProperty("--tv-magnet-x", `${pullX}px`);
+        nearest.style.setProperty("--tv-magnet-y", `${pullY}px`);
+      }
+      function handleTvMagneticClick(event) {
+        if (!window.__DASHBOARD_TV_MODE || !tvMagneticTarget || event.defaultPrevented) return;
+        const directTarget = event.target.closest?.(TV_MAGNETIC_TARGET_SELECTOR);
+        if (directTarget) return;
+        const target = tvMagneticTarget;
+        event.preventDefault();
+        event.stopPropagation();
+        clearTvMagneticTarget();
+        target.click();
+      }
       function navigateTv(direction) {
         if (!window.__DASHBOARD_TV_MODE) return;
         const active = document.querySelector(".sidebar .sb-item.act");
@@ -11374,14 +12225,19 @@ function setAppVersion() {
       }
       function handleTvPointerNavigation(event) {
         if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
-        if (handleTvSidebarReveal(event)) return;
+        const x = Number(event.clientX || 0);
+        const y = Number(event.clientY || 0);
+        const sidebarHandled = handleTvSidebarReveal(event);
+        updateTvMagneticTarget(x, y);
+        if (sidebarHandled) {
+          resetTvPointerGesture();
+          return;
+        }
         if (isTvNavigationBlocked(event)) {
           resetTvPointerGesture();
           return;
         }
         const now = Date.now();
-        const x = Number(event.clientX || 0);
-        const y = Number(event.clientY || 0);
         const isDuplicate = event.type !== tvPointerLastEventType
           && x === tvPointerLastEventX
           && y === tvPointerLastEventY
@@ -11417,6 +12273,7 @@ function setAppVersion() {
       }
       function installTvNavigation() {
         if (!window.__DASHBOARD_TV_MODE) return;
+        document.documentElement.classList.add("tv-cursor-hidden");
         document.addEventListener("keydown", (event) => {
           if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
           const key = event.key || ({ 37: "ArrowLeft", 39: "ArrowRight" })[event.keyCode];
@@ -11455,6 +12312,8 @@ function setAppVersion() {
           }
         }, true);
         document.addEventListener("mousemove", handleTvPointerNavigation, true);
+        document.addEventListener("click", handleTvMagneticClick, true);
+        document.documentElement.addEventListener("mouseleave", clearTvMagneticTarget);
         if (window.PointerEvent) {
           document.addEventListener("pointermove", handleTvPointerNavigation, true);
         }
@@ -11589,6 +12448,7 @@ function setAppVersion() {
           `TV detectada: sim`,
           `viewport: ${window.innerWidth}x${window.innerHeight}@${window.devicePixelRatio || 1}`,
           `plataforma: ${navigator.platform || "indisponivel"}`,
+          `versao Tizen: ${window.__DASHBOARD_TIZEN_VERSION || "nao identificada"}`,
           `user agent: ${navigator.userAgent}`,
           `Tizen: ${tizenStatus}`,
         ].join("\n");
@@ -11837,6 +12697,7 @@ function setAppVersion() {
           addKpiGoalDirections();
           installCardDetailDialog();
           installTvNavigation();
+          installTvViewportLayout();
           installTvInputDiagnostic();
           window.addEventListener("popstate", openTabFromUrl);
           openRequestedTvDiagnostic();

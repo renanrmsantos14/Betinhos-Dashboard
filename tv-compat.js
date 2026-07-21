@@ -8,11 +8,32 @@
   }
 
   function supportsCss(targetWindow, property, value) {
-    return Boolean(
-      targetWindow.CSS &&
-      typeof targetWindow.CSS.supports === "function" &&
-      targetWindow.CSS.supports(property, value)
-    );
+    try {
+      return Boolean(
+        targetWindow.CSS &&
+        typeof targetWindow.CSS.supports === "function" &&
+        targetWindow.CSS.supports(property, value)
+      );
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function detectTizenVersion(userAgent) {
+    var match = String(userAgent || "").match(/Tizen[\s\/]([0-9.]+)/i);
+    return match ? match[1] : "";
+  }
+
+  function supportsCssCondition(targetWindow, condition) {
+    try {
+      return Boolean(
+        targetWindow.CSS &&
+        typeof targetWindow.CSS.supports === "function" &&
+        targetWindow.CSS.supports(condition)
+      );
+    } catch (_error) {
+      return false;
+    }
   }
 
   function supportsFlexGap(targetWindow) {
@@ -41,10 +62,13 @@
     rootElement.classList.add("tv-browser");
     if (!supportsCss(targetWindow, "display", "grid")) rootElement.classList.add("tv-no-grid");
     if (!supportsCss(targetWindow, "inset", "0")) rootElement.classList.add("tv-no-inset");
+    if (!supportsCssCondition(targetWindow, "selector(:has(*))")) rootElement.classList.add("tv-no-has");
+    if (!supportsCss(targetWindow, "container-type", "inline-size")) rootElement.classList.add("tv-no-container");
     if (!supportsFlexGap(targetWindow)) rootElement.classList.add("tv-no-flex-gap");
     targetWindow.__DASHBOARD_TV_MODE = true;
+    targetWindow.__DASHBOARD_TIZEN_VERSION = detectTizenVersion(targetWindow.navigator && targetWindow.navigator.userAgent);
     return true;
   }
 
-  return { install: install, isTvUserAgent: isTvUserAgent };
+  return { install: install, isTvUserAgent: isTvUserAgent, detectTizenVersion: detectTizenVersion };
 });
