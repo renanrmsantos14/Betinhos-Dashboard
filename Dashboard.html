@@ -10718,7 +10718,11 @@ function setAppVersion() {
         })).sort((a, b) => b.count - a.count || b.total - a.total || a.name.localeCompare(b.name));
         const ranked = allRanked.slice(0, 50);
         const top = ranked.slice(0, 20);
-        const formatBirthday = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString("pt-BR") : "Nascimento não informado";
+        const formatBirthday = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString("pt-BR") : "";
+        const birthdayMarkup = (value) => {
+          const birthday = formatBirthday(value);
+          return birthday ? `<small class="passenger-birthday">${birthday}</small>` : "";
+        };
         const isBirthdayToday = (value) => {
           if (!value) return false;
           const date = new Date(`${String(value).slice(0, 10)}T12:00:00`);
@@ -10737,7 +10741,7 @@ function setAppVersion() {
         }
         document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
           <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
-          <td class="em"><div>${item.name}</div><small class="passenger-birthday">${formatBirthday(item.birthday)}</small></td><td class="dim">${item.client}</td>
+          <td class="em"><div>${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim">${item.client}</td>
           <td class="r em">${item.count.toLocaleString("pt-BR")}</td><td class="r">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</td>
           <td class="dim">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</td>
           <td class="dim">${item.serviceType}</td><td class="dim">${item.vehicleType}</td><td class="dim">${item.driver}</td><td class="r">${brl(item.count ? item.total / item.count : 0)}</td><td class="r em">${brl(item.total)}</td>
