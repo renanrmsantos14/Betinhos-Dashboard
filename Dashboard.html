@@ -3311,6 +3311,10 @@
         gap: 8px;
         padding-left: 18px;
       }
+      .card-detail-logic-emphasis {
+        color: var(--blue);
+        font-weight: 800;
+      }
       .card-detail-logic-code {
         display: block;
         overflow-x: auto;
@@ -8663,7 +8667,18 @@ function setAppVersion() {
         section.appendChild(createCardDetailElement("p", "card-detail-logic-label", label));
         if (Array.isArray(value)) {
           const list = createCardDetailElement("ul", "card-detail-logic-list");
-          value.forEach((item) => list.appendChild(createCardDetailElement("li", "", item)));
+          value.forEach((item) => {
+            const text = String(item ?? "");
+            const match = text.match(/^(Valores e condições):\s*(.*)$/i);
+            const itemElement = createCardDetailElement("li", "");
+            if (match) {
+              itemElement.appendChild(createCardDetailElement("strong", "card-detail-logic-emphasis", match[1] + ":"));
+              itemElement.appendChild(document.createTextNode(" " + match[2]));
+            } else {
+              itemElement.textContent = text;
+            }
+            list.appendChild(itemElement);
+          });
           section.appendChild(list);
         } else {
           section.appendChild(createCardDetailElement(options.code ? "code" : "p", options.code ? "card-detail-logic-code" : "card-detail-logic-copy", value));
