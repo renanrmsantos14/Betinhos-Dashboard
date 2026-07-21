@@ -4803,7 +4803,7 @@
                 </div>
                 <div class="inline-indicators" id="ind_mot"></div>
               </div>
-              <canvas id="cMM" height="105" data-mobile-height="144"></canvas>
+              <div id="tblMotResumo" class="metric-table-wrap"></div>
             </div>
           </div>
           </section>
@@ -9719,6 +9719,29 @@ function setAppVersion() {
           data: { labels: moLabels, datasets: moDatasets },
           options: opts0({ legendRight: true }),
         });
+
+        const motMonthKeys = mks.length > 0
+          ? mks
+          : monthsLabelsAll.map((_, i) => `${currentYear}-${String(i + 1).padStart(2, "0")}`);
+        const motMonthLabels = mks.length > 0
+          ? mls.map(label => label.split(" ")[0])
+          : monthsLabelsAll;
+        const motMonthTotals = motMonthKeys.map((monthKey) => (byM[monthKey] || []).length);
+        const motRows = mots.map((m) => {
+          const monthly = motMonthKeys.map((monthKey, monthIndex) => {
+            const qtd = (byM[monthKey] || []).filter((r) => (r._motKey || r._mot) === m.key).length;
+            const pct = motMonthTotals[monthIndex] ? `${(qtd / motMonthTotals[monthIndex] * 100).toFixed(1)}%` : "—";
+            return { qtd, pct };
+          });
+          return { ...m, monthly, total: monthly.reduce((sum, month) => sum + month.qtd, 0) };
+        }).sort((a, b) => b.total - a.total || a.label.localeCompare(b.label));
+        const motTableHead = `<tr><th>Motorista</th>${motMonthLabels.map((label) => `<th>${label}</th>`).join("")}<th>Total</th><th>Participa&ccedil;&atilde;o</th></tr>`;
+        const motTableBody = motRows.map((row, i) => {
+          const monthlyCells = row.monthly.map((month) => `<td>${metricSplit(month.qtd.toLocaleString("pt-BR"), month.pct, "r")}</td>`).join("");
+          const totalPct = rv.length ? (row.total / rv.length * 100).toFixed(1) : "0.0";
+          return `<tr><td class="em">${trunc(row.label, 28)}</td>${monthlyCells}<td>${metricSplit(row.total.toLocaleString("pt-BR"), `${totalPct}%`, "r")}</td><td>${progressCell(Number(totalPct), `${row.total.toLocaleString("pt-BR")} servi&ccedil;os`, PAL[i % PAL.length])}</td></tr>`;
+        }).join("") || emptyRow(motMonthKeys.length + 3);
+        html("tblMotResumo", dvDisabled ? "" : `<table><thead>${motTableHead}</thead><tbody>${motTableBody}</tbody></table>`);
 
         // ===== PÁGINA SERVIÇOS =====
         set("sT", dvDisabled ? "—" : rv.length.toLocaleString("pt-BR"));
