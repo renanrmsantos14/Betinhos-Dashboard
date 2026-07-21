@@ -278,7 +278,7 @@ OS sem veículo = status não cancelado + lookup de motorista preenchido + veíc
 
 O motorista é validado pelo vínculo `_motId`, e não pelo texto exibido no nome. Status contendo “cancel” ficam fora. O alerta indica falha de alocação ou de cadastro. Não representa automaticamente indisponibilidade de frota.
 
-### Sem tipo de veículo
+### Sem tipo de veículo - VALIDADO
 
 Conta serviços que:
 
@@ -291,7 +291,7 @@ Sem tipo de veículo = categoria Serviço + tipo de veículo vazio
 
 É um indicador de qualidade cadastral. Não representa ausência de veículo físico vinculado; essa situação é medida separadamente pelo card **OS sem veículo**.
 
-### Sem motorista
+### Sem motorista - VALIDADO
 
 Conta serviços que:
 
@@ -302,7 +302,7 @@ Conta serviços que:
 
 O recorte de data evita que o alerta misture registros antigos fora da janela operacional definida.
 
-### Sem cliente
+### Sem cliente - VALIDADO
 
 ```text
 Sem cliente = serviço com saída a partir de 01/04/2026 e cliente igual a Sem cliente
@@ -340,7 +340,7 @@ O card é operacional: quanto menor o percentual de ocorrências em relação ao
 
 ## 6. Análises da página Resumo
 
-### Total produzido
+### Total produzido - VALIDADO
 
 O cartão reaproveita o valor de faturamento produzido no recorte atual. Quando há filtro de data, usa a soma do período; sem filtro de data, usa a combinação do Dataverse com os históricos fixos de 2023–2025.
 
@@ -349,7 +349,7 @@ O gráfico de três anos usa:
 - Dataverse para anos transacionais disponíveis;
 - arrays históricos para 2023–2025 quando necessário.
 
-### Meta × realizado
+### Meta × realizado - VALIDADO
 
 O realizado mensal é a soma dos valores dos serviços do mês. A meta mensal é calculada com base ponderada no histórico:
 

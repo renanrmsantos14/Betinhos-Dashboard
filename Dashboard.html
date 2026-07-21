@@ -9491,11 +9491,24 @@ function setAppVersion() {
           }
           const fatCliCols = allMks2.length + 3;
           const fatCliHead = `<thead><tr><th>Cliente</th>${fcLabels.map((label) => `<th class="r">${label}</th>`).join("")}<th class="r">Total</th><th>Participação</th></tr></thead>`;
+          const fatCliDelta = (current, previous) => {
+            if (previous === null || previous === 0) {
+              return `<span class="metric-secondary" style="color:${previous === 0 && current > 0 ? "var(--green)" : "var(--yellow)"}">${previous === 0 && current > 0 ? "Novo" : "—"}</span>`;
+            }
+            const pct = ((current - previous) / previous) * 100;
+            const color = pct > 0 ? "var(--green)" : pct < 0 ? "var(--red)" : "var(--yellow)";
+            return `<span class="metric-secondary" style="color:${color}">${pct > 0 ? "+" : ""}${pct.toFixed(1)}%</span>`;
+          };
           const fatCliBody = cliEntries.map(([cliName, recs], i) => {
             const byMCli = grp(recs, r => mK(r[F.res.data]));
             const clientTotal = sumV(recs);
             const clientPct = fat > 0 ? (clientTotal / fat) * 100 : 0;
-            const monthCells = allMks2.map((monthKey) => `<td class="r">${brlS(sumV(byMCli[monthKey] || []))}</td>`).join("");
+            const monthCells = allMks2.map((monthKey, monthIndex) => {
+              const current = sumV(byMCli[monthKey] || []);
+              const previousKey = allMks2[monthIndex - 1];
+              const previous = previousKey ? sumV(byMCli[previousKey] || []) : null;
+              return `<td class="r">${metricSplit(brlS(current), fatCliDelta(current, previous), "r")}</td>`;
+            }).join("");
             return `<tr><td class="em">${trunc(cliName, 28)}</td>${monthCells}<td class="r em">${brlS(clientTotal)}</td><td>${progressCell(clientPct, brlS(clientTotal), PAL[i % PAL.length])}</td></tr>`;
           }).join("") || emptyRow(fatCliCols);
           html("tblFatCliResumo", `<table><thead>${fatCliHead.replace("<thead>", "").replace("</thead>", "")}</thead><tbody>${fatCliBody}</tbody></table>`);
