@@ -587,7 +587,7 @@ Quando a informação necessária não existe, o resultado aparece como `s/dado`
 
 ### Uso da frota própria
 
-Entram somente veículos cuja categoria contém `próprio` e serviços reserváveis, isto é, serviços cujo status não contém cancelado ou recusado.
+Entram somente veículos cuja categoria contém `próprio` e cujo status é exatamente `Ativo` ou `Ativo(a)`. Veículos vendidos, em manutenção, disponíveis ou com qualquer outro status ficam fora do denominador. Serviços reserváveis são aqueles cujo status não contém cancelado ou recusado.
 
 O período operacional começa em **01/06/2026**, data a partir da qual o preenchimento de veículo passou a ser considerado confiável. Se o filtro começar antes dessa data, o cálculo começa em 01/06/2026.
 
@@ -595,7 +595,8 @@ Para cada dia do período:
 
 ```text
 Veículos usados = quantidade de veículos próprios distintos com serviço naquele dia
-Veículos livres = total de veículos próprios - veículos usados
+Veículos ociosos = total de veículos próprios ativos - veículos próprios ativos usados
+Veículos terceiros = quantidade de veículos terceiros ativos distintos com serviço naquele dia
 Uso diário (%) = veículos usados / total de veículos próprios × 100
 ```
 
