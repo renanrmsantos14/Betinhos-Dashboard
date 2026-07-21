@@ -9964,7 +9964,8 @@ function setAppVersion() {
         set("frCorrCrit", dvDisabled ? "—" : (manutPorCategoria["Corretiva critica"] || []).length);
         set("frConserv", dvDisabled ? "—" : (manutPorCategoria["Conservacao"] || []).length);
         set("frAvaria", dvDisabled ? "—" : (manutPorCategoria["Avaria"] || []).length);
-        const usageStart = document.getElementById("fS")?.value || `${new Date().getFullYear()}-01-01`;
+        const selectedUsageStart = document.getElementById("fS")?.value || `${new Date().getFullYear()}-01-01`;
+        const usageStart = selectedUsageStart > "2026-06-01" ? selectedUsageStart : "2026-06-01";
         const usageEnd = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
         const usage = dvDisabled
           ? { totalOwn: 0, rows: [] }
@@ -9991,7 +9992,7 @@ function setAppVersion() {
           ["Com servico/dia", weekendUse.withAvg.toFixed(1)],
           ["Sem servico/dia", weekendUse.withoutAvg.toFixed(1)],
         ]));
-        set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} carros proprios · media diaria por mes`);
+        set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} carros proprios · desde 01/06/2026 · media diaria por mes`);
         renderFleetUsageRows(usage.rows);
         const kpiRows = dvDisabled ? [] : maintenanceKpiRows(VW.manutencoes, manFvInFrota);
         set("metaFrotaKpis", dvDisabled ? "—" : `${VW.manutencoes.length} manutencoes no filtro atual`);

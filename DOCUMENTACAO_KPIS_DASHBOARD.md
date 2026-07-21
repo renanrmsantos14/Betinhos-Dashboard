@@ -93,7 +93,7 @@ Se não houver base de comparação, o indicador mostra `s/dado`, em vez de inve
 
 ## 4. KPIs executivos da página Resumo
 
-### Faturamento
+### Faturamento - VALIDADO
 
 **O que responde:** qual valor financeiro está associado aos serviços considerados no período.
 
@@ -310,7 +310,7 @@ Sem cliente = serviço com saída a partir de 01/04/2026 e cliente igual a Sem c
 
 O alerta mede qualidade cadastral. Não significa necessariamente que a operação não tenha cliente real; significa que o relacionamento não está preenchido no registro carregado.
 
-### Número de ocorrências
+### Número de ocorrências - VALIDADO
 
 **O que responde:** quantos erros operacionais foram registrados no período e qual a frequência em relação aos serviços.
 
@@ -588,6 +588,8 @@ Quando a informação necessária não existe, o resultado aparece como `s/dado`
 ### Uso da frota própria
 
 Entram somente veículos cuja categoria contém `próprio` e serviços reserváveis, isto é, serviços cujo status não contém cancelado ou recusado.
+
+O período operacional começa em **01/06/2026**, data a partir da qual o preenchimento de veículo passou a ser considerado confiável. Se o filtro começar antes dessa data, o cálculo começa em 01/06/2026.
 
 Para cada dia do período:
 
