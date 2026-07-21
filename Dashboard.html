@@ -1754,6 +1754,13 @@
       .metric-table-wrap table {
         font-size: 11px;
       }
+      .fat-cli-table th:not(:first-child),
+      .fat-cli-table td:not(:first-child) {
+        text-align: center;
+      }
+      .fat-cli-table .metric-split.r {
+        align-items: center;
+      }
       .metric-table-wrap thead th {
         position: static;
         cursor: default;
@@ -9535,7 +9542,7 @@ function setAppVersion() {
             }).join("");
             return `<tr><td class="em">${trunc(cliName, 28)}</td>${monthCells}<td class="r em">${brlS(clientTotal)}</td><td>${progressCell(clientPct, brlS(clientTotal), PAL[i % PAL.length])}</td></tr>`;
           }).join("") || emptyRow(fatCliCols);
-          html("tblFatCliResumo", `<table><thead>${fatCliHead.replace("<thead>", "").replace("</thead>", "")}</thead><tbody>${fatCliBody}</tbody></table>`);
+          html("tblFatCliResumo", `<table class="fat-cli-table"><thead>${fatCliHead.replace("<thead>", "").replace("</thead>", "")}</thead><tbody>${fatCliBody}</tbody></table>`);
         }
 
         // Status dos serviços
