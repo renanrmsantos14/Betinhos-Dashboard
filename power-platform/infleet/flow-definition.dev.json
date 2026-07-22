@@ -129,6 +129,31 @@
               "Janela_Inicio_UTC": ["Succeeded"]
             }
           },
+          "Listar_Historico_Motoristas_Infleet": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                "operationId": "ExecuteGraphQL"
+              },
+              "parameters": {
+                "body/operationName": "ListVehicleDriverHistories",
+                "body/query": "query ListVehicleDriverHistories($filter: ListVehicleDriverHistoriesFilterInput, $limit: Int, $offset: Int) { listVehicleDriverHistories(filter: $filter, limit: $limit, offset: $offset) { total vehicleDriverHistories { id vehicleId driverId category occurredAt driver { id cpf name } } } }",
+                "body/variables": {
+                  "filter": {
+                    "startedAt": "@outputs('Janela_Inicio_UTC')",
+                    "endedAt": "@outputs('Janela_Fim_UTC')"
+                  },
+                  "limit": 10000,
+                  "offset": 0
+                }
+              }
+            },
+            "runAfter": {
+              "Janela_Fim_UTC": ["Succeeded"]
+            }
+          },
           "Listar_Eventos_Relevantes_Infleet": {
             "type": "OpenApiConnection",
             "inputs": {
@@ -165,7 +190,7 @@
               }
             },
             "runAfter": {
-              "Janela_Fim_UTC": ["Succeeded"]
+              "Listar_Historico_Motoristas_Infleet": ["Succeeded"]
             }
           },
           "Processar_Veiculos": {
@@ -308,11 +333,63 @@
                       }
                     },
                     "actions": {
+                      "Filtrar_Historico_Motorista_Evento": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@body('Listar_Historico_Motoristas_Infleet')?['data']?['listVehicleDriverHistories']?['vehicleDriverHistories']",
+                          "where": "@and(equals(item()?['vehicleId'],items('Processar_Eventos')?['vehicleId']),lessOrEquals(ticks(item()?['occurredAt']),ticks(items('Processar_Eventos')?['reportedAt'])))"
+                        }
+                      },
+                      "Resolver_Motorista_Por_Historico_Ou_Fallback": {
+                        "type": "If",
+                        "expression": {
+                          "equals": [
+                            "@length(body('Filtrar_Historico_Motorista_Evento'))",
+                            0
+                          ]
+                        },
+                        "actions": {
+                          "Obter_Motorista_No_Horario_Infleet": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                                "operationId": "ExecuteGraphQL"
+                              },
+                              "parameters": {
+                                "body/operationName": "GetDriverAtByVehicleId",
+                                "body/query": "query GetDriverAtByVehicleId($vehicleId: ID!, $atTime: DateTime!) { getDriverAtByVehicleId(vehicleId: $vehicleId, atTime: $atTime) { id cpf name } }",
+                                "body/variables": {
+                                  "vehicleId": "@items('Processar_Eventos')?['vehicleId']",
+                                  "atTime": "@items('Processar_Eventos')?['reportedAt']"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "else": {
+                          "actions": {}
+                        },
+                        "runAfter": {
+                          "Filtrar_Historico_Motorista_Evento": ["Succeeded"]
+                        }
+                      },
+                      "Motorista_Resolvido": {
+                        "type": "Compose",
+                        "inputs": "@if(greater(length(body('Filtrar_Historico_Motorista_Evento')),0),first(body('Filtrar_Historico_Motorista_Evento'))?['driver'],body('Obter_Motorista_No_Horario_Infleet')?['data']?['getDriverAtByVehicleId'])",
+                        "runAfter": {
+                          "Resolver_Motorista_Por_Historico_Ou_Fallback": ["Succeeded"]
+                        }
+                      },
                       "Filtrar_Motorista_Dataverse": {
                         "type": "Query",
                         "inputs": {
                           "from": "@body('Listar_Motoristas_Dataverse')?['value']",
-                          "where": "@or(and(not(empty(coalesce(items('Processar_Eventos')?['driver']?['id'],items('Processar_Eventos')?['driverId']))),equals(item()?['new_infleetdriverid'],coalesce(items('Processar_Eventos')?['driver']?['id'],items('Processar_Eventos')?['driverId']))),and(not(empty(items('Processar_Eventos')?['driver']?['cpf'])),equals(replace(replace(replace(trim(coalesce(item()?['cr40f_numerodocpf'],'')),'.',''),'-',''),' ',''),replace(replace(replace(trim(items('Processar_Eventos')?['driver']?['cpf']),'.',''),'-',''),' ',''))))"
+                          "where": "@or(and(not(empty(outputs('Motorista_Resolvido')?['id'])),equals(item()?['new_infleetdriverid'],outputs('Motorista_Resolvido')?['id'])),and(not(empty(outputs('Motorista_Resolvido')?['cpf'])),equals(replace(replace(replace(trim(coalesce(item()?['cr40f_numerodocpf'],'')),'.',''),'-',''),' ',''),replace(replace(replace(trim(outputs('Motorista_Resolvido')?['cpf']),'.',''),'-',''),' ',''))))"
+                        },
+                        "runAfter": {
+                          "Motorista_Resolvido": ["Succeeded"]
                         }
                       },
                       "Motorista_Canonico_Unico": {
@@ -338,8 +415,8 @@
                                 "prefer": "return=representation",
                                 "accept": "application/json;odata.metadata=full",
                                 "item": {
-                                  "new_infleetdriverid": "@coalesce(items('Processar_Eventos')?['driver']?['id'],items('Processar_Eventos')?['driverId'])",
-                                  "new_cpfnormalizado": "@replace(replace(replace(items('Processar_Eventos')?['driver']?['cpf'],'.',''),'-',''),' ','')",
+                                  "new_infleetdriverid": "@outputs('Motorista_Resolvido')?['id']",
+                                  "new_cpfnormalizado": "@replace(replace(replace(outputs('Motorista_Resolvido')?['cpf'],'.',''),'-',''),' ','')",
                                   "new_ultimasincronizacaoinfleet": "@utcNow()"
                                 }
                               }
@@ -362,9 +439,9 @@
                                   "new_nome": "@concat(items('Processar_Eventos')?['slugName'],' | ',items('Processar_Eventos')?['reportedAt'])",
                                   "new_infleeteventid": "@items('Processar_Eventos')?['id']",
                                   "new_infleetvehicleid": "@items('Processar_Eventos')?['vehicleId']",
-                                  "new_infleetdriverid": "@coalesce(items('Processar_Eventos')?['driver']?['id'],items('Processar_Eventos')?['driverId'])",
+                                  "new_infleetdriverid": "@outputs('Motorista_Resolvido')?['id']",
                                   "new_placanormalizada": "@toUpper(replace(items('Processar_Eventos')?['vehicle']?['plate'],'-',''))",
-                                  "new_nomemotoristarecebido": "@items('Processar_Eventos')?['driver']?['name']",
+                                  "new_nomemotoristarecebido": "@outputs('Motorista_Resolvido')?['name']",
                                   "new_slug": "@items('Processar_Eventos')?['slugName']",
                                   "new_descricao": "@items('Processar_Eventos')?['slugName']",
                                   "new_reportadoem": "@items('Processar_Eventos')?['reportedAt']",
@@ -406,9 +483,9 @@
                                     "new_nome": "@concat(items('Processar_Eventos')?['slugName'],' | ',items('Processar_Eventos')?['reportedAt'])",
                                     "new_infleeteventid": "@items('Processar_Eventos')?['id']",
                                     "new_infleetvehicleid": "@items('Processar_Eventos')?['vehicleId']",
-                                    "new_infleetdriverid": "@coalesce(items('Processar_Eventos')?['driver']?['id'],items('Processar_Eventos')?['driverId'])",
+                                    "new_infleetdriverid": "@outputs('Motorista_Resolvido')?['id']",
                                     "new_placanormalizada": "@toUpper(replace(items('Processar_Eventos')?['vehicle']?['plate'],'-',''))",
-                                    "new_nomemotoristarecebido": "@items('Processar_Eventos')?['driver']?['name']",
+                                    "new_nomemotoristarecebido": "@outputs('Motorista_Resolvido')?['name']",
                                     "new_slug": "@items('Processar_Eventos')?['slugName']",
                                     "new_descricao": "@items('Processar_Eventos')?['slugName']",
                                     "new_reportadoem": "@items('Processar_Eventos')?['reportedAt']",
@@ -419,7 +496,7 @@
                                     "new_longitude": "@items('Processar_Eventos')?['longitude']",
                                     "new_cerca": "@items('Processar_Eventos')?['geofence']?['name']",
                                     "new_alarme": "@coalesce(items('Processar_Eventos')?['isAlarm'],false)",
-                                    "new_statusmapeamentomotorista": "@if(and(empty(coalesce(items('Processar_Eventos')?['driver']?['id'],items('Processar_Eventos')?['driverId'])),empty(items('Processar_Eventos')?['driver']?['cpf'])),'SEM_MOTORISTA',if(equals(length(body('Filtrar_Motorista_Dataverse')),0),'NAO_ENCONTRADO','DUPLICADO'))",
+                                    "new_statusmapeamentomotorista": "@if(empty(outputs('Motorista_Resolvido')?['id']),'SEM_MOTORISTA',if(equals(length(body('Filtrar_Motorista_Dataverse')),0),'NAO_ENCONTRADO','DUPLICADO'))",
                                     "new_sincronizadoem": "@utcNow()",
                                     "new_Veiculo@odata.bind": "@concat('/cr40f_veiculoses(',first(body('Filtrar_Veiculo_Dataverse'))?['cr40f_veiculosid'],')')"
                                   }
