@@ -13833,12 +13833,52 @@ function setAppVersion() {
         const allRanked = [...ranking.values()].map((item) => ({
           ...item,
           paymentDays: [...item.paymentOps].reduce((days, opId) => days.concat(paymentDaysByOp.get(opId) || []), []),
+          ticket: item.count ? item.total / item.count : 0,
           serviceType: [...item.serviceTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
           vehicleType: [...item.vehicleTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
           driver: [...item.drivers.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
         })).sort((a, b) => b.count - a.count || b.total - a.total || a.name.localeCompare(b.name));
+        const sortState = srtSt.passengerRanking || { field: "count", asc: false };
+        const numericFields = ["count", "paymentDays", "ticket", "total"];
+        const paymentDaysAverage = (item) => item.paymentDays.length
+          ? item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length
+          : null;
+        const rankingValue = (item, field) => field === "paymentDays"
+          ? paymentDaysAverage(item)
+          : item[field];
+        const compareRanking = (a, b) => {
+          const aValue = rankingValue(a, sortState.field);
+          const bValue = rankingValue(b, sortState.field);
+          if (numericFields.includes(sortState.field)) return sortState.asc ? aValue - bValue : bValue - aValue;
+          return sortState.asc
+            ? String(aValue || "").localeCompare(String(bValue || ""))
+            : String(bValue || "").localeCompare(String(aValue || ""));
+        };
         const ranked = allRanked.slice(0, 50);
-        const top = ranked.slice(0, 20);
+        ranked.forEach((item, index) => { item.serviceRank = index + 1; });
+        const isNumericSort = numericFields.includes(sortState.field);
+        const rankingUniverse = sortState.field === "paymentDays"
+          ? allRanked.filter((item) => item.paymentDays.length)
+          : allRanked;
+        const top = (isNumericSort ? rankingUniverse : ranked)
+          .slice()
+          .sort(compareRanking)
+          .slice(0, 20);
+        const rankingTitle = {
+          count: sortState.asc ? "Passageiros que menos viajaram com a Betinhos" : "Passageiros que mais viajaram com a Betinhos",
+          paymentDays: sortState.asc ? "Passageiros com menor tempo de pagamento" : "Passageiros com maior tempo de pagamento",
+          ticket: sortState.asc ? "Passageiros com menor ticket médio" : "Passageiros com maior ticket médio",
+          total: sortState.asc ? "Passageiros com menor faturamento" : "Passageiros com maior faturamento",
+        }[sortState.field] || `Passageiros que mais viajaram com a Betinhos — por ${ {
+          name: "Passageiro",
+          client: "Cliente",
+          latest: "Último serviço",
+          serviceType: "Tipo de serviço",
+          vehicleType: "Tipo de veículo",
+          driver: "Motorista",
+        }[sortState.field] }`;
+        const tableTitle = document.getElementById("tbSrv")?.closest(".tc")?.querySelector(".tc-title");
+        if (tableTitle) tableTitle.textContent = rankingTitle;
         const formatBirthday = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString("pt-BR") : "";
         const birthdayMarkup = (value) => {
           const birthday = formatBirthday(value);
@@ -13861,15 +13901,24 @@ function setAppVersion() {
           window.__DASHBOARD_BIRTHDAY_TOAST_DATE = birthdayKey;
         }
         document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
-          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
+          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${isNumericSort ? index + 1 : item.serviceRank}</span></td>
           <td class="em"><div class="passenger-ranking-cell-value">${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim"><span class="passenger-ranking-cell-value">${item.client}</span></td>
           <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span><span class="passenger-ranking-cell-subvalue">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td><td class="r"><span class="passenger-ranking-cell-value">${item.paymentDays.length ? `${(item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length).toFixed(1).replace(".", ",")} d` : "&mdash;"}</span></td>
           <td class="dim"><span class="passenger-ranking-cell-value">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</span></td>
-          <td class="dim"><span class="passenger-ranking-cell-value">${item.serviceType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.vehicleType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.driver}</span></td><td class="r"><span class="passenger-ranking-cell-value">${brl(item.count ? item.total / item.count : 0)}</span></td><td class="r em"><span class="passenger-ranking-cell-value">${brl(item.total)}</span><span class="passenger-ranking-cell-subvalue">${totalRankingRevenue ? ((item.total / totalRankingRevenue) * 100).toFixed(1) : "0.0"}%</span></td>
+          <td class="dim"><span class="passenger-ranking-cell-value">${item.serviceType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.vehicleType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.driver}</span></td><td class="r"><span class="passenger-ranking-cell-value">${brl(item.ticket)}</span></td><td class="r em"><span class="passenger-ranking-cell-value">${brl(item.total)}</span><span class="passenger-ranking-cell-subvalue">${totalRankingRevenue ? ((item.total / totalRankingRevenue) * 100).toFixed(1) : "0.0"}%</span></td>
         </tr>`).join("") || emptyRow(11);
-        set("metaSrv", top.length ? `Top ${top.length} de ${allRanked.length} | ${totalLinks.toLocaleString("pt-BR")} vínculos serviço-passageiro` : "Nenhum vínculo serviço-passageiro no período");
+        set("metaSrv", top.length ? `Top ${top.length} de ${rankingUniverse.length} | ${totalLinks.toLocaleString("pt-BR")} vínculos serviço-passageiro` : "Nenhum vínculo serviço-passageiro no período");
         const fitColumns = () => fitPassengerRankingColumns();
         window.requestAnimationFrame ? window.requestAnimationFrame(fitColumns) : fitColumns();
+      }
+
+      function sortPassengerRanking(field, th) {
+        const previous = srtSt.passengerRanking || {};
+        const asc = previous.field === field ? !previous.asc : false;
+        srtSt.passengerRanking = { field, asc };
+        th.closest("thead").querySelectorAll("th").forEach((header) => header.classList.remove("sa", "sd"));
+        th.classList.add(asc ? "sa" : "sd");
+        renderPassengerRanking(tblCache.tbSrv || VW.reservas);
       }
 
       function fitPassengerRankingColumns() {
@@ -15067,7 +15116,7 @@ function setAppVersion() {
         if (title) title.textContent = "Passageiros que mais viajaram com a Betinhos";
         search?.remove();
         rankingTable?.classList.add("passenger-ranking-table");
-        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Dias para pagamento">Dias p/ pgto</span></th><th><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista mais frequente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
+        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th onclick="sortPassengerRanking('name',this)"><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th onclick="sortPassengerRanking('client',this)"><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th class="sd" onclick="sortPassengerRanking('count',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th onclick="sortPassengerRanking('paymentDays',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Dias para pagamento">Dias p/ pgto</span></th><th onclick="sortPassengerRanking('latest',this)"><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th onclick="sortPassengerRanking('serviceType',this)"><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o mais frequente</span></th><th onclick="sortPassengerRanking('vehicleType',this)"><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo mais frequente</span></th><th onclick="sortPassengerRanking('driver',this)"><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista mais frequente</span></th><th onclick="sortPassengerRanking('ticket',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th onclick="sortPassengerRanking('total',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
         table.dataset.passengerRanking = "1";
       }
 
