@@ -6,11 +6,19 @@ Bring Infleet fleet telemetry into Dataverse and expose it in `Dashboard.html` w
 
 ## Confirmed source
 
-- Environment: `Default-bed8b3ad-d487-4193-a748-09e16f0e0327` (`Betinhos Executive Service (default)`).
-- Region: `brazilsouth`; Flow endpoint: `https://southamerica.api.flow.microsoft.com`.
+- Existing-flow source environment: `Default-bed8b3ad-d487-4193-a748-09e16f0e0327` (`Betinhos Executive Service (default)`). This environment is read-only evidence and is not an implementation target.
+- Source region: `brazilsouth`; Flow endpoint: `https://southamerica.api.flow.microsoft.com`.
 - Infleet endpoint: `POST https://api.infleet.com.br/v1/graphql` with Bearer authentication.
 - Existing flows: `Webhook Infleet`, `API Infleet Autonomia`, `API InFleet Ranking`, and `API InFleet EVENTOS`; all were stopped during discovery.
 - Existing flows prove `listFuellings` and `listEvents` access and currently send results to Excel through Office Scripts.
+
+## Target environment and solution
+
+- Create and change Power Platform components only in the Betinhos DEV environment.
+- Add every Dataverse table, column, alternate key, relationship, environment variable, connection reference, and cloud flow to the existing `AppBetinhos` solution in DEV.
+- Do not create, update, activate, or import components in Default or PROD.
+- Revalidate the DEV organization URL, solution ID, publisher prefix, table metadata, and connection references before mutation.
+- Local `Dashboard.html` changes remain in this repository and must target the confirmed DEV metadata during validation.
 
 ## Architecture
 
