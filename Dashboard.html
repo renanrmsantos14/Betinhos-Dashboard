@@ -5679,6 +5679,16 @@
               <div id="tblTipoVei" class="metric-table-wrap"></div>
             </div>
           </div>
+          <div class="cc">
+            <div class="cc-hdr">
+              <div>
+                <div class="cc-title">Servi&ccedil;os emergenciais</div>
+                <div class="cc-sub">Sa&iacute;da no mesmo dia da cria&ccedil;&atilde;o</div>
+              </div>
+              <div class="cc-kv" id="sEmergCount">&mdash;</div>
+            </div>
+            <div id="tblServicosEmergenciais" class="metric-table-wrap"></div>
+          </div>
           <div class="tc">
             <div class="tc-bar">
               <div>
@@ -7121,6 +7131,7 @@
           navMot: "cr40f_Motorista",
           navCli: "cr40f_Cliente",
           catItem: "new_categoriadoitem",
+          solicitante: "_cr40f_solicitante_value",
           lookupPreco: "_new_composicaodepreco_value",
           lookupOP: "_cr40f_financeiro_value",
         },
@@ -8043,8 +8054,10 @@ function setAppVersion() {
           F.res.veiTipo,
           F.res.veiculo,
           F.res.catItem,
+          F.res.solicitante,
           F.res.lookupPreco,
           F.res.lookupOP,
+          "createdon",
         ].filter(Boolean).join(",");
         const exp = [
           `${F.res.navMot}($select=cr40f_funcionariosid,${F.fun.nome},${F.fun.apelido})`,
@@ -8249,6 +8262,7 @@ function setAppVersion() {
             _motKey: motKey,
             _mot: motDisplay,
             _cli: r[F.res.navCli]?.cr40f_nomedocliente || "Sem cliente",
+            _solicitante: String(fv(r, F.res.solicitante) || "N&atilde;o informado"),
             _stL: String(fv(r, F.res.status) || "Sem status"),
             _fatStL: String(fv(r, F.res.fatStatus) || "—"),
             _tipoL: String(fv(r, F.res.tipo) || "—"),
@@ -10618,6 +10632,17 @@ function setAppVersion() {
           qtd: byVei[k].length,
           fat: sumV(byVei[k]),
         })), totalServicos, fat);
+        const servicosEmergenciais = rv
+          .filter((r) => {
+            const criadoEm = String(r.createdon || "").slice(0, 10);
+            const saidaEm = String(r[F.res.data] || "").slice(0, 10);
+            return criadoEm && saidaEm && criadoEm === saidaEm;
+          })
+          .sort((a, b) => b._ts - a._ts);
+        set("sEmergCount", dvDisabled ? "â€”" : servicosEmergenciais.length.toLocaleString("pt-BR"));
+        html("tblServicosEmergenciais", dvDisabled ? "" : `<table><thead><tr><th>Solicitante</th><th>Sa&iacute;da</th><th>Status</th></tr></thead><tbody>${servicosEmergenciais
+          .map((r) => `<tr><td class="em">${r._solicitante}<div class="metric-secondary">${r._cli}</div></td><td class="dim">${fmtDt(r[F.res.data])}</td><td>${badge(r._stL)}</td></tr>`)
+          .join("") || emptyRow(3)}</tbody></table>`);
         tblCache.tbSrv = rv;
         set(
           "metaSrv",
