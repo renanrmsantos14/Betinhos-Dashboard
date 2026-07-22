@@ -35,6 +35,13 @@ function resolveFilePath(urlPathname) {
 
 const server = http.createServer((request, response) => {
   const currentUrl = new URL(request.url, `http://${request.headers.host || "localhost"}`);
+
+  if (currentUrl.pathname === "/demo") {
+    response.writeHead(302, { Location: "/?mock=1&demo=1" });
+    response.end();
+    return;
+  }
+
   const filePath = resolveFilePath(currentUrl.pathname);
 
   if (!filePath) {
@@ -69,4 +76,5 @@ server.listen(requestedPort, host, () => {
   const mode = tvPreview ? "TV/Tizen legado" : "desktop";
   const dataMode = hasSnapshot ? "snapshot PROD" : "mock";
   console.log(`[dev] Dashboard ${mode} (${dataMode}): http://localhost:${address.port}/${query}`);
+  console.log(`[demo] Simulacao de marketing: http://localhost:${address.port}/demo`);
 });
