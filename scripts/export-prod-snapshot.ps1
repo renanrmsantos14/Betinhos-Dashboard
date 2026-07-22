@@ -1,8 +1,11 @@
 ﻿[CmdletBinding()]
 param(
+  [ValidateSet("DEV", "PROD")]
+  [string] $Environment = "PROD",
+
   [string] $EnvironmentUrl = "https://orgf261ae8e.crm2.dynamics.com/",
 
-  [string] $OutputPath = "data/dashboard-prod-snapshot.json",
+  [string] $OutputPath,
 
   [string] $TenantId = "organizations",
 
@@ -19,11 +22,11 @@ Set-StrictMode -Version Latest
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 
 function Write-Step([string] $Message, [ConsoleColor] $Color = [ConsoleColor]::DarkGray) {
-  Write-Host "[snapshot-prod] $Message" -ForegroundColor $Color
+  Write-Host "[snapshot-$($Environment.ToLowerInvariant())] $Message" -ForegroundColor $Color
 }
 
 $downloadWorker = {
-  param([string] $Name, [string] $Url, [hashtable] $Headers, [string] $TempPath)
+  param([string] $Name, [string] $Url, [hashtable] $Headers, [string] $TempPath, [bool] $Optional, [string] $EnvironmentName)
 
   $rows = [System.Collections.Generic.List[object]]::new()
   $nextUrl = $Url
@@ -33,20 +36,32 @@ $downloadWorker = {
     $pages++
     $response = $null
     $lastError = $null
+    $lastStatusCode = $null
     for ($attempt = 1; $attempt -le 4 -and $null -eq $response; $attempt++) {
       try {
         $response = Invoke-RestMethod -Method Get -Uri $nextUrl -Headers $Headers -TimeoutSec 120
       } catch {
         $lastError = $_.Exception
-        $statusCode = $null
-        if ($lastError.Response) { $statusCode = [int] $lastError.Response.StatusCode }
-        if ($statusCode -ge 400 -and $statusCode -lt 500) { break }
+        $lastStatusCode = $null
+        if ($lastError.Response) { $lastStatusCode = [int] $lastError.Response.StatusCode }
+        if ($lastStatusCode -ge 400 -and $lastStatusCode -lt 500) { break }
         if ($attempt -lt 4) {
           Start-Sleep -Seconds ([Math]::Pow(2, $attempt - 1))
         }
       }
     }
     if ($null -eq $response) {
+      if ($Optional -and $lastStatusCode -eq 404) {
+        [System.IO.File]::WriteAllText($TempPath, "[]", [System.Text.UTF8Encoding]::new($false))
+        return [pscustomobject]@{
+          Name = $Name
+          Count = 0
+          Pages = 0
+          TempPath = $TempPath
+          Skipped = $true
+          Warning = "Tabela opcional '$Name' nao existe em $EnvironmentName; colecao exportada vazia."
+        }
+      }
       throw "Falha ao baixar '$Name' na pagina ${pages} apos 4 tentativas: $($lastError.Message)"
     }
     foreach ($row in @($response.value)) { [void] $rows.Add($row) }
@@ -56,15 +71,25 @@ $downloadWorker = {
 
   $json = ConvertTo-Json -InputObject $rows.ToArray() -Depth 100 -Compress
   [System.IO.File]::WriteAllText($TempPath, $json, [System.Text.UTF8Encoding]::new($false))
-  [pscustomobject]@{ Name = $Name; Count = $rows.Count; Pages = $pages; TempPath = $TempPath }
+  [pscustomobject]@{ Name = $Name; Count = $rows.Count; Pages = $pages; TempPath = $TempPath; Skipped = $false }
 }
 
 $root = Resolve-Path (Join-Path $PSScriptRoot "..")
 Set-Location $root
 
 $environmentBaseUrl = $EnvironmentUrl.TrimEnd("/")
-if ($environmentBaseUrl -ne "https://orgf261ae8e.crm2.dynamics.com") {
-  throw "Exportacao abortada: este comando aceita somente PROD (https://orgf261ae8e.crm2.dynamics.com)."
+$expectedEnvironmentUrl = if ($Environment -eq "DEV") {
+  "https://org23b93544.crm2.dynamics.com"
+} else {
+  "https://orgf261ae8e.crm2.dynamics.com"
+}
+if ($environmentBaseUrl -ne $expectedEnvironmentUrl) {
+  throw "Exportacao abortada: ambiente $Environment exige $expectedEnvironmentUrl."
+}
+$OutputPath = if ([string]::IsNullOrWhiteSpace($OutputPath)) {
+  "data/dashboard-$($Environment.ToLowerInvariant())-snapshot.json"
+} else {
+  $OutputPath
 }
 
 if (-not (Get-Module -ListAvailable MSAL.PS)) {
@@ -74,11 +99,11 @@ if (-not (Get-Module -ListAvailable MSAL.PS)) {
 Import-Module MSAL.PS -ErrorAction Stop
 $startedAt = Get-Date
 Write-Host ""
-Write-Host "Dashboard Betinhos | Snapshot PROD" -ForegroundColor Cyan
+Write-Host "Dashboard Betinhos | Snapshot $Environment" -ForegroundColor Cyan
 Write-Step "Ambiente: $environmentBaseUrl"
 Write-Step "Destino: $OutputPath"
 Write-Step "Cargas paralelas: $MaxParallelJobs"
-Write-Step "Autenticacao PROD..."
+Write-Step "Autenticacao $Environment..."
 $scope = "$environmentBaseUrl/user_impersonation"
 $clientApplication = New-MsalClientApplication `
   -ClientId $ClientId `
@@ -127,7 +152,10 @@ $queries = [ordered]@{
   funcionarios = "$api/cr40f_funcionarioses?`$select=cr40f_funcionariosid,cr40f_nomecompleto,cr40f_status,cr40f_funcao,cr40f_validadedacnh,new_apelido"
   marketing = "$api/new_marketings?`$select=new_status,new_categoria,new_datadepublicacao&`$orderby=new_datadepublicacao desc"
   infracoes = "$api/cr40f_infracaodetransitos?`$select=cr40f_infracaodetransitoid,cr40f_codigodainfracao,cr40f_descricaodainfracao"
+  telemetriaInfleet = "$api/new_telemetriadiariainfleets?`$select=new_data,_new_veiculo_value,new_placanormalizada,new_distanciapercorridakm,new_velocidademedia,new_velocidademaxima,new_excessosdevelocidade,new_autonomiakml,new_sincronizadoem&`$filter=new_data ge 2026-01-01&`$orderby=new_data desc"
+  eventosInfleet = "$api/new_eventoinfleets?`$select=new_infleeteventid,new_reportadoem,_new_veiculo_value,_new_motorista_value,new_placanormalizada,new_nomemotoristarecebido,new_slug,new_descricao,new_velocidaderegistrada,new_limitedevelocidade,new_statusmapeamentomotorista&`$filter=new_reportadoem ge 2026-01-01T00:00:00Z&`$orderby=new_reportadoem desc"
 }
+$optionalQueries = @("telemetriaInfleet", "eventosInfleet")
 
 $resolvedOutputPath = Join-Path $root $OutputPath
 $outputDirectory = Split-Path -Parent $resolvedOutputPath
@@ -139,25 +167,27 @@ $temporaryTablePaths = [System.Collections.Generic.List[string]]::new()
 $position = 0
 foreach ($entry in $queries.GetEnumerator()) {
   $position++
-  $tableTempPath = Join-Path $outputDirectory ".dashboard-prod-snapshot.$($entry.Key).tmp.json"
+  $tableTempPath = Join-Path $outputDirectory ".dashboard-$($Environment.ToLowerInvariant())-snapshot.$($entry.Key).tmp.json"
   [void] $temporaryTablePaths.Add($tableTempPath)
   $pending.Enqueue([pscustomobject]@{
     Name = $entry.Key
     Url = $entry.Value
     Position = $position
     TempPath = $tableTempPath
+    Optional = $optionalQueries -contains $entry.Key
   })
 }
 
 $activeJobs = @()
 $results = [ordered]@{}
+$warnings = [System.Collections.Generic.List[string]]::new()
 $completed = 0
 try {
   while ($pending.Count -gt 0 -or $activeJobs.Count -gt 0) {
     while ($pending.Count -gt 0 -and $activeJobs.Count -lt $MaxParallelJobs) {
       $item = $pending.Dequeue()
       Write-Step "$($item.Position)/$($queries.Count) | $($item.Name) | iniciando"
-      $activeJobs += Start-Job -Name "snapshot-$($item.Name)" -ScriptBlock $downloadWorker -ArgumentList $item.Name, $item.Url, $headers, $item.TempPath
+      $activeJobs += Start-Job -Name "snapshot-$($item.Name)" -ScriptBlock $downloadWorker -ArgumentList $item.Name, $item.Url, $headers, $item.TempPath, $item.Optional, $Environment
     }
 
     $finishedJob = Wait-Job -Job $activeJobs -Any
@@ -166,18 +196,24 @@ try {
     $activeJobs = @($activeJobs | Where-Object { $_.Id -ne $finishedJob.Id })
     $results[$result.Name] = $result
     $completed++
-    Write-Progress -Activity "Exportando snapshot PROD" -Status "$completed/$($queries.Count) tabelas concluidas" -PercentComplete ([Math]::Floor(($completed / $queries.Count) * 100))
-    Write-Step "$completed/$($queries.Count) | $($result.Name) | concluido: $($result.Count) registros em $($result.Pages) pagina(s)" ([ConsoleColor]::Green)
+    Write-Progress -Activity "Exportando snapshot $Environment" -Status "$completed/$($queries.Count) tabelas concluidas" -PercentComplete ([Math]::Floor(($completed / $queries.Count) * 100))
+    if ($result.Skipped) {
+      [void] $warnings.Add([string] $result.Warning)
+      Write-Step "$completed/$($queries.Count) | AVISO | $($result.Warning)" ([ConsoleColor]::Yellow)
+    } else {
+      Write-Step "$completed/$($queries.Count) | $($result.Name) | concluido: $($result.Count) registros em $($result.Pages) pagina(s)" ([ConsoleColor]::Green)
+    }
   }
-  Write-Progress -Activity "Exportando snapshot PROD" -Completed
+  Write-Progress -Activity "Exportando snapshot $Environment" -Completed
 
   $counts = [ordered]@{}
   foreach ($entry in $queries.GetEnumerator()) { $counts[$entry.Key] = $results[$entry.Key].Count }
   $metadata = [ordered]@{
     schemaVersion = 1
     exportedAt = [DateTime]::UtcNow.ToString("o")
-    source = [ordered]@{ environment = "PROD"; environmentUrl = $environmentBaseUrl }
+    source = [ordered]@{ environment = $Environment; environmentUrl = $environmentBaseUrl }
     counts = $counts
+    warnings = $warnings.ToArray()
   }
 
   Write-Step "Montando JSON final..."
