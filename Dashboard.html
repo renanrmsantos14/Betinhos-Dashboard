@@ -5873,6 +5873,26 @@
         </div>
 
         <div class="page" id="page-frota">
+          <section class="dashboard-section dashboard-section--metrics" aria-label="Telemetria Infleet">
+            <div class="kpi-row kpi-4">
+              <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Km percorridos</div><div class="kpi-val sm" id="infKm">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--teal)"></div><div class="kpi-lbl">Velocidade m&eacute;dia</div><div class="kpi-val sm" id="infVelMedia">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--orange)"></div><div class="kpi-lbl">Velocidade m&aacute;xima</div><div class="kpi-val sm" id="infVelMax">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--red)"></div><div class="kpi-lbl">Excessos de velocidade</div><div class="kpi-val" id="infExcessos">&mdash;</div></div>
+            </div>
+          </section>
+          <section class="dashboard-section dashboard-section--analysis" aria-label="Detalhes da telemetria Infleet">
+            <div class="cgrid g2">
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Telemetria por ve&iacute;culo</div><div class="tc-meta" id="metaInfleetVeiculos"></div></div></div>
+                <div id="tblInfleetVeiculos" class="metric-table-wrap"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Eventos recentes</div><div class="tc-meta" id="metaInfleetEventos"></div></div></div>
+                <div id="tblInfleetEventos" class="metric-table-wrap"></div>
+              </div>
+            </div>
+          </section>
           <template id="legacy-frota-kpis">
           <div class="kpi-row kpi-4">
             <div class="kpi">
@@ -7118,6 +7138,8 @@
         funcionarios: "cr40f_funcionarioses",
         marketing: "new_marketings",
         infracoes: "cr40f_infracaodetransitos",
+        telemetriaInfleet: "new_telemetriadiariainfleets",
+        eventosInfleet: "new_eventoinfleets",
       };
       const F = {
         res: {
@@ -7198,6 +7220,30 @@
           cat: "new_categoria",
           data: "new_datadepublicacao",
         },
+        infleetDiaria: {
+          data: "new_data",
+          veiculo: "_new_veiculo_value",
+          placa: "new_placanormalizada",
+          distancia: "new_distanciapercorridakm",
+          velocidadeMedia: "new_velocidademedia",
+          velocidadeMaxima: "new_velocidademaxima",
+          excessos: "new_excessosdevelocidade",
+          autonomia: "new_autonomiakml",
+          sincronizadoEm: "new_sincronizadoem",
+        },
+        infleetEvento: {
+          id: "new_infleeteventid",
+          reportadoEm: "new_reportadoem",
+          veiculo: "_new_veiculo_value",
+          motorista: "_new_motorista_value",
+          placa: "new_placanormalizada",
+          motoristaRecebido: "new_nomemotoristarecebido",
+          tipo: "new_slug",
+          descricao: "new_descricao",
+          velocidade: "new_velocidaderegistrada",
+          limite: "new_limitedevelocidade",
+          statusMotorista: "new_statusmapeamentomotorista",
+        },
       };
       const DV_STATUS_FAT_PAGO = 202410010;
       const DV_STATUS_FAT_PAGANTE_EM_VIAGEM = 202410006;
@@ -7218,6 +7264,8 @@
         funcionarios: [],
         marketing: [],
         infracoes: [],
+        telemetriaInfleet: [],
+        eventosInfleet: [],
       };
       let VW = { reservas: [], manutencoes: [], multas: [], trocas: [] };
       let charts = {},
@@ -7949,7 +7997,7 @@ function setAppVersion() {
         servicos: ["reservas", "precos", "funcionarios", "clientes", "passageiros", "servicosPassageiro"],
         faturamento: ["reservas", "precos"],
         pagantes: ["reservas", "precos", "pagantes"],
-        frota: ["reservas", "precos", "manutencoes", "veiculos", "funcionarios"],
+        frota: ["reservas", "precos", "manutencoes", "veiculos", "funcionarios", "telemetriaInfleet", "eventosInfleet"],
         motoristas: ["reservas", "precos", "funcionarios"],
         manutencoes: ["manutencoes"],
         multas: ["multas", "infracoes", "funcionarios"],
@@ -8138,6 +8186,20 @@ function setAppVersion() {
           `${API()}/${T.marketing}?$select=${F.mkt.status},${F.mkt.cat},${F.mkt.data}&$orderby=${F.mkt.data} desc`,
         );
       }
+      async function loadTelemetriaInfleet() {
+        const fields = Object.values(F.infleetDiaria).join(",");
+        DB.telemetriaInfleet = await fetchAll(
+          `${API()}/${T.telemetriaInfleet}?$select=${fields}&$filter=${F.infleetDiaria.data} ge 2026-01-01&$orderby=${F.infleetDiaria.data} desc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadEventosInfleet() {
+        const fields = Object.values(F.infleetEvento).join(",");
+        DB.eventosInfleet = await fetchAll(
+          `${API()}/${T.eventosInfleet}?$select=${fields}&$filter=${F.infleetEvento.reportadoEm} ge 2026-01-01T00:00:00Z&$orderby=${F.infleetEvento.reportadoEm} desc`,
+          { wantAnnotations: false },
+        );
+      }
 
       const dataSetLoaders = {
         reservas: loadReservas,
@@ -8154,6 +8216,8 @@ function setAppVersion() {
         veiculos: loadVeiculos,
         funcionarios: loadFuncionarios,
         marketing: loadMarketing,
+        telemetriaInfleet: loadTelemetriaInfleet,
+        eventosInfleet: loadEventosInfleet,
       };
 
       function markAllDataSetsLoaded() {
@@ -10881,7 +10945,90 @@ function setAppVersion() {
           { label: "Cliente", countLabel: "Atrasados", valueLabel: "Valor", moneyValue: true, participationByValue: true },
         );
       }
+      function escapeDashboardText(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function renderInfleetTelemetry(dvDisabled) {
+        const start = document.getElementById("fS")?.value || "2026-01-01";
+        const end = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
+        const daily = dvDisabled ? [] : (DB.telemetriaInfleet || []).filter((row) =>
+          inDateRange(row[F.infleetDiaria.data], start, end),
+        );
+        const events = dvDisabled ? [] : (DB.eventosInfleet || []).filter((row) =>
+          inDateRange(row[F.infleetEvento.reportadoEm], start, end),
+        );
+        const vehicleMap = new Map((DB.veiculos || []).map((row) => [
+          String(row[F.vei.id] || "").toLowerCase(),
+          row[F.vei.placa] || row[F.vei.modelo] || "Veiculo sem placa",
+        ]));
+        const driverMap = new Map((DB.funcionarios || []).map((row) => [
+          String(row.cr40f_funcionariosid || "").toLowerCase(),
+          row[F.fun.apelido] || row[F.fun.nome] || "Motorista sem nome",
+        ]));
+        const numberValue = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+        const totalKm = daily.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.distancia]), 0);
+        const weightedSpeed = daily.reduce((sum, row) => {
+          const weight = Math.max(numberValue(row[F.infleetDiaria.distancia]), 1);
+          return sum + numberValue(row[F.infleetDiaria.velocidadeMedia]) * weight;
+        }, 0);
+        const speedWeight = daily.reduce((sum, row) => sum + Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0);
+        const averageSpeed = speedWeight ? weightedSpeed / speedWeight : 0;
+        const maximumSpeed = daily.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.velocidadeMaxima])), 0);
+        const speedingCount = daily.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.excessos]), 0);
+
+        set("infKm", dvDisabled ? "—" : `${totalKm.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km`);
+        set("infVelMedia", dvDisabled ? "—" : `${averageSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h`);
+        set("infVelMax", dvDisabled ? "—" : `${maximumSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h`);
+        set("infExcessos", dvDisabled ? "—" : speedingCount.toLocaleString("pt-BR"));
+
+        const byVehicle = new Map();
+        daily.forEach((row) => {
+          const vehicleId = String(row[F.infleetDiaria.veiculo] || "").toLowerCase();
+          const key = vehicleId || row[F.infleetDiaria.placa] || "sem-veiculo";
+          if (!byVehicle.has(key)) byVehicle.set(key, { vehicleId, plate: row[F.infleetDiaria.placa], rows: [] });
+          byVehicle.get(key).rows.push(row);
+        });
+        const vehicleRows = [...byVehicle.values()].map((group) => {
+          const distance = group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.distancia]), 0);
+          const weight = group.rows.reduce((sum, row) => sum + Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0);
+          const speed = weight ? group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.velocidadeMedia]) * Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0) / weight : 0;
+          return {
+            plate: vehicleMap.get(group.vehicleId) || group.plate || "Nao vinculado",
+            distance,
+            speed,
+            maximum: group.rows.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.velocidadeMaxima])), 0),
+            speeding: group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.excessos]), 0),
+            autonomy: group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.autonomia]), 0) / Math.max(group.rows.filter((row) => numberValue(row[F.infleetDiaria.autonomia]) > 0).length, 1),
+          };
+        }).sort((a, b) => b.distance - a.distance);
+
+        set("metaInfleetVeiculos", dvDisabled ? "—" : `${vehicleRows.length} veiculos · ${daily.length} dias-veiculo`);
+        html("tblInfleetVeiculos", `<table><thead><tr><th>Veiculo</th><th class="r">Km</th><th class="r">Media</th><th class="r">Maxima</th><th class="r">Excessos</th><th class="r">Km/l</th></tr></thead><tbody>${vehicleRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(row.plate)}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.maximum.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speeding.toLocaleString("pt-BR")}</td><td class="r">${row.autonomy ? row.autonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "—"}</td></tr>`)
+          .join("") || emptyRow(6)}</tbody></table>`);
+
+        const recentEvents = [...events].sort((a, b) => new Date(b[F.infleetEvento.reportadoEm]) - new Date(a[F.infleetEvento.reportadoEm])).slice(0, 50);
+        set("metaInfleetEventos", dvDisabled ? "—" : `${events.length} eventos no periodo · ultimos 50`);
+        html("tblInfleetEventos", `<table><thead><tr><th>Data</th><th>Veiculo</th><th>Motorista</th><th>Evento</th><th class="r">Vel./limite</th></tr></thead><tbody>${recentEvents
+          .map((row) => {
+            const vehicleId = String(row[F.infleetEvento.veiculo] || "").toLowerCase();
+            const driverId = String(row[F.infleetEvento.motorista] || "").toLowerCase();
+            const driver = driverMap.get(driverId) || row[F.infleetEvento.motoristaRecebido] || "Nao identificado";
+            const mapping = row[F.infleetEvento.statusMotorista] || (driverId ? "Vinculado" : "Sem lookup");
+            const speed = numberValue(row[F.infleetEvento.velocidade]);
+            const limit = numberValue(row[F.infleetEvento.limite]);
+            return `<tr><td class="dim">${fmtDt(row[F.infleetEvento.reportadoEm])}</td><td class="em">${escapeDashboardText(vehicleMap.get(vehicleId) || row[F.infleetEvento.placa] || "Nao vinculado")}</td><td>${escapeDashboardText(driver)}<div class="metric-secondary">${escapeDashboardText(mapping)}</div></td><td>${escapeDashboardText(row[F.infleetEvento.descricao] || row[F.infleetEvento.tipo] || "Evento")}</td><td class="r">${speed ? speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "—"}${limit ? ` / ${limit.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}` : ""}</td></tr>`;
+          }).join("") || emptyRow(5)}</tbody></table>`);
+      }
+
       function renderFrota(dvDisabled) {
+        renderInfleetTelemetry(dvDisabled);
         const vei = dvDisabled ? [] : DB.veiculos;
         const vFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
