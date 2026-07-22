@@ -1,0 +1,24 @@
+{
+  "properties": {
+    "connectionParameters": {
+      "api_key": {
+        "type": "securestring",
+        "uiDefinition": {
+          "displayName": "Token Bearer Infleet",
+          "description": "Informe o valor completo: Bearer {token}",
+          "tooltip": "Credencial da API Infleet armazenada na conexao segura",
+          "constraints": {
+            "tabIndex": 2,
+            "clearText": false,
+            "required": "true"
+          }
+        }
+      }
+    },
+    "iconBrandColor": "#12395B",
+    "capabilities": [],
+    "scriptOperations": null,
+    "publisher": "Betinhos Executive Service",
+    "stackOwner": "Infleet"
+  }
+}

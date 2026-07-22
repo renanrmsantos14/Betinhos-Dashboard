@@ -1,0 +1,93 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Infleet GraphQL",
+    "description": "Conector interno para leitura de telemetria da frota no ambiente DEV.",
+    "version": "1.0"
+  },
+  "host": "api.infleet.com.br",
+  "basePath": "/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/graphql": {
+      "post": {
+        "summary": "Executar consulta GraphQL",
+        "description": "Executa uma consulta somente-leitura na API GraphQL da Infleet.",
+        "operationId": "ExecuteGraphQL",
+        "x-ms-summary": "Executar GraphQL",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphQLRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resposta GraphQL",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "default": {
+            "description": "Erro retornado pela API Infleet",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GraphQLRequest": {
+      "type": "object",
+      "required": [
+        "query"
+      ],
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Documento GraphQL."
+        },
+        "variables": {
+          "type": "object",
+          "description": "Variaveis da consulta.",
+          "additionalProperties": true
+        },
+        "operationName": {
+          "type": "string",
+          "description": "Nome opcional da operacao."
+        }
+      }
+    }
+  },
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "tags": []
+}

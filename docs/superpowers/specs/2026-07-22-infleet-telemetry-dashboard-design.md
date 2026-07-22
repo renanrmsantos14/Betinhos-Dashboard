@@ -28,7 +28,7 @@ Use a solution-aware scheduled Power Automate flow as the integration boundary:
 Infleet GraphQL -> Power Automate -> Dataverse -> Dashboard.html
 ```
 
-The browser never calls Infleet. Power Automate reads a secret environment variable, normalizes source records, resolves Dataverse lookups, and performs idempotent upserts. The dashboard reads compact Dataverse tables using its existing date filters and lazy tab loading.
+The browser never calls Infleet. Power Automate calls a solution-aware Infleet custom connector whose connection stores the Bearer credential securely, normalizes source records, resolves Dataverse lookups, and performs idempotent upserts. The dashboard reads compact Dataverse tables using its existing date filters and lazy tab loading.
 
 The flow reprocesses a rolling three-day window. Trigger concurrency is `1`. Retrying the same period corrects records without increasing row counts.
 
@@ -151,7 +151,7 @@ Queries request only fields required by the active view. Rendering aggregates th
 - Unmapped driver: persist telemetry with empty lookup and mapping status.
 - Incomplete GraphQL pagination: fail the run; do not mark the window complete.
 - Individual upsert failure: record external ID, continue the bounded batch, and finish as partial.
-- Secret management: Infleet token lives in a secret Dataverse environment variable and never in HTML, ordinary flow variables, logs, or committed files.
+- Secret management: Infleet token lives only in the custom connector connection parameter. The connector and connection reference belong to `AppBetinhos`; the token never appears in HTML, flow definitions, logs, or committed files.
 
 ## Verification and acceptance
 

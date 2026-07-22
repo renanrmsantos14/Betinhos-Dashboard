@@ -1,0 +1,13 @@
+{
+  "target": {
+    "environmentId": "25a2ab78-cf07-ee41-a124-457aa2c29aea",
+    "orgUrl": "https://org23b93544.crm2.dynamics.com",
+    "solutionUniqueName": "AppBetinhos"
+  },
+  "connector": {
+    "id": "06a37850-11ae-4b86-be90-dc38fe63e287",
+    "logicalName": "new_5Finfleetgraphql",
+    "displayName": "Infleet GraphQL",
+    "description": "Leitura de telemetria Infleet para o Dashboard Betinhos no ambiente DEV."
+  }
+}

@@ -15,7 +15,7 @@
 - Use confirmed publisher prefix `new`.
 - Do not modify Default or PROD.
 - Preserve all pre-existing worktree changes and the single-file dashboard contract.
-- Never commit, print, or log the Infleet Bearer token.
+- Never commit, print, or log the Infleet Bearer token; store it only in the DEV custom connector connection.
 - Vehicle lookup is required; driver lookup is optional and temporal.
 - Never create vehicle or employee records from telemetry.
 - Use alternate-key upsert; never blind-create telemetry rows.
@@ -157,7 +157,7 @@ git commit -m "feat(dataverse): provisionar telemetria Infleet no DEV" -m "Adici
 - Modify: `package.json`
 
 **Interfaces:**
-- Consumes: schema from Task 1, Infleet GraphQL endpoint, secret environment variable `new_InfleetBearerToken`, DEV Dataverse connection reference.
+- Consumes: schema from Task 1, Infleet GraphQL endpoint, solution-aware custom connector `new_infleetgraphql`, and DEV Dataverse connection reference.
 - Produces: solution-aware flow `Flow Sincronizar Telemetria Infleet` with recurrence concurrency `1` and three-day idempotent reprocessing.
 
 - [ ] **Step 1: Add failing flow-definition test**
@@ -220,9 +220,9 @@ new_eventoinfleets(new_infleeteventid='<escaped eventId>')
 
 Use `new_veiculo@odata.bind` always and `new_motorista@odata.bind` only when resolved.
 
-- [ ] **Step 3: Create secret variable and connection reference in DEV/AppBetinhos**
+- [ ] **Step 3: Create custom connector, secure connection, and connection reference in DEV/AppBetinhos**
 
-`provision-infleet-flow-dev.ps1` must create metadata only when missing, never read or output the secret current value, and require the secret value through a `SecureString` runtime parameter when it must be set.
+`provision-infleet-flow-dev.ps1` must create an OpenAPI custom connector for `https://api.infleet.com.br/v1/graphql` with an `apiKey` connection parameter mapped to the `Authorization` header. The Bearer value is supplied only as a `SecureString` runtime parameter to create the connection, never read back or output. Add the connector and connection reference to `AppBetinhos`.
 
 - [ ] **Step 4: Create flow and add it to AppBetinhos**
 
@@ -236,7 +236,7 @@ Expected: all structural, pagination, concurrency, environment, and secret-leak 
 
 - [ ] **Step 6: Validate DEV flow without activation**
 
-Confirm the flow belongs to AppBetinhos, references only DEV connections, contains no literal Bearer token, and uses alternate-key PATCH actions.
+Confirm the flow belongs to AppBetinhos, references only the DEV Infleet custom connector and DEV Dataverse connection, contains no literal Bearer token, and uses alternate-key PATCH actions.
 
 - [ ] **Step 7: Commit Task 2**
 
@@ -367,4 +367,3 @@ git diff --check
 git add scripts/validate-infleet-dev.ps1 power-platform/infleet/VALIDATION.md
 git commit -m "test(infleet): validar idempotência no DEV" -m "Registra evidências de chaves únicas, reprocessamento e atribuição temporal sem dados sensíveis."
 ```
-
