@@ -903,6 +903,14 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+      .passenger-ranking-cell-subvalue {
+        display: block;
+        margin-top: 2px;
+        color: var(--t3);
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.1;
+      }
       .passenger-ranking-table th:last-child,
       .passenger-ranking-table td:last-child {
         border-right: 1px solid var(--b1);
@@ -13769,6 +13777,17 @@ function setAppVersion() {
         const serviceMap = new Map(rows.map((row) => [normalizeId(row[F.res.id]), row]));
         const clientMap = new Map((DB.clientes || []).map((client) => [normalizeId(client[F.cliente.id]), client]));
         const passengerMap = new Map((DB.passageiros || []).map((passenger) => [normalizeId(passenger[F.passageiro.id]), passenger]));
+        const paymentDaysByOp = new Map();
+        (DB.pagantes || []).filter(isReceivedPayment).forEach((payment) => {
+          const opId = normalizeId(paymentOp(payment));
+          const createdAt = new Date(payment.createdon || "").getTime();
+          const paidAt = new Date(payment[F.pag.dataPrimeiroPagamento] || "").getTime();
+          const days = (paidAt - createdAt) / 86400000;
+          if (!opId || !Number.isFinite(days) || days < 0) return;
+          const entries = paymentDaysByOp.get(opId) || [];
+          entries.push(days);
+          paymentDaysByOp.set(opId, entries);
+        });
         const ranking = new Map();
         (DB.servicosPassageiro || []).forEach((link) => {
           const service = serviceMap.get(normalizeId(link._cr40f_geral_value));
@@ -13786,12 +13805,15 @@ function setAppVersion() {
             serviceTypes: new Map(),
             vehicleTypes: new Map(),
             drivers: new Map(),
+            paymentOps: new Set(),
           };
           const serviceType = String(service._tipoL || "N&atilde;o informado").trim() || "N&atilde;o informado";
           const vehicleType = String(service._veiL || "N&atilde;o informado").trim() || "N&atilde;o informado";
           const driver = String(service._mot || "N&atilde;o informado").trim() || "N&atilde;o informado";
           item.count += 1;
           item.total += service._valor || 0;
+          const paymentOpId = normalizeId(service._opId);
+          if (paymentOpId) item.paymentOps.add(paymentOpId);
           if (isProducedReservation(service)) {
             item.latest = Math.max(item.latest, service._ts || 0);
           }
@@ -13807,8 +13829,10 @@ function setAppVersion() {
           ranking.set(passengerId, item);
         });
         const totalLinks = [...ranking.values()].reduce((sum, item) => sum + item.count, 0);
+        const totalRankingRevenue = [...ranking.values()].reduce((sum, item) => sum + item.total, 0);
         const allRanked = [...ranking.values()].map((item) => ({
           ...item,
+          paymentDays: [...item.paymentOps].reduce((days, opId) => days.concat(paymentDaysByOp.get(opId) || []), []),
           serviceType: [...item.serviceTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
           vehicleType: [...item.vehicleTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
           driver: [...item.drivers.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
@@ -13839,9 +13863,9 @@ function setAppVersion() {
         document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
           <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
           <td class="em"><div class="passenger-ranking-cell-value">${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim"><span class="passenger-ranking-cell-value">${item.client}</span></td>
-          <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span></td><td class="r"><span class="passenger-ranking-cell-value">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td>
+          <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span><span class="passenger-ranking-cell-subvalue">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td><td class="r"><span class="passenger-ranking-cell-value">${item.paymentDays.length ? `${(item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length).toFixed(1).replace(".", ",")} d` : "&mdash;"}</span></td>
           <td class="dim"><span class="passenger-ranking-cell-value">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</span></td>
-          <td class="dim"><span class="passenger-ranking-cell-value">${item.serviceType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.vehicleType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.driver}</span></td><td class="r"><span class="passenger-ranking-cell-value">${brl(item.count ? item.total / item.count : 0)}</span></td><td class="r em"><span class="passenger-ranking-cell-value">${brl(item.total)}</span></td>
+          <td class="dim"><span class="passenger-ranking-cell-value">${item.serviceType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.vehicleType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.driver}</span></td><td class="r"><span class="passenger-ranking-cell-value">${brl(item.count ? item.total / item.count : 0)}</span></td><td class="r em"><span class="passenger-ranking-cell-value">${brl(item.total)}</span><span class="passenger-ranking-cell-subvalue">${totalRankingRevenue ? ((item.total / totalRankingRevenue) * 100).toFixed(1) : "0.0"}%</span></td>
         </tr>`).join("") || emptyRow(11);
         set("metaSrv", top.length ? `Top ${top.length} de ${allRanked.length} | ${totalLinks.toLocaleString("pt-BR")} vínculos serviço-passageiro` : "Nenhum vínculo serviço-passageiro no período");
         const fitColumns = () => fitPassengerRankingColumns();
@@ -15043,7 +15067,7 @@ function setAppVersion() {
         if (title) title.textContent = "Passageiros que mais viajaram com a Betinhos";
         search?.remove();
         rankingTable?.classList.add("passenger-ranking-table");
-        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Participa&ccedil;&atilde;o">Participa&ccedil;&atilde;o</span></th><th><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista mais frequente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
+        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Dias para pagamento">Dias p/ pgto</span></th><th><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo mais frequente</span></th><th><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista mais frequente</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
         table.dataset.passengerRanking = "1";
       }
 
