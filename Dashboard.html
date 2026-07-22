@@ -13855,12 +13855,11 @@ function setAppVersion() {
             : String(bValue || "").localeCompare(String(aValue || ""));
         };
         const ranked = allRanked.slice(0, 50);
-        ranked.forEach((item, index) => { item.serviceRank = index + 1; });
         const isNumericSort = numericFields.includes(sortState.field);
         const rankingUniverse = sortState.field === "paymentDays"
           ? allRanked.filter((item) => item.paymentDays.length)
           : allRanked;
-        const top = (isNumericSort ? rankingUniverse : ranked)
+        const top = (isNumericSort ? rankingUniverse : allRanked.slice(0, 20))
           .slice()
           .sort(compareRanking)
           .slice(0, 20);
@@ -13901,7 +13900,7 @@ function setAppVersion() {
           window.__DASHBOARD_BIRTHDAY_TOAST_DATE = birthdayKey;
         }
         document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
-          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${isNumericSort ? index + 1 : item.serviceRank}</span></td>
+          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
           <td class="em"><div class="passenger-ranking-cell-value">${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim"><span class="passenger-ranking-cell-value">${item.client}</span></td>
           <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span><span class="passenger-ranking-cell-subvalue">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td><td class="r"><span class="passenger-ranking-cell-value">${item.paymentDays.length ? `${(item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length).toFixed(1).replace(".", ",")} d` : "&mdash;"}</span></td>
           <td class="dim"><span class="passenger-ranking-cell-value">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</span></td>
