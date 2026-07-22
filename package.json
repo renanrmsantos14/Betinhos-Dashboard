@@ -7,6 +7,7 @@
     "build": "node scripts/update-app-version.mjs && node scripts/build-dashboard-tv-compatible.cjs",
     "test:tv": "node scripts/test-dashboard-tv-build.cjs",
     "test:tv-compat": "node scripts/test-tv-compat.cjs",
+    "test:infleet-schema": "node scripts/test-infleet-schema.mjs",
     "graphify": "powershell -ExecutionPolicy Bypass -File scripts/build-graphify-code.ps1",
     "snapshot:prod": "powershell -ExecutionPolicy Bypass -File scripts/export-prod-snapshot.ps1",
     "snapshot:prod:device": "powershell -ExecutionPolicy Bypass -File scripts/export-prod-snapshot.ps1 -DeviceCode",
