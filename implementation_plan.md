@@ -75,3 +75,29 @@ Criar uma interface exclusiva para Samsung Q60R 2019 (`.tv-browser`, Tizen 5.0 /
 - Browser Samsung em 125% reduz a viewport CSS: teste dedicado em 1536x720.
 - Graficos podem manter dimensoes antigas: resize explicito apos aplicar o layout.
 - Cache do webresource/browser pode mostrar bundle anterior: versao visivel e fechamento completo do navegador apos publicacao.
+
+---
+
+# Plano: tempo de pagamento automatico
+
+## Objetivo
+
+Registrar no Dataverse o primeiro instante em que um `cr40f_pagantes` fica `Pago` e exibir o prazo medio por cliente no dashboard.
+
+## Implementacao
+
+- `[NEW] plugins/Betinhos.Pagantes.PaymentTimestamp`: plug-in C# sincrono, `PreOperation`, para `Create` e `Update`.
+- `[NEW] scripts/deploy-payment-timestamp-plugin.ps1`: deploy idempotente travado no ambiente DEV.
+- `[MODIFY] Dashboard.html`: busca a nova data, calcula prazo e agrupa pela OP vinculada ao cliente.
+- Coluna DEV: `cr40f_datadoprimeiropagamento` (`DateTime`, User Local).
+- `Update` usa Filtering Attributes `cr40f_status` e PreImage com status/data.
+
+## Criterios verificaveis
+
+1. `Pendente -> Pago` grava data.
+2. Novo envio de `Pago` nao sobrescreve primeira data.
+3. Registro criado como `Pago` recebe data.
+4. Registros sinteticos de teste sao removidos.
+5. Dashboard ignora duracoes sem data ou negativas e mostra cobertura medida.
+6. Build C#, testes da politica, build HTML e testes TV passam.
+7. Nenhuma alteracao e feita em PROD.

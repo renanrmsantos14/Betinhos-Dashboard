@@ -40,3 +40,15 @@
 - [x] Permitir navegacao direcional pelos cards clicaveis
 - [x] Repetir movimentos sustentados a cada 80 ms
 - [x] Exibir snap de foco, pressao e limite de rota
+
+## Tempo de pagamento automatico
+
+- [x] Confirmar schema real de `cr40f_pagantes`
+- [x] Criar coluna somente no Dataverse DEV
+- [x] Implementar plug-in transacional para Create e Update
+- [x] Registrar Filtering Attributes e PreImage
+- [x] Testar transicao, idempotencia e criacao como Pago no DEV
+- [x] Remover registros sinteticos do smoke test
+- [x] Integrar prazo medio por cliente no dashboard
+- [x] Validar plug-in, dashboard e compatibilidade TV
+- [x] Publicar `new_dashboard` somente no DEV

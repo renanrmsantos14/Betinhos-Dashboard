@@ -7174,6 +7174,7 @@
           status: "cr40f_status",
           valor: "cr40f_valor",
           forma: "cr40f_formadepagamento",
+          dataPrimeiroPagamento: "cr40f_datadoprimeiropagamento",
         },
         vei: {
           id: "cr40f_veiculosid",
@@ -7387,7 +7388,9 @@
         return k.includes("viagem") || k.includes("transit") || k.includes("execu");
       };
       const isReceivedPayment = (r) => {
-        return r[F.pag.status] === 202410002;
+        const formatted = r[`${F.pag.status}@OData.Community.Display.V1.FormattedValue`];
+        const label = normL(formatted || r[F.pag.status] || "");
+        return r[F.pag.status] === 202410002 || label === "pago" || label === "paga";
       };
       const isTicketEligibleReservation = (r) =>
         r?._cpConcluida === true && (parseFloat(r?._valor) || 0) > 0;
@@ -8117,7 +8120,7 @@ function setAppVersion() {
       }
       async function loadPagantes() {
         DB.pagantes = await fetchAll(
-          `${API()}/${T.pagantes}?$select=cr40f_pagantesid,createdon,${F.pag.lookupOP},${F.pag.status},${F.pag.valor},${F.pag.forma}`,
+          `${API()}/${T.pagantes}?$select=cr40f_pagantesid,createdon,${F.pag.lookupOP},${F.pag.status},${F.pag.valor},${F.pag.forma},${F.pag.dataPrimeiroPagamento}`,
         );
       }
       async function loadVeiculos() {
@@ -9052,8 +9055,8 @@ function setAppVersion() {
           const oldTable = pag.querySelector(".tc");
           oldTable?.replaceWith(document.createRange().createContextualFragment(`
             <div class="cc">
-              <div class="cc-hdr"><div><div class="cc-title">Tempo de pagamento por cliente</div><div class="tc-meta">Pendente de data de pagamento/vencimento no fetch atual</div></div></div>
-              <div id="paymentInsight" class="metric-note"></div>
+              <div class="cc-hdr"><div><div class="cc-title">Tempo de pagamento por cliente</div><div class="tc-meta" id="paymentInsightMeta">Primeiro pagamento confirmado</div></div></div>
+              <div id="paymentInsight" class="metric-table-wrap"></div>
             </div>
           `));
           pag.dataset.reviewLayout = "1";
@@ -9497,10 +9500,10 @@ function setAppVersion() {
         if (title.includes("pagamento") || title.includes("cartao") || title.includes("forma de pagamento")) {
           return applyFilter({
             user: "Usa os registros de pagamento para somar valores, contar registros e agrupar por forma ou status.",
-            source: "DB.pagantes; o valor usa parseFloat(F.pag.valor) ou zero.",
-            formula: "recebidos = pags.filter(isReceivedPayment); cartao = sum(paymentValue where forma inclui cartao/credito/link/maquina); grupos = grp(pags, forma/status)",
-            conditions: ["Recebido usa F.pag.status == 202410002.", "Tempo de pagamento permanece s/dado por falta de datas no fetch."],
-            limitations: ["Não há cálculo de prazo ou atraso sem data de baixa e vencimento."],
+            source: "DB.pagantes; createdon inicia o prazo e cr40f_datadoprimeiropagamento encerra o prazo.",
+            formula: "tempo_dias = (dataPrimeiroPagamento - createdon) / 86400000; media_cliente = sum(tempo_dias) / pagamentos_medidos",
+            conditions: ["Recebido usa F.pag.status == 202410002.", "Só entram pagamentos com as duas datas válidas e duração não negativa."],
+            limitations: ["Pagamentos anteriores ao plug-in permanecem sem prazo até eventual backfill confiável."],
           });
         }
         if (title.includes("frota") || title.includes("blindad") || title.includes("veiculo") || title.includes("dispon") || title.includes("por marca")) {
@@ -10789,7 +10792,6 @@ function setAppVersion() {
         set("pQtd", dvDisabled ? "—" : pags.length);
         set("pCartao", dvDisabled ? "—" : brlS(cartaoRecebido));
         set("pPrazo", dvDisabled ? "—" : atrasados.length);
-        html("paymentInsight", dvDisabled ? "" : "Para calcular nome e tempo de pagamento por cliente, falta incluir no fetch uma data de pagamento/baixa e, se existir, data de vencimento. Sem esse campo, qualquer ranking de atrasados seria falso.");
         const byForma = grp(pags, (r) => String(pgFv(r, F.pag.forma) || "—"));
         const byPagSt = grp(pags, (r) => String(pgFv(r, F.pag.status) || "—"));
         const fmK = Object.keys(byForma)
@@ -10816,6 +10818,42 @@ function setAppVersion() {
             .map((r) => [r._opId, r._cli || "Sem cliente"]),
         );
         const clienteDoPagamento = (r) => clientePorOp.get(paymentOp(r)) || "Sem cliente";
+        const temposPagos = pagReceb
+          .map((r) => {
+            const criadoEm = new Date(r.createdon || "").getTime();
+            const pagoEm = new Date(r[F.pag.dataPrimeiroPagamento] || "").getTime();
+            const dias = (pagoEm - criadoEm) / 86400000;
+            return Number.isFinite(dias) && dias >= 0
+              ? { cliente: clienteDoPagamento(r), dias }
+              : null;
+          })
+          .filter(Boolean);
+        const temposPorCliente = grp(temposPagos, (r) => r.cliente);
+        const linhasTempo = Object.keys(temposPorCliente)
+          .filter((k) => k !== "__null__")
+          .map((cliente) => {
+            const tempos = temposPorCliente[cliente].map((r) => r.dias);
+            const media = tempos.reduce((s, dias) => s + dias, 0) / tempos.length;
+            const ateCinco = tempos.filter((dias) => dias <= 5).length;
+            return { cliente, qtd: tempos.length, media, ateCinco };
+          })
+          .sort((a, b) => b.media - a.media);
+        const formatPaymentDays = (days) => days < 1
+          ? `${Math.max(1, Math.round(days * 24))} h`
+          : `${days.toFixed(1).replace(".", ",")} dias`;
+        set(
+          "paymentInsightMeta",
+          dvDisabled ? "—" : `${temposPagos.length} de ${pagReceb.length} pagamentos com data confiável`,
+        );
+        html(
+          "paymentInsight",
+          dvDisabled || !linhasTempo.length
+            ? '<div class="empty"><div class="em-msg">Nenhum pagamento com data confiável</div></div>'
+            : `<table class="fat-cli-table"><thead><tr><th>Cliente</th><th class="r">Pagos</th><th class="r">Prazo médio</th><th class="r">Até 5 dias</th></tr></thead><tbody>${linhasTempo
+                .slice(0, 10)
+                .map((r) => `<tr><td>${trunc(r.cliente, 32)}</td><td class="r">${r.qtd.toLocaleString("pt-BR")}</td><td class="r">${formatPaymentDays(r.media)}</td><td class="r">${((r.ateCinco / r.qtd) * 100).toFixed(1).replace(".", ",")}%</td></tr>`)
+                .join("")}</tbody></table>`,
+        );
         const porCliente = grp(pags, clienteDoPagamento);
         const clientes = Object.keys(porCliente)
           .filter((k) => k !== "__null__")

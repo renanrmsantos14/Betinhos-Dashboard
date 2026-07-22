@@ -46,3 +46,12 @@
 - Ao perder o alvo, o foco criado pelo magnetismo e removido para nao deixar um botao antigo falsamente destacado.
 - Setas direcionais e OK/Enter do controle remoto usam `moveTvDirectionalTarget()` e `activateTvDirectionalTarget()`, compartilhando o mesmo foco do cursor invisivel.
 - O foco entra com snap de 110 ms, o OK comprime o alvo por 110 ms e uma tentativa sem vizinho produz um deslocamento curto na direcao bloqueada.
+
+## Tempo de pagamento
+
+- `cr40f_pagantes.cr40f_datadoprimeiropagamento` guarda a primeira transicao confirmada para `Pago` (`202410002`).
+- `Betinhos.Pagantes.PaymentTimestamp.SetFirstPaymentTimestampPlugin` roda sincrono em `PreOperation`, alterando o proprio `Target` na mesma transacao.
+- O step `Update` filtra `cr40f_status` e usa `PreImage` com status e data; reenvios de `Pago` nao sobrescrevem o instante original.
+- O step `Create` cobre registros criados diretamente como `Pago`.
+- `renderPagamentos()` calcula `(dataPrimeiroPagamento - createdon) / 86400000`, ignora valores invalidos/negativos e agrupa por OP e cliente.
+- `scripts/deploy-payment-timestamp-plugin.ps1` e travado para `org23b93544.crm2.dynamics.com` e executa smoke test com limpeza dos registros sinteticos.
