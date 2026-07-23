@@ -11,7 +11,7 @@ for (const expected of [
   'function loadTelemetriaInfleet()',
   'function loadEventosInfleet()',
   'function loadViagensInfleet()',
-  'function renderInfleetTelemetry(dvDisabled)',
+  'function renderInfleetTelemetry(dvDisabled, vehicleScopeIds = null)',
   'id="infKm"',
   'id="infVelMedia"',
   'id="infVelMax"',
@@ -19,11 +19,17 @@ for (const expected of [
   'id="tblInfleetVeiculos"',
   'id="tblInfleetEventos"',
   'id="tblInfleetMotoristas"',
+  'id="tblInfleetHealth"',
+  'id="cInfleetKm"',
+  'id="metaInfleetHealth"',
+  'id="metaInfleetTrend"',
   'id="infAutonomia"',
   'id="infOciosidade"',
 ]) {
   assert.ok(html.includes(expected), `Contrato ausente: ${expected}`);
 }
+
+assert.match(html, /Requer identificador InFleet\/CPF/, "Diagnostico deve manter mapeamento seguro por ID ou CPF");
 
 assert.match(
   html,

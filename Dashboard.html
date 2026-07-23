@@ -5986,6 +5986,14 @@
                 <div class="cc-hdr"><div><div class="cc-title">Condu&ccedil;&atilde;o por motorista</div><div class="tc-meta" id="metaInfleetMotoristas"></div></div></div>
                 <div id="tblInfleetMotoristas" class="metric-table-wrap"></div>
               </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Sa&uacute;de da integra&ccedil;&atilde;o</div><div class="tc-meta" id="metaInfleetHealth"></div></div></div>
+                <div id="tblInfleetHealth" class="metric-table-wrap"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Quilometragem di&aacute;ria</div><div class="tc-meta" id="metaInfleetTrend"></div></div></div>
+                <canvas id="cInfleetKm" height="100" data-mobile-height="136"></canvas>
+              </div>
             </div>
           </section>
           <template id="legacy-frota-kpis">
@@ -10299,21 +10307,21 @@ function setAppVersion() {
         );
       }
       async function loadTelemetriaInfleet() {
-        const fields = Object.values(F.infleetDiaria).join(",");
+        const fields = Object.keys(F.infleetDiaria).map((key) => F.infleetDiaria[key]).join(",");
         DB.telemetriaInfleet = await fetchAll(
           `${API()}/${T.telemetriaInfleet}?$select=${fields}&$filter=${F.infleetDiaria.data} ge 2026-01-01&$orderby=${F.infleetDiaria.data} desc`,
           { wantAnnotations: false },
         );
       }
       async function loadEventosInfleet() {
-        const fields = Object.values(F.infleetEvento).join(",");
+        const fields = Object.keys(F.infleetEvento).map((key) => F.infleetEvento[key]).join(",");
         DB.eventosInfleet = await fetchAll(
           `${API()}/${T.eventosInfleet}?$select=${fields}&$filter=${F.infleetEvento.reportadoEm} ge 2026-01-01T00:00:00Z&$orderby=${F.infleetEvento.reportadoEm} desc`,
           { wantAnnotations: false },
         );
       }
       async function loadViagensInfleet() {
-        const fields = Object.values(F.infleetViagem).join(",");
+        const fields = Object.keys(F.infleetViagem).map((key) => F.infleetViagem[key]).join(",");
         DB.viagensInfleet = await fetchAll(
           `${API()}/${T.viagensInfleet}?$select=${fields}&$filter=${F.infleetViagem.iniciadoEm} ge 2026-01-01T00:00:00Z&$orderby=${F.infleetViagem.iniciadoEm} desc`,
           { wantAnnotations: false },
@@ -12892,7 +12900,7 @@ function setAppVersion() {
           recebimentoPct,
           pagReceb,
         });
-        renderFrota(dvDisabled);
+        renderFrota(dvDisabled, rv);
         renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap);
         renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap);
         renderMultas(dvDisabled);
@@ -13124,17 +13132,20 @@ function setAppVersion() {
           .replaceAll("'", "&#39;");
       }
 
-      function renderInfleetTelemetry(dvDisabled) {
+      function renderInfleetTelemetry(dvDisabled, vehicleScopeIds = null) {
         const start = document.getElementById("fS")?.value || "2026-01-01";
         const end = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
         const daily = dvDisabled ? [] : (DB.telemetriaInfleet || []).filter((row) =>
-          inDateRange(row[F.infleetDiaria.data], start, end),
+          inDateRange(row[F.infleetDiaria.data], start, end) &&
+          (!vehicleScopeIds || vehicleScopeIds.has(String(row[F.infleetDiaria.veiculo] || "").toLowerCase())),
         );
         const events = dvDisabled ? [] : (DB.eventosInfleet || []).filter((row) =>
-          inDateRange(row[F.infleetEvento.reportadoEm], start, end),
+          inDateRange(row[F.infleetEvento.reportadoEm], start, end) &&
+          (!vehicleScopeIds || vehicleScopeIds.has(String(row[F.infleetEvento.veiculo] || "").toLowerCase())),
         );
         const trips = dvDisabled ? [] : (DB.viagensInfleet || []).filter((row) =>
-          inDateRange(row[F.infleetViagem.iniciadoEm], start, end),
+          inDateRange(row[F.infleetViagem.iniciadoEm], start, end) &&
+          (!vehicleScopeIds || vehicleScopeIds.has(String(row[F.infleetViagem.veiculo] || "").toLowerCase())),
         );
         const vehicleMap = new Map((DB.veiculos || []).map((row) => [
           String(row[F.vei.id] || "").toLowerCase(),
@@ -13165,6 +13176,58 @@ function setAppVersion() {
         set("infExcessos", dvDisabled ? "—" : speedingCount.toLocaleString("pt-BR"));
         set("infAutonomia", dvDisabled || !realAutonomy ? "—" : `${realAutonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} km/l`);
         set("infOciosidade", dvDisabled ? "—" : `${idleMinutes.toLocaleString("pt-BR", { maximumFractionDigits: 0 })} min`);
+
+        const allDaily = dvDisabled ? [] : (DB.telemetriaInfleet || []);
+        const latestSyncAt = allDaily.reduce((latest, row) => {
+          const value = Date.parse(row[F.infleetDiaria.sincronizadoEm] || "");
+          return Number.isFinite(value) && value > latest ? value : latest;
+        }, 0);
+        const expectedVehicleIds = vehicleScopeIds || new Set(
+          (DB.veiculos || [])
+            .map((row) => String(row[F.vei.id] || "").toLowerCase())
+            .filter(Boolean),
+        );
+        const telemetryVehicleIds = new Set(
+          daily
+            .map((row) => String(row[F.infleetDiaria.veiculo] || "").toLowerCase())
+            .filter(Boolean),
+        );
+        const staleVehicles = [...expectedVehicleIds].filter((id) => !telemetryVehicleIds.has(id)).length;
+        const mappingStatus = (rows, field) => rows.reduce((counts, row) => {
+          const status = String(row[field] || "SEM_MOTORISTA").toUpperCase();
+          counts[status] = (counts[status] || 0) + 1;
+          return counts;
+        }, {});
+        const eventMapping = mappingStatus(events, F.infleetEvento.statusMotorista);
+        const tripMapping = mappingStatus(trips, F.infleetViagem.statusMotorista);
+        const unmappedEvents = (eventMapping.NAO_ENCONTRADO || 0) + (eventMapping.SEM_MOTORISTA || 0);
+        const unmappedTrips = (tripMapping.NAO_ENCONTRADO || 0) + (tripMapping.SEM_MOTORISTA || 0);
+        const freshnessMinutes = latestSyncAt ? Math.max(0, Math.floor((Date.now() - latestSyncAt) / 60000)) : null;
+        const freshnessLabel = freshnessMinutes === null ? "Sem sincronizacao" : freshnessMinutes < 90 ? `${freshnessMinutes} min atras` : `${Math.floor(freshnessMinutes / 60)} h atras`;
+        set("metaInfleetHealth", dvDisabled ? "—" : `Atualizado ${freshnessLabel}`);
+        html("tblInfleetHealth", `<table><thead><tr><th>Controle</th><th class="r">Situacao</th><th class="r">Quantidade</th></tr></thead><tbody>${dvDisabled ? emptyRow(3) : [
+          ["Cobertura da frota", staleVehicles ? "Sem telemetria no periodo" : "Cobertura completa", staleVehicles],
+          ["Eventos sem motorista", unmappedEvents ? "Requer identificador InFleet/CPF" : "Mapeado", unmappedEvents],
+          ["Viagens sem motorista", unmappedTrips ? "Requer identificador InFleet/CPF" : "Mapeado", unmappedTrips],
+          ["Ultima sincronizacao", freshnessLabel, latestSyncAt ? new Date(latestSyncAt).toLocaleString("pt-BR") : "—"],
+        ].map(([label, status, quantity]) => `<tr><td class="em">${escapeDashboardText(label)}</td><td class="r">${escapeDashboardText(status)}</td><td class="r">${escapeDashboardText(quantity)}</td></tr>`).join("")}</tbody></table>`);
+
+        const kmByDay = new Map();
+        daily.forEach((row) => {
+          const day = String(row[F.infleetDiaria.data] || "").slice(0, 10);
+          if (!day) return;
+          kmByDay.set(day, (kmByDay.get(day) || 0) + numberValue(row[F.infleetDiaria.distancia]));
+        });
+        const kmDailyLabels = [...kmByDay.keys()].sort();
+        set("metaInfleetTrend", dvDisabled ? "—" : `${kmDailyLabels.length} dias no periodo`);
+        mkChart("cInfleetKm", {
+          type: "bar",
+          data: {
+            labels: kmDailyLabels.map((day) => new Date(`${day}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })),
+            datasets: [{ label: "Km", data: kmDailyLabels.map((day) => kmByDay.get(day)), backgroundColor: "#2159d2", borderRadius: 5, maxBarThickness: 28 }],
+          },
+          options: opts0({ noLegend: true, datalabels: false }),
+        });
 
         const tripsByVehicle = new Map();
         trips.forEach((row) => {
@@ -13266,9 +13329,26 @@ function setAppVersion() {
           .join("") || emptyRow(5)}</tbody></table>`);
       }
 
-      function renderFrota(dvDisabled) {
-        renderInfleetTelemetry(dvDisabled);
-        const vei = dvDisabled ? [] : DB.veiculos;
+      function renderFrota(dvDisabled, rv = []) {
+        const hasFleetFilters = Boolean(
+          document.getElementById("fS")?.value ||
+          document.getElementById("fE")?.value ||
+          msState.St.length ||
+          msState.Cl.length ||
+          msState.Mo.length ||
+          msState.Tp.length
+        );
+        const scopedVehicleIds = new Set(
+          (rv || [])
+            .map((r) => String(r._veiId || "").toLowerCase())
+            .filter(Boolean)
+        );
+        const vehicleScopeIds = hasFleetFilters ? scopedVehicleIds : null;
+        renderInfleetTelemetry(dvDisabled, vehicleScopeIds);
+        const veiBase = dvDisabled ? [] : DB.veiculos;
+        const vei = vehicleScopeIds
+          ? veiBase.filter((r) => vehicleScopeIds.has(String(r[F.vei.id] || "").toLowerCase()))
+          : veiBase;
         const vFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
         const disp = vei.filter(
@@ -13364,7 +13444,7 @@ function setAppVersion() {
         const usage = dvDisabled
           ? { totalOwn: 0, rows: [] }
           : buildOwnFleetUsageRows(vei, VW.reservas, usageStart, usageEnd);
-        set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} proprios ativos · ${usage.totalThird} terceiros ativos · ${usage.totalRental} aluguel ativos · desde 01/06/2026 · media diaria por mes`);
+        set("metaFrotaUso", dvDisabled ? "—" : `${usage.totalOwn} proprios ativos · ${usage.totalThird} terceiros ativos · ${usage.totalRental} aluguel ativos · ${hasFleetFilters ? "filtro aplicado" : "base completa"} · desde 01/06/2026 · media diaria por mes`);
         renderFleetUsageRows(usage.rows);
         const byVSt = grp(vei, (r) => String(vFv(r, F.vei.status) || "—"));
         const byMarca = grp(vei, (r) => r[F.vei.marca] || "—");
@@ -13394,7 +13474,7 @@ function setAppVersion() {
           blindado: r[F.vei.blindado],
           status: String(vFv(r, F.vei.status) || "—"),
         }));
-        set("metaFrota", dvDisabled ? "—" : `${vei.length} veículos`);
+        set("metaFrota", dvDisabled ? "—" : `${vei.length} veiculos${hasFleetFilters ? ` no filtro · ${veiBase.length} no cadastro` : ""}`);
         renderFrotaTable(tblCache.tbFrota);
       }
       function renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap) {

@@ -48,25 +48,107 @@
         },
         "runAfter": {}
       },
+      "Validar_Limite_Veiculos_Infleet": {
+        "type": "If",
+        "expression": "@equals(length(body('Listar_Veiculos_Infleet')?['data']?['listVehicles']),1000)",
+        "actions": {
+          "Falhar_Limite_Veiculos_Infleet": {
+            "type": "Terminate",
+            "inputs": {
+              "runStatus": "Failed",
+              "runError": {
+                "code": "INFLEET_VEHICLES_PAGINATION_REQUIRED",
+                "message": "A resposta de veiculos atingiu o limite de 1000. A API atual nao confirmou cursor ou offset; sincronizacao interrompida para evitar perda silenciosa."
+              }
+            }
+          }
+        },
+        "else": {
+          "actions": {}
+        },
+        "runAfter": {
+          "Listar_Veiculos_Infleet": ["Succeeded"]
+        }
+      },
       "Listar_Motoristas_Infleet": {
-        "type": "OpenApiConnection",
-        "inputs": {
-          "host": {
-            "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
-            "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
-            "operationId": "ExecuteGraphQL"
+        "type": "Until",
+        "expression": "@equals(variables('infleetDriversHasMore'),false)",
+        "limit": {
+          "count": 100,
+          "timeout": "PT1H"
+        },
+        "actions": {
+          "Listar_Motoristas_Infleet_Pagina": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                "operationId": "ExecuteGraphQL"
+              },
+              "parameters": {
+                "body/operationName": "ListDriversPaginated",
+                "body/query": "query ListDriversPaginated($limit: Int, $offset: Int) { listDriversPaginated(limit: $limit, offset: $offset) { id cpf name active } }",
+                "body/variables": {
+                  "limit": 500,
+                  "offset": "@variables('infleetDriversOffset')"
+                }
+              }
+            },
+            "runAfter": {}
           },
-          "parameters": {
-            "body/operationName": "ListDriversPaginated",
-            "body/query": "query ListDriversPaginated($limit: Int, $offset: Int) { listDriversPaginated(limit: $limit, offset: $offset) { id cpf name active } }",
-            "body/variables": {
-              "limit": 5000,
-              "offset": 0
+          "Acumular_Motoristas_Infleet": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetDrivers",
+              "value": "@union(variables('infleetDrivers'),body('Listar_Motoristas_Infleet_Pagina')?['data']?['listDriversPaginated'])"
+            },
+            "runAfter": {
+              "Listar_Motoristas_Infleet_Pagina": ["Succeeded"]
+            }
+          },
+          "Atualizar_Ha_Mais_Motoristas": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetDriversHasMore",
+              "value": "@equals(length(body('Listar_Motoristas_Infleet_Pagina')?['data']?['listDriversPaginated']),500)"
+            },
+            "runAfter": {
+              "Acumular_Motoristas_Infleet": ["Succeeded"]
+            }
+          },
+          "Avancar_Offset_Motoristas": {
+            "type": "IncrementVariable",
+            "inputs": {
+              "name": "infleetDriversOffset",
+              "value": 500
+            },
+            "runAfter": {
+              "Atualizar_Ha_Mais_Motoristas": ["Succeeded"]
             }
           }
         },
         "runAfter": {
-          "Listar_Veiculos_Infleet": ["Succeeded"]
+          "Inicializar_Paginacao_Infleet": ["Succeeded"]
+        }
+      },
+      "Inicializar_Paginacao_Infleet": {
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            { "name": "infleetDrivers", "type": "array", "value": [] },
+            { "name": "infleetDriversOffset", "type": "integer", "value": 0 },
+            { "name": "infleetDriversHasMore", "type": "boolean", "value": true },
+            { "name": "infleetHistory", "type": "array", "value": [] },
+            { "name": "infleetHistoryOffset", "type": "integer", "value": 0 },
+            { "name": "infleetHistoryHasMore", "type": "boolean", "value": true },
+            { "name": "infleetEvents", "type": "array", "value": [] },
+            { "name": "infleetEventsOffset", "type": "integer", "value": 0 },
+            { "name": "infleetEventsHasMore", "type": "boolean", "value": true }
+          ]
+        },
+        "runAfter": {
+          "Validar_Limite_Veiculos_Infleet": ["Succeeded"]
         }
       },
       "Selecionar_Ids_Veiculos": {
@@ -184,7 +266,7 @@
       },
       "Mapear_Motoristas_Infleet": {
         "type": "Foreach",
-        "foreach": "@body('Listar_Motoristas_Infleet')?['data']?['listDriversPaginated']",
+        "foreach": "@variables('infleetDrivers')",
         "runtimeConfiguration": {
           "concurrency": {
             "repetitions": 10
@@ -321,67 +403,209 @@
             }
           },
           "Listar_Historico_Motoristas_Infleet": {
-            "type": "OpenApiConnection",
-            "inputs": {
-              "host": {
-                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
-                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
-                "operationId": "ExecuteGraphQL"
-              },
-              "parameters": {
-                "body/operationName": "ListVehicleDriverHistories",
-                "body/query": "query ListVehicleDriverHistories($filter: ListVehicleDriverHistoriesFilterInput, $limit: Int, $offset: Int) { listVehicleDriverHistories(filter: $filter, limit: $limit, offset: $offset) { total vehicleDriverHistories { id vehicleId driverId category occurredAt driver { id cpf name } } } }",
-                "body/variables": {
-                  "filter": {
-                    "startedAt": "@outputs('Janela_Inicio_UTC')",
-                    "endedAt": "@outputs('Janela_Fim_UTC')"
+            "type": "Until",
+            "expression": "@equals(variables('infleetHistoryHasMore'),false)",
+            "limit": {
+              "count": 100,
+              "timeout": "PT1H"
+            },
+            "actions": {
+              "Listar_Historico_Motoristas_Infleet_Pagina": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                    "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                    "operationId": "ExecuteGraphQL"
                   },
-                  "limit": 10000,
-                  "offset": 0
+                  "parameters": {
+                    "body/operationName": "ListVehicleDriverHistories",
+                    "body/query": "query ListVehicleDriverHistories($filter: ListVehicleDriverHistoriesFilterInput, $limit: Int, $offset: Int) { listVehicleDriverHistories(filter: $filter, limit: $limit, offset: $offset) { total vehicleDriverHistories { id vehicleId driverId category occurredAt driver { id cpf name } } } }",
+                    "body/variables": {
+                      "filter": {
+                        "startedAt": "@outputs('Janela_Inicio_UTC')",
+                        "endedAt": "@outputs('Janela_Fim_UTC')"
+                      },
+                      "limit": 500,
+                      "offset": "@variables('infleetHistoryOffset')"
+                    }
+                  }
+                },
+                "runAfter": {}
+              },
+              "Acumular_Historico_Motoristas_Infleet": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "infleetHistory",
+                  "value": "@union(variables('infleetHistory'),body('Listar_Historico_Motoristas_Infleet_Pagina')?['data']?['listVehicleDriverHistories']?['vehicleDriverHistories'])"
+                },
+                "runAfter": {
+                  "Listar_Historico_Motoristas_Infleet_Pagina": ["Succeeded"]
+                }
+              },
+              "Atualizar_Ha_Mais_Historico": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "infleetHistoryHasMore",
+                  "value": "@equals(length(body('Listar_Historico_Motoristas_Infleet_Pagina')?['data']?['listVehicleDriverHistories']?['vehicleDriverHistories']),500)"
+                },
+                "runAfter": {
+                  "Acumular_Historico_Motoristas_Infleet": ["Succeeded"]
+                }
+              },
+              "Avancar_Offset_Historico": {
+                "type": "IncrementVariable",
+                "inputs": {
+                  "name": "infleetHistoryOffset",
+                  "value": 500
+                },
+                "runAfter": {
+                  "Atualizar_Ha_Mais_Historico": ["Succeeded"]
                 }
               }
+            },
+            "runAfter": {
+              "Resetar_Ha_Mais_Historico": ["Succeeded"]
+            }
+          },
+          "Resetar_Historico_Infleet": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetHistory",
+              "value": []
             },
             "runAfter": {
               "Listar_Medicoes_Diarias_Infleet": ["Succeeded"]
             }
           },
-          "Listar_Eventos_Relevantes_Infleet": {
-            "type": "OpenApiConnection",
+          "Resetar_Offset_Historico": {
+            "type": "SetVariable",
             "inputs": {
-              "host": {
-                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
-                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
-                "operationId": "ExecuteGraphQL"
-              },
-              "parameters": {
-                "body/operationName": "ListRelevantEvents",
-                "body/query": "query ListRelevantEvents($filter: ListEventsFilterInput!, $limit: Int, $offset: Int) { listEvents(filter: $filter, limit: $limit, offset: $offset) { id reportedAt slugName vehicleId address latitude longitude isAlarm attributes vehicle { id plate } driverId driver { id cpf name } geofence { name maxSpeed } } }",
-                "body/variables": {
-                    "filter": {
-                      "reportedAt": {
-                        "startAt": "@outputs('Janela_Inicio_UTC')",
-                        "endAt": "@outputs('Janela_Fim_UTC')"
+              "name": "infleetHistoryOffset",
+              "value": 0
+            },
+            "runAfter": {
+              "Resetar_Historico_Infleet": ["Succeeded"]
+            }
+          },
+          "Resetar_Ha_Mais_Historico": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetHistoryHasMore",
+              "value": true
+            },
+            "runAfter": {
+              "Resetar_Offset_Historico": ["Succeeded"]
+            }
+          },
+          "Listar_Eventos_Relevantes_Infleet": {
+            "type": "Until",
+            "expression": "@equals(variables('infleetEventsHasMore'),false)",
+            "limit": {
+              "count": 100,
+              "timeout": "PT1H"
+            },
+            "actions": {
+              "Listar_Eventos_Relevantes_Infleet_Pagina": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                    "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                    "operationId": "ExecuteGraphQL"
+                  },
+                  "parameters": {
+                    "body/operationName": "ListRelevantEvents",
+                    "body/query": "query ListRelevantEvents($filter: ListEventsFilterInput!, $limit: Int, $offset: Int) { listEvents(filter: $filter, limit: $limit, offset: $offset) { id reportedAt slugName vehicleId address latitude longitude isAlarm attributes vehicle { id plate } driverId driver { id cpf name } geofence { name maxSpeed } } }",
+                    "body/variables": {
+                      "filter": {
+                        "reportedAt": {
+                          "startAt": "@outputs('Janela_Inicio_UTC')",
+                          "endAt": "@outputs('Janela_Fim_UTC')"
+                        },
+                        "slugNames": [
+                          "routeOverspeed",
+                          "deviceOverspeed",
+                          "hardAcceleration",
+                          "hardBraking",
+                          "hardCornering",
+                          "deviceIdle",
+                          "geofenceEnter",
+                          "geofenceExit",
+                          "driverChanged"
+                        ],
+                        "vehicleIds": "@body('Selecionar_Ids_Veiculos')"
                       },
-                      "slugNames": [
-                        "routeOverspeed",
-                        "deviceOverspeed",
-                        "hardAcceleration",
-                        "hardBraking",
-                        "hardCornering",
-                        "deviceIdle",
-                        "geofenceEnter",
-                        "geofenceExit",
-                        "driverChanged"
-                      ],
-                      "vehicleIds": "@body('Selecionar_Ids_Veiculos')"
-                    },
-                    "limit": 10000,
-                    "offset": 0
+                      "limit": 500,
+                      "offset": "@variables('infleetEventsOffset')"
+                    }
+                  }
+                },
+                "runAfter": {}
+              },
+              "Acumular_Eventos_Infleet": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "infleetEvents",
+                  "value": "@union(variables('infleetEvents'),body('Listar_Eventos_Relevantes_Infleet_Pagina')?['data']?['listEvents'])"
+                },
+                "runAfter": {
+                  "Listar_Eventos_Relevantes_Infleet_Pagina": ["Succeeded"]
+                }
+              },
+              "Atualizar_Ha_Mais_Eventos": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "infleetEventsHasMore",
+                  "value": "@equals(length(body('Listar_Eventos_Relevantes_Infleet_Pagina')?['data']?['listEvents']),500)"
+                },
+                "runAfter": {
+                  "Acumular_Eventos_Infleet": ["Succeeded"]
+                }
+              },
+              "Avancar_Offset_Eventos": {
+                "type": "IncrementVariable",
+                "inputs": {
+                  "name": "infleetEventsOffset",
+                  "value": 500
+                },
+                "runAfter": {
+                  "Atualizar_Ha_Mais_Eventos": ["Succeeded"]
                 }
               }
             },
             "runAfter": {
+              "Resetar_Ha_Mais_Eventos": ["Succeeded"]
+            }
+          },
+          "Resetar_Eventos_Infleet": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetEvents",
+              "value": []
+            },
+            "runAfter": {
               "Listar_Historico_Motoristas_Infleet": ["Succeeded"]
+            }
+          },
+          "Resetar_Offset_Eventos": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetEventsOffset",
+              "value": 0
+            },
+            "runAfter": {
+              "Resetar_Eventos_Infleet": ["Succeeded"]
+            }
+          },
+          "Resetar_Ha_Mais_Eventos": {
+            "type": "SetVariable",
+            "inputs": {
+              "name": "infleetEventsHasMore",
+              "value": true
+            },
+            "runAfter": {
+              "Resetar_Offset_Eventos": ["Succeeded"]
             }
           },
           "Processar_Veiculos": {
@@ -440,7 +664,7 @@
                   "Filtrar_Eventos_Veiculo": {
                     "type": "Query",
                     "inputs": {
-                      "from": "@body('Listar_Eventos_Relevantes_Infleet')?['data']?['listEvents']",
+                      "from": "@variables('infleetEvents')",
                       "where": "@equals(item()?['vehicleId'],items('Processar_Veiculos')?['id'])"
                     },
                     "runAfter": {
@@ -513,7 +737,7 @@
                       "Filtrar_Historico_Motorista_Evento": {
                         "type": "Query",
                         "inputs": {
-                          "from": "@body('Listar_Historico_Motoristas_Infleet')?['data']?['listVehicleDriverHistories']?['vehicleDriverHistories']",
+                          "from": "@variables('infleetHistory')",
                           "where": "@and(equals(item()?['vehicleId'],items('Processar_Eventos')?['vehicleId']),lessOrEquals(ticks(item()?['occurredAt']),ticks(items('Processar_Eventos')?['reportedAt'])))"
                         }
                       },
@@ -710,17 +934,23 @@
         }
       },
       "Continuar_Apos_Telemetria": {
-        "type": "Compose",
-        "inputs": "@if(equals(actions('Processar_Ultimos_3_Dias').status,'Succeeded'),'TELEMETRIA_OK','TELEMETRIA_PARCIAL')",
+        "type": "Terminate",
+        "inputs": {
+          "runStatus": "Failed",
+          "runError": {
+            "code": "INFLEET_TELEMETRY_PARTIAL_FAILURE",
+            "message": "A telemetria diaria nao foi concluida. Viagens nao serao processadas para evitar execucao marcada como sucesso parcial."
+          }
+        },
         "runAfter": {
-          "Processar_Ultimos_3_Dias": ["Succeeded", "Failed", "Skipped", "TimedOut"]
+          "Processar_Ultimos_3_Dias": ["Failed", "Skipped", "TimedOut"]
         }
       },
       "Janela_Viagens_Inicio_UTC": {
         "type": "Compose",
         "inputs": "@convertTimeZone(concat(formatDateTime(addDays(convertTimeZone(utcNow(),'UTC','E. South America Standard Time'),-2),'yyyy-MM-dd'),'T00:00:00'),'E. South America Standard Time','UTC','yyyy-MM-ddTHH:mm:ssZ')",
         "runAfter": {
-          "Continuar_Apos_Telemetria": ["Succeeded"]
+          "Processar_Ultimos_3_Dias": ["Succeeded"]
         }
       },
       "Janela_Viagens_Fim_UTC": {
