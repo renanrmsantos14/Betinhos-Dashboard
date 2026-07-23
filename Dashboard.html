@@ -5979,7 +5979,7 @@
                 <div id="tblInfleetVeiculos" class="metric-table-wrap"></div>
               </div>
               <div class="cc">
-                <div class="cc-hdr"><div><div class="cc-title">Eventos recentes</div><div class="tc-meta" id="metaInfleetEventos"></div></div></div>
+                <div class="cc-hdr"><div><div class="cc-title">Eventos por tipo</div><div class="tc-meta" id="metaInfleetEventos"></div></div></div>
                 <div id="tblInfleetEventos" class="metric-table-wrap"></div>
               </div>
               <div class="cc">
@@ -13186,14 +13186,22 @@ function setAppVersion() {
           const weight = group.rows.reduce((sum, row) => sum + Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0);
           const speed = weight ? group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.velocidadeMedia]) * Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0) / weight : 0;
           const vehicleTrips = tripsByVehicle.get(group.vehicleId || group.plate || "sem-veiculo") || [];
+          const vehicleEvents = events.filter((eventRow) => {
+            const eventVehicleId = String(eventRow[F.infleetEvento.veiculo] || "").toLowerCase();
+            const eventPlate = eventRow[F.infleetEvento.placa] || "";
+            return (group.vehicleId && eventVehicleId === group.vehicleId) || (!group.vehicleId && group.plate && eventPlate === group.plate);
+          });
           const fuel = vehicleTrips.reduce((sum, row) => sum + numberValue(row[F.infleetViagem.combustivelLitros]), 0);
           const fuelDistance = vehicleTrips.reduce((sum, row) => sum + numberValue(row[F.infleetViagem.distancia]), 0);
           return {
             plate: vehicleMap.get(group.vehicleId) || group.plate || "Nao vinculado",
             distance,
+            distanceShare: totalKm ? (distance / totalKm) * 100 : 0,
             speed,
             maximum: group.rows.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.velocidadeMaxima])), 0),
             speeding: group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.excessos]), 0),
+            events: vehicleEvents.length,
+            eventsRate: distance ? (vehicleEvents.length / distance) * 1000 : 0,
             autonomy: fuel > 0 ? fuelDistance / fuel : 0,
             odometer: group.rows.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.odometroFinal])), 0),
             idleMinutes: group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.motorOciosoMin]), 0),
@@ -13205,19 +13213,34 @@ function setAppVersion() {
           .map((row) => `<tr><td class="em">${escapeDashboardText(row.plate)}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.maximum.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speeding.toLocaleString("pt-BR")}</td><td class="r">${row.idleMinutes.toLocaleString("pt-BR", { maximumFractionDigits: 0 })} min</td><td class="r">${row.odometer ? row.odometer.toLocaleString("pt-BR", { maximumFractionDigits: 0 }) : "—"}</td><td class="r">${row.autonomy ? row.autonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "—"}</td></tr>`)
           .join("") || emptyRow(8)}</tbody></table>`);
 
-        const recentEvents = [...events].sort((a, b) => new Date(b[F.infleetEvento.reportadoEm]) - new Date(a[F.infleetEvento.reportadoEm])).slice(0, 50);
-        set("metaInfleetEventos", dvDisabled ? "—" : `${events.length} eventos no periodo · ultimos 50`);
-        html("tblInfleetEventos", `<table><thead><tr><th>Data</th><th>Veiculo</th><th>Motorista</th><th>Evento</th><th class="r">Velocidade</th></tr></thead><tbody>${recentEvents
+        const vehicleAverageKm = vehicleRows.length ? totalKm / vehicleRows.length : 0;
+        set("metaInfleetVeiculos", dvDisabled ? "—" : `${vehicleRows.length} veiculos · ${daily.length} dias-veiculo · media ${vehicleAverageKm.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/veiculo`);
+        html("tblInfleetVeiculos", `<table><thead><tr><th>Veiculo</th><th class="r">Km</th><th class="r">% frota</th><th class="r">vs media</th><th class="r">Media</th><th class="r">Maxima</th><th class="r">Excessos</th><th class="r">Eventos/1.000 km</th><th class="r">Km/l real</th></tr></thead><tbody>${vehicleRows
           .map((row) => {
-            const vehicleId = String(row[F.infleetEvento.veiculo] || "").toLowerCase();
-            const driverId = String(row[F.infleetEvento.motorista] || "").toLowerCase();
-            const driver = driverMap.get(driverId) || row[F.infleetEvento.motoristaRecebido] || "Nao identificado";
-            const mapping = row[F.infleetEvento.statusMotorista] || (driverId ? "Vinculado" : "Sem lookup");
-            const speed = numberValue(row[F.infleetEvento.velocidade]);
-            const limit = numberValue(row[F.infleetEvento.limite]);
-            const location = row[F.infleetEvento.endereco] || (row[F.infleetEvento.latitude] != null && row[F.infleetEvento.longitude] != null ? `${row[F.infleetEvento.latitude]}, ${row[F.infleetEvento.longitude]}` : "");
-            return `<tr><td class="dim">${fmtDt(row[F.infleetEvento.reportadoEm])}</td><td class="em">${escapeDashboardText(vehicleMap.get(vehicleId) || row[F.infleetEvento.placa] || "Nao vinculado")}</td><td>${escapeDashboardText(driver)}<div class="metric-secondary">${escapeDashboardText(mapping)}</div></td><td>${escapeDashboardText(row[F.infleetEvento.descricao] || row[F.infleetEvento.tipo] || "Evento")}${location ? `<div class="metric-secondary">${escapeDashboardText(location)}</div>` : ""}</td><td class="r">${speed ? `${speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h` : "—"}${limit ? `<div class="metric-secondary">limite ${limit.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</div>` : ""}</td></tr>`;
-          }).join("") || emptyRow(5)}</tbody></table>`);
+            const vsAverage = vehicleAverageKm ? ((row.distance - vehicleAverageKm) / vehicleAverageKm) * 100 : 0;
+            return `<tr><td class="em">${escapeDashboardText(row.plate)}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.distanceShare.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%</td><td class="r">${metricSplit(`${vsAverage >= 0 ? "+" : ""}${vsAverage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`, `${row.odometer ? `od. ${row.odometer.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}` : "s/odometro"}`, "r")}</td><td class="r">${row.speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.maximum.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speeding.toLocaleString("pt-BR")}</td><td class="r">${metricSplit(row.eventsRate.toLocaleString("pt-BR", { maximumFractionDigits: 1 }), `${row.events.toLocaleString("pt-BR")} eventos`, "r")}</td><td class="r">${row.autonomy ? row.autonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "—"}</td></tr>`;
+          })
+          .join("") || emptyRow(9)}</tbody></table>`);
+
+        const eventsByType = grp(events, (row) => row[F.infleetEvento.descricao] || row[F.infleetEvento.tipo] || "Evento");
+        const eventRows = Object.keys(eventsByType)
+          .filter((key) => key !== "__null__")
+          .map((key) => {
+            const rows = eventsByType[key];
+            const speeds = rows.map((row) => numberValue(row[F.infleetEvento.velocidade])).filter((value) => value > 0);
+            return {
+              label: key,
+              qtd: rows.length,
+              rate: totalKm ? (rows.length / totalKm) * 1000 : 0,
+              avgSpeed: speeds.length ? speeds.reduce((sum, value) => sum + value, 0) / speeds.length : 0,
+              maxSpeed: speeds.length ? Math.max(...speeds) : 0,
+            };
+          })
+          .sort((a, b) => b.qtd - a.qtd);
+        set("metaInfleetEventos", dvDisabled ? "—" : `${events.length} eventos no periodo · ${totalKm ? `${((events.length / totalKm) * 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} por 1.000 km` : "sem km para comparar"}`);
+        html("tblInfleetEventos", `<table><thead><tr><th>Evento</th><th class="r">Qtde</th><th class="r">% total</th><th class="r">Por 1.000 km</th><th class="r">Vel. media</th><th class="r">Vel. maxima</th></tr></thead><tbody>${eventRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(row.label)}</td><td class="r">${row.qtd.toLocaleString("pt-BR")}</td><td class="r">${events.length ? ((row.qtd / events.length) * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "0"}%</td><td class="r">${row.rate.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.avgSpeed ? `${row.avgSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h` : "—"}</td><td class="r">${row.maxSpeed ? `${row.maxSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h` : "—"}</td></tr>`)
+          .join("") || emptyRow(6)}</tbody></table>`);
 
         const riskyTypes = new Set(["routeOverspeed", "deviceOverspeed", "hardAcceleration", "hardBraking", "hardCornering", "deviceIdle"]);
         const driverStats = new Map();

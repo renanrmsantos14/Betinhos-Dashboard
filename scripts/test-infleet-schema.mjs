@@ -41,6 +41,7 @@ for (const expected of [
   "VehiclesSummaries",
   "DailyWorkMeasures",
   "Processar_Viagens_Por_Veiculo",
+  "Atualizar_Mapeamento_Motorista_Viagem",
   "new_viageminfleets",
 ]) {
   assert.ok(flowText.includes(expected), `Contrato do fluxo ausente: ${expected}`);
@@ -65,6 +66,15 @@ assert.ok(
 assert.ok(
   flowText.includes("@string(body('Listar_Resumos_Veiculos_Infleet')?['data']?['vehiclesSummaries'])"),
   "Veículo sem resumo Infleet não deve derrubar o processamento diário",
+);
+
+assert.ok(
+  flowText.includes("\"recordId\": \"@first(body('Filtrar_Motorista_Dataverse_Viagem'))?['cr40f_funcionariosid']\""),
+  "Viagem mapeada deve atualizar o cadastro canonico do motorista",
+);
+assert.ok(
+  flowText.includes("\"new_infleetdriverid\": \"@items('Processar_Viagens')?['driver']?['id']\""),
+  "Viagem mapeada deve persistir Infleet Driver ID para evitar remapeamento por CPF",
 );
 
 console.log("Infleet schema contract OK");

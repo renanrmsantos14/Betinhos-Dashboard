@@ -803,6 +803,27 @@
                       ]
                     },
                     "actions": {
+                      "Atualizar_Mapeamento_Motorista_Viagem": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
+                            "operationId": "UpdateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "cr40f_funcionarioses",
+                            "recordId": "@first(body('Filtrar_Motorista_Dataverse_Viagem'))?['cr40f_funcionariosid']",
+                            "prefer": "return=representation",
+                            "accept": "application/json;odata.metadata=full",
+                            "item": {
+                              "new_infleetdriverid": "@items('Processar_Viagens')?['driver']?['id']",
+                              "new_cpfnormalizado": "@replace(replace(replace(items('Processar_Viagens')?['driver']?['cpf'],'.',''),'-',''),' ','')",
+                              "new_ultimasincronizacaoinfleet": "@utcNow()"
+                            }
+                          }
+                        }
+                      },
                       "Upsert_Viagem_Com_Motorista": {
                         "type": "OpenApiConnection",
                         "inputs": {
@@ -838,6 +859,9 @@
                               "new_Motorista@odata.bind": "@concat('/cr40f_funcionarioses(',first(body('Filtrar_Motorista_Dataverse_Viagem'))?['cr40f_funcionariosid'],')')"
                             }
                           }
+                        },
+                        "runAfter": {
+                          "Atualizar_Mapeamento_Motorista_Viagem": ["Succeeded"]
                         }
                       }
                     },
