@@ -1,6 +1,6 @@
 {
   "name": "dashboard-betinhos",
-  "version": "1.0.194",
+  "version": "1.0.195",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-server.js",
@@ -11,6 +11,7 @@
     "test:infleet-flow": "node scripts/test-infleet-flow-definition.mjs",
     "test:infleet-dashboard": "node scripts/test-infleet-dashboard.mjs",
     "test:infleet": "npm run test:infleet-schema && npm run test:infleet-flow && npm run test:infleet-dashboard",
+    "test:despesas": "node scripts/test-dashboard-expenses.mjs",
     "graphify": "powershell -ExecutionPolicy Bypass -File scripts/build-graphify-code.ps1",
     "snapshot:dev": "powershell -ExecutionPolicy Bypass -File scripts/export-prod-snapshot.ps1 -Environment DEV -EnvironmentUrl https://org23b93544.crm2.dynamics.com/",
     "snapshot:prod": "powershell -ExecutionPolicy Bypass -File scripts/export-prod-snapshot.ps1",

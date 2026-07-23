@@ -5069,6 +5069,200 @@
           padding: 3px 7px;
         }
       }
+
+      /* ===== DESPESAS ===== */
+      #page-despesas {
+        gap: var(--page-gap);
+      }
+      .expense-filter-bar {
+        align-items: end;
+        background: var(--surf);
+        border: 1px solid var(--b1);
+        border-radius: var(--r12);
+        box-shadow: var(--s1);
+        display: grid;
+        gap: var(--space-150);
+        grid-template-columns: minmax(180px, .75fr) minmax(0, 3fr) auto;
+        padding: var(--surface-pad);
+      }
+      .expense-filter-title {
+        color: var(--t1);
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.3;
+      }
+      .expense-filter-subtitle {
+        color: var(--t2);
+        font-size: 12px;
+        margin-top: 2px;
+      }
+      .expense-filter-grid {
+        display: grid;
+        gap: var(--space-100);
+        grid-template-columns: repeat(6, minmax(126px, 1fr));
+      }
+      .expense-filter-field {
+        color: var(--t2);
+        display: grid;
+        font-size: 11px;
+        font-weight: 800;
+        gap: 4px;
+      }
+      .expense-filter-field select {
+        appearance: none;
+        background-color: var(--surf2);
+        border: 1px solid var(--b1);
+        border-radius: 10px;
+        color: var(--t1);
+        font: 600 12px/1 var(--font);
+        height: 40px;
+        min-width: 0;
+        padding: 0 30px 0 10px;
+      }
+      .expense-filter-field select:focus-visible,
+      .expense-record-button:focus-visible,
+      .expense-receipt-link:focus-visible {
+        border-color: #6c91e8;
+        box-shadow: 0 0 0 3px rgba(33, 89, 210, .11);
+        outline: 0;
+      }
+      .expense-filter-reset {
+        align-items: center;
+        background: var(--surf);
+        border: 1px solid var(--b1);
+        border-radius: 10px;
+        color: var(--navy);
+        cursor: pointer;
+        display: inline-flex;
+        font: 800 12px/1 var(--font);
+        height: 40px;
+        justify-content: center;
+        padding: 0 14px;
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          transform var(--dur-fast) var(--ease-out);
+      }
+      .expense-filter-reset:active,
+      .expense-record-button:active {
+        transform: scale(.97);
+      }
+      .expense-chart-table {
+        margin-top: var(--space-100);
+        max-height: 220px;
+      }
+      .expense-record-button,
+      .expense-receipt-link {
+        background: transparent;
+        border: 0;
+        border-radius: var(--r6);
+        color: var(--blue);
+        cursor: pointer;
+        font: 800 11px/1.3 var(--font);
+        padding: 5px 6px;
+        text-decoration: none;
+      }
+      .expense-cell-detail {
+        color: var(--t2);
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+      .expense-mobile-list {
+        display: none;
+      }
+      .expense-mobile-card {
+        background: var(--surf2);
+        border: 1px solid var(--b1);
+        border-radius: 10px;
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+      }
+      .expense-mobile-card-head,
+      .expense-mobile-card-row {
+        align-items: start;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+      }
+      .expense-mobile-card-title {
+        color: var(--t1);
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .expense-mobile-card-value {
+        color: var(--navy);
+        font-size: 15px;
+        font-variant-numeric: tabular-nums;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .expense-mobile-card-row {
+        color: var(--t2);
+        font-size: 11px;
+      }
+      .expense-mobile-card-row b {
+        color: var(--t1);
+        font-weight: 700;
+        text-align: right;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .expense-filter-reset:hover {
+          background: var(--surf2);
+          border-color: var(--b2);
+        }
+        .expense-record-button:hover,
+        .expense-receipt-link:hover {
+          background: var(--blue-l);
+        }
+      }
+      @media (max-width: 1440px) {
+        .expense-filter-bar {
+          grid-template-columns: 1fr;
+        }
+        .expense-filter-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .expense-filter-reset {
+          justify-self: start;
+        }
+      }
+      @media (max-width: 820px) {
+        .expense-detail-table {
+          display: none;
+        }
+        .expense-mobile-list {
+          display: grid;
+          gap: 8px;
+          padding: 8px;
+        }
+      }
+      @media (max-width: 560px) {
+        .expense-filter-grid {
+          grid-template-columns: 1fr;
+        }
+        .expense-filter-field select,
+        .expense-filter-reset {
+          height: 44px;
+        }
+        .expense-filter-reset {
+          justify-self: stretch;
+        }
+      }
+      .tv-browser #page-despesas {
+        grid-template-rows: 88px minmax(0, 1fr);
+      }
+      .tv-browser #page-despesas > .expense-filter-bar,
+      .tv-browser #page-despesas > .tc,
+      .tv-browser #page-despesas .dashboard-section--analysis .cc:nth-child(n + 4) {
+        display: none !important;
+      }
+      .tv-browser #page-despesas .dashboard-section--analysis > .cgrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: minmax(0, 1fr);
+      }
     </style>
   </head>
   <body>
@@ -5188,6 +5382,13 @@
           <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path></svg></span>Pagamentos<span
             class="sb-badge"
             id="nbPag"
+            >—</span
+          >
+        </div>
+        <div class="sb-item" data-nav="despesas" onclick="nav('despesas', this)">
+          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2Z"></path><path d="M9 7h6M9 11h6M9 15h3"></path></svg></span>Despesas<span
+            class="sb-badge"
+            id="nbDesp"
             >—</span
           >
         </div>
@@ -5961,6 +6162,129 @@
           </section>
         </div>
 
+        <div class="page" id="page-despesas">
+          <section class="expense-filter-bar" aria-label="Filtros espec&iacute;ficos de despesas">
+            <div>
+              <div class="expense-filter-title">Recorte de despesas</div>
+              <div class="expense-filter-subtitle">Empresa, categoria, pagamento e conformidade</div>
+            </div>
+            <div class="expense-filter-grid">
+              <label class="expense-filter-field">Empresa
+                <select id="expenseCompanyFilter" onchange="updateExpenseFilters()">
+                  <option value="">Todas</option>
+                </select>
+              </label>
+              <label class="expense-filter-field">Categoria
+                <select id="expenseCategoryFilter" onchange="updateExpenseFilters()">
+                  <option value="">Todas</option>
+                </select>
+              </label>
+              <label class="expense-filter-field">Forma de pagamento
+                <select id="expensePaymentFilter" onchange="updateExpenseFilters()">
+                  <option value="">Todas</option>
+                </select>
+              </label>
+              <label class="expense-filter-field">Financeiro
+                <select id="expenseFinancialFilter" onchange="updateExpenseFilters()">
+                  <option value="">Todos</option>
+                </select>
+              </label>
+              <label class="expense-filter-field">Operacional
+                <select id="expenseOperationalFilter" onchange="updateExpenseFilters()">
+                  <option value="">Todos</option>
+                </select>
+              </label>
+              <label class="expense-filter-field">Comprovante
+                <select id="expenseAttachmentFilter" onchange="updateExpenseFilters()">
+                  <option value="">Todos</option>
+                </select>
+              </label>
+            </div>
+            <button class="expense-filter-reset" type="button" onclick="clearExpenseFilters()">Limpar recorte</button>
+          </section>
+
+          <section class="dashboard-section dashboard-section--metrics" aria-label="Indicadores de despesas">
+            <div class="kpi-row kpi-6">
+              <div class="kpi executive kpi-tone-blue"><div class="kpi-accent"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Despesa realizada</div><div class="kpi-val sm" id="expenseTotal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="expenseTotalDelta"></div></div></div></div>
+              <div class="kpi executive kpi-tone-purple"><div class="kpi-accent"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Alimenta&ccedil;&atilde;o</div><div class="kpi-val sm" id="expenseFood">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="expenseFoodDelta"></div></div></div></div>
+              <div class="kpi executive kpi-tone-orange"><div class="kpi-accent"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Aguardando pagamento</div><div class="kpi-val sm" id="expensePending">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="expensePendingDelta"></div></div></div></div>
+              <div class="kpi executive kpi-tone-green"><div class="kpi-accent"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Ticket m&eacute;dio</div><div class="kpi-val sm" id="expenseTicket">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="expenseTicketDelta"></div></div></div></div>
+              <div class="kpi executive kpi-tone-red"><div class="kpi-accent"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Sem comprovante</div><div class="kpi-val" id="expenseNoReceipt">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="expenseNoReceiptDelta"></div></div></div></div>
+              <div class="kpi executive kpi-tone-orange"><div class="kpi-accent"></div><div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Sem reserva vinculada</div><div class="kpi-val" id="expenseNoReservation">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="expenseNoReservationDelta"></div></div></div></div>
+            </div>
+          </section>
+
+          <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de despesas">
+            <div class="cgrid g2">
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Despesas por m&ecirc;s</div><div class="tc-meta" id="metaExpenseTrend"></div></div></div>
+                <canvas id="cExpenseMonthly" height="112" data-mobile-height="148"></canvas>
+                <div id="tblExpenseMonthly" class="metric-table-wrap expense-chart-table"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Categorias de despesa</div><div class="tc-meta" id="metaExpenseCategories"></div></div></div>
+                <canvas id="cExpenseCategories" height="112" data-mobile-height="172"></canvas>
+                <div id="tblExpenseCategories" class="metric-table-wrap expense-chart-table"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Despesa por empresa</div><div class="tc-meta" id="metaExpenseCompanies"></div></div></div>
+                <div id="tblExpenseCompanies" class="metric-table-wrap"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Grupos DRE</div><div class="tc-meta" id="metaExpenseDre"></div></div></div>
+                <div id="tblExpenseDre" class="metric-table-wrap"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Sa&uacute;de operacional</div><div class="tc-meta" id="metaExpenseHealth"></div></div></div>
+                <div id="tblExpenseHealth" class="metric-table-wrap"></div>
+              </div>
+              <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Motoristas com maior despesa</div><div class="tc-meta" id="metaExpenseDrivers"></div></div></div>
+                <div id="tblExpenseDrivers" class="metric-table-wrap"></div>
+              </div>
+            </div>
+          </section>
+
+          <div class="tc">
+            <div class="tc-bar">
+              <div>
+                <div class="tc-title">Lan&ccedil;amentos de despesas</div>
+                <div class="tc-meta" id="metaExpenses"></div>
+              </div>
+              <input
+                class="tc-search"
+                id="expenseSearch"
+                type="search"
+                aria-label="Buscar despesas"
+                placeholder="Buscar despesa, empresa ou motorista&hellip;"
+                oninput="searchExpenseTable(this.value)"
+              />
+            </div>
+            <div class="tc-wrap">
+              <table class="expense-detail-table">
+                <thead>
+                  <tr>
+                    <th onclick="srt('tbDespesas', 'date', this)">Data</th>
+                    <th onclick="srt('tbDespesas', 'name', this)">Despesa</th>
+                    <th onclick="srt('tbDespesas', 'company', this)">Empresa</th>
+                    <th onclick="srt('tbDespesas', 'category', this)">Categoria</th>
+                    <th onclick="srt('tbDespesas', 'driver', this)">Motorista</th>
+                    <th onclick="srt('tbDespesas', 'link', this)">V&iacute;nculo</th>
+                    <th onclick="srt('tbDespesas', 'payment', this)">Pagamento</th>
+                    <th onclick="srt('tbDespesas', 'operational', this)">Operacional</th>
+                    <th onclick="srt('tbDespesas', 'financial', this)">Financeiro</th>
+                    <th>Comprovante</th>
+                    <th class="r" onclick="srt('tbDespesas', 'value', this)">Valor</th>
+                    <th>A&ccedil;&atilde;o</th>
+                  </tr>
+                </thead>
+                <tbody id="tbDespesas"></tbody>
+              </table>
+              <div class="expense-mobile-list" id="expenseMobileList"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="page" id="page-frota">
           <section class="dashboard-section dashboard-section--metrics" aria-label="Telemetria Infleet">
             <div class="kpi-row kpi-6">
@@ -6526,6 +6850,7 @@
         </div>
         <div class="mobile-more-grid">
           <button type="button" class="mobile-more-item" data-nav="pagantes" onclick="nav('pagantes', this)">Pagamentos</button>
+          <button type="button" class="mobile-more-item" data-nav="despesas" onclick="nav('despesas', this)">Despesas</button>
           <button type="button" class="mobile-more-item" data-nav="motoristas" onclick="nav('motoristas', this)">Motoristas</button>
           <button type="button" class="mobile-more-item" data-nav="manutencoes" onclick="nav('manutencoes', this)">Manutencoes</button>
           <button type="button" class="mobile-more-item" data-nav="multas" onclick="nav('multas', this)">Multas</button>
@@ -8687,6 +9012,30 @@
           "Parceria",
         ];
         const statusMkt = ["Publicado", "Em Produção", "Rascunho", "Aprovado"];
+        const expenseCategories = [
+          ["Abastecimento", "Frota"],
+          ["Almoço", "Equipe"],
+          ["Aplicativos", "Operacional"],
+          ["Café", "Equipe"],
+          ["Estacionamento", "Operacional"],
+          ["Gastos a pedido do cliente", "Cliente"],
+          ["Hospedagem", "Equipe"],
+          ["Jantar", "Equipe"],
+          ["Lanche", "Equipe"],
+          ["Lavagem", "Frota"],
+          ["Locação de carro", "Operacional"],
+          ["Manutenção", "Frota"],
+          ["Outros", "Outros"],
+          ["Pedágio", "Operacional"],
+        ];
+        const expensePayments = [
+          ["Cartão de crédito", "Cartão"],
+          ["CTF (Sem parar)", "Tag"],
+          ["TicketLog", "Cartão"],
+          ["Particular (Reembolso)", "Reembolso"],
+          ["Dinheiro (Corporativo)", "Dinheiro"],
+          ["Faturado (Plano mensal)", "Faturado"],
+        ];
 
         const r = (arr) => arr[Math.floor(random() * arr.length)];
         const rand = (min, max) =>
@@ -8714,6 +9063,10 @@
           veiculos: [],
           funcionarios: [],
           marketing: [],
+          despesas: [],
+          categoriasDespesas: [],
+          formasPagamentoDespesas: [],
+          anexosDespesas: [],
         };
 
         // Preços
@@ -8739,6 +9092,11 @@
             new_apelido: motores[i].split(" ")[0],
             cr40f_status: "Ativo",
             "cr40f_status@OData.Community.Display.V1.FormattedValue": "Ativo",
+            cr40f_nomedaempresa: i % 3 === 0 ? 202410000 : 202410001,
+            "cr40f_nomedaempresa@OData.Community.Display.V1.FormattedValue":
+              i % 3 === 0
+                ? "BETINHOS L AUTO LTDA EPP"
+                : "DEPAULA L AUTO LTDA EPP",
             cr40f_funcao: r([
               "Motorista",
               "Gerente",
@@ -8911,6 +9269,131 @@
           });
         }
 
+        expenseCategories.forEach(([name, dre], index) => {
+          mock.categoriasDespesas.push({
+            cr40f_categoriadespesaoperacionalid: `mock-exp-cat-${index}`,
+            cr40f_nome: name,
+            cr40f_grupodre: dre,
+            cr40f_ordem: index + 1,
+            cr40f_ativa: true,
+          });
+        });
+        expensePayments.forEach(([name, type], index) => {
+          mock.formasPagamentoDespesas.push({
+            cr40f_formapagamentodespesaid: `mock-exp-pay-${index}`,
+            cr40f_nome: name,
+            cr40f_tipo: type,
+            cr40f_ordem: index + 1,
+            cr40f_ativa: true,
+          });
+        });
+
+        const expenseFinancialStatuses = [
+          [100000000, "Não reembolsável"],
+          [100000001, "Aguardando pagamento"],
+          [100000002, "Pago"],
+          [100000003, "Cancelado"],
+        ];
+        const expenseOperationalStatuses = [
+          [100000000, "Enviado"],
+          [100000001, "Precisa corrigir"],
+          [100000002, "Validado"],
+          [100000003, "Recusado"],
+          [100000004, "Cancelado"],
+        ];
+        const expenseAttachmentStatuses = [
+          [100000000, "Sem anexo"],
+          [100000002, "Completo"],
+          [100000003, "Falhou"],
+        ];
+        const expenseEstablishments = [
+          "Posto Avenida",
+          "Restaurante Central",
+          "Café Executivo",
+          "Estacionamento Centro",
+          "Sem Parar",
+          "Hotel Paulista",
+          "Oficina Premium",
+        ];
+        for (let i = 0; i < 220; i++) {
+          const categoryIndex =
+            i % 4 === 0
+              ? r([1, 3, 7, 8])
+              : rand(0, expenseCategories.length - 1);
+          const paymentIndex = rand(0, expensePayments.length - 1);
+          const driverIndex = rand(0, mock.funcionarios.length - 1);
+          const category = expenseCategories[categoryIndex];
+          const payment = expensePayments[paymentIndex];
+          const financial = r(expenseFinancialStatuses);
+          const operational = r(expenseOperationalStatuses);
+          const attachment = random() > 0.84
+            ? r(expenseAttachmentStatuses.slice(1))
+            : expenseAttachmentStatuses[0];
+          const establishment = r(expenseEstablishments);
+          const expenseId = `mock-exp-${i}`;
+          const reservationId =
+            random() > 0.78
+              ? mock.reservas[rand(0, mock.reservas.length - 1)]
+                  .cr40f_reservadeveculosid
+              : null;
+          const amount =
+            category[1] === "Frota"
+              ? randF(120, 1800)
+              : category[1] === "Equipe"
+                ? randF(18, 240)
+                : randF(35, 780);
+          const row = {
+            cr40f_despesaoperacionalid: expenseId,
+            cr40f_nome: `${category[0]} - ${establishment}`,
+            cr40f_datagasto: dt(rand(0, 180)),
+            cr40f_valor: amount,
+            cr40f_estabelecimento: establishment,
+            cr40f_observacao: i % 8 === 0 ? "Despesa operacional da equipe" : "",
+            cr40f_statusfinanceiro: financial[0],
+            "cr40f_statusfinanceiro@OData.Community.Display.V1.FormattedValue":
+              financial[1],
+            cr40f_statusoperacional: operational[0],
+            "cr40f_statusoperacional@OData.Community.Display.V1.FormattedValue":
+              operational[1],
+            cr40f_statusanexo: attachment[0],
+            "cr40f_statusanexo@OData.Community.Display.V1.FormattedValue":
+              attachment[1],
+            cr40f_origem: 100000000,
+            "cr40f_origem@OData.Community.Display.V1.FormattedValue": "App",
+            cr40f_possivelduplicidade: i % 91 === 0,
+            cr40f_protocolo: `DSP-${String(i + 1).padStart(5, "0")}`,
+            _cr40f_categoria_value: `mock-exp-cat-${categoryIndex}`,
+            "_cr40f_categoria_value@OData.Community.Display.V1.FormattedValue":
+              category[0],
+            _cr40f_formapagamento_value: `mock-exp-pay-${paymentIndex}`,
+            "_cr40f_formapagamento_value@OData.Community.Display.V1.FormattedValue":
+              payment[0],
+            _cr40f_motorista_value: `mock-func-${driverIndex}`,
+            "_cr40f_motorista_value@OData.Community.Display.V1.FormattedValue":
+              mock.funcionarios[driverIndex].cr40f_nomecompleto,
+            _cr40f_veiculo_value: `mock-vei-${rand(0, 14)}`,
+            createdon: dt(rand(0, 180)),
+          };
+          if (reservationId) row._cr40f_reserva_value = reservationId;
+          mock.despesas.push(row);
+
+          if (attachment[0] === 100000002) {
+            mock.anexosDespesas.push({
+              cr40f_anexodespesaoperacionalid: `mock-exp-attachment-${i}`,
+              _cr40f_despesa_value: expenseId,
+              cr40f_nomearquivo: `comprovante-${i + 1}.pdf`,
+              cr40f_status: 100000000,
+              "cr40f_status@OData.Community.Display.V1.FormattedValue": "Enviado",
+              cr40f_tipo: 100000000,
+              "cr40f_tipo@OData.Community.Display.V1.FormattedValue":
+                "Comprovante",
+              cr40f_urlsharepoint: "",
+              cr40f_sharelink: "",
+              createdon: dt(rand(0, 180)),
+            });
+          }
+        }
+
         return mock;
       }
 
@@ -8959,7 +9442,7 @@
         if (!response.ok) throw new Error(`Snapshot ${environmentLabel} indisponível (HTTP ${response.status}). Rode ${command}.`);
 
         const snapshot = await response.json();
-        const requiredCollections = ["reservas", "clientes", "passageiros", "servicosPassageiro", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
+        const requiredCollections = ["reservas", "clientes", "passageiros", "servicosPassageiro", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing", "despesas", "categoriasDespesas", "formasPagamentoDespesas", "anexosDespesas"];
         if (snapshot?.schemaVersion !== 1 || !snapshot?.data || snapshot?.source?.environment?.toLowerCase() !== environment) {
           throw new Error(`Snapshot ${environmentLabel} inválido ou de outro ambiente. Rode ${command} novamente.`);
         }
@@ -8974,6 +9457,10 @@
           clientes: [],
           passageiros: [],
           servicosPassageiro: [],
+          despesas: [],
+          categoriasDespesas: [],
+          formasPagamentoDespesas: [],
+          anexosDespesas: [],
           ...snapshot.data,
         };
         const exportedAt = new Date(snapshot.exportedAt);
@@ -9231,6 +9718,10 @@
         veiculos: "cr40f_veiculoses",
         funcionarios: "cr40f_funcionarioses",
         marketing: "new_marketings",
+        despesas: "cr40f_despesaoperacionals",
+        categoriasDespesas: "cr40f_categoriadespesaoperacionals",
+        formasPagamentoDespesas: "cr40f_formapagamentodespesas",
+        anexosDespesas: "cr40f_anexodespesaoperacionals",
         infracoes: "cr40f_infracaodetransitos",
         telemetriaInfleet: "new_telemetriadiariainfleets",
         eventosInfleet: "new_eventoinfleets",
@@ -9309,6 +9800,57 @@
           funcao: "cr40f_funcao",
           cnh: "cr40f_validadedacnh",
           apelido: "new_apelido",
+          empresa: "cr40f_nomedaempresa",
+        },
+        despesa: {
+          id: "cr40f_despesaoperacionalid",
+          nome: "cr40f_nome",
+          data: "cr40f_datagasto",
+          valor: "cr40f_valor",
+          categoria: "_cr40f_categoria_value",
+          formaPagamento: "_cr40f_formapagamento_value",
+          motorista: "_cr40f_motorista_value",
+          veiculo: "_cr40f_veiculo_value",
+          reserva: "_cr40f_reserva_value",
+          cidade: "_cr40f_cidade_value",
+          manutencao: "_cr40f_manutencao_value",
+          estabelecimento: "cr40f_estabelecimento",
+          observacao: "cr40f_observacao",
+          observacaoInterna: "cr40f_observacaointerna",
+          statusFinanceiro: "cr40f_statusfinanceiro",
+          statusOperacional: "cr40f_statusoperacional",
+          statusAnexo: "cr40f_statusanexo",
+          origem: "cr40f_origem",
+          possivelDuplicidade: "cr40f_possivelduplicidade",
+          protocolo: "cr40f_protocolo",
+          km: "cr40f_kminformado",
+          litros: "cr40f_litros",
+          criadoEm: "createdon",
+          alteradoEm: "modifiedon",
+        },
+        categoriaDespesa: {
+          id: "cr40f_categoriadespesaoperacionalid",
+          nome: "cr40f_nome",
+          dre: "cr40f_grupodre",
+          ordem: "cr40f_ordem",
+          ativa: "cr40f_ativa",
+        },
+        formaDespesa: {
+          id: "cr40f_formapagamentodespesaid",
+          nome: "cr40f_nome",
+          tipo: "cr40f_tipo",
+          ordem: "cr40f_ordem",
+          ativa: "cr40f_ativa",
+        },
+        anexoDespesa: {
+          id: "cr40f_anexodespesaoperacionalid",
+          despesa: "_cr40f_despesa_value",
+          nomeArquivo: "cr40f_nomearquivo",
+          url: "cr40f_urlsharepoint",
+          shareLink: "cr40f_sharelink",
+          status: "cr40f_status",
+          tipo: "cr40f_tipo",
+          criadoEm: "createdon",
         },
         mkt: {
           status: "new_status",
@@ -9368,6 +9910,34 @@
       const DV_STATUS_FAT_PAGO = 202410010;
       const DV_STATUS_FAT_PAGANTE_EM_VIAGEM = 202410006;
       const DV_STATUS_FAT_MENSAL = 202410008;
+      const EXPENSE_STATUS = {
+        financeiro: {
+          100000000: "Não reembolsável",
+          100000001: "Aguardando pagamento",
+          100000002: "Pago",
+          100000003: "Cancelado",
+        },
+        operacional: {
+          100000000: "Enviado",
+          100000001: "Precisa corrigir",
+          100000002: "Validado",
+          100000003: "Recusado",
+          100000004: "Cancelado",
+        },
+        anexo: {
+          100000000: "Sem anexo",
+          100000001: "Enviando",
+          100000002: "Completo",
+          100000003: "Falhou",
+          100000004: "Parcial",
+        },
+      };
+      const EXPENSE_FOOD_CATEGORIES = new Set([
+        "almoco",
+        "cafe",
+        "jantar",
+        "lanche",
+      ]);
 
       let DB = {
         reservas: [],
@@ -9383,18 +9953,37 @@
         veiculos: [],
         funcionarios: [],
         marketing: [],
+        despesas: [],
+        categoriasDespesas: [],
+        formasPagamentoDespesas: [],
+        anexosDespesas: [],
         infracoes: [],
         telemetriaInfleet: [],
         eventosInfleet: [],
         viagensInfleet: [],
       };
-      let VW = { reservas: [], manutencoes: [], multas: [], trocas: [] };
+      let VW = {
+        reservas: [],
+        manutencoes: [],
+        multas: [],
+        trocas: [],
+        despesas: [],
+      };
       let charts = {},
         sparks = {},
         detailCharts = [],
         srtSt = {},
         tblCache = {};
       let msState = { St: [], Cl: [], Mo: [], Tp: [] };
+      let expenseFilters = {
+        company: "",
+        category: "",
+        payment: "",
+        financial: "",
+        operational: "",
+        attachment: "",
+      };
+      let expenseSearchQuery = "";
       let funcMapGlobal = new Map();
       let infracaoMapGlobal = new Map();
 
@@ -10123,6 +10712,7 @@ function setAppVersion() {
         servicos: ["reservas", "precos", "funcionarios", "clientes", "passageiros", "servicosPassageiro"],
         faturamento: ["reservas", "precos"],
         pagantes: ["reservas", "precos", "pagantes"],
+        despesas: ["despesas", "categoriasDespesas", "formasPagamentoDespesas", "anexosDespesas", "funcionarios", "reservas", "precos"],
         frota: ["reservas", "precos", "manutencoes", "veiculos", "funcionarios", "telemetriaInfleet", "eventosInfleet", "viagensInfleet"],
         motoristas: ["reservas", "precos", "funcionarios"],
         manutencoes: ["manutencoes"],
@@ -10179,6 +10769,7 @@ function setAppVersion() {
               veiculos: DB.veiculos.length,
               funcionarios: DB.funcionarios.length,
               marketing: DB.marketing.length,
+              despesas: DB.despesas.length,
             });
           } else {
             USING_MOCK_DATA = false;
@@ -10194,6 +10785,7 @@ function setAppVersion() {
             veiculos: DB.veiculos.length,
             funcionarios: DB.funcionarios.length,
             marketing: DB.marketing.length,
+            despesas: DB.despesas.length,
           });
           buildFuncMap();
           buildInfracaoMap();
@@ -10304,12 +10896,69 @@ function setAppVersion() {
       }
       async function loadFuncionarios() {
         DB.funcionarios = await fetchAll(
-          `${API()}/${T.funcionarios}?$select=cr40f_funcionariosid,${F.fun.nome},${F.fun.status},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido}`,
+          `${API()}/${T.funcionarios}?$select=cr40f_funcionariosid,${F.fun.nome},${F.fun.status},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido},${F.fun.empresa}`,
         );
       }
       async function loadMarketing() {
         DB.marketing = await fetchAll(
           `${API()}/${T.marketing}?$select=${F.mkt.status},${F.mkt.cat},${F.mkt.data}&$orderby=${F.mkt.data} desc`,
+        );
+      }
+      async function loadDespesas() {
+        const fields = [
+          F.despesa.id,
+          F.despesa.nome,
+          F.despesa.data,
+          F.despesa.valor,
+          F.despesa.categoria,
+          F.despesa.formaPagamento,
+          F.despesa.motorista,
+          F.despesa.veiculo,
+          F.despesa.reserva,
+          F.despesa.cidade,
+          F.despesa.manutencao,
+          F.despesa.estabelecimento,
+          F.despesa.observacao,
+          F.despesa.observacaoInterna,
+          F.despesa.statusFinanceiro,
+          F.despesa.statusOperacional,
+          F.despesa.statusAnexo,
+          F.despesa.origem,
+          F.despesa.possivelDuplicidade,
+          F.despesa.protocolo,
+          F.despesa.km,
+          F.despesa.litros,
+          F.despesa.criadoEm,
+          F.despesa.alteradoEm,
+        ].join(",");
+        DB.despesas = await fetchAll(
+          `${API()}/${T.despesas}?$select=${fields}&$filter=statecode eq 0&$orderby=${F.despesa.data} desc`,
+        );
+      }
+      async function loadCategoriasDespesas() {
+        const fields = Object.keys(F.categoriaDespesa)
+          .map((key) => F.categoriaDespesa[key])
+          .join(",");
+        DB.categoriasDespesas = await fetchAll(
+          `${API()}/${T.categoriasDespesas}?$select=${fields}&$filter=statecode eq 0 and ${F.categoriaDespesa.ativa} eq true&$orderby=${F.categoriaDespesa.ordem} asc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadFormasPagamentoDespesas() {
+        const fields = Object.keys(F.formaDespesa)
+          .map((key) => F.formaDespesa[key])
+          .join(",");
+        DB.formasPagamentoDespesas = await fetchAll(
+          `${API()}/${T.formasPagamentoDespesas}?$select=${fields}&$filter=statecode eq 0 and ${F.formaDespesa.ativa} eq true&$orderby=${F.formaDespesa.ordem} asc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadAnexosDespesas() {
+        const fields = Object.keys(F.anexoDespesa)
+          .map((key) => F.anexoDespesa[key])
+          .join(",");
+        DB.anexosDespesas = await fetchAll(
+          `${API()}/${T.anexosDespesas}?$select=${fields}&$filter=statecode eq 0&$orderby=${F.anexoDespesa.criadoEm} desc`,
         );
       }
       async function loadTelemetriaInfleet() {
@@ -10349,6 +10998,10 @@ function setAppVersion() {
         veiculos: loadVeiculos,
         funcionarios: loadFuncionarios,
         marketing: loadMarketing,
+        despesas: loadDespesas,
+        categoriasDespesas: loadCategoriasDespesas,
+        formasPagamentoDespesas: loadFormasPagamentoDespesas,
+        anexosDespesas: loadAnexosDespesas,
         telemetriaInfleet: loadTelemetriaInfleet,
         eventosInfleet: loadEventosInfleet,
         viagensInfleet: loadViagensInfleet,
@@ -10359,7 +11012,7 @@ function setAppVersion() {
       }
 
       async function loadDataSets(keys) {
-        if (shouldUseSnapshot() || USING_MOCK_DATA) {
+        if (shouldUseSnapshot() || shouldUseMockData() || USING_MOCK_DATA) {
           markAllDataSetsLoaded();
           return;
         }
@@ -11347,7 +12000,21 @@ function setAppVersion() {
         const shouldIncrease = /tempo de pagamento/i;
         const shouldDecrease = /pendente|a receber|multa|cancelad|manuten|custo|cnh|corretiva|avaria|em andamento|falta|sem pre[cç]o|sem op|sem motorista|sem cliente/i;
         document.querySelectorAll(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .meta-kpi-pill > span, .exec-alert span").forEach((label) => {
-          const direction = shouldIncrease.test(label.textContent) ? "up" : shouldDecrease.test(label.textContent) ? "down" : "up";
+          const isExpenseLabel = Boolean(label.closest("#page-despesas"));
+          const isExpenseMetric = isExpenseLabel && label.classList.contains("kpi-lbl");
+          if (isExpenseLabel && !isExpenseMetric) {
+            label.classList.remove("goal-direction-label");
+            delete label.dataset.goalDirection;
+            label.title = "Análise descritiva das despesas no período filtrado.";
+            return;
+          }
+          const direction = isExpenseMetric
+            ? "down"
+            : shouldIncrease.test(label.textContent)
+              ? "up"
+              : shouldDecrease.test(label.textContent)
+                ? "down"
+                : "up";
           label.classList.add("goal-direction-label");
           label.dataset.goalDirection = direction;
           label.title = `Para um resultado positivo, este indicador deve ${direction === "up" ? "subir" : "descer"}.`;
@@ -12136,6 +12803,7 @@ function setAppVersion() {
         VW.manutencoes = filterByDate(DB.manutencoes, F.man.data);
         VW.multas = filterByDate(DB.multas, F.mul.data);
         VW.trocas = filterByDate(DB.trocas, F.trc.data);
+        VW.despesas = filterByDate(DB.despesas, F.despesa.data);
 
         const pagReceb = DB.pagantes.filter(isReceivedPayment);
 
@@ -12906,6 +13574,7 @@ function setAppVersion() {
           recebimentoPct,
           pagReceb,
         });
+        renderDespesas(dvDisabled);
         renderFrota(dvDisabled, rv);
         renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap);
         renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap);
@@ -13136,6 +13805,768 @@ function setAppVersion() {
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#39;");
+      }
+
+      function expenseId(value) {
+        return String(value || "").replace(/[{}]/g, "").toLowerCase();
+      }
+
+      function expenseCompanyLabel(value) {
+        const label = String(value || "").trim();
+        const normalized = normL(label);
+        if (normalized.includes("betinhos")) return "BETINHOS";
+        if (normalized.includes("depaula")) return "DEPAULA";
+        return label || "Sem empresa";
+      }
+
+      function expenseStatusLabel(row, field, group) {
+        const raw = row?.[field];
+        return EXPENSE_STATUS[group]?.[raw] || String(fv(row || {}, field) || "Não informado");
+      }
+
+      function safeExpenseUrl(value) {
+        const raw = String(value || "").trim();
+        if (!raw) return "";
+        try {
+          const parsed = new URL(raw, window.location.href);
+          return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : "";
+        } catch (_) {
+          return "";
+        }
+      }
+
+      function buildExpenseRows() {
+        const categoryMap = new Map(
+          (DB.categoriasDespesas || []).map((row) => [
+            expenseId(row[F.categoriaDespesa.id]),
+            {
+              name: String(row[F.categoriaDespesa.nome] || "Sem categoria"),
+              dre: String(fv(row, F.categoriaDespesa.dre) || row[F.categoriaDespesa.dre] || "Sem grupo DRE"),
+            },
+          ]),
+        );
+        const paymentMap = new Map(
+          (DB.formasPagamentoDespesas || []).map((row) => [
+            expenseId(row[F.formaDespesa.id]),
+            String(row[F.formaDespesa.nome] || "Sem forma de pagamento"),
+          ]),
+        );
+        const employeeMap = new Map(
+          (DB.funcionarios || []).map((row) => [
+            expenseId(row.cr40f_funcionariosid),
+            {
+              name: String(row[F.fun.nome] || row[F.fun.apelido] || "Sem motorista"),
+              company: expenseCompanyLabel(fv(row, F.fun.empresa)),
+            },
+          ]),
+        );
+        const reservationMap = new Map(
+          (DB.reservas || []).map((row) => [
+            expenseId(row[F.res.id]),
+            {
+              client: String(row._cli || row[F.res.navCli]?.[F.cliente.nome] || "Sem cliente"),
+              date: row[F.res.data] || "",
+            },
+          ]),
+        );
+        const attachmentsByExpense = new Map();
+        for (const row of DB.anexosDespesas || []) {
+          const key = expenseId(row[F.anexoDespesa.despesa]);
+          if (!key) continue;
+          const current = attachmentsByExpense.get(key) || [];
+          current.push(row);
+          attachmentsByExpense.set(key, current);
+        }
+
+        return (DB.despesas || []).map((source) => {
+          const id = expenseId(source[F.despesa.id]);
+          const categoryId = expenseId(source[F.despesa.categoria]);
+          const paymentId = expenseId(source[F.despesa.formaPagamento]);
+          const driverId = expenseId(source[F.despesa.motorista]);
+          const reservationId = expenseId(source[F.despesa.reserva]);
+          const categoryMaster = categoryMap.get(categoryId);
+          const employee = employeeMap.get(driverId);
+          const reservation = reservationMap.get(reservationId);
+          const attachments = attachmentsByExpense.get(id) || [];
+          const attachment = attachments.find((row) =>
+            safeExpenseUrl(row[F.anexoDespesa.shareLink] || row[F.anexoDespesa.url]),
+          ) || attachments[0];
+          const receiptUrl = attachment
+            ? safeExpenseUrl(
+                attachment[F.anexoDespesa.shareLink] ||
+                  attachment[F.anexoDespesa.url],
+              )
+            : "";
+          const category =
+            categoryMaster?.name ||
+            String(fv(source, F.despesa.categoria) || "Sem categoria");
+          const payment =
+            paymentMap.get(paymentId) ||
+            String(fv(source, F.despesa.formaPagamento) || "Sem forma de pagamento");
+          const driver =
+            employee?.name ||
+            String(fv(source, F.despesa.motorista) || "Sem motorista");
+          const financial = expenseStatusLabel(
+            source,
+            F.despesa.statusFinanceiro,
+            "financeiro",
+          );
+          const operational = expenseStatusLabel(
+            source,
+            F.despesa.statusOperacional,
+            "operacional",
+          );
+          const attachmentStatus = expenseStatusLabel(
+            source,
+            F.despesa.statusAnexo,
+            "anexo",
+          );
+          const value = Number(source[F.despesa.valor] || 0);
+          const date = String(source[F.despesa.data] || "");
+          const company = employee?.company || "Sem empresa";
+          const client = reservation?.client || "";
+          const link = reservationId
+            ? `Reserva${client ? ` · ${client}` : ""}`
+            : "Sem reserva";
+          const noReceipt =
+            Number(source[F.despesa.statusAnexo]) !== 100000002 &&
+            attachments.length === 0;
+          const row = {
+            id,
+            source,
+            date,
+            dateKey: date.slice(0, 10),
+            name: String(source[F.despesa.nome] || "Despesa sem título"),
+            establishment: String(source[F.despesa.estabelecimento] || ""),
+            observation: String(source[F.despesa.observacao] || ""),
+            internalObservation: String(
+              source[F.despesa.observacaoInterna] || "",
+            ),
+            protocol: String(source[F.despesa.protocolo] || ""),
+            value,
+            categoryId,
+            category,
+            dre: categoryMaster?.dre || "Sem grupo DRE",
+            paymentId,
+            payment,
+            driverId,
+            driver,
+            driverKey: driverId || `nome:${normL(driver)}`,
+            company,
+            reservationId,
+            client,
+            link,
+            financialValue: String(source[F.despesa.statusFinanceiro] ?? ""),
+            financial,
+            operationalValue: String(source[F.despesa.statusOperacional] ?? ""),
+            operational,
+            attachmentValue: String(source[F.despesa.statusAnexo] ?? ""),
+            attachmentStatus,
+            noReceipt,
+            receiptUrl,
+            possibleDuplicate: source[F.despesa.possivelDuplicidade] === true,
+          };
+          row.searchText = normL(
+            [
+              row.name,
+              row.establishment,
+              row.protocol,
+              row.company,
+              row.category,
+              row.dre,
+              row.payment,
+              row.driver,
+              row.client,
+              row.observation,
+              row.internalObservation,
+              row.financial,
+              row.operational,
+              row.attachmentStatus,
+            ].join(" "),
+          );
+          return row;
+        });
+      }
+
+      function setExpenseSelectOptions(id, options, defaultLabel, selected) {
+        const select = document.getElementById(id);
+        if (!select) return;
+        const unique = new Map();
+        for (const option of options) {
+          const value = String(option.value ?? "");
+          if (!value || unique.has(value)) continue;
+          unique.set(value, String(option.label || value));
+        }
+        select.innerHTML =
+          `<option value="">${escapeDashboardText(defaultLabel)}</option>` +
+          [...unique.entries()]
+            .sort((a, b) => a[1].localeCompare(b[1], "pt-BR"))
+            .map(
+              ([value, label]) =>
+                `<option value="${escapeDashboardText(value)}">${escapeDashboardText(label)}</option>`,
+            )
+            .join("");
+        select.value = selected || "";
+      }
+
+      function populateExpenseFilters(rows) {
+        setExpenseSelectOptions(
+          "expenseCompanyFilter",
+          rows.map((row) => ({ value: row.company, label: row.company })),
+          "Todas",
+          expenseFilters.company,
+        );
+        setExpenseSelectOptions(
+          "expenseCategoryFilter",
+          (DB.categoriasDespesas || []).map((row) => ({
+            value: expenseId(row[F.categoriaDespesa.id]),
+            label: row[F.categoriaDespesa.nome],
+          })),
+          "Todas",
+          expenseFilters.category,
+        );
+        setExpenseSelectOptions(
+          "expensePaymentFilter",
+          (DB.formasPagamentoDespesas || []).map((row) => ({
+            value: expenseId(row[F.formaDespesa.id]),
+            label: row[F.formaDespesa.nome],
+          })),
+          "Todas",
+          expenseFilters.payment,
+        );
+        setExpenseSelectOptions(
+          "expenseFinancialFilter",
+          Object.entries(EXPENSE_STATUS.financeiro).map(([value, label]) => ({
+            value,
+            label,
+          })),
+          "Todos",
+          expenseFilters.financial,
+        );
+        setExpenseSelectOptions(
+          "expenseOperationalFilter",
+          Object.entries(EXPENSE_STATUS.operacional).map(([value, label]) => ({
+            value,
+            label,
+          })),
+          "Todos",
+          expenseFilters.operational,
+        );
+        setExpenseSelectOptions(
+          "expenseAttachmentFilter",
+          Object.entries(EXPENSE_STATUS.anexo).map(([value, label]) => ({
+            value,
+            label,
+          })),
+          "Todos",
+          expenseFilters.attachment,
+        );
+      }
+
+      function expenseMatchesFilters(row, includeDate = true, dateRange = null) {
+        const selectedDriverKeys = (msState.Mo || []).map((value) =>
+          expenseId(value) || normL(value),
+        );
+        const driverMatches =
+          !selectedDriverKeys.length ||
+          selectedDriverKeys.includes(row.driverKey) ||
+          selectedDriverKeys.includes(`nome:${normL(row.driver)}`);
+        if (!driverMatches) return false;
+        if (expenseFilters.company && row.company !== expenseFilters.company) return false;
+        if (expenseFilters.category && row.categoryId !== expenseFilters.category) return false;
+        if (expenseFilters.payment && row.paymentId !== expenseFilters.payment) return false;
+        if (expenseFilters.financial && row.financialValue !== expenseFilters.financial) return false;
+        if (expenseFilters.operational && row.operationalValue !== expenseFilters.operational) return false;
+        if (expenseFilters.attachment && row.attachmentValue !== expenseFilters.attachment) return false;
+        if (!includeDate) return true;
+        const start =
+          dateRange?.start ?? document.getElementById("fS")?.value ?? "";
+        const end =
+          dateRange?.end ?? document.getElementById("fE")?.value ?? "";
+        if ((start || end) && !row.dateKey) return false;
+        if (start && row.dateKey < start) return false;
+        if (end && row.dateKey > end) return false;
+        return true;
+      }
+
+      function getPreviousExpensePeriod(start, end) {
+        if (!start || !end) return null;
+        const startDate = new Date(`${start}T12:00:00`);
+        const endDate = new Date(`${end}T12:00:00`);
+        if (
+          Number.isNaN(startDate.getTime()) ||
+          Number.isNaN(endDate.getTime()) ||
+          endDate < startDate
+        ) {
+          return null;
+        }
+        const days = Math.round((endDate - startDate) / 86400000) + 1;
+        const previousEnd = new Date(startDate);
+        previousEnd.setDate(previousEnd.getDate() - 1);
+        const previousStart = new Date(previousEnd);
+        previousStart.setDate(previousStart.getDate() - days + 1);
+        return { start: ymd(previousStart), end: ymd(previousEnd) };
+      }
+
+      function expenseDeltaMarkup(current, previous, options = {}) {
+        const {
+          currency = false,
+          higherIsWorse = true,
+          label = "ANT.",
+        } = options;
+        if (previous == null) {
+          return `<span class="badge-kpi badge-lm"><span class="bk-label">${label}</span><span class="bk-val">&mdash;</span><span class="bk-pct">s/dado</span></span>`;
+        }
+        const previousLabel = currency
+          ? brlS(previous)
+          : Number(previous).toLocaleString("pt-BR");
+        if (!previous) {
+          return `<span class="badge-kpi badge-lm"><span class="bk-label">${label}</span><span class="bk-val">${previousLabel}</span><span class="bk-pct">base zero</span></span>`;
+        }
+        const delta = ((current - previous) / Math.abs(previous)) * 100;
+        const favorable = higherIsWorse ? delta <= 0 : delta >= 0;
+        return `<span class="badge-kpi badge-lm"><span class="bk-label">${label}</span><span class="bk-val">${previousLabel}</span><span class="bk-pct ${favorable ? "du" : "dd"}">${delta >= 0 ? "▲" : "▼"}${Math.abs(delta).toFixed(1)}%</span></span>`;
+      }
+
+      function aggregateExpenses(rows, keyFn) {
+        const grouped = new Map();
+        for (const row of rows) {
+          const key = String(keyFn(row) || "Não informado");
+          const current = grouped.get(key) || { label: key, qtd: 0, value: 0 };
+          current.qtd += 1;
+          current.value += row.value;
+          grouped.set(key, current);
+        }
+        return [...grouped.values()].sort(
+          (a, b) => b.value - a.value || b.qtd - a.qtd || a.label.localeCompare(b.label, "pt-BR"),
+        );
+      }
+
+      function expenseSubsetMetrics(rows) {
+        const total = rows.reduce((sum, row) => sum + row.value, 0);
+        const foodRows = rows.filter((row) =>
+          EXPENSE_FOOD_CATEGORIES.has(normL(row.category)),
+        );
+        const pendingRows = rows.filter(
+          (row) => row.financialValue === "100000001",
+        );
+        return {
+          total,
+          food: foodRows.reduce((sum, row) => sum + row.value, 0),
+          pending: pendingRows.reduce((sum, row) => sum + row.value, 0),
+          ticket: rows.length ? total / rows.length : 0,
+          noReceipt: rows.filter((row) => row.noReceipt).length,
+          noReservation: rows.filter((row) => !row.reservationId).length,
+        };
+      }
+
+      function renderExpenseTable(rows) {
+        const body = document.getElementById("tbDespesas");
+        const mobile = document.getElementById("expenseMobileList");
+        if (!body || !mobile) return;
+        tblCache.tbDespesasView = rows;
+        const maxDesktop = 500;
+        const maxMobile = 120;
+        const desktopRows = rows.slice(0, maxDesktop);
+        const mobileRows = rows.slice(0, maxMobile);
+        body.innerHTML =
+          desktopRows
+            .map((row) => {
+              const detail = [
+                row.establishment,
+                row.protocol,
+                row.observation || row.internalObservation
+                  ? trunc(row.observation || row.internalObservation, 48)
+                  : "",
+              ]
+                .filter(Boolean)
+                .map(escapeDashboardText)
+                .join(" · ");
+              const receipt = row.receiptUrl
+                ? `<a class="expense-receipt-link" href="${escapeDashboardText(row.receiptUrl)}" target="_blank" rel="noopener noreferrer">Abrir</a>`
+                : badge(row.attachmentStatus);
+              return `<tr>
+                <td class="dim">${fmtD(row.date)}</td>
+                <td class="em">${escapeDashboardText(row.name)}${detail ? `<span class="expense-cell-detail">${detail}</span>` : ""}</td>
+                <td>${escapeDashboardText(row.company)}</td>
+                <td>${escapeDashboardText(row.category)}<span class="expense-cell-detail">${escapeDashboardText(row.dre)}</span></td>
+                <td>${escapeDashboardText(row.driver)}</td>
+                <td>${escapeDashboardText(row.link)}</td>
+                <td>${escapeDashboardText(row.payment)}</td>
+                <td>${badge(row.operational)}</td>
+                <td>${badge(row.financial)}</td>
+                <td>${receipt}</td>
+                <td class="r em">${brl(row.value)}</td>
+                <td><button class="expense-record-button" type="button" onclick="openExpenseRecord('${escapeDashboardText(row.id)}')">Abrir registro</button></td>
+              </tr>`;
+            })
+            .join("") || emptyRow(12);
+        mobile.innerHTML =
+          mobileRows
+            .map((row) => {
+              const receipt = row.receiptUrl
+                ? `<a class="expense-receipt-link" href="${escapeDashboardText(row.receiptUrl)}" target="_blank" rel="noopener noreferrer">Comprovante</a>`
+                : badge(row.attachmentStatus);
+              return `<article class="expense-mobile-card">
+                <div class="expense-mobile-card-head">
+                  <div><div class="expense-mobile-card-title">${escapeDashboardText(row.name)}</div><div class="expense-cell-detail">${fmtD(row.date)} · ${escapeDashboardText(row.company)}</div></div>
+                  <div class="expense-mobile-card-value">${brl(row.value)}</div>
+                </div>
+                <div class="expense-mobile-card-row"><span>Categoria</span><b>${escapeDashboardText(row.category)}</b></div>
+                <div class="expense-mobile-card-row"><span>Motorista</span><b>${escapeDashboardText(row.driver)}</b></div>
+                <div class="expense-mobile-card-row"><span>Vínculo</span><b>${escapeDashboardText(row.link)}</b></div>
+                <div class="expense-mobile-card-row"><span>Financeiro</span><b>${badge(row.financial)}</b></div>
+                <div class="expense-mobile-card-row"><span>Comprovante</span><b>${receipt}</b></div>
+                <div class="expense-mobile-card-row"><span>Ação</span><button class="expense-record-button" type="button" onclick="openExpenseRecord('${escapeDashboardText(row.id)}')">Abrir registro</button></div>
+              </article>`;
+            })
+            .join("") ||
+          '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
+        const total = tblCache.tbDespesasBase?.length || 0;
+        const shown = rows.length;
+        const limited = shown > maxDesktop
+          ? ` · primeiros ${maxDesktop.toLocaleString("pt-BR")} na tabela`
+          : "";
+        set(
+          "metaExpenses",
+          `${shown.toLocaleString("pt-BR")} de ${total.toLocaleString("pt-BR")} lançamentos${limited}`,
+        );
+      }
+
+      function renderDespesas(dvDisabled) {
+        const allRows = dvDisabled ? [] : buildExpenseRows();
+        populateExpenseFilters(allRows);
+        const rowsBeforeDate = allRows.filter((row) =>
+          expenseMatchesFilters(row, false),
+        );
+        const rows = rowsBeforeDate
+          .filter((row) => expenseMatchesFilters(row, true))
+          .sort((a, b) => b.date.localeCompare(a.date) || b.value - a.value);
+        const start = document.getElementById("fS")?.value || "";
+        const end = document.getElementById("fE")?.value || "";
+        const previousPeriod = getPreviousExpensePeriod(start, end);
+        const previousRows = previousPeriod
+          ? rowsBeforeDate.filter((row) =>
+              expenseMatchesFilters(row, true, previousPeriod),
+            )
+          : [];
+        const currentMetrics = expenseSubsetMetrics(rows);
+        const previousMetrics = previousPeriod
+          ? expenseSubsetMetrics(previousRows)
+          : null;
+
+        set("nbDesp", rows.length.toLocaleString("pt-BR"));
+        set("expenseTotal", dvDisabled ? "—" : brlS(currentMetrics.total));
+        set("expenseFood", dvDisabled ? "—" : brlS(currentMetrics.food));
+        set("expensePending", dvDisabled ? "—" : brlS(currentMetrics.pending));
+        set("expenseTicket", dvDisabled ? "—" : brl(currentMetrics.ticket));
+        set("expenseNoReceipt", dvDisabled ? "—" : currentMetrics.noReceipt.toLocaleString("pt-BR"));
+        set("expenseNoReservation", dvDisabled ? "—" : currentMetrics.noReservation.toLocaleString("pt-BR"));
+
+        html(
+          "expenseTotalDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.total, previousMetrics?.total ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expenseFoodDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.food, previousMetrics?.food ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expensePendingDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.pending, previousMetrics?.pending ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expenseTicketDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.ticket, previousMetrics?.ticket ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expenseNoReceiptDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.noReceipt, previousMetrics?.noReceipt ?? null),
+        );
+        html(
+          "expenseNoReservationDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.noReservation, previousMetrics?.noReservation ?? null),
+        );
+
+        const monthly = aggregateExpenses(rows, (row) => mK(row.date)).map(
+          (item) => ({
+            ...item,
+            food: rows
+              .filter(
+                (row) =>
+                  mK(row.date) === item.label &&
+                  EXPENSE_FOOD_CATEGORIES.has(normL(row.category)),
+              )
+              .reduce((sum, row) => sum + row.value, 0),
+          }),
+        );
+        monthly.sort((a, b) => a.label.localeCompare(b.label));
+        set(
+          "metaExpenseTrend",
+          dvDisabled
+            ? "—"
+            : `${rows.length.toLocaleString("pt-BR")} lançamentos · ${brl(currentMetrics.total)}`,
+        );
+        mkChart("cExpenseMonthly", {
+          type: "line",
+          data: {
+            labels: monthly.map((item) => monthTableLabel(item.label)),
+            datasets: [
+              {
+                label: "Despesa total",
+                data: monthly.map((item) => item.value),
+                borderColor: PAL[0],
+                backgroundColor: "rgba(33, 89, 210, .08)",
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.25,
+                fill: false,
+              },
+              {
+                label: "Alimentação",
+                data: monthly.map((item) => item.food),
+                borderColor: PAL[2],
+                backgroundColor: "rgba(107, 75, 155, .08)",
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.25,
+                fill: false,
+              },
+            ],
+          },
+          options: opts0({ yBrl: true, datalabels: false }),
+        });
+        html(
+          "tblExpenseMonthly",
+          `<table><thead><tr><th>Mês</th><th class="r">Lançamentos</th><th class="r">Despesa</th><th class="r">Alimentação</th></tr></thead><tbody>${
+            monthly
+              .map(
+                (item) =>
+                  `<tr><td class="em">${monthTableLabel(item.label)}</td><td class="r">${item.qtd.toLocaleString("pt-BR")}</td><td class="r em">${brl(item.value)}</td><td class="r">${brl(item.food)}</td></tr>`,
+              )
+              .join("") || emptyRow(4)
+          }</tbody></table>`,
+        );
+
+        const categories = aggregateExpenses(rows, (row) => row.category);
+        const topCategories = categories.slice(0, 8);
+        set(
+          "metaExpenseCategories",
+          dvDisabled
+            ? "—"
+            : `${categories.length.toLocaleString("pt-BR")} categorias`,
+        );
+        mkChart("cExpenseCategories", {
+          type: "bar",
+          data: {
+            labels: topCategories.map((item) => trunc(item.label, 24)),
+            datasets: [
+              {
+                label: "Despesa",
+                data: topCategories.map((item) => item.value),
+                backgroundColor: topCategories.map(
+                  (_, index) => PAL[index % PAL.length],
+                ),
+                borderRadius: 6,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: opts0({
+            hBar: true,
+            xBrl: true,
+            noLegend: true,
+            datalabels: false,
+          }),
+        });
+        renderDistributionTable(
+          "tblExpenseCategories",
+          categories,
+          rows.length,
+          {
+            label: "Categoria",
+            countLabel: "Lançamentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+            limit: 8,
+          },
+        );
+
+        const companies = aggregateExpenses(rows, (row) => row.company);
+        const dreGroups = aggregateExpenses(rows, (row) => row.dre);
+        const drivers = aggregateExpenses(rows, (row) => row.driver);
+        set("metaExpenseCompanies", dvDisabled ? "—" : `${companies.length} empresas`);
+        set("metaExpenseDre", dvDisabled ? "—" : `${dreGroups.length} grupos`);
+        set("metaExpenseDrivers", dvDisabled ? "—" : `${drivers.length} responsáveis`);
+        renderDistributionTable(
+          "tblExpenseCompanies",
+          companies,
+          rows.length,
+          {
+            label: "Empresa",
+            countLabel: "Lançamentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+          },
+        );
+        renderDistributionTable(
+          "tblExpenseDre",
+          dreGroups,
+          rows.length,
+          {
+            label: "Grupo DRE",
+            countLabel: "Lançamentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+          },
+        );
+        renderDistributionTable(
+          "tblExpenseDrivers",
+          drivers,
+          rows.length,
+          {
+            label: "Motorista",
+            countLabel: "Lançamentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+          },
+        );
+
+        const healthDefinitions = [
+          ["Aguardando pagamento", rows.filter((row) => row.financialValue === "100000001")],
+          ["Sem comprovante", rows.filter((row) => row.noReceipt)],
+          ["Sem categoria", rows.filter((row) => !row.categoryId)],
+          ["Sem forma de pagamento", rows.filter((row) => !row.paymentId)],
+          ["Sem reserva vinculada", rows.filter((row) => !row.reservationId)],
+          ["Possível duplicidade", rows.filter((row) => row.possibleDuplicate)],
+        ];
+        const health = healthDefinitions
+          .map(([label, subset]) => ({
+            label,
+            qtd: subset.length,
+            value: subset.reduce((sum, row) => sum + row.value, 0),
+          }))
+          .filter((item) => item.qtd > 0)
+          .sort((a, b) => b.qtd - a.qtd);
+        set(
+          "metaExpenseHealth",
+          dvDisabled
+            ? "—"
+            : `${health.reduce((sum, item) => sum + item.qtd, 0).toLocaleString("pt-BR")} sinalizações`,
+        );
+        renderDistributionTable(
+          "tblExpenseHealth",
+          health,
+          rows.length,
+          {
+            label: "Sinalização",
+            countLabel: "Ocorrências",
+            valueLabel: "Valor associado",
+            moneyValue: true,
+            limit: 8,
+          },
+        );
+
+        tblCache.tbDespesasBase = rows;
+        const searched = expenseSearchQuery
+          ? rows.filter((row) => row.searchText.includes(normL(expenseSearchQuery)))
+          : rows;
+        const search = document.getElementById("expenseSearch");
+        if (search && search.value !== expenseSearchQuery) {
+          search.value = expenseSearchQuery;
+        }
+        renderExpenseTable(searched);
+      }
+
+      function updateExpenseFilters() {
+        expenseFilters = {
+          company: document.getElementById("expenseCompanyFilter")?.value || "",
+          category: document.getElementById("expenseCategoryFilter")?.value || "",
+          payment: document.getElementById("expensePaymentFilter")?.value || "",
+          financial: document.getElementById("expenseFinancialFilter")?.value || "",
+          operational: document.getElementById("expenseOperationalFilter")?.value || "",
+          attachment: document.getElementById("expenseAttachmentFilter")?.value || "",
+        };
+        renderDespesas(isDataverseDisabled());
+      }
+
+      function clearExpenseFilters() {
+        expenseFilters = {
+          company: "",
+          category: "",
+          payment: "",
+          financial: "",
+          operational: "",
+          attachment: "",
+        };
+        expenseSearchQuery = "";
+        const search = document.getElementById("expenseSearch");
+        if (search) search.value = "";
+        renderDespesas(isDataverseDisabled());
+      }
+
+      function searchExpenseTable(query) {
+        expenseSearchQuery = String(query || "");
+        const base = tblCache.tbDespesasBase || [];
+        const filtered = expenseSearchQuery
+          ? base.filter((row) => row.searchText.includes(normL(expenseSearchQuery)))
+          : base;
+        renderExpenseTable(filtered);
+      }
+
+      function openExpenseRecord(id) {
+        const recordId = expenseId(id);
+        if (!recordId || recordId.startsWith("mock-")) {
+          showAlert(
+            "warn",
+            "Registro fictício: não existe formulário Dataverse para abrir.",
+          );
+          return;
+        }
+        try {
+          const xrm = window.top?.Xrm || window.Xrm;
+          if (xrm?.Navigation?.openForm) {
+            void xrm.Navigation.openForm({
+              entityName: "cr40f_despesaoperacional",
+              entityId: recordId,
+            }).catch((error) =>
+              reportDashboardError(error, {
+                source: "dashboard-expenses",
+                action: "open-record",
+                phase: "xrm-navigation",
+              }),
+            );
+            return;
+          }
+        } catch (_) {}
+        const origin = BASE || window.location.origin;
+        window.location.assign(
+          `${origin}/main.aspx?pagetype=entityrecord&etn=cr40f_despesaoperacional&id=${encodeURIComponent(recordId)}`,
+        );
       }
 
       function renderInfleetTelemetry(dvDisabled, vehicleScopeIds = null) {
@@ -14429,6 +15860,13 @@ function setAppVersion() {
           r.sort((a, b) => sortFn(a, b, field));
           renderFrotaTable(r);
         }
+        if (tbId === "tbDespesas") {
+          const rows = [
+            ...(tblCache.tbDespesasView || tblCache.tbDespesasBase || []),
+          ];
+          rows.sort((a, b) => sortFn(a, b, field));
+          renderExpenseTable(rows);
+        }
       }
       function srchReg(q) {
         const lq = (q || "").toLowerCase();
@@ -14538,6 +15976,7 @@ function setAppVersion() {
         servicos: "Serviços",
         faturamento: "Faturamento",
         pagantes: "Pagamentos",
+        despesas: "Despesas",
         frota: "Frota",
         motoristas: "Motoristas",
         manutencoes: "Manutenções",
@@ -14553,6 +15992,8 @@ function setAppVersion() {
         financeiro: "faturamento",
         faturamento: "faturamento",
         pagantes: "pagantes",
+        despesas: "despesas",
+        gastos: "despesas",
         frota: "frota",
         motoristas: "motoristas",
         manutencoes: "manutencoes",
@@ -14700,11 +16141,11 @@ function setAppVersion() {
         });
       }
       const TV_NAV_IDS = [
-        "resumo", "servicos", "faturamento", "pagantes", "frota",
+        "resumo", "servicos", "faturamento", "pagantes", "despesas", "frota",
         "motoristas", "manutencoes", "multas", "trocas", "marketing", "tvdiagnostico",
       ];
       const TV_ROTATION_IDS = [
-        "resumo", "servicos", "faturamento", "pagantes", "frota",
+        "resumo", "servicos", "faturamento", "pagantes", "despesas", "frota",
         "motoristas", "manutencoes", "multas", "trocas", "marketing",
       ];
       const TV_NUMERIC_NAV = {
