@@ -32,11 +32,11 @@ function Get-StatusCounts {
 }
 
 $daily = Get-DataverseRows 'new_telemetriadiariainfleets?$select=new_data,new_sincronizadoem,new_telemetriadiariainfleetid'
-$events = Get-DataverseRows 'new_eventoinfleets?$select=new_infleeteventid,new_statusmapeamentomotorista,new_chavetecnica'
-$trips = Get-DataverseRows 'new_viageminfleets?$select=new_infleettripid,new_statusmapeamentomotorista,new_chavetecnica'
+$events = Get-DataverseRows 'new_eventoinfleets?$select=new_infleeteventid,new_statusmapeamentomotorista'
+$trips = Get-DataverseRows 'new_viageminfleets?$select=new_infleettripid,new_statusmapeamentomotorista'
 
-$duplicateEvents = @($events | Where-Object { $_.new_chavetecnica } | Group-Object new_chavetecnica | Where-Object Count -gt 1).Count
-$duplicateTrips = @($trips | Where-Object { $_.new_chavetecnica } | Group-Object new_chavetecnica | Where-Object Count -gt 1).Count
+$duplicateEvents = @($events | Where-Object { $_.new_infleeteventid } | Group-Object new_infleeteventid | Where-Object Count -gt 1).Count
+$duplicateTrips = @($trips | Where-Object { $_.new_infleettripid } | Group-Object new_infleettripid | Where-Object Count -gt 1).Count
 $latestSync = @($daily | Where-Object new_sincronizadoem | ForEach-Object { [datetime]$_.new_sincronizadoem } | Sort-Object -Descending | Select-Object -First 1)
 
 [pscustomobject]@{
@@ -49,11 +49,11 @@ $latestSync = @($daily | Where-Object new_sincronizadoem | ForEach-Object { [dat
     eventos = [pscustomobject]@{
         quantidade = $events.Count
         mapeamentoMotorista = @(Get-StatusCounts $events)
-        chavesTecnicasDuplicadas = $duplicateEvents
+        idsInfleetDuplicados = $duplicateEvents
     }
     viagens = [pscustomobject]@{
         quantidade = $trips.Count
         mapeamentoMotorista = @(Get-StatusCounts $trips)
-        chavesTecnicasDuplicadas = $duplicateTrips
+        idsInfleetDuplicados = $duplicateTrips
     }
 } | ConvertTo-Json -Depth 6

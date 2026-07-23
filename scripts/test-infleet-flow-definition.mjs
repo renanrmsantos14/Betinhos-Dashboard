@@ -10,6 +10,9 @@ const source = JSON.stringify(flow);
 assert.equal(actions.Listar_Motoristas_Infleet.type, "Until");
 assert.equal(dailyActions.Listar_Historico_Motoristas_Infleet.type, "Until");
 assert.equal(dailyActions.Listar_Eventos_Relevantes_Infleet.type, "Until");
+assert.equal(actions.Listar_Motoristas_Infleet.actions.Acumular_Motoristas_Infleet.type, "Foreach");
+assert.equal(dailyActions.Listar_Historico_Motoristas_Infleet.actions.Acumular_Historico_Motoristas_Infleet.type, "Foreach");
+assert.equal(dailyActions.Listar_Eventos_Relevantes_Infleet.actions.Acumular_Eventos_Infleet.type, "Foreach");
 assert.equal(actions.Continuar_Apos_Telemetria.type, "Terminate");
 assert.equal(actions.Continuar_Apos_Telemetria.inputs.runStatus, "Failed");
 assert.deepEqual(actions.Janela_Viagens_Inicio_UTC.runAfter, {
@@ -42,6 +45,7 @@ for (const code of [
 }
 
 assert.doesNotMatch(source, /"limit"\s*:\s*10000/, "Consulta InFleet nao pode truncar em 10.000 itens");
+assert.doesNotMatch(source, /@union\(variables\('infleet(?:Drivers|History|Events)'\)/, "Fluxo nao pode atualizar variavel com autorreferencia");
 assert.doesNotMatch(source, /Bearer\s+[A-Za-z0-9._-]{20,}/, "Flow nao pode conter token Bearer");
 
 console.log("Infleet flow definition contract OK");

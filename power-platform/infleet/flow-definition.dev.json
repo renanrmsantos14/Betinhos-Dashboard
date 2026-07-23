@@ -98,10 +98,17 @@
             "runAfter": {}
           },
           "Acumular_Motoristas_Infleet": {
-            "type": "SetVariable",
-            "inputs": {
-              "name": "infleetDrivers",
-              "value": "@union(variables('infleetDrivers'),body('Listar_Motoristas_Infleet_Pagina')?['data']?['listDriversPaginated'])"
+            "type": "Foreach",
+            "foreach": "@body('Listar_Motoristas_Infleet_Pagina')?['data']?['listDriversPaginated']",
+            "actions": {
+              "Anexar_Motorista_Infleet": {
+                "type": "AppendToArrayVariable",
+                "inputs": {
+                  "name": "infleetDrivers",
+                  "value": "@item()"
+                },
+                "runAfter": {}
+              }
             },
             "runAfter": {
               "Listar_Motoristas_Infleet_Pagina": ["Succeeded"]
@@ -434,10 +441,17 @@
                 "runAfter": {}
               },
               "Acumular_Historico_Motoristas_Infleet": {
-                "type": "SetVariable",
-                "inputs": {
-                  "name": "infleetHistory",
-                  "value": "@union(variables('infleetHistory'),body('Listar_Historico_Motoristas_Infleet_Pagina')?['data']?['listVehicleDriverHistories']?['vehicleDriverHistories'])"
+                "type": "Foreach",
+                "foreach": "@body('Listar_Historico_Motoristas_Infleet_Pagina')?['data']?['listVehicleDriverHistories']?['vehicleDriverHistories']",
+                "actions": {
+                  "Anexar_Historico_Motorista_Infleet": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "infleetHistory",
+                      "value": "@item()"
+                    },
+                    "runAfter": {}
+                  }
                 },
                 "runAfter": {
                   "Listar_Historico_Motoristas_Infleet_Pagina": ["Succeeded"]
@@ -544,10 +558,17 @@
                 "runAfter": {}
               },
               "Acumular_Eventos_Infleet": {
-                "type": "SetVariable",
-                "inputs": {
-                  "name": "infleetEvents",
-                  "value": "@union(variables('infleetEvents'),body('Listar_Eventos_Relevantes_Infleet_Pagina')?['data']?['listEvents'])"
+                "type": "Foreach",
+                "foreach": "@body('Listar_Eventos_Relevantes_Infleet_Pagina')?['data']?['listEvents']",
+                "actions": {
+                  "Anexar_Evento_Infleet": {
+                    "type": "AppendToArrayVariable",
+                    "inputs": {
+                      "name": "infleetEvents",
+                      "value": "@item()"
+                    },
+                    "runAfter": {}
+                  }
                 },
                 "runAfter": {
                   "Listar_Eventos_Relevantes_Infleet_Pagina": ["Succeeded"]

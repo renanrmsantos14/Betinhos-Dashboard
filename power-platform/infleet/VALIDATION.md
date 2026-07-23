@@ -22,7 +22,7 @@ Use um token Dataverse apenas em memoria. O script e somente leitura, nao imprim
 Confirme no JSON:
 
 - `ultimaSincronizacaoUtc` recente.
-- `chavesTecnicasDuplicadas` igual a zero para eventos e viagens.
+- `idsInfleetDuplicados` igual a zero para eventos e viagens.
 - `mapeamentoMotorista` com queda de `NAO_ENCONTRADO` apos cadastrar o InFleet Driver ID ou CPF normalizado no cadastro do motorista.
 
 ## Regra de seguranca para motorista
