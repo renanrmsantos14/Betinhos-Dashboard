@@ -152,10 +152,11 @@ $queries = [ordered]@{
   funcionarios = "$api/cr40f_funcionarioses?`$select=cr40f_funcionariosid,cr40f_nomecompleto,cr40f_status,cr40f_funcao,cr40f_validadedacnh,new_apelido"
   marketing = "$api/new_marketings?`$select=new_status,new_categoria,new_datadepublicacao&`$orderby=new_datadepublicacao desc"
   infracoes = "$api/cr40f_infracaodetransitos?`$select=cr40f_infracaodetransitoid,cr40f_codigodainfracao,cr40f_descricaodainfracao"
-  telemetriaInfleet = "$api/new_telemetriadiariainfleets?`$select=new_data,_new_veiculo_value,new_placanormalizada,new_distanciapercorridakm,new_velocidademedia,new_velocidademaxima,new_excessosdevelocidade,new_autonomiakml,new_sincronizadoem&`$filter=new_data ge 2026-01-01&`$orderby=new_data desc"
-  eventosInfleet = "$api/new_eventoinfleets?`$select=new_infleeteventid,new_reportadoem,_new_veiculo_value,_new_motorista_value,new_placanormalizada,new_nomemotoristarecebido,new_slug,new_descricao,new_velocidaderegistrada,new_limitedevelocidade,new_statusmapeamentomotorista&`$filter=new_reportadoem ge 2026-01-01T00:00:00Z&`$orderby=new_reportadoem desc"
+  telemetriaInfleet = "$api/new_telemetriadiariainfleets?`$select=new_data,_new_veiculo_value,new_placanormalizada,new_distanciapercorridakm,new_odometrofinal,new_velocidademedia,new_velocidademaxima,new_excessosdevelocidade,new_autonomiakml,new_tempomotorociosomin,new_tempoacimavelocidademin,new_sincronizadoem&`$filter=new_data ge 2026-01-01&`$orderby=new_data desc"
+  eventosInfleet = "$api/new_eventoinfleets?`$select=new_infleeteventid,new_reportadoem,_new_veiculo_value,_new_motorista_value,new_placanormalizada,new_nomemotoristarecebido,new_slug,new_descricao,new_velocidaderegistrada,new_limitedevelocidade,new_endereco,new_latitude,new_longitude,new_statusmapeamentomotorista&`$filter=new_reportadoem ge 2026-01-01T00:00:00Z&`$orderby=new_reportadoem desc"
+  viagensInfleet = "$api/new_viageminfleets?`$select=new_infleettripid,new_iniciadoem,new_finalizadoem,_new_veiculo_value,_new_motorista_value,new_placanormalizada,new_nomemotoristarecebido,new_distanciakm,new_velocidademedia,new_velocidademaxima,new_tempoacimavelocidademin,new_combustivelconsumidolitros,new_custocombustivelconsumido,new_autonomiakml,new_statusmapeamentomotorista&`$filter=new_iniciadoem ge 2026-01-01T00:00:00Z&`$orderby=new_iniciadoem desc"
 }
-$optionalQueries = @("telemetriaInfleet", "eventosInfleet")
+$optionalQueries = @("telemetriaInfleet", "eventosInfleet", "viagensInfleet")
 
 $resolvedOutputPath = Join-Path $root $OutputPath
 $outputDirectory = Split-Path -Parent $resolvedOutputPath

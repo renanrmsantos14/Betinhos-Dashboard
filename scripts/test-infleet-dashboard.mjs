@@ -7,8 +7,10 @@ const snapshotExporter = fs.readFileSync(new URL("./export-prod-snapshot.ps1", i
 for (const expected of [
   'telemetriaInfleet: "new_telemetriadiariainfleets"',
   'eventosInfleet: "new_eventoinfleets"',
+  'viagensInfleet: "new_viageminfleets"',
   'function loadTelemetriaInfleet()',
   'function loadEventosInfleet()',
+  'function loadViagensInfleet()',
   'function renderInfleetTelemetry(dvDisabled)',
   'id="infKm"',
   'id="infVelMedia"',
@@ -16,13 +18,16 @@ for (const expected of [
   'id="infExcessos"',
   'id="tblInfleetVeiculos"',
   'id="tblInfleetEventos"',
+  'id="tblInfleetMotoristas"',
+  'id="infAutonomia"',
+  'id="infOciosidade"',
 ]) {
   assert.ok(html.includes(expected), `Contrato ausente: ${expected}`);
 }
 
 assert.match(
   html,
-  /frota:\s*\[[^\]]*"telemetriaInfleet"[^\]]*"eventosInfleet"[^\]]*\]/,
+  /frota:\s*\[[^\]]*"telemetriaInfleet"[^\]]*"eventosInfleet"[^\]]*"viagensInfleet"[^\]]*\]/,
   "Telemetria deve carregar somente como dependencia da aba Frota",
 );
 assert.match(html, /\$filter=\$\{F\.infleetDiaria\.data\} ge 2026-01-01/);
@@ -33,7 +38,8 @@ assert.doesNotMatch(html, /Bearer\s+[A-Za-z0-9._-]{20,}/, "Dashboard nao pode co
 for (const expected of [
   'telemetriaInfleet = "$api/new_telemetriadiariainfleets?',
   'eventosInfleet = "$api/new_eventoinfleets?',
-  '$optionalQueries = @("telemetriaInfleet", "eventosInfleet")',
+  'viagensInfleet = "$api/new_viageminfleets?',
+  '$optionalQueries = @("telemetriaInfleet", "eventosInfleet", "viagensInfleet")',
   "if ($Optional -and $lastStatusCode -eq 404)",
   "warnings = $warnings.ToArray()",
 ]) {

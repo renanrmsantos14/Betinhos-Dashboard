@@ -54,6 +54,9 @@
         { "logicalName": "new_tempoparadomin", "schemaName": "new_TempoParadoMin", "displayName": "Tempo parado (min)", "type": "integer" },
         { "logicalName": "new_tempoparadocomignicaomin", "schemaName": "new_TempoParadoComIgnicaoMin", "displayName": "Tempo parado com ignição (min)", "type": "integer" },
         { "logicalName": "new_tempocomignicaoligadamin", "schemaName": "new_TempoComIgnicaoLigadaMin", "displayName": "Tempo com ignição ligada (min)", "type": "integer" },
+        { "logicalName": "new_tempomotorociosomin", "schemaName": "new_TempoMotorOciosoMin", "displayName": "Tempo de motor ocioso (min)", "type": "integer" },
+        { "logicalName": "new_tempoacimavelocidademin", "schemaName": "new_TempoAcimaVelocidadeMin", "displayName": "Tempo acima da velocidade (min)", "type": "integer" },
+        { "logicalName": "new_quantidadeposicoes", "schemaName": "new_QuantidadePosicoes", "displayName": "Quantidade de posições", "type": "integer" },
         { "logicalName": "new_quantidadeeventos", "schemaName": "new_QuantidadeEventos", "displayName": "Quantidade de eventos", "type": "integer" },
         { "logicalName": "new_excessosdevelocidade", "schemaName": "new_ExcessosDeVelocidade", "displayName": "Excessos de velocidade", "type": "integer" },
         { "logicalName": "new_quantidadeabastecida", "schemaName": "new_QuantidadeAbastecida", "displayName": "Quantidade abastecida", "type": "decimal", "precision": 3 },
@@ -65,6 +68,38 @@
       ],
       "lookups": {
         "new_veiculo": { "schemaName": "new_Veiculo", "relationshipSchemaName": "new_Veiculo_TelemetriaDiariaInfleet", "displayName": "Veículo", "target": "cr40f_veiculos", "required": true }
+      }
+    },
+    "new_viageminfleet": {
+      "schemaName": "new_ViagemInfleet",
+      "entitySetName": "new_viageminfleets",
+      "displayName": "Viagem Infleet",
+      "displayCollectionName": "Viagens Infleet",
+      "primaryName": "new_nome",
+      "primaryNameSchema": "new_Nome",
+      "alternateKey": ["new_infleettripid"],
+      "alternateKeySchema": "new_AK_ViagemInfleet",
+      "columns": [
+        { "logicalName": "new_infleettripid", "schemaName": "new_InfleetTripId", "displayName": "Infleet Trip ID", "type": "string", "maxLength": 100, "required": true },
+        { "logicalName": "new_infleetvehicleid", "schemaName": "new_InfleetVehicleId", "displayName": "Infleet Vehicle ID", "type": "string", "maxLength": 100, "required": true },
+        { "logicalName": "new_infleetdriverid", "schemaName": "new_InfleetDriverId", "displayName": "Infleet Driver ID", "type": "string", "maxLength": 100 },
+        { "logicalName": "new_placanormalizada", "schemaName": "new_PlacaNormalizada", "displayName": "Placa normalizada", "type": "string", "maxLength": 20 },
+        { "logicalName": "new_nomemotoristarecebido", "schemaName": "new_NomeMotoristaRecebido", "displayName": "Nome do motorista recebido", "type": "string", "maxLength": 300 },
+        { "logicalName": "new_iniciadoem", "schemaName": "new_IniciadoEm", "displayName": "Iniciado em", "type": "datetime", "required": true },
+        { "logicalName": "new_finalizadoem", "schemaName": "new_FinalizadoEm", "displayName": "Finalizado em", "type": "datetime" },
+        { "logicalName": "new_distanciakm", "schemaName": "new_DistanciaKm", "displayName": "Distância (km)", "type": "decimal", "precision": 3 },
+        { "logicalName": "new_velocidademedia", "schemaName": "new_VelocidadeMedia", "displayName": "Velocidade média", "type": "decimal", "precision": 2 },
+        { "logicalName": "new_velocidademaxima", "schemaName": "new_VelocidadeMaxima", "displayName": "Velocidade máxima", "type": "decimal", "precision": 2 },
+        { "logicalName": "new_tempoacimavelocidademin", "schemaName": "new_TempoAcimaVelocidadeMin", "displayName": "Tempo acima da velocidade (min)", "type": "integer" },
+        { "logicalName": "new_combustivelconsumidolitros", "schemaName": "new_CombustivelConsumidoLitros", "displayName": "Combustível consumido (l)", "type": "decimal", "precision": 3 },
+        { "logicalName": "new_custocombustivelconsumido", "schemaName": "new_CustoCombustivelConsumido", "displayName": "Custo do combustível consumido", "type": "money", "precision": 2 },
+        { "logicalName": "new_autonomiakml", "schemaName": "new_AutonomiaKmL", "displayName": "Autonomia (km/l)", "type": "decimal", "precision": 3 },
+        { "logicalName": "new_statusmapeamentomotorista", "schemaName": "new_StatusMapeamentoMotorista", "displayName": "Status do mapeamento do motorista", "type": "string", "maxLength": 100 },
+        { "logicalName": "new_sincronizadoem", "schemaName": "new_SincronizadoEm", "displayName": "Sincronizado em", "type": "datetime" }
+      ],
+      "lookups": {
+        "new_veiculo": { "schemaName": "new_Veiculo", "relationshipSchemaName": "new_Veiculo_ViagemInfleet", "displayName": "Veículo", "target": "cr40f_veiculos", "required": true },
+        "new_motorista": { "schemaName": "new_Motorista", "relationshipSchemaName": "new_Motorista_ViagemInfleet", "displayName": "Motorista", "target": "cr40f_funcionarios", "required": false }
       }
     },
     "new_eventoinfleet": {

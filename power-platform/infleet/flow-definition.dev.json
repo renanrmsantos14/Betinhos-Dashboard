@@ -48,6 +48,27 @@
         },
         "runAfter": {}
       },
+      "Listar_Motoristas_Infleet": {
+        "type": "OpenApiConnection",
+        "inputs": {
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+            "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+            "operationId": "ExecuteGraphQL"
+          },
+          "parameters": {
+            "body/operationName": "ListDriversPaginated",
+            "body/query": "query ListDriversPaginated($limit: Int, $offset: Int) { listDriversPaginated(limit: $limit, offset: $offset) { id cpf name active } }",
+            "body/variables": {
+              "limit": 5000,
+              "offset": 0
+            }
+          }
+        },
+        "runAfter": {
+          "Listar_Veiculos_Infleet": ["Succeeded"]
+        }
+      },
       "Selecionar_Ids_Veiculos": {
         "type": "Select",
         "inputs": {
@@ -55,7 +76,7 @@
           "select": "@item()?['id']"
         },
         "runAfter": {
-          "Listar_Veiculos_Infleet": ["Succeeded"]
+          "Listar_Motoristas_Infleet": ["Succeeded"]
         }
       },
       "Listar_Veiculos_Dataverse": {
@@ -102,6 +123,124 @@
           "Listar_Veiculos_Dataverse": ["Succeeded"]
         }
       },
+      "Mapear_Veiculos_Infleet": {
+        "type": "Foreach",
+        "foreach": "@body('Listar_Veiculos_Infleet')?['data']?['listVehicles']",
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 10
+          }
+        },
+        "actions": {
+          "Filtrar_Veiculo_Canonico_Por_Placa": {
+            "type": "Query",
+            "inputs": {
+              "from": "@body('Listar_Veiculos_Dataverse')?['value']",
+              "where": "@equals(toUpper(replace(replace(trim(coalesce(item()?['cr40f_placa'],'')),'-',''),' ','')),toUpper(replace(replace(trim(coalesce(items('Mapear_Veiculos_Infleet')?['plate'],'')),'-',''),' ','')))"
+            }
+          },
+          "Vincular_Veiculo_Quando_Unico": {
+            "type": "If",
+            "expression": {
+              "equals": [
+                "@length(body('Filtrar_Veiculo_Canonico_Por_Placa'))",
+                1
+              ]
+            },
+            "actions": {
+              "Atualizar_Identidade_Infleet_Veiculo": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
+                    "operationId": "UpdateRecord"
+                  },
+                  "parameters": {
+                    "entityName": "cr40f_veiculoses",
+                    "recordId": "@first(body('Filtrar_Veiculo_Canonico_Por_Placa'))?['cr40f_veiculosid']",
+                    "prefer": "return=representation",
+                    "accept": "application/json;odata.metadata=full",
+                    "item": {
+                      "new_infleetvehicleid": "@items('Mapear_Veiculos_Infleet')?['id']",
+                      "new_placanormalizada": "@toUpper(replace(replace(trim(items('Mapear_Veiculos_Infleet')?['plate']),'-',''),' ',''))",
+                      "new_ultimasincronizacaoinfleet": "@utcNow()"
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "actions": {}
+            },
+            "runAfter": {
+              "Filtrar_Veiculo_Canonico_Por_Placa": ["Succeeded"]
+            }
+          }
+        },
+        "runAfter": {
+          "Listar_Motoristas_Dataverse": ["Succeeded"]
+        }
+      },
+      "Mapear_Motoristas_Infleet": {
+        "type": "Foreach",
+        "foreach": "@body('Listar_Motoristas_Infleet')?['data']?['listDriversPaginated']",
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 10
+          }
+        },
+        "actions": {
+          "Filtrar_Funcionario_Canonico_Por_CPF": {
+            "type": "Query",
+            "inputs": {
+              "from": "@body('Listar_Motoristas_Dataverse')?['value']",
+              "where": "@and(not(empty(items('Mapear_Motoristas_Infleet')?['cpf'])),equals(replace(replace(replace(trim(coalesce(item()?['cr40f_numerodocpf'],'')),'.',''),'-',''),' ',''),replace(replace(replace(trim(items('Mapear_Motoristas_Infleet')?['cpf']),'.',''),'-',''),' ','')))"
+            }
+          },
+          "Vincular_Motorista_Quando_Unico": {
+            "type": "If",
+            "expression": {
+              "equals": [
+                "@length(body('Filtrar_Funcionario_Canonico_Por_CPF'))",
+                1
+              ]
+            },
+            "actions": {
+              "Atualizar_Identidade_Infleet_Funcionario": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
+                    "operationId": "UpdateRecord"
+                  },
+                  "parameters": {
+                    "entityName": "cr40f_funcionarioses",
+                    "recordId": "@first(body('Filtrar_Funcionario_Canonico_Por_CPF'))?['cr40f_funcionariosid']",
+                    "prefer": "return=representation",
+                    "accept": "application/json;odata.metadata=full",
+                    "item": {
+                      "new_infleetdriverid": "@items('Mapear_Motoristas_Infleet')?['id']",
+                      "new_cpfnormalizado": "@replace(replace(replace(trim(items('Mapear_Motoristas_Infleet')?['cpf']),'.',''),'-',''),' ','')",
+                      "new_ultimasincronizacaoinfleet": "@utcNow()"
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "actions": {}
+            },
+            "runAfter": {
+              "Filtrar_Funcionario_Canonico_Por_CPF": ["Succeeded"]
+            }
+          }
+        },
+        "runAfter": {
+          "Mapear_Veiculos_Infleet": ["Succeeded"]
+        }
+      },
       "Processar_Ultimos_3_Dias": {
         "type": "Foreach",
         "foreach": "@createArray(-2,-1,0)",
@@ -129,6 +268,58 @@
               "Janela_Inicio_UTC": ["Succeeded"]
             }
           },
+          "Listar_Resumos_Veiculos_Infleet": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                "operationId": "ExecuteGraphQL"
+              },
+              "parameters": {
+                "body/operationName": "VehiclesSummaries",
+                "body/query": "query VehiclesSummaries($filter: VehiclesSummariesFilterInput!) { vehiclesSummaries(filter: $filter) { vehicleId distanceTraveled averageSpeed maximumSpeed engineIdle timeStopped timeStoppedWithIgnitionOn timeWithIgnitionOn timeOverSpeed positions } }",
+                "body/variables": {
+                  "filter": {
+                    "occurredAt": {
+                      "startAt": "@outputs('Janela_Inicio_UTC')",
+                      "endAt": "@outputs('Janela_Fim_UTC')"
+                    },
+                    "vehicleIds": "@body('Selecionar_Ids_Veiculos')"
+                  }
+                }
+              }
+            },
+            "runAfter": {
+              "Janela_Fim_UTC": ["Succeeded"]
+            }
+          },
+          "Listar_Medicoes_Diarias_Infleet": {
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                "operationId": "ExecuteGraphQL"
+              },
+              "parameters": {
+                "body/operationName": "DailyWorkMeasures",
+                "body/query": "query DailyWorkMeasures($filter: DailyWorkMeasuresFilterInput) { dailyWorkMeasures(filter: $filter) { vehicleId date initialOdometer finalOdometer distanceTraveled timeWithIgnitionOn } }",
+                "body/variables": {
+                  "filter": {
+                    "occurredAt": {
+                      "startAt": "@outputs('Janela_Inicio_UTC')",
+                      "endAt": "@outputs('Janela_Fim_UTC')"
+                    },
+                    "vehicleIds": "@body('Selecionar_Ids_Veiculos')"
+                  }
+                }
+              }
+            },
+            "runAfter": {
+              "Listar_Resumos_Veiculos_Infleet": ["Succeeded"]
+            }
+          },
           "Listar_Historico_Motoristas_Infleet": {
             "type": "OpenApiConnection",
             "inputs": {
@@ -151,7 +342,7 @@
               }
             },
             "runAfter": {
-              "Janela_Fim_UTC": ["Succeeded"]
+              "Listar_Medicoes_Diarias_Infleet": ["Succeeded"]
             }
           },
           "Listar_Eventos_Relevantes_Infleet": {
@@ -211,58 +402,39 @@
               },
               "Veiculo_Canonico_Unico": {
                 "type": "If",
-                "expression": {
-                  "equals": [
-                    "@length(body('Filtrar_Veiculo_Dataverse'))",
-                    1
-                  ]
-                },
+                    "expression": {
+                      "and": [
+                        {
+                          "equals": [
+                            "@length(body('Filtrar_Veiculo_Dataverse'))",
+                            1
+                          ]
+                        },
+                        {
+                          "contains": [
+                            "@string(body('Listar_Resumos_Veiculos_Infleet')?['data']?['vehiclesSummaries'])",
+                            "@items('Processar_Veiculos')?['id']"
+                          ]
+                        }
+                      ]
+                    },
                 "actions": {
-                  "Atualizar_Mapeamento_Veiculo": {
-                    "type": "OpenApiConnection",
+                  "Filtrar_Resumo_Veiculo": {
+                    "type": "Query",
                     "inputs": {
-                      "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                        "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
-                        "operationId": "UpdateRecord"
-                      },
-                      "parameters": {
-                        "entityName": "cr40f_veiculoses",
-                        "recordId": "@first(body('Filtrar_Veiculo_Dataverse'))?['cr40f_veiculosid']",
-                        "prefer": "return=representation",
-                        "accept": "application/json;odata.metadata=full",
-                        "item": {
-                          "new_infleetvehicleid": "@items('Processar_Veiculos')?['id']",
-                          "new_placanormalizada": "@toUpper(replace(items('Processar_Veiculos')?['plate'],'-',''))",
-                          "new_ultimasincronizacaoinfleet": "@utcNow()"
-                        }
-                      }
-                    }
+                      "from": "@body('Listar_Resumos_Veiculos_Infleet')?['data']?['vehiclesSummaries']",
+                      "where": "@equals(item()?['vehicleId'],items('Processar_Veiculos')?['id'])"
+                    },
+                    "runAfter": {}
                   },
-                  "Obter_Detalhes_Rota_Infleet": {
-                    "type": "OpenApiConnection",
+                  "Filtrar_Medicao_Diaria_Veiculo": {
+                    "type": "Query",
                     "inputs": {
-                      "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
-                        "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
-                        "operationId": "ExecuteGraphQL"
-                      },
-                      "parameters": {
-                        "body/operationName": "RouteVehicleDetails",
-                        "body/query": "query RouteVehicleDetails($filter: ListVehiclePositionsFilterInput!) { routeVehicleDetails(filter: $filter) { averageSpeed maximumSpeed totalDistanceTraveled totalTimeStopped totalTimeStoppedWithIgnitionOn totalTimeWithIgnitionOn } }",
-                        "body/variables": {
-                            "filter": {
-                              "vehicleId": "@items('Processar_Veiculos')?['id']",
-                              "fixTime": {
-                                "startAt": "@outputs('Janela_Inicio_UTC')",
-                                "endAt": "@outputs('Janela_Fim_UTC')"
-                              }
-                            }
-                        }
-                      }
+                      "from": "@body('Listar_Medicoes_Diarias_Infleet')?['data']?['dailyWorkMeasures']",
+                      "where": "@equals(item()?['vehicleId'],items('Processar_Veiculos')?['id'])"
                     },
                     "runAfter": {
-                      "Atualizar_Mapeamento_Veiculo": ["Succeeded"]
+                      "Filtrar_Resumo_Veiculo": ["Succeeded"]
                     }
                   },
                   "Filtrar_Eventos_Veiculo": {
@@ -272,7 +444,7 @@
                       "where": "@equals(item()?['vehicleId'],items('Processar_Veiculos')?['id'])"
                     },
                     "runAfter": {
-                      "Obter_Detalhes_Rota_Infleet": ["Succeeded"]
+                      "Filtrar_Medicao_Diaria_Veiculo": ["Succeeded"]
                     }
                   },
                   "Filtrar_Excessos_Velocidade": {
@@ -304,13 +476,18 @@
                           "new_infleetvehicleid": "@items('Processar_Veiculos')?['id']",
                           "new_placanormalizada": "@toUpper(replace(items('Processar_Veiculos')?['plate'],'-',''))",
                           "new_data": "@outputs('Data_Local')",
-                          "new_distanciapercorridakm": "@coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['totalDistanceTraveled'],0)",
-                          "new_velocidademedia": "@coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['averageSpeed'],0)",
-                          "new_velocidademaxima": "@coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['maximumSpeed'],0)",
-                          "new_tempoemmovimentomin": "@div(sub(coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['totalTimeWithIgnitionOn'],0),coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['totalTimeStoppedWithIgnitionOn'],0)),60)",
-                          "new_tempoparadomin": "@div(coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['totalTimeStopped'],0),60)",
-                          "new_tempoparadocomignicaomin": "@div(coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['totalTimeStoppedWithIgnitionOn'],0),60)",
-                          "new_tempocomignicaoligadamin": "@div(coalesce(body('Obter_Detalhes_Rota_Infleet')?['data']?['routeVehicleDetails']?['totalTimeWithIgnitionOn'],0),60)",
+                          "new_distanciapercorridakm": "@coalesce(first(body('Filtrar_Resumo_Veiculo'))?['distanceTraveled'],first(body('Filtrar_Medicao_Diaria_Veiculo'))?['distanceTraveled'],0)",
+                          "new_odometroinicial": "@first(body('Filtrar_Medicao_Diaria_Veiculo'))?['initialOdometer']",
+                          "new_odometrofinal": "@first(body('Filtrar_Medicao_Diaria_Veiculo'))?['finalOdometer']",
+                          "new_velocidademedia": "@coalesce(first(body('Filtrar_Resumo_Veiculo'))?['averageSpeed'],0)",
+                          "new_velocidademaxima": "@coalesce(first(body('Filtrar_Resumo_Veiculo'))?['maximumSpeed'],0)",
+                          "new_tempoemmovimentomin": "@int(div(sub(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeWithIgnitionOn'],0),coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeStoppedWithIgnitionOn'],0)),60))",
+                          "new_tempoparadomin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeStopped'],0),60))",
+                          "new_tempoparadocomignicaomin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeStoppedWithIgnitionOn'],0),60))",
+                          "new_tempocomignicaoligadamin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeWithIgnitionOn'],first(body('Filtrar_Medicao_Diaria_Veiculo'))?['timeWithIgnitionOn'],0),60))",
+                          "new_tempomotorociosomin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['engineIdle'],0),60))",
+                          "new_tempoacimavelocidademin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeOverSpeed'],0),60))",
+                          "new_quantidadeposicoes": "@int(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['positions'],0))",
                           "new_quantidadeeventos": "@length(body('Filtrar_Eventos_Veiculo'))",
                           "new_excessosdevelocidade": "@length(body('Filtrar_Excessos_Velocidade'))",
                           "new_janelainicioutc": "@outputs('Janela_Inicio_UTC')",
@@ -529,7 +706,201 @@
           }
         },
         "runAfter": {
-          "Listar_Motoristas_Dataverse": ["Succeeded"]
+          "Mapear_Motoristas_Infleet": ["Succeeded"]
+        }
+      },
+      "Continuar_Apos_Telemetria": {
+        "type": "Compose",
+        "inputs": "@if(equals(actions('Processar_Ultimos_3_Dias').status,'Succeeded'),'TELEMETRIA_OK','TELEMETRIA_PARCIAL')",
+        "runAfter": {
+          "Processar_Ultimos_3_Dias": ["Succeeded", "Failed", "Skipped", "TimedOut"]
+        }
+      },
+      "Janela_Viagens_Inicio_UTC": {
+        "type": "Compose",
+        "inputs": "@convertTimeZone(concat(formatDateTime(addDays(convertTimeZone(utcNow(),'UTC','E. South America Standard Time'),-2),'yyyy-MM-dd'),'T00:00:00'),'E. South America Standard Time','UTC','yyyy-MM-ddTHH:mm:ssZ')",
+        "runAfter": {
+          "Continuar_Apos_Telemetria": ["Succeeded"]
+        }
+      },
+      "Janela_Viagens_Fim_UTC": {
+        "type": "Compose",
+        "inputs": "@convertTimeZone(concat(formatDateTime(addDays(convertTimeZone(utcNow(),'UTC','E. South America Standard Time'),1),'yyyy-MM-dd'),'T00:00:00'),'E. South America Standard Time','UTC','yyyy-MM-ddTHH:mm:ssZ')",
+        "runAfter": {
+          "Janela_Viagens_Inicio_UTC": ["Succeeded"]
+        }
+      },
+      "Processar_Viagens_Por_Veiculo": {
+        "type": "Foreach",
+        "foreach": "@body('Listar_Veiculos_Infleet')?['data']?['listVehicles']",
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 3
+          }
+        },
+        "actions": {
+          "Filtrar_Veiculo_Dataverse_Viagem": {
+            "type": "Query",
+            "inputs": {
+              "from": "@body('Listar_Veiculos_Dataverse')?['value']",
+              "where": "@equals(toUpper(replace(replace(trim(coalesce(item()?['cr40f_placa'],'')),'-',''),' ','')),toUpper(replace(replace(trim(coalesce(items('Processar_Viagens_Por_Veiculo')?['plate'],'')),'-',''),' ','')))"
+            }
+          },
+          "Veiculo_Viagem_Canonico_Unico": {
+            "type": "If",
+            "expression": {
+              "equals": [
+                "@length(body('Filtrar_Veiculo_Dataverse_Viagem'))",
+                1
+              ]
+            },
+            "actions": {
+              "Listar_Viagens_Infleet": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/__INFLEET_API_NAME__",
+                    "connectionName": "__INFLEET_CONNECTION_REFERENCE__",
+                    "operationId": "ExecuteGraphQL"
+                  },
+                  "parameters": {
+                    "body/operationName": "Trips",
+                    "body/query": "query Trips($filter: ListVehicleTripsFilterInput!) { trips(filter: $filter) { id startedAt finishedAt distanceTraveled averageSpeed maximumSpeed timeAboveMaxConfSpeed fuelConsumedLiters fuelConsumedPrice driver { id cpf name } vehicle { id plate } } }",
+                    "body/variables": {
+                      "filter": {
+                        "vehicleId": "@items('Processar_Viagens_Por_Veiculo')?['id']",
+                        "fixTime": {
+                          "startAt": "@outputs('Janela_Viagens_Inicio_UTC')",
+                          "endAt": "@outputs('Janela_Viagens_Fim_UTC')"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Processar_Viagens": {
+                "type": "Foreach",
+                "foreach": "@body('Listar_Viagens_Infleet')?['data']?['trips']",
+                "runtimeConfiguration": {
+                  "concurrency": {
+                    "repetitions": 10
+                  }
+                },
+                "actions": {
+                  "Filtrar_Motorista_Dataverse_Viagem": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@body('Listar_Motoristas_Dataverse')?['value']",
+                      "where": "@or(and(not(empty(items('Processar_Viagens')?['driver']?['id'])),equals(item()?['new_infleetdriverid'],items('Processar_Viagens')?['driver']?['id'])),and(not(empty(items('Processar_Viagens')?['driver']?['cpf'])),equals(replace(replace(replace(trim(coalesce(item()?['cr40f_numerodocpf'],'')),'.',''),'-',''),' ',''),replace(replace(replace(trim(items('Processar_Viagens')?['driver']?['cpf']),'.',''),'-',''),' ',''))))"
+                    }
+                  },
+                  "Motorista_Viagem_Canonico_Unico": {
+                    "type": "If",
+                    "expression": {
+                      "equals": [
+                        "@length(body('Filtrar_Motorista_Dataverse_Viagem'))",
+                        1
+                      ]
+                    },
+                    "actions": {
+                      "Upsert_Viagem_Com_Motorista": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
+                            "operationId": "UpdateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "new_viageminfleets",
+                            "recordId": "@concat(substring(items('Processar_Viagens_Por_Veiculo')?['id'],0,24),formatDateTime(items('Processar_Viagens')?['startedAt'],'yyMMddHHmmss'))",
+                            "prefer": "return=representation",
+                            "accept": "application/json;odata.metadata=full",
+                            "item": {
+                              "new_nome": "@concat(items('Processar_Viagens_Por_Veiculo')?['plate'],' | ',items('Processar_Viagens')?['startedAt'])",
+                              "new_infleettripid": "@concat(items('Processar_Viagens_Por_Veiculo')?['id'],'|',items('Processar_Viagens')?['startedAt'])",
+                              "new_infleetvehicleid": "@items('Processar_Viagens_Por_Veiculo')?['id']",
+                              "new_infleetdriverid": "@items('Processar_Viagens')?['driver']?['id']",
+                              "new_placanormalizada": "@toUpper(replace(items('Processar_Viagens_Por_Veiculo')?['plate'],'-',''))",
+                              "new_nomemotoristarecebido": "@items('Processar_Viagens')?['driver']?['name']",
+                              "new_iniciadoem": "@items('Processar_Viagens')?['startedAt']",
+                              "new_finalizadoem": "@items('Processar_Viagens')?['finishedAt']",
+                              "new_distanciakm": "@coalesce(items('Processar_Viagens')?['distanceTraveled'],0)",
+                              "new_velocidademedia": "@coalesce(items('Processar_Viagens')?['averageSpeed'],0)",
+                              "new_velocidademaxima": "@coalesce(items('Processar_Viagens')?['maximumSpeed'],0)",
+                              "new_tempoacimavelocidademin": "@int(div(coalesce(items('Processar_Viagens')?['timeAboveMaxConfSpeed'],0),60))",
+                              "new_combustivelconsumidolitros": "@coalesce(items('Processar_Viagens')?['fuelConsumedLiters'],0)",
+                              "new_custocombustivelconsumido": "@coalesce(items('Processar_Viagens')?['fuelConsumedPrice'],0)",
+                              "new_autonomiakml": "@if(greater(coalesce(items('Processar_Viagens')?['fuelConsumedLiters'],0),0),div(coalesce(items('Processar_Viagens')?['distanceTraveled'],0),items('Processar_Viagens')?['fuelConsumedLiters']),null)",
+                              "new_statusmapeamentomotorista": "MAPEADO",
+                              "new_sincronizadoem": "@utcNow()",
+                              "new_Veiculo@odata.bind": "@concat('/cr40f_veiculoses(',first(body('Filtrar_Veiculo_Dataverse_Viagem'))?['cr40f_veiculosid'],')')",
+                              "new_Motorista@odata.bind": "@concat('/cr40f_funcionarioses(',first(body('Filtrar_Motorista_Dataverse_Viagem'))?['cr40f_funcionariosid'],')')"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "Upsert_Viagem_Sem_Motorista": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
+                              "operationId": "UpdateRecord"
+                            },
+                            "parameters": {
+                              "entityName": "new_viageminfleets",
+                              "recordId": "@concat(substring(items('Processar_Viagens_Por_Veiculo')?['id'],0,24),formatDateTime(items('Processar_Viagens')?['startedAt'],'yyMMddHHmmss'))",
+                              "prefer": "return=representation",
+                              "accept": "application/json;odata.metadata=full",
+                              "item": {
+                                "new_nome": "@concat(items('Processar_Viagens_Por_Veiculo')?['plate'],' | ',items('Processar_Viagens')?['startedAt'])",
+                                "new_infleettripid": "@concat(items('Processar_Viagens_Por_Veiculo')?['id'],'|',items('Processar_Viagens')?['startedAt'])",
+                                "new_infleetvehicleid": "@items('Processar_Viagens_Por_Veiculo')?['id']",
+                                "new_infleetdriverid": "@items('Processar_Viagens')?['driver']?['id']",
+                                "new_placanormalizada": "@toUpper(replace(items('Processar_Viagens_Por_Veiculo')?['plate'],'-',''))",
+                                "new_nomemotoristarecebido": "@items('Processar_Viagens')?['driver']?['name']",
+                                "new_iniciadoem": "@items('Processar_Viagens')?['startedAt']",
+                                "new_finalizadoem": "@items('Processar_Viagens')?['finishedAt']",
+                                "new_distanciakm": "@coalesce(items('Processar_Viagens')?['distanceTraveled'],0)",
+                                "new_velocidademedia": "@coalesce(items('Processar_Viagens')?['averageSpeed'],0)",
+                                "new_velocidademaxima": "@coalesce(items('Processar_Viagens')?['maximumSpeed'],0)",
+                                "new_tempoacimavelocidademin": "@int(div(coalesce(items('Processar_Viagens')?['timeAboveMaxConfSpeed'],0),60))",
+                                "new_combustivelconsumidolitros": "@coalesce(items('Processar_Viagens')?['fuelConsumedLiters'],0)",
+                                "new_custocombustivelconsumido": "@coalesce(items('Processar_Viagens')?['fuelConsumedPrice'],0)",
+                                "new_autonomiakml": "@if(greater(coalesce(items('Processar_Viagens')?['fuelConsumedLiters'],0),0),div(coalesce(items('Processar_Viagens')?['distanceTraveled'],0),items('Processar_Viagens')?['fuelConsumedLiters']),null)",
+                                "new_statusmapeamentomotorista": "@if(empty(items('Processar_Viagens')?['driver']?['id']),'SEM_MOTORISTA',if(equals(length(body('Filtrar_Motorista_Dataverse_Viagem')),0),'NAO_ENCONTRADO','DUPLICADO'))",
+                                "new_sincronizadoem": "@utcNow()",
+                                "new_Veiculo@odata.bind": "@concat('/cr40f_veiculoses(',first(body('Filtrar_Veiculo_Dataverse_Viagem'))?['cr40f_veiculosid'],')')"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Filtrar_Motorista_Dataverse_Viagem": ["Succeeded"]
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Listar_Viagens_Infleet": ["Succeeded"]
+                }
+              }
+            },
+            "else": {
+              "actions": {}
+            },
+            "runAfter": {
+              "Filtrar_Veiculo_Dataverse_Viagem": ["Succeeded"]
+            }
+          }
+        },
+        "runAfter": {
+          "Janela_Viagens_Fim_UTC": ["Succeeded"]
         }
       }
     },

@@ -345,7 +345,9 @@ foreach ($tableProperty in $script:Schema.tables.PSObject.Properties) {
 }
 
 if ($Apply -and $script:Changed.Count -gt 0) {
-    $publishXml = '<importexportxml><entities><entity>cr40f_veiculos</entity><entity>cr40f_funcionarios</entity><entity>new_telemetriadiariainfleet</entity><entity>new_eventoinfleet</entity></entities></importexportxml>'
+    $publishTables = @($script:Schema.existingTables.PSObject.Properties.Name) + @($script:Schema.tables.PSObject.Properties.Name)
+    $publishEntities = ($publishTables | ForEach-Object { "<entity>$_</entity>" }) -join ''
+    $publishXml = "<importexportxml><entities>$publishEntities</entities></importexportxml>"
     $null = Invoke-Dv -Method POST -Path 'PublishXml' -Body @{ ParameterXml = $publishXml }
     Write-Host '[PUBLICADO] metadados Infleet'
 }
