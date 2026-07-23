@@ -44,3 +44,19 @@ Acceptance:
 2. Partial telemetry failure ends the flow as failed with actionable diagnostics.
 3. No one-page fixed limit silently drops InFleet data.
 4. InFleet tests and dashboard build contracts pass.
+
+## Documentation audit and driver reconciliation - 2026-07-23
+
+- [MODIFY] `Dashboard.html`: expose pending driver identities returned by InFleet, including Driver ID and event/trip counts.
+- [MODIFY] `scripts/validate-infleet-dev.ps1`: include the same privacy-safe reconciliation queue in DEV evidence.
+- [MODIFY] `scripts/test-infleet-dashboard.mjs`: protect the new fields and UI contracts.
+- [NEW] `power-platform/infleet/API_CAPABILITY_MAP.md`: map official queries to current and future dashboard capabilities.
+- [MODIFY] `power-platform/infleet/flow-definition.dev.json`: fix the observable daily telemetry failure after runtime evidence is confirmed.
+
+Acceptance:
+
+1. No mapping by name.
+2. Every `NAO_ENCONTRADO` driver exposes an InFleet Driver ID when the API supplied one.
+3. The flow completes successfully after publication.
+4. No duplicate InFleet event/trip IDs.
+5. Dashboard build and TV compatibility gates pass.

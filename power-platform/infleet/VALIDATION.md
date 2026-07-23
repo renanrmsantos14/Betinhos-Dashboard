@@ -13,7 +13,7 @@ npm run test:tv-compat
 
 ## Evidencia no ambiente DEV
 
-Use um token Dataverse apenas em memoria. O script e somente leitura, nao imprime token, CPF, nome ou chave tecnica.
+Use um token Dataverse apenas em memoria. O script e somente leitura; nao imprime token, CPF ou payload bruto. Para conciliacao, exibe somente nome recebido, InFleet Driver ID e contagens.
 
 ```powershell
 ./scripts/validate-infleet-dev.ps1 -AccessToken $token
@@ -24,6 +24,16 @@ Confirme no JSON:
 - `ultimaSincronizacaoUtc` recente.
 - `idsInfleetDuplicados` igual a zero para eventos e viagens.
 - `mapeamentoMotorista` com queda de `NAO_ENCONTRADO` apos cadastrar o InFleet Driver ID ou CPF normalizado no cadastro do motorista.
+
+### Execucao validada em 2026-07-23
+
+- Run DEV: `08584167665926247140249747542CU04`.
+- Status: `Succeeded`.
+- Intervalo UTC: `2026-07-23T20:58:12Z` a `2026-07-23T21:08:05Z`.
+- Telemetria diaria: 60 registros.
+- Eventos: 633 registros; zero IDs InFleet duplicados.
+- Viagens: 235 registros; zero IDs InFleet duplicados.
+- Motoristas pendentes de vinculo: 5 identidades.
 
 ## Regra de seguranca para motorista
 

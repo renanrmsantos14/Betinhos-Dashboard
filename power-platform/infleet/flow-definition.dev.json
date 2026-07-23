@@ -151,7 +151,8 @@
             { "name": "infleetHistoryHasMore", "type": "boolean", "value": true },
             { "name": "infleetEvents", "type": "array", "value": [] },
             { "name": "infleetEventsOffset", "type": "integer", "value": 0 },
-            { "name": "infleetEventsHasMore", "type": "boolean", "value": true }
+            { "name": "infleetEventsHasMore", "type": "boolean", "value": true },
+            { "name": "telemetryErrors", "type": "array", "value": [] }
           ]
         },
         "runAfter": {
@@ -634,7 +635,7 @@
             "foreach": "@body('Listar_Veiculos_Infleet')?['data']?['listVehicles']",
             "runtimeConfiguration": {
               "concurrency": {
-                "repetitions": 3
+                "repetitions": 1
               }
             },
             "actions": {
@@ -682,6 +683,20 @@
                       "Filtrar_Resumo_Veiculo": ["Succeeded"]
                     }
                   },
+                  "Normalizar_Resumo_Veiculo": {
+                    "type": "Compose",
+                    "inputs": "@if(empty(body('Filtrar_Resumo_Veiculo')),json('{}'),first(body('Filtrar_Resumo_Veiculo')))",
+                    "runAfter": {
+                      "Filtrar_Medicao_Diaria_Veiculo": ["Succeeded"]
+                    }
+                  },
+                  "Normalizar_Medicao_Diaria_Veiculo": {
+                    "type": "Compose",
+                    "inputs": "@if(empty(body('Filtrar_Medicao_Diaria_Veiculo')),json('{}'),first(body('Filtrar_Medicao_Diaria_Veiculo')))",
+                    "runAfter": {
+                      "Normalizar_Resumo_Veiculo": ["Succeeded"]
+                    }
+                  },
                   "Filtrar_Eventos_Veiculo": {
                     "type": "Query",
                     "inputs": {
@@ -689,7 +704,7 @@
                       "where": "@equals(item()?['vehicleId'],items('Processar_Veiculos')?['id'])"
                     },
                     "runAfter": {
-                      "Filtrar_Medicao_Diaria_Veiculo": ["Succeeded"]
+                      "Normalizar_Medicao_Diaria_Veiculo": ["Succeeded"]
                     }
                   },
                   "Filtrar_Excessos_Velocidade": {
@@ -703,42 +718,62 @@
                     }
                   },
                   "Upsert_Resumo_Diario": {
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                        "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
-                        "operationId": "UpdateRecord"
+                    "type": "Scope",
+                    "actions": {
+                      "Atualizar_Resumo_Diario": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "__DATAVERSE_CONNECTION_REFERENCE__",
+                            "operationId": "UpdateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "new_telemetriadiariainfleets",
+                            "recordId": "@concat(substring(items('Processar_Veiculos')?['id'],0,28),replace(outputs('Data_Local'),'-',''))",
+                            "prefer": "return=representation",
+                            "accept": "application/json;odata.metadata=full",
+                            "item": {
+                              "new_nome": "@concat(items('Processar_Veiculos')?['plate'],' | ',outputs('Data_Local'))",
+                              "new_chavetelemetria": "@concat(items('Processar_Veiculos')?['id'],'|',outputs('Data_Local'))",
+                              "new_infleetvehicleid": "@items('Processar_Veiculos')?['id']",
+                              "new_placanormalizada": "@toUpper(replace(items('Processar_Veiculos')?['plate'],'-',''))",
+                              "new_data": "@outputs('Data_Local')",
+                              "new_distanciapercorridakm": "@coalesce(outputs('Normalizar_Resumo_Veiculo')?['distanceTraveled'],outputs('Normalizar_Medicao_Diaria_Veiculo')?['distanceTraveled'],0)",
+                              "new_odometroinicial": "@coalesce(outputs('Normalizar_Medicao_Diaria_Veiculo')?['initialOdometer'],0)",
+                              "new_odometrofinal": "@coalesce(outputs('Normalizar_Medicao_Diaria_Veiculo')?['finalOdometer'],0)",
+                              "new_velocidademedia": "@coalesce(outputs('Normalizar_Resumo_Veiculo')?['averageSpeed'],0)",
+                              "new_velocidademaxima": "@coalesce(outputs('Normalizar_Resumo_Veiculo')?['maximumSpeed'],0)",
+                              "new_tempoemmovimentomin": "@int(div(sub(coalesce(outputs('Normalizar_Resumo_Veiculo')?['timeWithIgnitionOn'],0),coalesce(outputs('Normalizar_Resumo_Veiculo')?['timeStoppedWithIgnitionOn'],0)),60))",
+                              "new_tempoparadomin": "@int(div(coalesce(outputs('Normalizar_Resumo_Veiculo')?['timeStopped'],0),60))",
+                              "new_tempoparadocomignicaomin": "@int(div(coalesce(outputs('Normalizar_Resumo_Veiculo')?['timeStoppedWithIgnitionOn'],0),60))",
+                              "new_tempocomignicaoligadamin": "@int(div(coalesce(outputs('Normalizar_Resumo_Veiculo')?['timeWithIgnitionOn'],outputs('Normalizar_Medicao_Diaria_Veiculo')?['timeWithIgnitionOn'],0),60))",
+                              "new_tempomotorociosomin": "@int(div(coalesce(outputs('Normalizar_Resumo_Veiculo')?['engineIdle'],0),60))",
+                              "new_tempoacimavelocidademin": "@int(div(coalesce(outputs('Normalizar_Resumo_Veiculo')?['timeOverSpeed'],0),60))",
+                              "new_quantidadeposicoes": "@int(coalesce(outputs('Normalizar_Resumo_Veiculo')?['positions'],0))",
+                              "new_quantidadeeventos": "@length(body('Filtrar_Eventos_Veiculo'))",
+                              "new_excessosdevelocidade": "@length(body('Filtrar_Excessos_Velocidade'))",
+                              "new_janelainicioutc": "@outputs('Janela_Inicio_UTC')",
+                              "new_janelafimutc": "@outputs('Janela_Fim_UTC')",
+                              "new_sincronizadoem": "@utcNow()",
+                              "new_Veiculo@odata.bind": "@concat('/cr40f_veiculoses(',first(body('Filtrar_Veiculo_Dataverse'))?['cr40f_veiculosid'],')')"
+                            }
+                          }
+                        }
                       },
-                      "parameters": {
-                        "entityName": "new_telemetriadiariainfleets",
-                        "recordId": "@concat(substring(items('Processar_Veiculos')?['id'],0,28),replace(outputs('Data_Local'),'-',''))",
-                        "prefer": "return=representation",
-                        "accept": "application/json;odata.metadata=full",
-                        "item": {
-                          "new_nome": "@concat(items('Processar_Veiculos')?['plate'],' | ',outputs('Data_Local'))",
-                          "new_chavetelemetria": "@concat(items('Processar_Veiculos')?['id'],'|',outputs('Data_Local'))",
-                          "new_infleetvehicleid": "@items('Processar_Veiculos')?['id']",
-                          "new_placanormalizada": "@toUpper(replace(items('Processar_Veiculos')?['plate'],'-',''))",
-                          "new_data": "@outputs('Data_Local')",
-                          "new_distanciapercorridakm": "@coalesce(first(body('Filtrar_Resumo_Veiculo'))?['distanceTraveled'],first(body('Filtrar_Medicao_Diaria_Veiculo'))?['distanceTraveled'],0)",
-                          "new_odometroinicial": "@first(body('Filtrar_Medicao_Diaria_Veiculo'))?['initialOdometer']",
-                          "new_odometrofinal": "@first(body('Filtrar_Medicao_Diaria_Veiculo'))?['finalOdometer']",
-                          "new_velocidademedia": "@coalesce(first(body('Filtrar_Resumo_Veiculo'))?['averageSpeed'],0)",
-                          "new_velocidademaxima": "@coalesce(first(body('Filtrar_Resumo_Veiculo'))?['maximumSpeed'],0)",
-                          "new_tempoemmovimentomin": "@int(div(sub(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeWithIgnitionOn'],0),coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeStoppedWithIgnitionOn'],0)),60))",
-                          "new_tempoparadomin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeStopped'],0),60))",
-                          "new_tempoparadocomignicaomin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeStoppedWithIgnitionOn'],0),60))",
-                          "new_tempocomignicaoligadamin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeWithIgnitionOn'],first(body('Filtrar_Medicao_Diaria_Veiculo'))?['timeWithIgnitionOn'],0),60))",
-                          "new_tempomotorociosomin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['engineIdle'],0),60))",
-                          "new_tempoacimavelocidademin": "@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['timeOverSpeed'],0),60))",
-                          "new_quantidadeposicoes": "@int(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['positions'],0))",
-                          "new_quantidadeeventos": "@length(body('Filtrar_Eventos_Veiculo'))",
-                          "new_excessosdevelocidade": "@length(body('Filtrar_Excessos_Velocidade'))",
-                          "new_janelainicioutc": "@outputs('Janela_Inicio_UTC')",
-                          "new_janelafimutc": "@outputs('Janela_Fim_UTC')",
-                          "new_sincronizadoem": "@utcNow()",
-                          "new_Veiculo@odata.bind": "@concat('/cr40f_veiculoses(',first(body('Filtrar_Veiculo_Dataverse'))?['cr40f_veiculosid'],')')"
+                      "Registrar_Falha_Resumo_Diario": {
+                        "type": "AppendToArrayVariable",
+                        "inputs": {
+                          "name": "telemetryErrors",
+                          "value": {
+                            "vehicleId": "@items('Processar_Veiculos')?['id']",
+                            "plate": "@items('Processar_Veiculos')?['plate']",
+                            "date": "@outputs('Data_Local')",
+                            "error": "@actions('Atualizar_Resumo_Diario')?['error']"
+                          }
+                        },
+                        "runAfter": {
+                          "Atualizar_Resumo_Diario": ["Failed", "TimedOut"]
                         }
                       }
                     },
@@ -960,7 +995,7 @@
           "runStatus": "Failed",
           "runError": {
             "code": "INFLEET_TELEMETRY_PARTIAL_FAILURE",
-            "message": "A telemetria diaria nao foi concluida. Viagens nao serao processadas para evitar execucao marcada como sucesso parcial."
+            "message": "@concat('A telemetria diaria nao foi concluida. Diagnostico: ',string(variables('telemetryErrors')))"
           }
         },
         "runAfter": {

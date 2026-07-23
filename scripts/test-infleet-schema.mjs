@@ -56,7 +56,7 @@ assert.ok(
   "Chave alternativa da viagem deve ser estável e idempotente",
 );
 assert.ok(
-  flowText.includes("@int(div(coalesce(first(body('Filtrar_Resumo_Veiculo'))?['engineIdle'],0),60))"),
+  flowText.includes("@int(div(coalesce(outputs('Normalizar_Resumo_Veiculo')?['engineIdle'],0),60))"),
   "Motor ocioso decimal da Infleet deve ser convertido para inteiro antes do Dataverse",
 );
 assert.ok(

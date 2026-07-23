@@ -5991,6 +5991,10 @@
                 <div id="tblInfleetHealth" class="metric-table-wrap"></div>
               </div>
               <div class="cc">
+                <div class="cc-hdr"><div><div class="cc-title">Motoristas pendentes de v&iacute;nculo</div><div class="tc-meta" id="metaInfleetMapping"></div></div></div>
+                <div id="tblInfleetMapping" class="metric-table-wrap"></div>
+              </div>
+              <div class="cc">
                 <div class="cc-hdr"><div><div class="cc-title">Quilometragem di&aacute;ria</div><div class="tc-meta" id="metaInfleetTrend"></div></div></div>
                 <canvas id="cInfleetKm" height="100" data-mobile-height="136"></canvas>
               </div>
@@ -9327,6 +9331,7 @@
         },
         infleetEvento: {
           id: "new_infleeteventid",
+          infleetDriverId: "new_infleetdriverid",
           reportadoEm: "new_reportadoem",
           veiculo: "_new_veiculo_value",
           motorista: "_new_motorista_value",
@@ -9343,6 +9348,7 @@
         },
         infleetViagem: {
           id: "new_infleettripid",
+          infleetDriverId: "new_infleetdriverid",
           iniciadoEm: "new_iniciadoem",
           finalizadoEm: "new_finalizadoem",
           veiculo: "_new_veiculo_value",
@@ -13211,6 +13217,37 @@ function setAppVersion() {
           ["Viagens sem motorista", unmappedTrips ? "Requer identificador InFleet/CPF" : "Mapeado", unmappedTrips],
           ["Ultima sincronizacao", freshnessLabel, latestSyncAt ? new Date(latestSyncAt).toLocaleString("pt-BR") : "—"],
         ].map(([label, status, quantity]) => `<tr><td class="em">${escapeDashboardText(label)}</td><td class="r">${escapeDashboardText(status)}</td><td class="r">${escapeDashboardText(quantity)}</td></tr>`).join("")}</tbody></table>`);
+
+        const pendingDrivers = new Map();
+        const addPendingDriver = (row, fields, source) => {
+          const status = String(row[fields.status] || "SEM_MOTORISTA").toUpperCase();
+          if (status !== "NAO_ENCONTRADO") return;
+          const driverId = String(row[fields.id] || "").trim();
+          const receivedName = String(row[fields.name] || "Motorista nao informado").trim();
+          const key = driverId || `sem-id:${receivedName.toLowerCase()}`;
+          if (!pendingDrivers.has(key)) {
+            pendingDrivers.set(key, { driverId, receivedName, status, events: 0, trips: 0 });
+          }
+          const item = pendingDrivers.get(key);
+          item[source] += 1;
+          if (status === "NAO_ENCONTRADO") item.status = status;
+        };
+        events.forEach((row) => addPendingDriver(row, {
+          id: F.infleetEvento.infleetDriverId,
+          name: F.infleetEvento.motoristaRecebido,
+          status: F.infleetEvento.statusMotorista,
+        }, "events"));
+        trips.forEach((row) => addPendingDriver(row, {
+          id: F.infleetViagem.infleetDriverId,
+          name: F.infleetViagem.motoristaRecebido,
+          status: F.infleetViagem.statusMotorista,
+        }, "trips"));
+        const pendingDriverRows = [...pendingDrivers.values()]
+          .sort((a, b) => (b.events + b.trips) - (a.events + a.trips));
+        set("metaInfleetMapping", dvDisabled ? "—" : `${pendingDriverRows.length} identidades para revisar`);
+        html("tblInfleetMapping", `<table><thead><tr><th>Motorista recebido</th><th>ID InFleet</th><th>Status</th><th class="r">Eventos</th><th class="r">Viagens</th></tr></thead><tbody>${dvDisabled ? emptyRow(5) : pendingDriverRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(row.receivedName)}</td><td class="dim">${escapeDashboardText(row.driverId || "Nao informado")}</td><td>${badge(row.status)}</td><td class="r">${row.events.toLocaleString("pt-BR")}</td><td class="r">${row.trips.toLocaleString("pt-BR")}</td></tr>`)
+          .join("") || emptyRow(5)}</tbody></table>`);
 
         const kmByDay = new Map();
         daily.forEach((row) => {

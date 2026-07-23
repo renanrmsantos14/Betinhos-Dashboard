@@ -20,9 +20,12 @@ for (const expected of [
   'id="tblInfleetEventos"',
   'id="tblInfleetMotoristas"',
   'id="tblInfleetHealth"',
+  'id="tblInfleetMapping"',
   'id="cInfleetKm"',
   'id="metaInfleetHealth"',
+  'id="metaInfleetMapping"',
   'id="metaInfleetTrend"',
+  'infleetDriverId: "new_infleetdriverid"',
   'id="infAutonomia"',
   'id="infOciosidade"',
 ]) {

@@ -32,12 +32,34 @@ function Get-StatusCounts {
 }
 
 $daily = Get-DataverseRows 'new_telemetriadiariainfleets?$select=new_data,new_sincronizadoem,new_telemetriadiariainfleetid'
-$events = Get-DataverseRows 'new_eventoinfleets?$select=new_infleeteventid,new_statusmapeamentomotorista'
-$trips = Get-DataverseRows 'new_viageminfleets?$select=new_infleettripid,new_statusmapeamentomotorista'
+$events = Get-DataverseRows 'new_eventoinfleets?$select=new_infleeteventid,new_infleetdriverid,new_nomemotoristarecebido,new_statusmapeamentomotorista'
+$trips = Get-DataverseRows 'new_viageminfleets?$select=new_infleettripid,new_infleetdriverid,new_nomemotoristarecebido,new_statusmapeamentomotorista'
 
 $duplicateEvents = @($events | Where-Object { $_.new_infleeteventid } | Group-Object new_infleeteventid | Where-Object Count -gt 1).Count
 $duplicateTrips = @($trips | Where-Object { $_.new_infleettripid } | Group-Object new_infleettripid | Where-Object Count -gt 1).Count
 $latestSync = @($daily | Where-Object new_sincronizadoem | ForEach-Object { [datetime]$_.new_sincronizadoem } | Sort-Object -Descending | Select-Object -First 1)
+$pendingSource = @(
+    $events | Where-Object new_statusmapeamentomotorista -EQ 'NAO_ENCONTRADO' | ForEach-Object {
+        [pscustomobject]@{ tipo = 'evento'; id = $_.new_infleetdriverid; nome = $_.new_nomemotoristarecebido }
+    }
+    $trips | Where-Object new_statusmapeamentomotorista -EQ 'NAO_ENCONTRADO' | ForEach-Object {
+        [pscustomobject]@{ tipo = 'viagem'; id = $_.new_infleetdriverid; nome = $_.new_nomemotoristarecebido }
+    }
+)
+$pendingDrivers = @(
+    $pendingSource |
+        Group-Object id, nome |
+        ForEach-Object {
+            $sample = $_.Group[0]
+            [pscustomobject]@{
+                nome = $sample.nome
+                infleetDriverId = $sample.id
+                eventos = @($_.Group | Where-Object tipo -EQ 'evento').Count
+                viagens = @($_.Group | Where-Object tipo -EQ 'viagem').Count
+            }
+        } |
+        Sort-Object @{ Expression = { $_.eventos + $_.viagens }; Descending = $true }
+)
 
 [pscustomobject]@{
     ambiente = $EnvironmentUrl.TrimEnd('/')
@@ -56,4 +78,5 @@ $latestSync = @($daily | Where-Object new_sincronizadoem | ForEach-Object { [dat
         mapeamentoMotorista = @(Get-StatusCounts $trips)
         idsInfleetDuplicados = $duplicateTrips
     }
+    motoristasPendentes = $pendingDrivers
 } | ConvertTo-Json -Depth 6

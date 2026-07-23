@@ -15,6 +15,17 @@ assert.equal(dailyActions.Listar_Historico_Motoristas_Infleet.actions.Acumular_H
 assert.equal(dailyActions.Listar_Eventos_Relevantes_Infleet.actions.Acumular_Eventos_Infleet.type, "Foreach");
 assert.equal(actions.Continuar_Apos_Telemetria.type, "Terminate");
 assert.equal(actions.Continuar_Apos_Telemetria.inputs.runStatus, "Failed");
+assert.equal(dailyActions.Processar_Veiculos.runtimeConfiguration.concurrency.repetitions, 1);
+assert.equal(
+  dailyActions.Processar_Veiculos.actions.Veiculo_Canonico_Unico.actions.Upsert_Resumo_Diario.actions
+    .Registrar_Falha_Resumo_Diario.inputs.name,
+  "telemetryErrors",
+);
+assert.match(
+  actions.Continuar_Apos_Telemetria.inputs.runError.message,
+  /telemetryErrors/,
+  "Falha de telemetria deve expor o diagnostico capturado",
+);
 assert.deepEqual(actions.Janela_Viagens_Inicio_UTC.runAfter, {
   Processar_Ultimos_3_Dias: ["Succeeded"],
 });
