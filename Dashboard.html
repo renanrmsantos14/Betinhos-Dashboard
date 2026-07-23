@@ -8929,22 +8929,32 @@
         return IS_LOCAL || params.get("mock") === "1";
       }
 
-      function shouldUseProdSnapshot() {
+      function getSnapshotEnvironment() {
         const params = new URLSearchParams(window.location.search);
-        return IS_LOCAL && params.get("snapshot") === "1";
+        const environment = params.get("snapshot")?.toLowerCase();
+        return IS_LOCAL && ["dev", "prod"].includes(environment) ? environment : null;
       }
 
-      async function loadProdSnapshot() {
-        const response = await fetch("data/dashboard-prod-snapshot.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`Snapshot PROD indisponível (HTTP ${response.status}). Rode npm run snapshot:prod.`);
+      function shouldUseSnapshot() {
+        return getSnapshotEnvironment() !== null;
+      }
+
+      async function loadSnapshot() {
+        const environment = getSnapshotEnvironment();
+        const environmentLabel = environment.toUpperCase();
+        const command = `npm run snapshot:${environment}`;
+        const response = await fetch(`data/dashboard-${environment}-snapshot.json`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Snapshot ${environmentLabel} indisponível (HTTP ${response.status}). Rode ${command}.`);
 
         const snapshot = await response.json();
         const requiredCollections = ["reservas", "clientes", "passageiros", "servicosPassageiro", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing"];
-        if (snapshot?.schemaVersion !== 1 || !snapshot?.data) throw new Error("Snapshot PROD inválido. Rode npm run snapshot:prod novamente.");
+        if (snapshot?.schemaVersion !== 1 || !snapshot?.data || snapshot?.source?.environment?.toLowerCase() !== environment) {
+          throw new Error(`Snapshot ${environmentLabel} inválido ou de outro ambiente. Rode ${command} novamente.`);
+        }
 
         for (const collection of requiredCollections) {
           if (!Array.isArray(snapshot.data[collection])) {
-            throw new Error(`Snapshot PROD inválido: coleção '${collection}' ausente.`);
+            throw new Error(`Snapshot ${environmentLabel} inválido: coleção '${collection}' ausente.`);
           }
         }
 
@@ -8956,7 +8966,7 @@
         };
         const exportedAt = new Date(snapshot.exportedAt);
         const timestamp = Number.isNaN(exportedAt.getTime()) ? "data desconhecida" : exportedAt.toLocaleString("pt-BR");
-        showAlert("warn", `<strong>SNAPSHOT PROD:</strong> dados reais exportados em ${timestamp}. Atualize com <code>npm run snapshot:prod</code>.`);
+        showAlert("warn", `<strong>SNAPSHOT ${environmentLabel}:</strong> dados reais exportados em ${timestamp}. Atualize com <code>${command}</code>.`);
       }
 
       function makeHeaders(wantAnno, wantPage) {
@@ -10131,9 +10141,9 @@ function setAppVersion() {
           btn.classList.add("spin");
         }
         try {
-          if (shouldUseProdSnapshot()) {
+          if (shouldUseSnapshot()) {
             USING_MOCK_DATA = false;
-            await loadProdSnapshot();
+            await loadSnapshot();
             markAllDataSetsLoaded();
           } else if (shouldUseMockData()) {
             // Usar dados fictícios para desenvolvimento local
@@ -10335,7 +10345,7 @@ function setAppVersion() {
       }
 
       async function loadDataSets(keys) {
-        if (shouldUseProdSnapshot() || USING_MOCK_DATA) {
+        if (shouldUseSnapshot() || USING_MOCK_DATA) {
           markAllDataSetsLoaded();
           return;
         }
@@ -13939,6 +13949,7 @@ function setAppVersion() {
             ? String(aValue || "").localeCompare(String(bValue || ""))
             : String(bValue || "").localeCompare(String(aValue || ""));
         };
+        allRanked.forEach((item, index) => { item.serviceRank = index + 1; });
         const ranked = allRanked.slice(0, 50);
         const isNumericSort = numericFields.includes(sortState.field);
         const rankingUniverse = sortState.field === "paymentDays"
@@ -13953,14 +13964,7 @@ function setAppVersion() {
           paymentDays: sortState.asc ? "Passageiros com menor tempo de pagamento" : "Passageiros com maior tempo de pagamento",
           ticket: sortState.asc ? "Passageiros com menor ticket médio" : "Passageiros com maior ticket médio",
           total: sortState.asc ? "Passageiros com menor faturamento" : "Passageiros com maior faturamento",
-        }[sortState.field] || `Passageiros que mais viajaram com a Betinhos — por ${ {
-          name: "Passageiro",
-          client: "Cliente",
-          latest: "Último serviço",
-          serviceType: "Tipo de serviço",
-          vehicleType: "Tipo de veículo",
-          driver: "Motorista",
-        }[sortState.field] }`;
+        }[sortState.field] || "Passageiros que mais viajaram com a Betinhos";
         const tableTitle = document.getElementById("tbSrv")?.closest(".tc")?.querySelector(".tc-title");
         if (tableTitle) tableTitle.textContent = rankingTitle;
         const formatBirthday = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString("pt-BR") : "";
@@ -13985,7 +13989,7 @@ function setAppVersion() {
           window.__DASHBOARD_BIRTHDAY_TOAST_DATE = birthdayKey;
         }
         document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
-          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${index + 1}</span></td>
+          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${isNumericSort ? index + 1 : item.serviceRank}</span></td>
           <td class="em"><div class="passenger-ranking-cell-value">${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim"><span class="passenger-ranking-cell-value">${item.client}</span></td>
           <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span><span class="passenger-ranking-cell-subvalue">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td><td class="r"><span class="passenger-ranking-cell-value">${item.paymentDays.length ? `${(item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length).toFixed(1).replace(".", ",")} d` : "&mdash;"}</span></td>
           <td class="dim"><span class="passenger-ranking-cell-value">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</span></td>
@@ -14004,6 +14008,8 @@ function setAppVersion() {
         th.classList.add(asc ? "sa" : "sd");
         renderPassengerRanking(tblCache.tbSrv || VW.reservas);
       }
+
+      const PASSENGER_RANKING_MAX_WIDTHS = [64, 320, 220, 110, 120, 170, 220, 200, 220, 140, 160];
 
       function fitPassengerRankingColumns() {
         const rankingTable = document.querySelector(".passenger-ranking-table");
@@ -14037,7 +14043,7 @@ function setAppVersion() {
               padding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
               styles.set(paddingKey, padding);
             }
-            const width = Math.min(contentWidth + padding + 1, isHeader ? 152 : Infinity);
+            const width = contentWidth + padding + 4;
             widths[index] = Math.max(widths[index], Math.ceil(width));
           });
         });
@@ -14045,15 +14051,43 @@ function setAppVersion() {
           try { return JSON.parse(rankingTable.dataset.passengerRankingWidths || "[]"); }
           catch { return []; }
         })();
-        applyPassengerRankingColumnWidths(rankingTable, widths.map((width, index) => manualWidths[index] || width));
+        applyPassengerRankingColumnWidths(rankingTable, widths);
+        const overflowWidths = Array.from(widths, () => 0);
+        rankingTable.querySelectorAll("tbody tr").forEach((row) => {
+          Array.from(row.cells).forEach((cell, index) => {
+            if (cell.colSpan !== 1 || index >= widths.length) return;
+            Array.from(cell.children).forEach((content) => {
+              const overflow = content.scrollWidth - content.clientWidth;
+              if (overflow > 0) overflowWidths[index] = Math.max(overflowWidths[index], Math.ceil(overflow) + 1);
+            });
+          });
+        });
+        widths.forEach((width, index) => { widths[index] = width + overflowWidths[index]; });
+        const autoWidths = widths.map((width, index) => Math.min(width, PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity));
+        rankingTable.dataset.passengerRankingAutoWidths = JSON.stringify(autoWidths);
+        applyPassengerRankingColumnWidths(rankingTable, autoWidths.map((width, index) => Math.max(width, Number(manualWidths[index]) || 0)));
+        rankingTable.querySelectorAll("tbody .passenger-ranking-cell-value").forEach((content) => {
+          if (content.scrollWidth > content.clientWidth + 1) content.title = content.textContent.trim();
+          else content.removeAttribute("title");
+        });
         installPassengerRankingColumnResize(rankingTable);
+        observePassengerRankingWidth(rankingTable);
       }
 
       function applyPassengerRankingColumnWidths(rankingTable, widths) {
-        const adjustedWidths = [...widths];
+        const adjustedWidths = widths.map((width, index) => Math.min(width, PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity));
         const minimumWidth = Math.ceil(rankingTable.closest(".tc-wrap")?.clientWidth || 0);
-        const missingWidth = minimumWidth - adjustedWidths.reduce((total, width) => total + width, 0);
-        if (missingWidth > 0) adjustedWidths[adjustedWidths.length - 1] += missingWidth;
+        let missingWidth = minimumWidth - adjustedWidths.reduce((total, width) => total + width, 0);
+        while (missingWidth > 0) {
+          const expandable = adjustedWidths.map((width, index) => width < (PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity) ? index : -1).filter((index) => index >= 0);
+          if (!expandable.length) break;
+          const share = Math.ceil(missingWidth / expandable.length);
+          expandable.forEach((index) => {
+            const addition = Math.min(share, missingWidth, PASSENGER_RANKING_MAX_WIDTHS[index] - adjustedWidths[index]);
+            adjustedWidths[index] += addition;
+            missingWidth -= addition;
+          });
+        }
         let colgroup = rankingTable.querySelector("colgroup");
         if (!colgroup) {
           colgroup = document.createElement("colgroup");
@@ -14085,12 +14119,17 @@ function setAppVersion() {
             const colgroup = rankingTable.querySelector("colgroup");
             let widths = Array.from(colgroup?.children || [], (column) => column.getBoundingClientRect().width);
             const baseWidths = [...widths];
+            const autoWidths = (() => {
+              try { return JSON.parse(rankingTable.dataset.passengerRankingAutoWidths || "[]"); }
+              catch { return []; }
+            })();
             const minimumWidth = Math.ceil(rankingTable.closest(".tc-wrap")?.clientWidth || 0);
             const startX = event.clientX;
             const startWidth = baseWidths[index];
             const resize = (moveEvent) => {
               const resizedWidths = [...baseWidths];
-              resizedWidths[index] = Math.max(64, Math.round(startWidth + moveEvent.clientX - startX));
+              const maximumWidth = PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity;
+              resizedWidths[index] = Math.min(maximumWidth, Math.max(Math.min(autoWidths[index] || 64, maximumWidth), Math.round(startWidth + moveEvent.clientX - startX)));
               const missingWidth = minimumWidth - resizedWidths.reduce((total, width) => total + width, 0);
               if (missingWidth > 0) resizedWidths[index + 1] += missingWidth;
               widths = applyPassengerRankingColumnWidths(rankingTable, resizedWidths);
@@ -14106,6 +14145,21 @@ function setAppVersion() {
           header.append(resizer);
         });
         rankingTable.dataset.passengerRankingResizable = "1";
+      }
+
+      function observePassengerRankingWidth(rankingTable) {
+        if (rankingTable.dataset.passengerRankingObserved === "1" || !window.ResizeObserver) return;
+        const wrapper = rankingTable.closest(".tc-wrap");
+        if (!wrapper) return;
+        let previousWidth = wrapper.clientWidth;
+        const observer = new ResizeObserver(() => {
+          const currentWidth = wrapper.clientWidth;
+          if (currentWidth === previousWidth) return;
+          previousWidth = currentWidth;
+          window.requestAnimationFrame(() => fitPassengerRankingColumns());
+        });
+        observer.observe(wrapper);
+        rankingTable.dataset.passengerRankingObserved = "1";
       }
 
       function renderSrvTable(rows) {
@@ -15200,7 +15254,7 @@ function setAppVersion() {
         if (title) title.textContent = "Passageiros que mais viajaram com a Betinhos";
         search?.remove();
         rankingTable?.classList.add("passenger-ranking-table");
-        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th onclick="sortPassengerRanking('name',this)"><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th onclick="sortPassengerRanking('client',this)"><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th class="sd" onclick="sortPassengerRanking('count',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th onclick="sortPassengerRanking('paymentDays',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Dias para pagamento">Dias p/ pgto</span></th><th onclick="sortPassengerRanking('latest',this)"><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th onclick="sortPassengerRanking('serviceType',this)"><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o mais frequente</span></th><th onclick="sortPassengerRanking('vehicleType',this)"><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo mais frequente</span></th><th onclick="sortPassengerRanking('driver',this)"><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista mais frequente</span></th><th onclick="sortPassengerRanking('ticket',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th onclick="sortPassengerRanking('total',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
+        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th onclick="sortPassengerRanking('name',this)"><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th onclick="sortPassengerRanking('client',this)"><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th class="sd" onclick="sortPassengerRanking('count',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th onclick="sortPassengerRanking('paymentDays',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Dias para pagamento">Dias p/ pgto</span></th><th onclick="sortPassengerRanking('latest',this)"><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th onclick="sortPassengerRanking('serviceType',this)"><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o + freq</span></th><th onclick="sortPassengerRanking('vehicleType',this)"><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo + freq</span></th><th onclick="sortPassengerRanking('driver',this)"><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista + freq</span></th><th onclick="sortPassengerRanking('ticket',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th onclick="sortPassengerRanking('total',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
         table.dataset.passengerRanking = "1";
       }
 
@@ -15250,7 +15304,7 @@ function setAppVersion() {
           && /(?:^|[?&])tv=1(?:&|$)/i.test(location.search || "");
       }
       function startDashboardAutoRefresh() {
-        if (shouldUseProdSnapshot()) return;
+        if (shouldUseSnapshot()) return;
         if (dashboardAutoRefreshTimer) window.clearInterval(dashboardAutoRefreshTimer);
         dashboardAutoRefreshTimer = window.setInterval(() => {
           if (window.__DASHBOARD_TV_MODE) {

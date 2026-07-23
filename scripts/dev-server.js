@@ -8,7 +8,10 @@ if (tvPreview) require("./build-dashboard-tv-compatible.cjs");
 const defaultFile = tvPreview
   ? path.join(repoRoot, "dist", "Dashboard.html")
   : path.join(repoRoot, "Dashboard.html");
-const snapshotFile = path.join(repoRoot, "data", "dashboard-prod-snapshot.json");
+const snapshotFiles = {
+  dev: path.join(repoRoot, "data", "dashboard-dev-snapshot.json"),
+  prod: path.join(repoRoot, "data", "dashboard-prod-snapshot.json"),
+};
 const host = "127.0.0.1";
 const requestedPort = Number(process.env.PORT || 0);
 
@@ -69,12 +72,16 @@ const server = http.createServer((request, response) => {
 
 server.listen(requestedPort, host, () => {
   const address = server.address();
-  const hasSnapshot = fs.existsSync(snapshotFile);
+  const availableSnapshots = Object.keys(snapshotFiles).filter((environment) => fs.existsSync(snapshotFiles[environment]));
+  const defaultSnapshot = availableSnapshots.includes("dev") ? "dev" : availableSnapshots[0];
   const query = tvPreview
-    ? (hasSnapshot ? "?snapshot=1&tv=1" : "?mock=1&tv=1")
-    : (hasSnapshot ? "?snapshot=1" : "?mock=1");
+    ? (defaultSnapshot ? `?snapshot=${defaultSnapshot}&tv=1` : "?mock=1&tv=1")
+    : (defaultSnapshot ? `?snapshot=${defaultSnapshot}` : "?mock=1");
   const mode = tvPreview ? "TV/Tizen legado" : "desktop";
-  const dataMode = hasSnapshot ? "snapshot PROD" : "mock";
+  const dataMode = defaultSnapshot ? `snapshot ${defaultSnapshot.toUpperCase()}` : "mock";
   console.log(`[dev] Dashboard ${mode} (${dataMode}): http://localhost:${address.port}/${query}`);
+  availableSnapshots.forEach((environment) => {
+    console.log(`[snapshot-${environment}] http://localhost:${address.port}/?snapshot=${environment}`);
+  });
   console.log(`[demo] Simulacao de marketing: http://localhost:${address.port}/demo`);
 });
