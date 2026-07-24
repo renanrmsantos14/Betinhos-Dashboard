@@ -5377,7 +5377,9 @@
       .markpoint-upload-sub { margin-top:3px; color:var(--t2); font-size:12px; }
       .markpoint-upload-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
       .markpoint-file-input { display:none; }
-      .tb-upload-marq { height:32px; padding:0 11px; font-size:12px; font-weight:700; }
+      .tb-upload-marq { display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 11px; background:var(--navy); border-color:var(--navy); color:#fff; font-size:12px; font-weight:700; }
+      .tb-upload-marq:hover { background:var(--navy-2); border-color:var(--navy-2); }
+      .tb-upload-marq svg { width:14px; height:14px; }
       .markpoint-status { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--t2); font-size:12px; }
       .markpoint-status strong { color:var(--navy); }
       .markpoint-status-error { color:var(--red); }
@@ -5470,7 +5472,7 @@
       <div class="tb-right">
         <span class="ts" id="ts"></span>
         <span class="env-pill" id="envPill">—</span>
-        <button id="markpointHeaderUpload" class="btn tb-upload-marq" type="button" title="Importar relatório MarQPonto" hidden>Upload MarQ</button>
+        <button id="markpointHeaderUpload" class="btn tb-upload-marq" type="button" title="Importar relatório MarQPonto" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 8 5-5 5 5"></path><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"></path></svg>Upload MarQ</button>
         <button class="btn-ic" id="btnRef" type="button" aria-label="Atualizar dados" title="Atualizar dados" onclick="loadAll()">
           <svg
             width="15"
