@@ -21,21 +21,34 @@ for (const expected of [
   'id="cExpenseCategories"',
   'id="tblExpenseCompanies"',
   'id="tblExpenseDre"',
-  'id="tblExpenseHealth"',
-  'id="tblExpenseDrivers"',
-  'id="tbDespesas"',
-  'id="expenseMobileList"',
+  'id="tblExpenseFoodDrivers"',
   'function loadDespesas()',
   'function loadCategoriasDespesas()',
   'function loadFormasPagamentoDespesas()',
   'function loadAnexosDespesas()',
   'function renderDespesas(dvDisabled)',
+  'function aggregateFoodExpensesByDriver(rows)',
   'function openExpenseRecord(id)',
   'function updateExpenseFilters()',
   'function searchExpenseTable(query)',
 ]) {
   assert.ok(html.includes(expected), `Contrato de despesas ausente: ${expected}`);
 }
+
+for (const removed of [
+  'id="tblExpenseHealth"',
+  'id="tblExpenseDrivers"',
+  'id="tbDespesas"',
+  'id="expenseMobileList"',
+]) {
+  assert.ok(!html.includes(removed), `Contrato removido ainda presente: ${removed}`);
+}
+
+assert.doesNotMatch(
+  html,
+  /renderDistributionTable\(\s*"tblExpenseDrivers"/,
+  "Aba Despesas não pode renderizar ranking geral por motorista",
+);
 
 for (const expected of [
   'despesas: "cr40f_despesaoperacionals"',
@@ -61,8 +74,8 @@ assert.match(
 );
 assert.match(
   html,
-  /const EXPENSE_FOOD_CATEGORIES = new Set\(\[\s*"almoco",\s*"cafe",\s*"jantar",\s*"lanche"/,
-  "Alimentação deve usar somente Almoço, Café, Jantar e Lanche",
+  /const EXPENSE_FOOD_CATEGORIES = new Set\(\[\s*"alimentacao",\s*"almoco",\s*"cafe",\s*"jantar",\s*"lanche"/,
+  "Alimentação deve reconhecer categoria atual e categorias legadas",
 );
 assert.match(
   html,

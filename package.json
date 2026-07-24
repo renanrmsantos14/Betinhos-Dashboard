@@ -1,12 +1,13 @@
 {
   "name": "dashboard-betinhos",
-  "version": "1.0.197",
+  "version": "1.0.223",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-server.js",
     "build": "node scripts/update-app-version.mjs && node scripts/build-dashboard-tv-compatible.cjs",
     "test:tv": "node scripts/test-dashboard-tv-build.cjs",
     "test:tv-compat": "node scripts/test-tv-compat.cjs",
+    "test:markpoint": "node scripts/test-markpoint-parser.cjs && node scripts/test-markpoint-dataverse.mjs",
     "test:infleet-schema": "node scripts/test-infleet-schema.mjs",
     "test:infleet-flow": "node scripts/test-infleet-flow-definition.mjs",
     "test:infleet-dashboard": "node scripts/test-infleet-dashboard.mjs",
@@ -24,5 +25,8 @@
     "chartjs-plugin-datalabels": "2.2.0",
     "esbuild": "^0.27.7",
     "resize-observer-polyfill": "1.5.1"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
   }
 }

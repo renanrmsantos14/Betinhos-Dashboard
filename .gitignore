@@ -4,3 +4,5 @@ data/.dashboard-prod-snapshot.*.tmp.json
 data/dashboard-dev-snapshot.json
 data/dashboard-dev-snapshot.json.tmp
 data/.dashboard-dev-snapshot.*.tmp.json
+.codex-temp/
+node_modules/

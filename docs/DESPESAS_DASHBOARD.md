@@ -23,7 +23,7 @@ quando há reserva vinculada; sem esse vínculo o dashboard mostra `Sem reserva`
 ## Métricas
 
 - Despesa realizada: soma de `cr40f_valor`.
-- Alimentação: soma das categorias Almoço, Café, Jantar e Lanche.
+- Alimentação: soma da categoria Alimentação. As categorias legadas Almoço, Café, Jantar e Lanche também são aceitas.
 - Aguardando pagamento: soma com status financeiro `100000001`.
 - Ticket médio: despesa realizada dividida pela quantidade de lançamentos.
 - Sem comprovante: status de anexo diferente de Completo e nenhum anexo relacionado.

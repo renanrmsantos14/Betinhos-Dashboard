@@ -18,7 +18,7 @@ const appScripts = Array.from(
 assert.doesNotMatch(appScripts, /\.flat\s*\(/i, "O código do dashboard ainda depende de Array.prototype.flat.");
 assert.doesNotMatch(appScripts, /Object\.values\s*\(/i, "O código do dashboard ainda depende de Object.values.");
 
-const styles = Array.from(html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi), (match) => match[1]).join("\n");
+const styles = Array.from(html.matchAll(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/gi), (match) => match[1]).join("\n");
 assert.doesNotMatch(styles, /\binset\s*:/i, "CSS final ainda depende da propriedade inset.");
 assert.match(styles, /\.tv-browser\s+\.filter-body\s*\{[^}]*display:\s*none/i);
 assert.match(styles, /\.tv-browser\s+\.fbar\.open\s+\.filter-body\s*\{[^}]*display:\s*block/i);
