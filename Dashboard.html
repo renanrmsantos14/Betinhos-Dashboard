@@ -6567,10 +6567,6 @@
             </div>
             <div id="markpointStatus" class="markpoint-status" role="status" aria-live="polite"><span>Nenhum relatório importado.</span></div>
           </section>
-          <div class="markpoint-grid">
-            <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Horas trabalhadas por motorista</div><div id="markpointHoursMeta" class="cc-sub">Importe um relatório para visualizar.</div></div></div><div id="tblMarkpointHours" class="metric-table-wrap"></div></div>
-            <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Descanso entre jornadas</div><div id="markpointRestMeta" class="cc-sub">Somente jornadas com batidas válidas.</div></div></div><div id="tblMarkpointRest" class="metric-table-wrap"></div></div>
-          </div>
           <div class="kpi-row kpi-4" id="markpointKpis" hidden>
             <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Horas trabalhadas</div><div class="kpi-val" id="mpHours">—</div><div class="markpoint-kpi-note" id="mpHoursNote"></div></div>
             <div class="kpi"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-lbl">Média diária</div><div class="kpi-val" id="mpDaily">—</div></div>
@@ -6578,8 +6574,8 @@
             <div class="kpi"><div class="kpi-accent" style="background:var(--orange)"></div><div class="kpi-lbl">Dados incompletos</div><div class="kpi-val" id="mpIncomplete">—</div></div>
           </div>
           <div class="tc" id="markpointTableCard" hidden>
-            <div class="tc-bar"><div class="tc-title">Ranking de descanso por motorista</div><div id="markpointTableMeta" class="tc-meta"></div></div>
-            <div class="tc-wrap"><table><thead><tr><th>#</th><th>Motorista</th><th class="r">Descanso médio</th><th class="r">Média de horas</th><th class="r">Jornadas avaliadas</th></tr></thead><tbody id="markpointTableBody"></tbody></table></div>
+            <div class="tc-bar"><div class="tc-title">Jornada por motorista</div><div id="markpointTableMeta" class="tc-meta"></div></div>
+            <div class="tc-wrap"><table><thead><tr><th>Motorista</th><th class="r">Horas trabalhadas</th><th class="r">Média diária</th><th class="r">Descanso médio</th><th class="r">Jornadas avaliadas</th></tr></thead><tbody id="markpointTableBody"></tbody></table></div>
           </div>
           <div class="tc">
             <div class="tc-bar">
@@ -11071,6 +11067,7 @@ function setAppVersion() {
           const employeeRests = employeeRecords.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
           return {
             employee: sample.employee,
+            employeeKey,
             avgRest: employeeRests.length ? employeeRests.reduce((sum, record) => sum + record.rest, 0) / employeeRests.length : null,
             avgWorked: employeeRecords.length ? employeeRecords.reduce((sum, record) => sum + record.worked, 0) / employeeRecords.length : null,
             totalWorked: employeeRecords.reduce((sum, record) => sum + record.worked, 0),
@@ -11083,18 +11080,15 @@ function setAppVersion() {
         document.getElementById("mpDaily").textContent = markpointFmtMinutes(avg);
         document.getElementById("mpRest").textContent = markpointFmtMinutes(restAvg);
         document.getElementById("mpIncomplete").textContent = records.filter((record) => !record.validPoints).length.toLocaleString("pt-BR");
-        document.getElementById("markpointHoursMeta").textContent = `${records.length} registros · ${markpointState.meta.employees} colaboradores`;
-        document.getElementById("markpointRestMeta").textContent = `${rests.length} intervalos entre jornadas consecutivas`;
-        document.getElementById("markpointTableMeta").textContent = `${ranking.length} motoristas · somente jornadas consecutivas · descanso médio em ordem decrescente`;
+        const rankingByKey = new Map(ranking.map((item) => [item.employeeKey, item]));
+        const activeDrivers = [...new Map((DB.funcionarios || []).filter(isActiveFuncionario).map((driver) => {
+          const employee = driver[F.fun.nome] || driver[F.fun.apelido] || "Motorista sem nome";
+          const employeeKey = markpointNormalizeName(employee);
+          return [employeeKey, rankingByKey.get(employeeKey) || { employee, employeeKey, totalWorked: 0, avgWorked: null, avgRest: null, evaluatedJourneys: 0 }];
+        })).values()].sort((a, b) => (b.avgRest ?? -Infinity) - (a.avgRest ?? -Infinity) || a.employee.localeCompare(b.employee, "pt-BR"));
+        document.getElementById("markpointTableMeta").textContent = `${activeDrivers.length} motoristas ativos · descanso médio em ordem decrescente`;
         const body = document.getElementById("markpointTableBody");
-        body.innerHTML = ranking.map((item, index) => `<tr><td>${index + 1}</td><td class="em">${item.employee}</td><td class="r">${markpointFmtMinutes(item.avgRest)}</td><td class="r">${markpointFmtMinutes(item.avgWorked)}</td><td class="r">${item.evaluatedJourneys.toLocaleString("pt-BR")}</td></tr>`).join("") || emptyRow(5);
-
-        const hoursRanking = [...ranking].sort((a, b) => b.totalWorked - a.totalWorked);
-        const maxHours = hoursRanking[0]?.totalWorked || 1;
-        const restRanking = ranking.filter((item) => item.avgRest != null);
-        const maxRest = restRanking[0]?.avgRest || 1;
-        html("tblMarkpointHours", `<table><thead><tr><th>Motorista</th><th class="r">Horas</th><th>Comparativo</th></tr></thead><tbody>${hoursRanking.map((item) => `<tr><td class="em">${trunc(item.employee, 24)}</td><td class="r">${metricSplit(markpointFmtMinutes(item.totalWorked), `média ${markpointFmtMinutes(item.avgWorked)}`, "r")}</td><td>${progressCell(item.totalWorked / maxHours * 100, markpointFmtMinutes(item.totalWorked), "var(--blue)")}</td></tr>`).join("") || emptyRow(3)}</tbody></table>`);
-        html("tblMarkpointRest", `<table><thead><tr><th>Motorista</th><th class="r">Descanso médio</th><th>Comparativo</th></tr></thead><tbody>${restRanking.map((item) => `<tr><td class="em">${trunc(item.employee, 24)}</td><td class="r">${metricSplit(markpointFmtMinutes(item.avgRest), `${item.evaluatedJourneys} jornadas`, "r")}</td><td>${progressCell(item.avgRest / maxRest * 100, markpointFmtMinutes(item.avgRest), "var(--purple)")}</td></tr>`).join("") || emptyRow(3)}</tbody></table>`);
+        body.innerHTML = activeDrivers.map((item) => `<tr><td class="em">${item.employee}</td><td class="r">${markpointFmtMinutes(item.totalWorked)}</td><td class="r">${markpointFmtMinutes(item.avgWorked)}</td><td class="r">${markpointFmtMinutes(item.avgRest)}</td><td class="r">${item.evaluatedJourneys.toLocaleString("pt-BR")}</td></tr>`).join("") || emptyRow(5);
       }
       function markpointShowFiles(files) { const valid = [...files].filter((file) => /\.xlsx$/i.test(file.name)); if (!valid.length) return markpointSetStatus("Arquivo recusado. Selecione um .xlsx do Markpoint.", "error"); if (valid.length > 1) return markpointSetStatus(`Foram encontrados ${valid.length} arquivos. Selecione apenas um relatório .xlsx.`, "error"); markpointImportFile(valid[0]); }
       async function markpointImportFile(file) { if (!file || markpointState.busy) return; markpointState.busy = true; markpointSetUploadBusy(true); markpointSetStatus(`Lendo <strong>${file.name}</strong>…`); try { const buffer = await file.arrayBuffer(); markpointSetStatus("Validando estrutura do relatório…"); await new Promise((resolve) => setTimeout(resolve, 0)); const parsed = markpointParseWorkbook(buffer, file.name); markpointSetStatus(IS_LOCAL ? "Prévia pronta (ambiente local)." : "Sincronizando registros no Dataverse…"); const persistence = await markpointPersistRecords(parsed.records, file.name); Object.assign(markpointState, parsed); markpointSetStatus(persistence.saved ? `<strong>${file.name}</strong> sincronizado · ${persistence.created} criados · ${persistence.updated} atualizados · ${persistence.duplicatesSkipped ? `${persistence.duplicatesSkipped} repetidos ignorados · ` : ""}${parsed.meta.incomplete} incompletos` : `<strong>${file.name}</strong> carregado · ${parsed.meta.total} registros · sessão local`); renderMarkpointModule(); nav("motoristas", document.querySelector('.sb-item[data-nav="motoristas"]')); } catch (error) { markpointSetStatus(error?.message || "Não foi possível importar o relatório.", "error"); } finally { markpointState.busy = false; markpointSetUploadBusy(false); } }
