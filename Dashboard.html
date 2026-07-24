@@ -52,6 +52,7 @@
     <script src="tv-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
       /* ===== RESET & VARIÁVEIS ===== */
       *,
@@ -307,6 +308,10 @@
         color: var(--t2);
         font-size: 17px;
       }
+      .tv-pin-key-delete svg {
+        width: 20px;
+        height: 20px;
+      }
       .tv-pin-message {
         color: var(--t2);
         font-size: 12px;
@@ -525,6 +530,25 @@
         text-align: center;
         flex-shrink: 0;
         opacity: 0.75;
+      }
+      .sb-icon svg,
+      .filter-icon svg,
+      .filter-chevron svg,
+      .mobile-nav-icon svg,
+      .tv-current-menu-icon svg,
+      .btn-ic svg,
+      .alert-icon svg,
+      .empty-icon,
+      .table-status-icon,
+      .tv-nav-edge svg,
+      .tv-pin-key-delete svg {
+        display: block;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
       }
       .sb-item.act .sb-icon {
         opacity: 1;
@@ -2174,8 +2198,23 @@
         color: var(--t3);
       }
       .ei {
-        font-size: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
         margin-bottom: 8px;
+        color: var(--t3);
+      }
+      .empty-icon {
+        width: 32px;
+        height: 32px;
+      }
+      .table-status-icon {
+        width: 16px;
+        height: 16px;
+        vertical-align: -3px;
+        margin-right: 4px;
       }
       .em-msg {
         font-size: 13px;
@@ -3760,6 +3799,11 @@
         font: 800 30px/1 Arial, sans-serif;
         cursor: pointer;
       }
+      .tv-nav-edge svg {
+        width: 28px;
+        height: 28px;
+        margin: auto;
+      }
       .tv-nav-edge-left { left: 12px; }
       .tv-nav-edge-right { right: 6px; }
       .tv-nav-edge:hover,
@@ -5325,6 +5369,26 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         grid-template-rows: minmax(0, 1fr);
       }
+      .markpoint-upload-card { display:grid; gap:12px; }
+      .markpoint-upload-zone { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:76px; padding:16px 18px; border:1px dashed var(--b2); border-radius:var(--radius); background:var(--surf2); transition:border-color .18s ease, background .18s ease, box-shadow .18s ease; }
+      .markpoint-upload-zone.is-active { border-color:var(--blue); background:var(--blue-l); box-shadow:0 0 0 3px rgba(33,89,210,.11); }
+      .markpoint-upload-copy { min-width:0; }
+      .markpoint-upload-title { color:var(--navy); font-size:14px; font-weight:800; }
+      .markpoint-upload-sub { margin-top:3px; color:var(--t2); font-size:12px; }
+      .markpoint-upload-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+      .markpoint-file-input { display:none; }
+      .markpoint-status { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--t2); font-size:12px; }
+      .markpoint-status strong { color:var(--navy); }
+      .markpoint-status-error { color:var(--red); }
+      .markpoint-kpi-note { margin-top:4px; color:var(--t3); font-size:11px; }
+      .markpoint-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:12px; }
+      .markpoint-overlay { position:fixed; top:0; right:0; bottom:0; left:0; z-index:2147483640; display:grid; place-items:center; padding:24px; background:rgba(0,26,61,.48); pointer-events:none; opacity:0; transition:opacity .15s ease; }
+      .markpoint-overlay.is-visible { opacity:1; }
+      .markpoint-overlay-card { width:min(440px,100%); padding:28px; text-align:center; border:2px dashed var(--blue); border-radius:var(--radius-lg); background:var(--surface); box-shadow:var(--shadow-lg); color:var(--navy); }
+      .markpoint-overlay-card strong { display:block; font-size:20px; }
+      .markpoint-overlay-card span { display:block; margin-top:8px; color:var(--t2); font-size:13px; }
+      @media (max-width:820px) { .markpoint-upload-zone { align-items:flex-start; flex-direction:column; } .markpoint-upload-actions { width:100%; } .markpoint-upload-actions .btn { flex:1; } .markpoint-grid { grid-template-columns:1fr; } }
+      .tv-browser .markpoint-upload-zone, .tv-browser .markpoint-overlay { display:none !important; }
     </style>
   </head>
   <body>
@@ -5353,7 +5417,7 @@
           <button class="tv-pin-key" type="button" data-tv-pin-index="8" data-tv-pin-digit="9">9</button>
           <span class="tv-pin-key tv-pin-key-empty" aria-hidden="true"></span>
           <button class="tv-pin-key" type="button" data-tv-pin-index="9" data-tv-pin-digit="0">0</button>
-          <button class="tv-pin-key tv-pin-key-delete" data-tv-pin-index="10" id="tvPinDelete" type="button" aria-label="Apagar ultimo digito">&#8592;</button>
+          <button class="tv-pin-key tv-pin-key-delete" data-tv-pin-index="10" id="tvPinDelete" type="button" aria-label="Apagar ultimo digito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"></path></svg></button>
         </div>
         <p class="tv-pin-message" id="tvPinMessage" aria-live="polite">Aguardando PIN</p>
       </div>
@@ -5379,8 +5443,8 @@
       </div>
     </div>
     <nav id="tvNavigation" class="tv-navigation" aria-label="Navegação da TV">
-      <button type="button" class="tv-nav-edge tv-nav-edge-left" aria-label="Página anterior" onclick="navigateTv(-1)">&#8249;</button>
-      <button type="button" class="tv-nav-edge tv-nav-edge-right" aria-label="Próxima página" onclick="navigateTv(1)">&#8250;</button>
+      <button type="button" class="tv-nav-edge tv-nav-edge-left" aria-label="Página anterior" onclick="navigateTv(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+      <button type="button" class="tv-nav-edge tv-nav-edge-right" aria-label="Próxima página" onclick="navigateTv(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
     </nav>
 
     <div class="topbar">
@@ -5457,7 +5521,7 @@
         <div class="sb-div"></div>
         <div class="sb-section">Frota & Equipe</div>
         <div class="sb-item" data-nav="frota" onclick="nav('frota', this)">
-          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 17 1-6h12l1 6"></path><path d="M4 17h16v3H4z"></path><path d="M7 11l2-4h6l2 4"></path><circle cx="7" cy="18.5" r="1"></circle><circle cx="17" cy="18.5" r="1"></circle></svg></span>Frota<span
+          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.65 5h-7.3A2 2 0 0 0 6.5 6.3L5 10 3 8"></path><path d="M7 14h.01"></path><path d="M17 14h.01"></path><rect width="18" height="8" x="3" y="10" rx="2"></rect><path d="M5 18v2"></path><path d="M19 18v2"></path></svg></span>Frota<span
             class="sb-badge"
             id="nbFrota"
             >—</span
@@ -5471,7 +5535,7 @@
           >
         </div>
         <div class="sb-item" data-nav="manutencoes" onclick="nav('manutencoes', this)">
-          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.7 6.3 3-3a4 4 0 0 0-5.7 5.7l-7.7 7.7a2 2 0 1 0 2.8 2.8l7.7-7.7a4 4 0 0 0 5.7-5.7l-3 3"></path></svg></span>Manutenções<span
+          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"></path></svg></span>Manutenções<span
             class="sb-badge warn"
             id="nbMan"
             >—</span
@@ -5485,7 +5549,7 @@
           >
         </div>
         <div class="sb-item" data-nav="trocas" onclick="nav('trocas', this)">
-          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 3-3 3 3"></path><path d="M10 4v10a4 4 0 0 0 4 4h3"></path><path d="m17 17-3 3-3-3"></path><path d="M14 20V10a4 4 0 0 0-4-4H7"></path></svg></span>Trocas<span class="sb-badge" id="nbTrc"
+          <span class="sb-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10"></path><path d="m14 4 3 3-3 3"></path><path d="M17 17H7"></path><path d="m10 20-3-3 3-3"></path></svg></span>Trocas<span class="sb-badge" id="nbTrc"
             >—</span
           >
         </div>
@@ -6297,54 +6361,12 @@
                 <div id="tblExpenseDre" class="metric-table-wrap"></div>
               </div>
               <div class="cc">
-                <div class="cc-hdr"><div><div class="cc-title">Sa&uacute;de operacional</div><div class="tc-meta" id="metaExpenseHealth"></div></div></div>
-                <div id="tblExpenseHealth" class="metric-table-wrap"></div>
-              </div>
-              <div class="cc">
-                <div class="cc-hdr"><div><div class="cc-title">Motoristas com maior despesa</div><div class="tc-meta" id="metaExpenseDrivers"></div></div></div>
-                <div id="tblExpenseDrivers" class="metric-table-wrap"></div>
+                <div class="cc-hdr"><div><div class="cc-title">Alimenta&ccedil;&atilde;o por motorista</div><div class="tc-meta" id="metaExpenseFoodDrivers"></div></div></div>
+                <div id="tblExpenseFoodDrivers" class="metric-table-wrap"></div>
               </div>
             </div>
           </section>
 
-          <div class="tc">
-            <div class="tc-bar">
-              <div>
-                <div class="tc-title">Lan&ccedil;amentos de despesas</div>
-                <div class="tc-meta" id="metaExpenses"></div>
-              </div>
-              <input
-                class="tc-search"
-                id="expenseSearch"
-                type="search"
-                aria-label="Buscar despesas"
-                placeholder="Buscar despesa, empresa ou motorista&hellip;"
-                oninput="searchExpenseTable(this.value)"
-              />
-            </div>
-            <div class="tc-wrap">
-              <table class="expense-detail-table">
-                <thead>
-                  <tr>
-                    <th onclick="srt('tbDespesas', 'date', this)">Data</th>
-                    <th onclick="srt('tbDespesas', 'name', this)">Despesa</th>
-                    <th onclick="srt('tbDespesas', 'company', this)">Empresa</th>
-                    <th onclick="srt('tbDespesas', 'category', this)">Categoria</th>
-                    <th onclick="srt('tbDespesas', 'driver', this)">Motorista</th>
-                    <th onclick="srt('tbDespesas', 'link', this)">V&iacute;nculo</th>
-                    <th onclick="srt('tbDespesas', 'payment', this)">Pagamento</th>
-                    <th onclick="srt('tbDespesas', 'operational', this)">Operacional</th>
-                    <th onclick="srt('tbDespesas', 'financial', this)">Financeiro</th>
-                    <th>Comprovante</th>
-                    <th class="r" onclick="srt('tbDespesas', 'value', this)">Valor</th>
-                    <th>A&ccedil;&atilde;o</th>
-                  </tr>
-                </thead>
-                <tbody id="tbDespesas"></tbody>
-              </table>
-              <div class="expense-mobile-list" id="expenseMobileList"></div>
-            </div>
-          </div>
         </div>
 
         <div class="page" id="page-frota">
@@ -6502,13 +6524,39 @@
               <div class="kpi-val" id="mSrv">—</div>
             </div>
           </div>
-          <div class="cgrid g1">
-            <div class="cc">
-              <div class="cc-hdr">
-                <div class="cc-title">Serviços por motorista por mês</div>
+          <section class="cc markpoint-upload-card" aria-labelledby="markpointUploadTitle">
+            <div class="cc-hdr">
+              <div>
+                <div id="markpointUploadTitle" class="cc-title">Jornada e descanso · MarQPonto</div>
+                <div class="cc-sub">Arraste o relatório para qualquer lugar da tela ou cole com Ctrl+V.</div>
               </div>
-              <div id="tblMotMes" class="metric-table-wrap"></div>
             </div>
+            <div id="markpointUploadZone" class="markpoint-upload-zone">
+              <div class="markpoint-upload-copy">
+                <div class="markpoint-upload-title">Importe o relatório de jornada</div>
+                <div class="markpoint-upload-sub">Somente .xlsx · dados ficam nesta sessão</div>
+              </div>
+              <div class="markpoint-upload-actions">
+                <input id="markpointFileInput" class="markpoint-file-input" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <button id="markpointChooseFile" class="btn btn-p" type="button">Selecionar arquivo</button>
+                <button id="markpointClear" class="btn" type="button" hidden>Remover</button>
+              </div>
+            </div>
+            <div id="markpointStatus" class="markpoint-status" role="status" aria-live="polite"><span>Nenhum relatório importado.</span></div>
+          </section>
+          <div class="markpoint-grid">
+            <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Horas trabalhadas por motorista</div><div id="markpointHoursMeta" class="cc-sub">Importe um relatório para visualizar.</div></div></div><div class="chart-box"><canvas id="cMarkpointHours"></canvas></div></div>
+            <div class="cc"><div class="cc-hdr"><div><div class="cc-title">Descanso entre jornadas</div><div id="markpointRestMeta" class="cc-sub">Somente jornadas com batidas válidas.</div></div></div><div class="chart-box"><canvas id="cMarkpointRest"></canvas></div></div>
+          </div>
+          <div class="kpi-row kpi-4" id="markpointKpis" hidden>
+            <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Horas trabalhadas</div><div class="kpi-val" id="mpHours">—</div><div class="markpoint-kpi-note" id="mpHoursNote"></div></div>
+            <div class="kpi"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-lbl">Média diária</div><div class="kpi-val" id="mpDaily">—</div></div>
+            <div class="kpi"><div class="kpi-accent" style="background:var(--purple)"></div><div class="kpi-lbl">Descanso médio</div><div class="kpi-val" id="mpRest">—</div></div>
+            <div class="kpi"><div class="kpi-accent" style="background:var(--orange)"></div><div class="kpi-lbl">Dados incompletos</div><div class="kpi-val" id="mpIncomplete">—</div></div>
+          </div>
+          <div class="tc" id="markpointTableCard" hidden>
+            <div class="tc-bar"><div class="tc-title">Ranking de descanso por motorista</div><div id="markpointTableMeta" class="tc-meta"></div></div>
+            <div class="tc-wrap"><table><thead><tr><th>#</th><th>Motorista</th><th class="r">Descanso médio</th><th class="r">Média de horas</th><th class="r">Jornadas avaliadas</th></tr></thead><tbody id="markpointTableBody"></tbody></table></div>
           </div>
           <div class="tc">
             <div class="tc-bar">
@@ -6874,10 +6922,11 @@
       >
         <span class="mobile-nav-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 17h14l1-6H4l1 6Z"></path>
-            <path d="m7 11 1.5-4h7L17 11"></path>
-            <circle cx="8" cy="17" r="1.5"></circle>
-            <circle cx="16" cy="17" r="1.5"></circle>
+            <path d="m5 16 1.5-5h11L19 16"></path>
+            <path d="M4 16h16v3H4z"></path>
+            <path d="m8 11 1.5-3h5L16 11"></path>
+            <circle cx="7" cy="19" r="1"></circle>
+            <circle cx="17" cy="19" r="1"></circle>
           </svg>
         </span>
         Frota
@@ -6934,6 +6983,10 @@
           <button type="button" class="mobile-more-item" data-nav="marketing" onclick="nav('marketing', this)">Marketing</button>
         </div>
       </section>
+    </div>
+
+    <div id="markpointDropOverlay" class="markpoint-overlay" aria-hidden="true">
+      <div class="markpoint-overlay-card"><strong>Solte o relatório MarQPonto</strong><span>O arquivo será validado antes de substituir os dados atuais.</span></div>
     </div>
 
     <dialog id="cardDetailDialog" class="card-detail-dialog" aria-labelledby="cardDetailTitle">
@@ -10009,6 +10062,7 @@
         },
       };
       const EXPENSE_FOOD_CATEGORIES = new Set([
+        "alimentacao",
         "almoco",
         "cafe",
         "jantar",
@@ -10045,6 +10099,9 @@
         trocas: [],
         despesas: [],
       };
+      const markpointState = { records: [], fileName: "", importedAt: null, meta: null, busy: false };
+      const MARKPOINT_TABLE = "cr40f_jornadacolaborador";
+      const MARKPOINT_ENTITY_SET = "cr40f_jornadacolaboradors";
       let charts = {},
         sparks = {},
         detailCharts = [],
@@ -10777,6 +10834,202 @@ function setAppVersion() {
       // ════════════════════════════════════════════
       // LOAD
       // ════════════════════════════════════════════
+      function markpointFmtMinutes(value) {
+        if (!Number.isFinite(value)) return "—";
+        const abs = Math.abs(Math.round(value));
+        return `${value < 0 ? "-" : ""}${String(Math.floor(abs / 60)).padStart(2, "0")}h${String(abs % 60).padStart(2, "0")}`;
+      }
+      function markpointNormalizeName(value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim(); }
+      function markpointParseDate(value) { if (value instanceof Date && Number.isFinite(value.getTime())) return new Date(value.getFullYear(), value.getMonth(), value.getDate()); const text = String(value || "").trim(); const br = text.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/); if (br) return new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1])); const parsed = new Date(text); return Number.isFinite(parsed.getTime()) ? new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate()) : null; }
+      function markpointParseMinutes(value) { const match = String(value || "").trim().match(/^(\d{1,3}):(\d{2})$/); return match ? Number(match[1]) * 60 + Number(match[2]) : null; }
+      function markpointValidSignature(bytes) { return bytes && bytes.length >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b && bytes[2] === 0x03 && bytes[3] === 0x04; }
+      function markpointSetStatus(message, tone = "") { const el = document.getElementById("markpointStatus"); if (!el) return; el.className = `markpoint-status${tone ? ` markpoint-status-${tone}` : ""}`; el.innerHTML = message; }
+      async function markpointHash(buffer) { if (window.crypto?.subtle) { const digest = await window.crypto.subtle.digest("SHA-256", buffer); return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join(""); } return `${buffer.byteLength}-${Date.now()}`; }
+      function markpointFuncionario(employeeKey) { return (DB.funcionarios || []).find((record) => markpointNormalizeName(record[F.fun.nome] || record[F.fun.apelido]) === employeeKey); }
+      function markpointRecordKey(record) {
+        const date = record.date;
+        const day = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        return `${day}|${record.employeeKey}`.slice(0, 180);
+      }
+      function markpointPayload(record, fileName) {
+        const payload = {
+          cr40f_name: `${record.employee} · ${fmtD(record.date)}`.slice(0, 850),
+          cr40f_data: record.date.toISOString(),
+          cr40f_colaborador: record.employee,
+          cr40f_horastrabalhadasminutos: Math.round(record.worked),
+          cr40f_descansoanteriorminutos: Number.isFinite(record.rest) && record.rest >= 0 ? Math.round(record.rest) : null,
+          cr40f_qualidaderegistro: record.quality,
+          cr40f_chavedeimportacao: markpointRecordKey(record),
+          cr40f_nomedoarquivo: fileName,
+          cr40f_importadoem: new Date().toISOString(),
+          cr40f_pontosdodia: record.points.join(" - "),
+        };
+        if (record.start != null) payload.cr40f_iniciojornada = new Date(record.date.getTime() + record.start * 60000).toISOString();
+        if (record.end != null) payload.cr40f_fimjornada = new Date(record.date.getTime() + record.end * 60000).toISOString();
+        const funcionario = markpointFuncionario(record.employeeKey);
+        if (funcionario?.cr40f_funcionariosid) payload["cr40f_funcionario@odata.bind"] = `/cr40f_funcionarioses(${funcionario.cr40f_funcionariosid})`;
+        return payload;
+      }
+      async function markpointExistingRecords() {
+        const existing = new Map();
+        const xrm = getDashboardXrm();
+        if (xrm?.WebApi?.retrieveMultipleRecords) {
+          let query = "?$select=cr40f_jornadacolaboradorid,cr40f_chavedeimportacao";
+          do {
+            const page = await xrm.WebApi.retrieveMultipleRecords(MARKPOINT_TABLE, query);
+            (page.entities || []).forEach((item) => {
+              if (item.cr40f_chavedeimportacao) existing.set(item.cr40f_chavedeimportacao, item.cr40f_jornadacolaboradorid);
+            });
+            query = page.nextLink ? page.nextLink.replace(/^.*\/api\/data\/v[\d.]+\/cr40f_jornadacolaboradors/i, "") : "";
+          } while (query);
+          return existing;
+        }
+        let nextUrl = `${API()}/${MARKPOINT_ENTITY_SET}?$select=cr40f_jornadacolaboradorid,cr40f_chavedeimportacao`;
+        while (nextUrl) {
+          const response = await fetchDashboardData(nextUrl, { wantAnnotations: false });
+          if (!response.ok) throw new Error(`Falha ao consultar jornadas existentes (HTTP ${response.status}).`);
+          const page = await response.json();
+          (page.value || []).forEach((item) => {
+            if (item.cr40f_chavedeimportacao) existing.set(item.cr40f_chavedeimportacao, item.cr40f_jornadacolaboradorid);
+          });
+          nextUrl = page["@odata.nextLink"] || "";
+        }
+        return existing;
+      }
+      async function markpointPersistRecords(records, fileName) {
+        if (IS_LOCAL || window.__DASHBOARD_TV_MODE) return { saved: false, reason: "local" };
+        const payloads = records.map((record) => markpointPayload(record, fileName));
+        const existing = await markpointExistingRecords();
+        const xrm = getDashboardXrm();
+        let created = 0;
+        let updated = 0;
+        for (let offset = 0; offset < payloads.length; offset += 25) {
+          const batch = payloads.slice(offset, offset + 25);
+          await Promise.all(batch.map(async (payload) => {
+            const recordId = existing.get(payload.cr40f_chavedeimportacao);
+            if (xrm?.WebApi?.createRecord && xrm?.WebApi?.updateRecord) {
+              if (recordId) {
+                await xrm.WebApi.updateRecord(MARKPOINT_TABLE, recordId, payload);
+                updated += 1;
+              } else {
+                const result = await xrm.WebApi.createRecord(MARKPOINT_TABLE, payload);
+                existing.set(payload.cr40f_chavedeimportacao, result.id);
+                created += 1;
+              }
+              return;
+            }
+            const headers = makeHeaders(false, false);
+            headers.set("Content-Type", "application/json; charset=utf-8");
+            const url = recordId ? `${API()}/${MARKPOINT_ENTITY_SET}(${recordId})` : `${API()}/${MARKPOINT_ENTITY_SET}`;
+            const response = await fetch(url, {
+              method: recordId ? "PATCH" : "POST",
+              credentials: "same-origin",
+              headers,
+              body: JSON.stringify(payload),
+            });
+            if (!response.ok) throw new Error(`Falha ao salvar jornada no Dataverse (HTTP ${response.status}).`);
+            if (recordId) updated += 1;
+            else created += 1;
+          }));
+        }
+        return { saved: true, count: payloads.length, created, updated };
+      }
+      async function markpointLoadFromDataverse() {
+        if (IS_LOCAL || window.__DASHBOARD_TV_MODE) return;
+        try {
+          const items = [];
+          let nextUrl = `${API()}/${MARKPOINT_ENTITY_SET}?$select=cr40f_data,cr40f_colaborador,cr40f_horastrabalhadasminutos,cr40f_iniciojornada,cr40f_fimjornada,cr40f_descansoanteriorminutos,cr40f_qualidaderegistro,cr40f_nomedoarquivo,cr40f_pontosdodia&$orderby=cr40f_data asc`;
+          while (nextUrl) {
+            const response = await fetchDashboardData(nextUrl, { wantAnnotations: false });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const page = await response.json();
+            items.push(...(page.value || []));
+            nextUrl = page["@odata.nextLink"] || "";
+          }
+          const records = items.map((item, index) => ({
+            row: index + 1,
+            date: new Date(item.cr40f_data),
+            employee: item.cr40f_colaborador || "—",
+            employeeKey: markpointNormalizeName(item.cr40f_colaborador),
+            worked: Number(item.cr40f_horastrabalhadasminutos || 0),
+            start: item.cr40f_iniciojornada ? ((new Date(item.cr40f_iniciojornada).getTime() - new Date(item.cr40f_data).setHours(0, 0, 0, 0)) / 60000) : null,
+            end: item.cr40f_fimjornada ? ((new Date(item.cr40f_fimjornada).getTime() - new Date(item.cr40f_data).setHours(0, 0, 0, 0)) / 60000) : null,
+            rest: item.cr40f_descansoanteriorminutos == null ? null : Number(item.cr40f_descansoanteriorminutos),
+            points: String(item.cr40f_pontosdodia || "").split(" - ").filter(Boolean),
+            validPoints: item.cr40f_qualidaderegistro === "Válido",
+            quality: item.cr40f_qualidaderegistro || "Incompleto",
+            fileName: item.cr40f_nomedoarquivo || "",
+          }));
+          if (!records.length) return;
+          markpointState.records = records;
+          markpointState.fileName = records.at(-1)?.fileName || "Dataverse";
+          markpointState.meta = {
+            total: records.length,
+            employees: new Set(records.map((record) => record.employeeKey)).size,
+            incomplete: records.filter((record) => !record.validPoints).length,
+          };
+          markpointSetStatus(`Dados carregados do Dataverse · ${records.length} registros`);
+          renderMarkpointModule();
+        } catch (error) {
+          console.warn("MarQPonto: leitura Dataverse indisponível", error);
+        }
+      }
+      function markpointParseWorkbook(buffer, fileName) {
+        if (!window.XLSX) throw new Error("Leitor XLSX não foi carregado. Recarregue o dashboard.");
+        if (!markpointValidSignature(new Uint8Array(buffer, 0, Math.min(8, buffer.byteLength)))) throw new Error("Arquivo não é um XLSX válido.");
+        const workbook = window.XLSX.read(buffer, { type: "array", cellDates: true, cellNF: false, cellStyles: false, dense: true }); const sheet = workbook.Sheets[workbook.SheetNames[0]]; if (!sheet) throw new Error("Planilha sem abas válidas.");
+        const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "", raw: true }); const headers = (rows.shift() || []).map((value) => String(value || "").trim().toLowerCase());
+        const indexOf = (name) => headers.findIndex((header) => header === name || header.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")); const dateIndex = indexOf("data"); const employeeIndex = indexOf("funcionário"); const workedIndex = indexOf("horas trabalhadas"); const pointsIndex = indexOf("pontos do dia");
+        if ([dateIndex, employeeIndex, workedIndex, pointsIndex].some((index) => index < 0)) throw new Error("Colunas obrigatórias ausentes: Data, Funcionário, Horas trabalhadas e Pontos do dia.");
+        const records = rows.map((row, rowIndex) => { const date = markpointParseDate(row[dateIndex]); const employee = String(row[employeeIndex] || "").trim(); const worked = markpointParseMinutes(row[workedIndex]); const points = String(row[pointsIndex] || "").split(/\s*-\s*/).filter(Boolean).map(markpointParseMinutes); const validPoints = points.length >= 2 && points.length % 2 === 0 && points.every((point) => Number.isFinite(point)); let timeline = []; if (validPoints) { let offset = 0; timeline = points.map((point, index) => { if (index && point < points[index - 1]) offset += 1440; return point + offset; }); } return { row: rowIndex + 2, date, employee, employeeKey: markpointNormalizeName(employee), worked, points, start: validPoints ? timeline[0] : null, end: validPoints ? timeline[timeline.length - 1] : null, validPoints, quality: !date || !employee ? "Inválido" : validPoints ? "Válido" : "Incompleto" }; }).filter((record) => record.date && record.employee && record.worked != null);
+        if (!records.length) throw new Error("Relatório não contém registros válidos."); records.sort((a, b) => a.employeeKey.localeCompare(b.employeeKey) || a.date - b.date); const previous = new Map(); records.forEach((record) => { record.rest = null; if (record.validPoints) { const start = record.date.getTime() / 60000 + record.start; const end = record.date.getTime() / 60000 + record.end; const prior = previous.get(record.employeeKey); if (prior) record.rest = start - prior.end; previous.set(record.employeeKey, { end }); } });
+        return { records, fileName, importedAt: new Date(), meta: { total: records.length, employees: new Set(records.map((record) => record.employeeKey)).size, incomplete: records.filter((record) => !record.validPoints).length, minDate: new Date(Math.min(...records.map((record) => record.date))), maxDate: new Date(Math.max(...records.map((record) => record.date))) } };
+      }
+      function markpointFilteredRecords() { const start = document.getElementById("fS")?.value ? new Date(`${document.getElementById("fS").value}T00:00:00`) : null; const end = document.getElementById("fE")?.value ? new Date(`${document.getElementById("fE").value}T23:59:59`) : null; return markpointState.records.filter((record) => (!start || record.date >= start) && (!end || record.date <= end) && (!msState.Mo.length || msState.Mo.some((name) => markpointNormalizeName(name) === record.employeeKey))); }
+      function renderMarkpointModule() {
+        const records = markpointFilteredRecords();
+        const hasData = markpointState.records.length > 0;
+        document.getElementById("markpointKpis")?.toggleAttribute("hidden", !hasData);
+        document.getElementById("markpointTableCard")?.toggleAttribute("hidden", !hasData);
+        document.getElementById("markpointClear")?.toggleAttribute("hidden", !hasData);
+        if (!hasData) return;
+
+        const total = records.reduce((sum, record) => sum + record.worked, 0);
+        const rests = records.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
+        const avg = records.length ? total / records.length : null;
+        const restAvg = rests.length ? rests.reduce((sum, record) => sum + record.rest, 0) / rests.length : null;
+        const ranking = [...new Map(records.map((record) => [record.employeeKey, record])).entries()].map(([employeeKey, sample]) => {
+          const employeeRecords = records.filter((record) => record.employeeKey === employeeKey);
+          const employeeRests = employeeRecords.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
+          return {
+            employee: sample.employee,
+            avgRest: employeeRests.length ? employeeRests.reduce((sum, record) => sum + record.rest, 0) / employeeRests.length : null,
+            avgWorked: employeeRecords.length ? employeeRecords.reduce((sum, record) => sum + record.worked, 0) / employeeRecords.length : null,
+            totalWorked: employeeRecords.reduce((sum, record) => sum + record.worked, 0),
+            evaluatedJourneys: employeeRests.length,
+          };
+        }).sort((a, b) => (b.avgRest ?? -Infinity) - (a.avgRest ?? -Infinity) || a.employee.localeCompare(b.employee, "pt-BR"));
+
+        document.getElementById("mpHours").textContent = markpointFmtMinutes(total);
+        document.getElementById("mpHoursNote").textContent = `${records.length} registros no filtro`;
+        document.getElementById("mpDaily").textContent = markpointFmtMinutes(avg);
+        document.getElementById("mpRest").textContent = markpointFmtMinutes(restAvg);
+        document.getElementById("mpIncomplete").textContent = records.filter((record) => !record.validPoints).length.toLocaleString("pt-BR");
+        document.getElementById("markpointHoursMeta").textContent = `${records.length} registros · ${markpointState.meta.employees} colaboradores`;
+        document.getElementById("markpointRestMeta").textContent = `${rests.length} intervalos calculáveis`;
+        document.getElementById("markpointTableMeta").textContent = `${ranking.length} motoristas · descanso médio em ordem decrescente`;
+        const body = document.getElementById("markpointTableBody");
+        body.innerHTML = ranking.map((item, index) => `<tr><td>${index + 1}</td><td class="em">${item.employee}</td><td class="r">${markpointFmtMinutes(item.avgRest)}</td><td class="r">${markpointFmtMinutes(item.avgWorked)}</td><td class="r">${item.evaluatedJourneys.toLocaleString("pt-BR")}</td></tr>`).join("") || emptyRow(5);
+
+        const employees = ranking.map((item) => item.employee);
+        ["cMarkpointHours", "cMarkpointRest"].forEach((id) => { if (charts[id]) charts[id].destroy(); });
+        charts.cMarkpointHours = mkChart("cMarkpointHours", { type: "bar", data: { labels: employees, datasets: [{ label: "Horas trabalhadas", data: ranking.map((item) => item.totalWorked / 60), backgroundColor: "#2159d2" }] }, options: { ...opts0({ noLegend: true }), indexAxis: "y" } });
+        charts.cMarkpointRest = mkChart("cMarkpointRest", { type: "bar", data: { labels: employees, datasets: [{ label: "Descanso médio", data: ranking.map((item) => item.avgRest == null ? null : item.avgRest / 60), backgroundColor: "#6b4b9b" }] }, options: { ...opts0({ noLegend: true }), indexAxis: "y" } });
+      }
+      function markpointShowFiles(files) { const valid = [...files].filter((file) => /\.xlsx$/i.test(file.name)); if (!valid.length) return markpointSetStatus("Arquivo recusado. Selecione um .xlsx do Markpoint.", "error"); if (valid.length > 1) return markpointSetStatus(`Foram encontrados ${valid.length} arquivos. Selecione apenas um relatório .xlsx.`, "error"); markpointImportFile(valid[0]); }
+      async function markpointImportFile(file) { if (!file || markpointState.busy) return; markpointState.busy = true; markpointSetStatus(`Lendo <strong>${file.name}</strong>…`); try { const buffer = await file.arrayBuffer(); markpointSetStatus("Validando estrutura do relatório…"); await new Promise((resolve) => setTimeout(resolve, 0)); const parsed = markpointParseWorkbook(buffer, file.name); markpointSetStatus(IS_LOCAL ? "Prévia pronta (ambiente local)." : "Sincronizando registros no Dataverse…"); const persistence = await markpointPersistRecords(parsed.records, file.name); Object.assign(markpointState, parsed); markpointSetStatus(persistence.saved ? `<strong>${file.name}</strong> sincronizado · ${persistence.created} criados · ${persistence.updated} atualizados · ${parsed.meta.incomplete} incompletos` : `<strong>${file.name}</strong> carregado · ${parsed.meta.total} registros · sessão local`); renderMarkpointModule(); nav("motoristas", document.querySelector('.sb-item[data-nav="motoristas"]')); } catch (error) { markpointSetStatus(error?.message || "Não foi possível importar o relatório.", "error"); } finally { markpointState.busy = false; } }
+      function clearMarkpointImport() { markpointState.records = []; markpointState.meta = null; markpointState.fileName = ""; markpointState.importedAt = null; markpointSetStatus("Nenhum relatório importado."); renderMarkpointModule(); }
+      function initMarkpointImport() { const input = document.getElementById("markpointFileInput"); const choose = document.getElementById("markpointChooseFile"); const clear = document.getElementById("markpointClear"); const zone = document.getElementById("markpointUploadZone"); const overlay = document.getElementById("markpointDropOverlay"); let depth = 0; choose?.addEventListener("click", () => input?.click()); input?.addEventListener("change", () => markpointShowFiles(input.files || [])); clear?.addEventListener("click", clearMarkpointImport); document.addEventListener("dragenter", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.types?.includes("Files")) return; depth += 1; overlay?.classList.add("is-visible"); zone?.classList.add("is-active"); }); document.addEventListener("dragover", (event) => { if (event.dataTransfer?.types?.includes("Files")) event.preventDefault(); }); document.addEventListener("dragleave", () => { depth = Math.max(0, depth - 1); if (!depth) { overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); document.addEventListener("drop", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.files?.length) return; event.preventDefault(); depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); markpointShowFiles(event.dataTransfer.files); }); document.addEventListener("paste", (event) => { if (event.clipboardData?.files?.length) { event.preventDefault(); markpointShowFiles(event.clipboardData.files); } }); document.addEventListener("keydown", (event) => { if (event.key === "Escape") { depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); void markpointLoadFromDataverse(); }
       const DASHBOARD_AUTO_REFRESH_INTERVAL_MS = 60 * 1000;
       let dashboardLoadInProgress = false;
       let dashboardSilentLoad = false;
@@ -14218,6 +14471,21 @@ function setAppVersion() {
         );
       }
 
+      function aggregateFoodExpensesByDriver(rows) {
+        const grouped = new Map();
+        for (const row of rows) {
+          if (!row.driverId || !EXPENSE_FOOD_CATEGORIES.has(normL(row.category))) continue;
+          const current = grouped.get(row.driverId) || { label: row.driver, qtd: 0, value: 0, days: new Set() };
+          current.qtd += 1;
+          current.value += row.value;
+          if (row.dateKey) current.days.add(row.dateKey);
+          grouped.set(row.driverId, current);
+        }
+        return [...grouped.values()]
+          .map((item) => ({ ...item, dailyAverage: item.days.size ? item.value / item.days.size : 0 }))
+          .sort((a, b) => b.value - a.value || b.qtd - a.qtd || a.label.localeCompare(b.label, "pt-BR"));
+      }
+
       function expenseSubsetMetrics(rows) {
         const total = rows.reduce((sum, row) => sum + row.value, 0);
         const foodRows = rows.filter((row) =>
@@ -14491,10 +14759,18 @@ function setAppVersion() {
 
         const companies = aggregateExpenses(rows, (row) => row.company);
         const dreGroups = aggregateExpenses(rows, (row) => row.dre);
-        const drivers = aggregateExpenses(rows, (row) => row.driver);
+        const foodDrivers = aggregateFoodExpensesByDriver(rows);
+        const topFoodDriver = foodDrivers[0];
         set("metaExpenseCompanies", dvDisabled ? "—" : `${companies.length} empresas`);
         set("metaExpenseDre", dvDisabled ? "—" : `${dreGroups.length} grupos`);
-        set("metaExpenseDrivers", dvDisabled ? "—" : `${drivers.length} responsáveis`);
+        set(
+          "metaExpenseFoodDrivers",
+          dvDisabled
+            ? "—"
+            : topFoodDriver
+              ? `${foodDrivers.length} motoristas · maior gasto: ${topFoodDriver.label}`
+              : "Sem gastos de alimentação no período",
+        );
         renderDistributionTable(
           "tblExpenseCompanies",
           companies,
@@ -14519,52 +14795,16 @@ function setAppVersion() {
             participationByValue: true,
           },
         );
-        renderDistributionTable(
-          "tblExpenseDrivers",
-          drivers,
-          rows.length,
-          {
-            label: "Motorista",
-            countLabel: "Lançamentos",
-            valueLabel: "Valor",
-            moneyValue: true,
-            participationByValue: true,
-          },
-        );
-
-        const healthDefinitions = [
-          ["Aguardando pagamento", rows.filter((row) => row.financialValue === "100000001")],
-          ["Sem comprovante", rows.filter((row) => row.noReceipt)],
-          ["Sem categoria", rows.filter((row) => !row.categoryId)],
-          ["Sem forma de pagamento", rows.filter((row) => !row.paymentId)],
-          ["Sem reserva vinculada", rows.filter((row) => !row.reservationId)],
-          ["Possível duplicidade", rows.filter((row) => row.possibleDuplicate)],
-        ];
-        const health = healthDefinitions
-          .map(([label, subset]) => ({
-            label,
-            qtd: subset.length,
-            value: subset.reduce((sum, row) => sum + row.value, 0),
-          }))
-          .filter((item) => item.qtd > 0)
-          .sort((a, b) => b.qtd - a.qtd);
-        set(
-          "metaExpenseHealth",
-          dvDisabled
-            ? "—"
-            : `${health.reduce((sum, item) => sum + item.qtd, 0).toLocaleString("pt-BR")} sinalizações`,
-        );
-        renderDistributionTable(
-          "tblExpenseHealth",
-          health,
-          rows.length,
-          {
-            label: "Sinalização",
-            countLabel: "Ocorrências",
-            valueLabel: "Valor associado",
-            moneyValue: true,
-            limit: 8,
-          },
+        html(
+          "tblExpenseFoodDrivers",
+          `<table><thead><tr><th>Motorista</th><th class="r">Lançamentos</th><th class="r">Total</th><th class="r">Média/dia</th></tr></thead><tbody>${
+            foodDrivers
+              .map(
+                (item) =>
+                  `<tr><td class="em">${item.label}</td><td class="r">${item.qtd.toLocaleString("pt-BR")}</td><td class="r em">${brl(item.value)}</td><td class="r">${brl(item.dailyAverage)}</td></tr>`,
+              )
+              .join("") || emptyRow(4)
+          }</tbody></table>`,
         );
 
         tblCache.tbDespesasBase = rows;
@@ -15112,7 +15352,6 @@ function setAppVersion() {
         });
         const mots = [...motMap.entries()].map(([key, label]) => ({ key, label }));
 
-        renderMotMesTable(mots, mks, byM);
         const motRows = funcionariosAtivos
           .map((f) => {
             const funcId = String(f.cr40f_funcionariosid || "").toLowerCase();
@@ -15137,30 +15376,7 @@ function setAppVersion() {
           dvDisabled ? "—" : `${funcionariosAtivos.length} motoristas ativos`,
         );
         renderMotTable(motRows, fat);
-      }
-      function renderMotMesTable(mots, monthKeys, byM) {
-        const monthTotals = monthKeys.map((key) => (byM[key] || []).length);
-        const periodTotal = monthTotals.reduce((sum, count) => sum + count, 0);
-        const headers = monthKeys.map((key) => `<th class="r">${monthTableLabel(key)}</th>`).join("");
-        const rows = monthKeys.length ? mots.map((motorista) => {
-          const counts = monthKeys.map((key) =>
-            (byM[key] || []).filter((r) => (r._motKey || r._mot) === motorista.key).length,
-          );
-          const total = counts.reduce((sum, count) => sum + count, 0);
-          return `<tr><td class="em">${motorista.label}</td>${counts
-            .map((count, index) => `<td class="r">${metricSplit(
-              `${monthTotals[index] ? ((count / monthTotals[index]) * 100).toFixed(1) : 0}%`,
-              count.toLocaleString("pt-BR"),
-              "r",
-            )}</td>`)
-            .join("")}<td class="r">${metricSplit(
-              `${periodTotal ? ((total / periodTotal) * 100).toFixed(1) : 0}%`,
-              total.toLocaleString("pt-BR"),
-              "r",
-            )}</td></tr>`;
-        }).join("") : "";
-        const empty = monthKeys.length ? emptyRow(monthKeys.length + 2) : emptyRow(2);
-        html("tblMotMes", `<table><thead><tr><th>Motorista</th>${headers}<th class="r">Total</th></tr></thead><tbody>${rows || empty}</tbody></table>`);
+        renderMarkpointModule();
       }
       function renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap) {
         const monthsLabelsAll = getDashboardMonthLabels();
@@ -15503,6 +15719,9 @@ function setAppVersion() {
         const el = document.getElementById(id);
         if (!el) return;
         if (charts[id]) charts[id].destroy();
+        const registeredChart = window.Chart?.getChart?.(el);
+        if (registeredChart) registeredChart.destroy();
+        charts[id] = null;
         if (!el.parentElement?.classList.contains("chart-fill")) {
           const wrap = document.createElement("div");
           wrap.className = "chart-fill";
@@ -15920,7 +16139,7 @@ function setAppVersion() {
             .map(
               (r) => `<tr>
     <td class="em">${r.placa}</td><td>${r.marca}</td><td>${r.modelo}</td><td class="dim">${r.ano}</td>
-    <td class="c">${r.blindado === true || r.blindado === "true" || r.blindado === 1 ? "🛡️ Sim" : "—"}</td><td>${badge(r.status)}</td>
+    <td class="c">${r.blindado === true || r.blindado === "true" || r.blindado === 1 ? '<svg class="table-status-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6l-7-3Z"></path><path d="m9 12 2 2 4-4"></path></svg>Sim' : "—"}</td><td>${badge(r.status)}</td>
   </tr>`,
             )
             .join("") || emptyRow(6);
@@ -16813,7 +17032,7 @@ function setAppVersion() {
         document.getElementById("alertArea").innerHTML = "";
       }
       function emptyRow(n) {
-        return `<tr><td colspan="${n}"><div class="empty"><div class="ei">📭</div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;
+        return `<tr><td colspan="${n}"><div class="empty"><div class="ei"><svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z"></path><path d="M4 8h16"></path><path d="m8 13 2.5 2.5L16 10"></path></svg></div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;
       }
 
       // ════════════════════════════════════════════
@@ -16995,6 +17214,7 @@ function setAppVersion() {
         window.__DASHBOARD_AFTER_ACCESS_STARTED = true;
         try {
           initializeDashboardCharts();
+          initMarkpointImport();
           updateFilterSummary();
           detectEnv();
           setBrandLogo();
