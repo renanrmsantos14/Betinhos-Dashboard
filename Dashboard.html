@@ -5370,6 +5370,7 @@
         grid-template-rows: minmax(0, 1fr);
       }
       .markpoint-upload-card { display:none; }
+      #markpointTableCard { display:none !important; }
       .markpoint-upload-zone { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:76px; padding:16px 18px; border:1px dashed var(--b2); border-radius:var(--radius); background:var(--surf2); transition:border-color .18s ease, background .18s ease, box-shadow .18s ease; }
       .markpoint-upload-zone.is-active { border-color:var(--blue); background:var(--blue-l); box-shadow:0 0 0 3px rgba(33,89,210,.11); }
       .markpoint-upload-copy { min-width:0; }
@@ -6238,7 +6239,6 @@
                     <th>Serviços</th>
                     <th>Faturamento</th>
                     <th>Ticket médio</th>
-                    <th>Participação</th>
                   </tr>
                 </thead>
                 <tbody id="tbFat"></tbody>
@@ -6575,12 +6575,12 @@
                   <tr>
                     <th>#</th>
                     <th>Motorista</th>
-                    <th>Função</th>
                     <th>Serviços</th>
                     <th>Faturamento</th>
                     <th>Ticket médio</th>
                     <th>Validade CNH</th>
-                    <th>Participação</th>
+                    <th>Horas trabalhadas</th>
+                    <th>Descanso</th>
                   </tr>
                 </thead>
                 <tbody id="tbMot"></tbody>
@@ -10101,6 +10101,7 @@
         despesas: [],
       };
       const markpointState = { records: [], fileName: "", importedAt: null, meta: null, busy: false };
+      let markpointDriverMetrics = new Map();
       const MARKPOINT_TABLE = "cr40f_jornadacolaborador";
       const MARKPOINT_ENTITY_SET = "cr40f_jornadacolaboradors";
       let charts = {},
@@ -11053,6 +11054,7 @@ function setAppVersion() {
             avgRest: employeeRests.length ? employeeRests.reduce((sum, record) => sum + record.rest, 0) / employeeRests.length : null,
             avgWorked: employeeRecords.length ? employeeRecords.reduce((sum, record) => sum + record.worked, 0) / employeeRecords.length : null,
             totalWorked: employeeRecords.reduce((sum, record) => sum + record.worked, 0),
+            totalRest: employeeRests.reduce((sum, record) => sum + record.rest, 0),
             evaluatedJourneys: employeeRests.length,
           };
         }).sort((a, b) => (b.avgRest ?? -Infinity) - (a.avgRest ?? -Infinity) || a.employee.localeCompare(b.employee, "pt-BR"));
@@ -11063,6 +11065,8 @@ function setAppVersion() {
         document.getElementById("mpRest").textContent = markpointFmtMinutes(restAvg);
         document.getElementById("mpIncomplete").textContent = records.filter((record) => !record.validPoints).length.toLocaleString("pt-BR");
         const rankingByKey = new Map(ranking.map((item) => [item.employeeKey, item]));
+        markpointDriverMetrics = new Map(ranking.map((item) => [item.employeeKey, item]));
+        if (tblCache.tbMot) renderMotTable(tblCache.tbMot, sumV(VW.reservas));
         const activeDrivers = [...new Map((DB.funcionarios || []).filter(isActiveFuncionario).map((driver) => {
           const employee = driver[F.fun.nome] || driver[F.fun.apelido] || "Motorista sem nome";
           const employeeKey = markpointNormalizeName(employee);
@@ -15413,6 +15417,7 @@ function setAppVersion() {
               fat: sumV(srvs),
               ticket: getTicketStats(srvs).ticket,
               cnh: f[F.fun.cnh],
+              months: Math.max(1, mks.length),
             };
           })
           .sort((a, b) => b.qtd - a.qtd);
@@ -16206,12 +16211,12 @@ function setAppVersion() {
                     ? "em cnh-warning"
                     : "dim";
               const cnhTxt = Number.isFinite(cnhDate) ? fmtD(r.cnh) : "Não informado";
-              const part = totalFat ? (r.fat / totalFat) * 100 : 0;
+              const jornada = markpointDriverMetrics.get(markpointNormalizeName(r.nome)) || { totalWorked: 0, totalRest: 0 };
               return `<tr>
       <td><span class="rn ${i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : ""}">${i + 1}</span></td>
-      <td class="em">${r.nome}</td><td class="dim">${r.funcao}</td><td class="r">${r.qtd.toLocaleString("pt-BR")}</td>
-      <td class="r em">${brl(r.fat)}</td><td class="r dim">${brl(r.ticket)}</td><td class="${cnhCls}">${cnhTxt}</td>
-      <td>${progressCell(part, brlS(r.fat), "var(--blue)")}</td>
+      <td class="em">${r.nome}</td><td class="r">${metricSplit(r.qtd.toLocaleString("pt-BR"), `${(r.qtd / r.months).toFixed(1)}/mês`, "r")}</td>
+      <td class="r em">${metricSplit(brl(r.fat), brlS(r.fat / r.months), "r")}</td><td class="r dim">${brl(r.ticket)}</td><td class="${cnhCls}">${cnhTxt}</td>
+      <td class="r">${metricSplit(markpointFmtMinutes(jornada.totalWorked), markpointFmtMinutes(jornada.totalWorked / r.months), "r")}</td><td class="r">${metricSplit(markpointFmtMinutes(jornada.totalRest), markpointFmtMinutes(jornada.totalRest / r.months), "r")}</td>
     </tr>`;
             })
             .join("") || emptyRow(8);
