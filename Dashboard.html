@@ -4965,6 +4965,68 @@
         grid-column: 2;
         grid-template-rows: minmax(0, 1fr) 250px;
       }
+      .frota-insights {
+        display: grid;
+        gap: var(--card-gap);
+        grid-template-columns: minmax(220px, .85fr) minmax(320px, 1.35fr) minmax(260px, 1fr);
+      }
+      .frota-insights .cc {
+        min-width: 0;
+      }
+      .frota-insights canvas {
+        min-height: 190px;
+      }
+      .frota-event-summary {
+        display: grid;
+        gap: 8px;
+      }
+      .frota-event-summary-row {
+        align-items: center;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--b1);
+      }
+      .frota-event-summary-row:last-child {
+        border-bottom: 0;
+      }
+      .frota-event-summary-label {
+        color: var(--t1);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .frota-event-summary-value {
+        color: var(--navy);
+        font-size: 18px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+      .frota-risk-table {
+        overflow-x: auto;
+      }
+      .frota-risk-table table {
+        min-width: 360px;
+      }
+      @media (max-width: 980px) {
+        .frota-insights {
+          grid-template-columns: 1fr 1fr;
+        }
+        .frota-insights .cc:last-child {
+          grid-column: 1 / -1;
+        }
+      }
+      @media (max-width: 640px) {
+        .frota-insights {
+          grid-template-columns: 1fr;
+        }
+        .frota-insights .cc:last-child {
+          grid-column: auto;
+        }
+      }
+      .tv-browser #page-frota .frota-insights {
+        grid-column: 1 / -1;
+      }
 
       /* Manutencao: categorias/metas no topo, analise e Top 5 abaixo. */
       .tv-browser #page-manutencoes {
@@ -6294,6 +6356,20 @@
               <div class="kpi"><div class="kpi-accent" style="background: var(--red)"></div><div class="kpi-lbl">Excessos de velocidade</div><div class="kpi-val" id="infExcessos">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Consumo real</div><div class="kpi-val sm" id="infAutonomia">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--yellow)"></div><div class="kpi-lbl">Motor ocioso</div><div class="kpi-val sm" id="infOciosidade">&mdash;</div></div>
+            </div>
+          </section>
+          <section class="dashboard-section frota-insights" aria-label="Indicadores de condução">
+            <div class="cc">
+              <div class="cc-hdr"><div><div class="cc-title">Eventos de condução</div><div class="tc-meta" id="metaFrotaEventosResumo"></div></div></div>
+              <div id="tblFrotaEventosResumo" class="frota-event-summary"></div>
+            </div>
+            <div class="cc">
+              <div class="cc-hdr"><div><div class="cc-title">Risco por mês</div><div class="tc-meta" id="metaFrotaEventosMes"></div></div></div>
+              <canvas id="cFrotaEventosMes" height="120" data-mobile-height="170"></canvas>
+            </div>
+            <div class="cc">
+              <div class="cc-hdr"><div><div class="cc-title">Ranking de risco</div><div class="tc-meta" id="metaFrotaRisco"></div></div></div>
+              <div id="tblFrotaRisco" class="frota-risk-table"></div>
             </div>
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="Detalhes da telemetria Infleet">
@@ -14795,6 +14871,59 @@ function setAppVersion() {
         html("tblInfleetMotoristas", `<table><thead><tr><th>Motorista</th><th class="r">Viagens</th><th class="r">Km</th><th class="r">Km/l real</th><th class="r">Eventos de risco</th></tr></thead><tbody>${driverRows
           .map((row) => `<tr><td class="em">${escapeDashboardText(driverMap.get(row.driverId) || "Motorista vinculado")}</td><td class="r">${row.trips.toLocaleString("pt-BR")}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.fuel > 0 ? (row.distance / row.fuel).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "—"}</td><td class="r">${row.risk.toLocaleString("pt-BR")}</td></tr>`)
           .join("") || emptyRow(5)}</tbody></table>`);
+
+        const eventCategories = [
+          { key: "overspeed", label: "Excesso de velocidade", match: (type, text) => type.includes("overspeed") || text.includes("velocidade"), color: "#C12F45" },
+          { key: "acceleration", label: "Aceleração brusca", match: (type, text) => type.includes("acceleration") || text.includes("acelera"), color: "#9A4E12" },
+          { key: "braking", label: "Frenagem brusca", match: (type, text) => type.includes("braking") || text.includes("frenagem") || text.includes("freada"), color: "#B17A00" },
+          { key: "cornering", label: "Curva brusca", match: (type, text) => type.includes("cornering") || text.includes("curva"), color: "#6B4B9B" },
+        ];
+        const classifyEvent = (row) => {
+          const type = String(row[F.infleetEvento.tipo] || "").toLowerCase();
+          const text = String(row[F.infleetEvento.descricao] || "").toLowerCase();
+          return eventCategories.find((category) => category.match(type, text)) || null;
+        };
+        const categoryCounts = new Map(eventCategories.map((category) => [category.key, 0]));
+        const monthRows = new Map();
+        events.forEach((row) => {
+          const category = classifyEvent(row);
+          if (!category) return;
+          categoryCounts.set(category.key, categoryCounts.get(category.key) + 1);
+          const month = String(row[F.infleetEvento.reportadoEm] || "").slice(0, 7);
+          if (!month) return;
+          if (!monthRows.has(month)) monthRows.set(month, new Map(eventCategories.map((item) => [item.key, 0])));
+          const counts = monthRows.get(month);
+          counts.set(category.key, counts.get(category.key) + 1);
+        });
+        const categorizedTotal = [...categoryCounts.values()].reduce((sum, value) => sum + value, 0);
+        set("metaFrotaEventosResumo", dvDisabled ? "—" : `${categorizedTotal.toLocaleString("pt-BR")} eventos classificados`);
+        html("tblFrotaEventosResumo", dvDisabled ? `<div class="dim">Sem dados no período</div>` : `<div>${eventCategories.map((category) => `<div class="frota-event-summary-row"><span class="frota-event-summary-label">${category.label}</span><strong class="frota-event-summary-value" style="color:${category.color}">${categoryCounts.get(category.key).toLocaleString("pt-BR")}</strong></div>`).join("")}</div>`);
+        const monthKeys = [...monthRows.keys()].sort();
+        set("metaFrotaEventosMes", dvDisabled ? "—" : `${monthKeys.length} meses no período`);
+        const eventTrendOptions = opts0({ noLegend: false, datalabels: false });
+        eventTrendOptions.scales.x.stacked = true;
+        eventTrendOptions.scales.y.stacked = true;
+        mkChart("cFrotaEventosMes", {
+          type: "bar",
+          data: {
+            labels: monthKeys.map((month) => new Date(`${month}-15T12:00:00`).toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")),
+            datasets: eventCategories.map((category) => ({
+              label: category.label,
+              data: monthKeys.map((month) => monthRows.get(month).get(category.key)),
+              backgroundColor: category.color,
+              borderRadius: 3,
+              maxBarThickness: 22,
+            })),
+          },
+          options: eventTrendOptions,
+        });
+        const riskRows = driverRows
+          .filter((row) => row.risk > 0)
+          .map((row) => ({ ...row, riskRate: row.distance ? (row.risk / row.distance) * 1000 : 0 }))
+          .sort((a, b) => b.riskRate - a.riskRate || b.risk - a.risk)
+          .slice(0, 5);
+        set("metaFrotaRisco", dvDisabled ? "—" : `${riskRows.length} motoristas com eventos`);
+        html("tblFrotaRisco", `<table><thead><tr><th>Motorista</th><th class="r">Eventos</th><th class="r">/1.000 km</th></tr></thead><tbody>${dvDisabled ? emptyRow(3) : riskRows.map((row) => `<tr><td class="em">${escapeDashboardText(driverMap.get(row.driverId) || "Motorista vinculado")}</td><td class="r">${row.risk.toLocaleString("pt-BR")}</td><td class="r">${row.riskRate.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td></tr>`).join("") || emptyRow(3)}</tbody></table>`);
       }
 
       function renderFrota(dvDisabled, rv = []) {
