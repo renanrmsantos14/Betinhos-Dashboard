@@ -10948,7 +10948,7 @@ function setAppVersion() {
           }
           const records = items.map((item, index) => ({
             row: index + 1,
-            date: new Date(item.cr40f_data),
+            date: markpointParseDate(item.cr40f_data),
             employee: item.cr40f_colaborador || "—",
             employeeKey: markpointNormalizeName(item.cr40f_colaborador),
             worked: Number(item.cr40f_horastrabalhadasminutos || 0),
@@ -10961,6 +10961,7 @@ function setAppVersion() {
             fileName: item.cr40f_nomedoarquivo || "",
           }));
           if (!records.length) return;
+          markpointAssignConsecutiveRests(records);
           markpointState.records = records;
           markpointState.fileName = records.at(-1)?.fileName || "Dataverse";
           markpointState.meta = {
@@ -10974,6 +10975,23 @@ function setAppVersion() {
           console.warn("MarQPonto: leitura Dataverse indisponível", error);
         }
       }
+      function markpointAssignConsecutiveRests(records) {
+        records.sort((a, b) => a.employeeKey.localeCompare(b.employeeKey) || a.date - b.date || (a.start ?? Infinity) - (b.start ?? Infinity));
+        const previous = new Map();
+        records.forEach((record) => {
+          record.rest = null;
+          if (!record.validPoints || !Number.isFinite(record.start) || !Number.isFinite(record.end)) {
+            previous.delete(record.employeeKey);
+            return;
+          }
+          const start = record.date.getTime() / 60000 + record.start;
+          const prior = previous.get(record.employeeKey);
+          const daysSincePrior = prior ? Math.round((record.date - prior.date) / 86400000) : null;
+          const rest = prior && (daysSincePrior === 0 || daysSincePrior === 1) ? start - prior.end : null;
+          record.rest = Number.isFinite(rest) && rest >= 0 ? rest : null;
+          previous.set(record.employeeKey, { date: record.date, end: record.date.getTime() / 60000 + record.end });
+        });
+      }
       function markpointParseWorkbook(buffer, fileName) {
         if (!window.XLSX) throw new Error("Leitor XLSX não foi carregado. Recarregue o dashboard.");
         if (!markpointValidSignature(new Uint8Array(buffer, 0, Math.min(8, buffer.byteLength)))) throw new Error("Arquivo não é um XLSX válido.");
@@ -10982,7 +11000,8 @@ function setAppVersion() {
         const indexOf = (name) => headers.findIndex((header) => header === name || header.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")); const dateIndex = indexOf("data"); const employeeIndex = indexOf("funcionário"); const workedIndex = indexOf("horas trabalhadas"); const pointsIndex = indexOf("pontos do dia");
         if ([dateIndex, employeeIndex, workedIndex, pointsIndex].some((index) => index < 0)) throw new Error("Colunas obrigatórias ausentes: Data, Funcionário, Horas trabalhadas e Pontos do dia.");
         const records = rows.map((row, rowIndex) => { const date = markpointParseDate(row[dateIndex]); const employee = String(row[employeeIndex] || "").trim(); const worked = markpointParseMinutes(row[workedIndex]); const points = String(row[pointsIndex] || "").split(/\s*-\s*/).filter(Boolean).map(markpointParseMinutes); const validPoints = points.length >= 2 && points.length % 2 === 0 && points.every((point) => Number.isFinite(point)); let timeline = []; if (validPoints) { let offset = 0; timeline = points.map((point, index) => { if (index && point < points[index - 1]) offset += 1440; return point + offset; }); } return { row: rowIndex + 2, date, employee, employeeKey: markpointNormalizeName(employee), worked, points, start: validPoints ? timeline[0] : null, end: validPoints ? timeline[timeline.length - 1] : null, validPoints, quality: !date || !employee ? "Inválido" : validPoints ? "Válido" : "Incompleto" }; }).filter((record) => record.date && record.employee && record.worked != null);
-        if (!records.length) throw new Error("Relatório não contém registros válidos."); records.sort((a, b) => a.employeeKey.localeCompare(b.employeeKey) || a.date - b.date); const previous = new Map(); records.forEach((record) => { record.rest = null; if (record.validPoints) { const start = record.date.getTime() / 60000 + record.start; const end = record.date.getTime() / 60000 + record.end; const prior = previous.get(record.employeeKey); if (prior) record.rest = start - prior.end; previous.set(record.employeeKey, { end }); } });
+        if (!records.length) throw new Error("Relatório não contém registros válidos.");
+        markpointAssignConsecutiveRests(records);
         return { records, fileName, importedAt: new Date(), meta: { total: records.length, employees: new Set(records.map((record) => record.employeeKey)).size, incomplete: records.filter((record) => !record.validPoints).length, minDate: new Date(Math.min(...records.map((record) => record.date))), maxDate: new Date(Math.max(...records.map((record) => record.date))) } };
       }
       function markpointFilteredRecords() { const start = document.getElementById("fS")?.value ? new Date(`${document.getElementById("fS").value}T00:00:00`) : null; const end = document.getElementById("fE")?.value ? new Date(`${document.getElementById("fE").value}T23:59:59`) : null; return markpointState.records.filter((record) => (!start || record.date >= start) && (!end || record.date <= end) && (!msState.Mo.length || msState.Mo.some((name) => markpointNormalizeName(name) === record.employeeKey))); }
@@ -11016,8 +11035,8 @@ function setAppVersion() {
         document.getElementById("mpRest").textContent = markpointFmtMinutes(restAvg);
         document.getElementById("mpIncomplete").textContent = records.filter((record) => !record.validPoints).length.toLocaleString("pt-BR");
         document.getElementById("markpointHoursMeta").textContent = `${records.length} registros · ${markpointState.meta.employees} colaboradores`;
-        document.getElementById("markpointRestMeta").textContent = `${rests.length} intervalos calculáveis`;
-        document.getElementById("markpointTableMeta").textContent = `${ranking.length} motoristas · descanso médio em ordem decrescente`;
+        document.getElementById("markpointRestMeta").textContent = `${rests.length} intervalos entre jornadas consecutivas`;
+        document.getElementById("markpointTableMeta").textContent = `${ranking.length} motoristas · somente jornadas consecutivas · descanso médio em ordem decrescente`;
         const body = document.getElementById("markpointTableBody");
         body.innerHTML = ranking.map((item, index) => `<tr><td>${index + 1}</td><td class="em">${item.employee}</td><td class="r">${markpointFmtMinutes(item.avgRest)}</td><td class="r">${markpointFmtMinutes(item.avgWorked)}</td><td class="r">${item.evaluatedJourneys.toLocaleString("pt-BR")}</td></tr>`).join("") || emptyRow(5);
 
