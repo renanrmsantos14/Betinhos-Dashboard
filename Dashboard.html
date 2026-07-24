@@ -14829,7 +14829,29 @@ function setAppVersion() {
           })
           .join("") || emptyRow(9)}</tbody></table>`);
 
-        const eventsByType = grp(events, (row) => row[F.infleetEvento.descricao] || row[F.infleetEvento.tipo] || "Evento");
+        const INFLEET_EVENT_DISPLAY_NAMES = {
+          routeOverspeed: "Excesso de velocidade — rota",
+          deviceOverspeed: "Excesso de velocidade — dispositivo",
+          hardAcceleration: "Aceleração brusca",
+          hardBraking: "Frenagem brusca",
+          hardCornering: "Curva brusca",
+          deviceIdle: "Motor ocioso",
+          geofenceEnter: "Entrada em área monitorada",
+          geofenceExit: "Saída de área monitorada",
+          driverChanged: "Troca de motorista",
+        };
+        const displayInfleetEventName = (row) => {
+          const type = String(row[F.infleetEvento.tipo] || "").trim();
+          if (INFLEET_EVENT_DISPLAY_NAMES[type]) return INFLEET_EVENT_DISPLAY_NAMES[type];
+          const description = String(row[F.infleetEvento.descricao] || "").trim();
+          if (description && !/^[A-Za-z][A-Za-z0-9_-]*$/.test(description)) return description;
+          const readableType = type
+            .replace(/([a-z])([A-Z])/g, "$1 $2")
+            .replace(/[_-]+/g, " ")
+            .trim();
+          return readableType ? `Evento operacional — ${readableType.charAt(0).toUpperCase()}${readableType.slice(1)}` : "Evento operacional";
+        };
+        const eventsByType = grp(events, displayInfleetEventName);
         const eventRows = Object.keys(eventsByType)
           .filter((key) => key !== "__null__")
           .map((key) => {
