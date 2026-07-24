@@ -6524,29 +6524,18 @@
         </div>
 
         <div class="page" id="page-motoristas">
-          <div class="kpi-row kpi-3">
-            <div class="kpi">
-              <div class="kpi-accent" style="background: var(--blue-g)"></div>
-              <div class="kpi-lbl">Total motoristas</div>
-              <div class="kpi-val" id="mTot">—</div>
+          <section class="dashboard-section dashboard-section--alerts" aria-label="Indicadores de motoristas">
+            <p class="section-label">Equipe</p>
+            <div class="exec-alerts">
+              <div class="exec-alert"><div><strong id="mTot">—</strong><span>Total motoristas</span></div><b>Ativos</b></div>
+              <div class="exec-alert danger"><div><strong id="mCnh">—</strong><span>CNH vencida/próx.</span></div><b>Atenção</b></div>
+              <div class="exec-alert"><div><strong id="mSrv">—</strong><span>Serviços no período</span></div><b>Operação</b></div>
+              <div class="exec-alert"><div><strong id="mpHours">—</strong><span>Horas trabalhadas</span></div><b id="mpHoursNote">No filtro</b></div>
+              <div class="exec-alert"><div><strong id="mpDaily">—</strong><span>Média diária</span></div><b>Por jornada</b></div>
+              <div class="exec-alert ok"><div><strong id="mpRest">—</strong><span>Descanso médio</span></div><b>Consecutivo</b></div>
+              <div class="exec-alert warn"><div><strong id="mpIncomplete">—</strong><span>Dados incompletos</span></div><b>Revisar</b></div>
             </div>
-            <div class="kpi">
-              <div
-                class="kpi-accent"
-                style="background: var(--red)"
-              ></div>
-              <div class="kpi-lbl">CNH vencida/próx.</div>
-              <div class="kpi-val" id="mCnh">—</div>
-            </div>
-            <div class="kpi">
-              <div
-                class="kpi-accent"
-                style="background: var(--blue)"
-              ></div>
-              <div class="kpi-lbl">Serviços no período</div>
-              <div class="kpi-val" id="mSrv">—</div>
-            </div>
-          </div>
+          </section>
           <section class="cc markpoint-upload-card" aria-labelledby="markpointUploadTitle">
             <div class="cc-hdr">
               <div>
@@ -6567,12 +6556,6 @@
             </div>
             <div id="markpointStatus" class="markpoint-status" role="status" aria-live="polite"><span>Nenhum relatório importado.</span></div>
           </section>
-          <div class="kpi-row kpi-4" id="markpointKpis" hidden>
-            <div class="kpi"><div class="kpi-accent" style="background:var(--blue-g)"></div><div class="kpi-lbl">Horas trabalhadas</div><div class="kpi-val" id="mpHours">—</div><div class="markpoint-kpi-note" id="mpHoursNote"></div></div>
-            <div class="kpi"><div class="kpi-accent" style="background:var(--teal)"></div><div class="kpi-lbl">Média diária</div><div class="kpi-val" id="mpDaily">—</div></div>
-            <div class="kpi"><div class="kpi-accent" style="background:var(--purple)"></div><div class="kpi-lbl">Descanso médio</div><div class="kpi-val" id="mpRest">—</div></div>
-            <div class="kpi"><div class="kpi-accent" style="background:var(--orange)"></div><div class="kpi-lbl">Dados incompletos</div><div class="kpi-val" id="mpIncomplete">—</div></div>
-          </div>
           <div class="tc" id="markpointTableCard" hidden>
             <div class="tc-bar"><div class="tc-title">Jornada por motorista</div><div id="markpointTableMeta" class="tc-meta"></div></div>
             <div class="tc-wrap"><table><thead><tr><th>Motorista</th><th class="r">Horas trabalhadas</th><th class="r">Média diária</th><th class="r">Descanso médio</th><th class="r">Jornadas avaliadas</th></tr></thead><tbody id="markpointTableBody"></tbody></table></div>
