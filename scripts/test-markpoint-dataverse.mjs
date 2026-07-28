@@ -46,8 +46,18 @@ assert.match(
 );
 assert.match(
   html,
-  /function markpointOpenMarq\(\)[\s\S]*latest\.getDate\(\) \+ 1[\s\S]*relatorio-de-jornada\?p=1&i=/,
+  /function markpointOpenMarq\(\)[\s\S]*latest\.getDate\(\) \+ 1[\s\S]*new URL\("https:\/\/app\.marqponto\.com\.br\/relatorio-de-jornada"\)/,
   "Atalho MarQ deve iniciar no dia seguinte a ultima jornada.",
+);
+assert.match(
+  html,
+  /const iso = text\.match\([^\n]+\)[\s\S]*markpointCreateLocalDate/,
+  "Data ISO do Dataverse deve ser lida sem deslocamento de fuso.",
+);
+assert.match(
+  html,
+  /new URLSearchParams\(\{ p: "1", i: markpointFormatMarqDate\(firstDate\), e: markpointFormatMarqDate\(yesterday\) \}\)/,
+  "URL MarQ deve ser montada com parametros validados.",
 );
 
 console.log("MarQPonto Dataverse: idempotência, lote e paginação OK");
