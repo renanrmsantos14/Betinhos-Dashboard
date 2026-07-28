@@ -43,6 +43,9 @@ assert.match(html, /\$filter=\$\{F\.infleetDiaria\.data\} ge 2026-01-01/);
 assert.match(html, /\$filter=\$\{F\.infleetEvento\.reportadoEm\} ge 2026-01-01T00:00:00Z/);
 assert.doesNotMatch(html, /api\.infleet\.com\.br/, "Dashboard nao pode chamar a Infleet diretamente");
 assert.doesNotMatch(html, /Bearer\s+[A-Za-z0-9._-]{20,}/, "Dashboard nao pode conter token Bearer");
+assert.match(html, /value >= 2 && value <= 30/, "Autonomia Infleet deve rejeitar valores implausiveis");
+assert.match(html, /infleetAutonomy\(tripDistance, totalFuel\)/);
+assert.match(html, /infleetAutonomy\(row\.distance, row\.fuel\)/);
 
 for (const expected of [
   'telemetriaInfleet = "$api/new_telemetriadiariainfleets?',

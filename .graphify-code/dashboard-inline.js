@@ -1,6 +1,12 @@
 ﻿// Gerado por scripts/build-graphify-code.ps1
 // Fonte: Dashboard.html
 (() => {
+        document.documentElement.classList.add("dashboard-js-ready");
+        const localTvPreview = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(location.hostname || "")
+          && /(?:^|[?&])tv=1(?:&|$)/i.test(location.search || "");
+        if (/SMART-TV|SmartTV|Tizen|SmartHub|Maple|HbbTV|NetCast|Web0S|WebTV/i.test(navigator.userAgent || "") || localTvPreview) {
+          document.documentElement.classList.add("tv-pin-pending");
+        }
         const earlyErrors = (window.__DASHBOARD_EARLY_ERRORS = window.__DASHBOARD_EARLY_ERRORS || []);
         window.__DASHBOARD_EARLY_CAPTURE_ACTIVE = true;
         const capture = (entry) => {
@@ -29,6 +35,8 @@
         });
       })();
 
+window.__DASHBOARD_BUILD_INFO = {"version":"1.0.0","label":"v1.0.0"};
+
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // DADOS HARDCODED
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -44,6 +52,1995 @@
         336469.65, 454025.84, 519102.26, 490267.63, 627708.67, 458813.7,
         450734.61, 426814.08, 419071.97, 434559.4, 421781.78, 438377.83,
       ];
+      // Fonte: "ServiÃ§os prestados 2026(DASHBOARD).csv". O arquivo contÃ©m
+      // totais mensais consolidados, sem as linhas individuais dos serviÃ§os.
+      const fat2026 = [
+        276277.52, 444129.04, 500666.92, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+      ];
+      // Gerado de "ServiÃ§os prestados 2026(Faturamento).csv" por
+      // scripts/embed-legacy-2026-csv.mjs. Campos: data, status, motorista,
+      // carro, ID original, cliente, tipo de serviÃ§o, tipo de veÃ­culo, valor.
+      const legacy2026Rows = [
+        ["2026-01-01T00:01:00-03:00","Mensal","-","","","Tenaris","LocaÃ§Ã£o","n/a",3149],
+        ["2026-01-02T13:00:00-03:00","Concluido","Oliveira",".","8559","Particular","Guarulhos","Spin",790],
+        ["2026-01-03T07:00:00-03:00","Cancelado","Cancelado","","16294","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-03T10:00:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8546","Particular","Outras Cidades","BÃ¡sico",649],
+        ["2026-01-03T10:30:00-03:00","Mensal","Isael","Corolla RUH7G45","PG2025/98932","Embraer","Guarulhos","Executivo",447.05],
+        ["2026-01-03T22:20:00-03:00","Cancelado","Cancelado","","7055","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-04T10:30:00-03:00","Mensal","Ibrahim","Virtus FNV6G64","PG2025/100169","Embraer","Guarulhos","Executivo",552.84],
+        ["2026-01-04T22:20:00-03:00","Cancelado","Cancelado","","7056","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-05T03:00:00-03:00","Cancelado","Cancelado","","16292","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-05T03:00:00-03:00","Mensal","Washington","Versa EKH6E73","","Tenaris","Rio de Janeiro","BÃ¡sico",1068.43],
+        ["2026-01-05T03:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","16212","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-01-05T04:50:00-03:00","Mensal","Danilo","Cruze RTC8A02","16287","Tenaris","Guarulhos","BÃ¡sico",483.25],
+        ["2026-01-05T07:40:00-03:00","Cancelado","Cancelado","","PG2025/100835","Embraer","Cancelado","Cancelado",0],
+        ["2026-01-05T09:00:00-03:00","Mensal","Isael","Corolla RUH7G45","PG2026/64","Embraer","SÃ£o JosÃ© dos Campos","Executivo",214.37],
+        ["2026-01-06T07:00:00-03:00","Mensal","Washington","Versa EKH6E73","8585","Tenaris","Rio de Janeiro","BÃ¡sico",1104.85],
+        ["2026-01-06T06:50:00-03:00","Mensal","Isael","Corolla RUH7G45","PG2025/100571","Embraer","SÃ£o Paulo","Executivo",554.94],
+        ["2026-01-06T07:00:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",781],
+        ["2026-01-06T16:40:00-03:00","Mensal","Ibrahim","Corolla RUH7G45","PG2025/100571","Embraer","SÃ£o Paulo","Executivo",1507.05],
+        ["2026-01-06T17:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8586","Tenaris","Pindamonhangaba","BÃ¡sico",115.02],
+        ["2026-01-06T22:20:00-03:00","Cancelado","Cancelado","","7058","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-07T04:00:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-01-07T07:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8587","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-07T07:45:00-03:00","Mensal","Mauricio","Corolla RUP6H17","8593","Tenaris","Vale do ParaÃ­ba","Executivo",224.31],
+        ["2026-01-07T09:00:00-03:00","ConcluÃ­do","Isael","","8596","Betinhos Executive Service","SÃ£o JosÃ© dos Campos","BÃ¡sico",0],
+        ["2026-01-07T09:00:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","","Betinhos Executive Service","Office","Office",0],
+        ["2026-01-07T13:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Pindamonhangaba","BÃ¡sico",84.01],
+        ["2026-01-07T16:30:00-03:00","Mensal","Danilo","Cruze RTC8A02","","Tenaris","Vale do ParaÃ­ba","Executivo",170.86],
+        ["2026-01-07T17:00:00-03:00","Cancelado","Cancelado","","8588","Tenaris","Pindamonhangaba","BÃ¡sico",0],
+        ["2026-01-07T22:20:00-03:00","Cancelado","Cancelado","","7059","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-08T03:30:00-03:00","Mensal","Washington","Versa EKH6E73","16276","Tenaris","SÃ£o Paulo","BÃ¡sico",736.06],
+        ["2026-01-08T07:00:00-03:00","Mensal","Danilo","Cruze RTC8A02","","Tenaris","Vale do ParaÃ­ba","Executivo",317.64],
+        ["2026-01-08T07:40:00-03:00","Mensal","Josmar","Versa CUQ7E87","8589","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-08T15:30:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8590","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-08T15:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","16213","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-08T17:00:00-03:00","ConcluÃ­do","Isael","Virtus FNV6G64","","Johnson&Johnson","SÃ£o Paulo","Executivo",620.49],
+        ["2026-01-08T22:20:00-03:00","Cancelado","Cancelado","","7060","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-09T04:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8592","Tenaris","Rio de Janeiro","Executivo",1236.36],
+        ["2026-01-09T10:40:00-03:00","Mensal","Danilo","Cruze RTC8A02","","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-09T10:00:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8628","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-01-09T22:20:00-03:00","Cancelado","Cancelado","","7061","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-10T04:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-10T14:00:00-03:00","Mensal","Isael","Virtus FNV6G64","PG2026/686","Embraer","Guarulhos","Executivo",351.42],
+        ["2026-01-10T14:00:00-03:00","Mensal","Danilo","Cruze RTC8A02","8658","Tenaris","Guarulhos","BÃ¡sico",483.25],
+        ["2026-01-10T17:30:00-03:00","Mensal","Danilo","Cruze RTC8A02","","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-10T18:00:00-03:00","ConcluÃ­do","Washington","Corolla RUR8F13","8629","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-01-10T18:15:00-03:00","ConcluÃ­do","Lorran","Corolla GDP2G67","8631","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-01-10T22:20:00-03:00","Cancelado","Cancelado","","7062","Tenaris","Cancelado","Cancelado",0],
+        ["2026-01-11T06:50:00-03:00","Mensal","Washington","Corolla RUR8F13","8594","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-01-11T07:00:00-03:00","ConcluÃ­do","Junior","Virtus STW5G55","","Particular","Guarulhos","Executivo",0],
+        ["2026-01-11T09:45:00-03:00","Mensal","Ricardo","Cruze RNT4F01","8656","Tenaris","Guarulhos","Executivo",373.86],
+        ["2026-01-11T11:55:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8591","Tenaris","Rio de Janeiro","Executivo",1304.37],
+        ["2026-01-11T14:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8647","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-11T14:00:00-03:00","ConcluÃ­do","Mauricio","Blindado GLM","","Particular","SÃ£o Paulo","Office",0],
+        ["2026-01-11T18:00:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","","Boeing","Guarulhos","Spin",495.89],
+        ["2026-01-11T18:00:00-03:00","ConcluÃ­do","Isael","Blindado Renato","8597","Kenvue","SÃ£o Paulo","Blindado",1018.25],
+        ["2026-01-11T22:00:00-03:00","ConcluÃ­do","Lorran","Corolla GDP2G67","8578","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-12T04:00:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUH7G45","8634","Particular","Guarulhos","Executivo",300],
+        ["2026-01-12T04:30:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-12T05:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8650","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-01-12T05:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Rio de Janeiro","BÃ¡sico",1592.47],
+        ["2026-01-12T05:00:00-03:00","Mensal","Danilo","Cruze RTC8A02","16296","Tenaris","Rio de Janeiro","BÃ¡sico",1102.44],
+        ["2026-01-12T12:55:00-03:00","Mensal","Menecucci","Virtus RFV4E20","","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-12T14:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8646","Tenaris","Guarulhos","Executivo",666.35],
+        ["2026-01-12T17:30:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","","Kenvue","Guarulhos","Spin",429.35],
+        ["2026-01-12T17:30:00-03:00","Mensal","Robson","Virtus STW5G55","8652","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-12T18:30:00-03:00","ConcluÃ­do","Mauricio","Blindado GLM","","Particular","Guarulhos","Office",0],
+        ["2026-01-13T05:00:00-03:00","Cancelado","Cancelado","","PG2026/1061","Embraer","SÃ£o Paulo","Executivo",0],
+        ["2026-01-13T05:30:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/1060","Embraer","SÃ£o Paulo","Executivo",1872.94],
+        ["2026-01-13T06:00:00-03:00","Mensal","Ibrahim","Corolla RUH7G45","PG2026/1855","Embraer","SÃ£o JosÃ© dos Campos","Executivo",1973.47],
+        ["2026-01-13T06:00:00-03:00","Mensal","Danilo","Cruze RTC8A02","PG2026/909","Embraer","SÃ£o Paulo","Executivo",1716.52],
+        ["2026-01-13T06:30:00-03:00","ConcluÃ­do","Isael","Virtus FNV6G64","8599","Johnson&Johnson","Guarulhos","Executivo",790.14],
+        ["2026-01-13T06:45:00-03:00","ConcluÃ­do","Washington","Corolla RUR8F13","8664","Particular","Guarulhos","Executivo",667.49],
+        ["2026-01-13T08:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-13T08:15:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8660","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-13T08:30:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Pindamonhangaba","Executivo",133.47],
+        ["2026-01-13T11:55:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","","Particular","Guarulhos","Spin",350],
+        ["2026-01-13T12:00:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","","Johnson&Johnson","Dentro de SÃ£o Paulo","",1090],
+        ["2026-01-13T12:44:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","",81.01],
+        ["2026-01-13T15:30:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-13T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-13T17:00:00-03:00","ConcluÃ­do","Isael","Virtus FNV6G64","8601","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-13T17:30:00-03:00","Mensal","Washington","Corolla RUR8F13","8653","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-13T17:45:00-03:00","Mensal","Amadeu","Spin TIU2F11","PG2026/2175","Embraer","SÃ£o Paulo","Executivo",554.94],
+        ["2026-01-14T05:00:00-03:00","Cancelado","Cancelado","","PG2026/843","Embraer","SÃ£o Paulo","Executivo",0],
+        ["2026-01-13T19:00:00-03:00","Mensal","Washington","","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-14T05:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8644","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-01-14T05:30:00-03:00","Mensal","Isael","Versa EKH6E73","PG2026/2141","Embraer","SÃ£o Paulo","Executivo",1623.24],
+        ["2026-01-14T05:30:00-03:00","Mensal","Robson","Virtus STW5G55","8689","Tenaris","Rio de Janeiro","BÃ¡sico",1147.05],
+        ["2026-01-14T06:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","PG2026/2049","Embraer","SÃ£o Paulo","Executivo",1305.87],
+        ["2026-01-14T07:00:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","","Johnson&Johnson","SÃ£o Paulo","",620.49],
+        ["2026-01-14T07:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8661","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-14T08:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8680","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-14T08:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","16298","Tenaris","","BÃ¡sico",739.2],
+        ["2026-01-14T08:30:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUH7G45","8602","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-14T09:00:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-14T09:30:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","",81.01],
+        ["2026-01-14T11:00:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","NFE_0003181079_1","Usiscrew","Rio de Janeiro","",1650],
+        ["2026-01-14T14:00:00-03:00","ConcluÃ­do","Danilo","Cruze RTC8A02","8665","Particular","Guarulhos","Executivo",684.5],
+        ["2026-01-14T15:30:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-14T16:10:00-03:00","Mensal","Danilo","Cruze RTC8A02","PG2026/2356","Embraer","SÃ£o Paulo","Executivo",663.34],
+        ["2026-01-14T17:00:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","","Johnson&Johnson","SÃ£o Paulo","",620.49],
+        ["2026-01-14T17:00:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8603","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",489.65],
+        ["2026-01-14T17:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8691","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-14T17:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","8654","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-14T19:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8682","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-14T20:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","PG2026/722","Embraer","Guarulhos","Executivo",552.84],
+        ["2026-01-14T23:00:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8672","Johnson&Johnson","Guarulhos","Executivo",603.49],
+        ["2026-01-15T03:00:00-03:00","Mensal","Robson","Virtus STW5G55","8694","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-01-15T04:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-15T05:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","PG2026/2316","Embraer","SÃ£o Paulo","Executivo",1263.36],
+        ["2026-01-15T05:30:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUH7G45","","Johnson&Johnson","SÃ£o Paulo","",669.37],
+        ["2026-01-15T06:30:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","8684","Particular","Outras Cidades","Executivo",1701.36],
+        ["2026-01-15T06:40:00-03:00","Mensal","Danilo","Cruze RTC8A02","PG2026/2276","Embraer","SÃ£o Paulo","Executivo",554.94],
+        ["2026-01-15T07:10:00-03:00","Cancelado","Cancelado","","PG2026/2129","Embraer","SÃ£o Paulo","Executivo",0],
+        ["2026-01-15T07:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8662","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-15T07:45:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","8692","Tenaris","Pindamonhangaba","BÃ¡sico",115.02],
+        ["2026-01-15T07:15:00-03:00","Mensal","Washington","Corolla RUR8F13","8681","Tenaris","Pindamonhangaba","Executivo",1249.12],
+        ["2026-01-15T08:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","8604","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-15T08:50:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8674","Particular","Guarulhos","Spin",426],
+        ["2026-01-15T08:50:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","8675","Particular","Guarulhos","Spin",426],
+        ["2026-01-15T08:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-15T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-15T12:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","8606","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",1419.93],
+        ["2026-01-15T14:00:00-03:00","Cancelado","Cancelado","","8697","Tenaris","Guarulhos","Executivo",0],
+        ["2026-01-15T15:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8690","Tenaris","Rio de Janeiro","BÃ¡sico",1524.44],
+        ["2026-01-15T15:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-15T16:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8645","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-15T17:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","Executivo",386.33],
+        ["2026-01-15T17:00:00-03:00","Cancelado","Cancelado","","PG2026/2129","Embraer","SÃ£o Paulo","Executivo",0],
+        ["2026-01-15T17:30:00-03:00","Mensal","Danilo","Cruze RTC8A02","PG2026/2276","Embraer","SÃ£o Paulo","Executivo",1520.05],
+        ["2026-01-15T17:30:00-03:00","Mensal","Robson","Virtus STW5G55","8655","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-15T19:30:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","","Johnson&Johnson","Guarulhos","",442.98],
+        ["2026-01-16T04:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-16T07:00:00-03:00","ConcluÃ­do","Isael","Blindado Renato","8598","Kenvue","SÃ£o Paulo","Blindado",1082.25],
+        ["2026-01-16T07:00:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUH7G45","8716","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-16T07:30:00-03:00","Mensal","Robson","Virtus STW5G55","8663","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-16T08:30:00-03:00","Cancelado","Cancelado","","8605","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",0],
+        ["2026-01-16T08:30:00-03:00","Mensal","Robson","Virtus STW5G55","16300","Tenaris","","SÃ³ Motorista",81.01],
+        ["2026-01-16T09:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-16T09:30:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUH7G45","8711","Particular","Guarulhos","BÃ¡sico",0],
+        ["2026-01-16T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-16T15:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8651","Tenaris","Rio de Janeiro","BÃ¡sico",194.41],
+        ["2026-01-16T15:00:00-03:00","Mensal","Robson","Virtus STW5G55","8721","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-16T14:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-16T15:50:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","8677","Particular","Guarulhos","Spin",350],
+        ["2026-01-16T15:50:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","8709","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-16T16:00:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","","Johnson&Johnson","SÃ£o Paulo","",718.25],
+        ["2026-01-16T17:00:00-03:00","Cancelado","Cancelado","","8607","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",0],
+        ["2026-01-16T18:30:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8687","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-01-16T20:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8659","Tenaris","Guarulhos","BÃ¡sico",608.66],
+        ["2026-01-16T20:20:00-03:00","ConcluÃ­do","Lorran","Corolla GDP2G67","8717","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-16T20:30:00-03:00","ConcluÃ­do","Danilo","Cruze RTC8A02","","Johnson&Johnson","SÃ£o Paulo","",620.49],
+        ["2026-01-16T20:30:00-03:00","Mensal","Washington","Corolla RUR8F13","8695","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-01-16T20:50:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","Vale do ParaÃ­ba","BÃ¡sico",81.01],
+        ["2026-01-16T20:30:00-03:00","Mensal","Mauricio","Corolla RUP6H17","16295","Tenaris","Guarulhos","BÃ¡sico",561.65],
+        ["2026-01-16T21:15:00-03:00","Mensal","Amadeu","Spin TIU2F11","8657","Tenaris","Guarulhos","Executivo",404.86],
+        ["2026-01-17T04:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-17T04:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-17T05:40:00-03:00","ConcluÃ­do","Ricardo","Cruze  GDP2G67","8579","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-17T05:40:00-03:00","ConcluÃ­do","Carlos","Cruze GEZ6D67","8676","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-17T06:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","16308","Tenaris","","BÃ¡sico",162.02],
+        ["2026-01-17T06:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","16309","Tenaris","","BÃ¡sico",129.6],
+        ["2026-01-17T06:30:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","","Particular","Araraquara","Executivo",1637.36],
+        ["2026-01-17T07:15:00-03:00","Mensal","Washington","Corolla RUR8F13","PG2025/2930","Embraer","SÃ£o Paulo","Executivo",769.13],
+        ["2026-01-17T12:30:00-03:00","Mensal","Washington","Corolla RUR8F13","PG2025/2958","Embraer","SÃ£o Paulo","Executivo",2051.88],
+        ["2026-01-17T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-17T15:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8571","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-17T15:30:00-03:00","Mensal","Marcelo","Corolla RRI8497","16310","Tenaris","","BÃ¡sico",268.02],
+        ["2026-01-17T17:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","8719","Tenaris","Guarulhos","BÃ¡sico",483.25],
+        ["2026-01-17T18:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8600","Johnson&Johnson","Guarulhos","Executivo",713.56],
+        ["2026-01-17T19:30:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/1856","Embraer","Guarulhos","Executivo",351.42],
+        ["2026-01-18T04:30:00-03:00","ConcluÃ­do","Ricardo","Cruze  GDP2G67","8648","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-18T10:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Embraer","SÃ£o Paulo","Executivo",1429.42],
+        ["2026-01-18T13:30:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","8669","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-18T14:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Rio de Janeiro","BÃ¡sico",1096.2],
+        ["2026-01-18T15:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-01-18T15:30:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8567","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-18T18:00:00-03:00","Mensal","Office","","PG2026/3283","Embraer","SÃ£o JosÃ© dos Campos","Executivo",347.04],
+        ["2026-01-19T04:00:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","8636","Particular","Guarulhos","Executivo",300],
+        ["2026-01-19T04:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8740","Tenaris","Rio de Janeiro","Executivo",1830.99],
+        ["2026-01-19T04:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","8741","Tenaris","Guarulhos","BÃ¡sico",607.62],
+        ["2026-01-19T06:00:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/2628","Embraer","SÃ£o Paulo","Executivo",1623.24],
+        ["2026-01-19T06:20:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","8747","Particular","SÃ£o Paulo","BÃ¡sico",830],
+        ["2026-01-19T09:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8748","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-19T15:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8749","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-19T15:30:00-03:00","Mensal","Robson","Virtus STW5G55","8750","Tenaris","Rio de Janeiro","BÃ¡sico",1124.2],
+        ["2026-01-19T15:30:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/3336","Embraer","SÃ£o Paulo","Executivo",554.94],
+        ["2026-01-19T17:00:00-03:00","ConcluÃ­do","Isael","Spin TIU2F11","8685","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-19T17:30:00-03:00","ConcluÃ­do","Lorran","Corolla GDP2G67","8583","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-01-19T19:00:00-03:00","Mensal","Ricardo","Cruze  GDP2G67","","Embraer","Guarulhos","Executivo",552.84],
+        ["2026-01-19T20:00:00-03:00","Mensal","Isael","Spin TIU2F11","PG2026/2466","Embraer","Guarulhos","Spin",447.05],
+        ["2026-01-19T20:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","16301","Tenaris","Guarulhos","Executivo",666.35],
+        ["2026-01-20T06:00:00-03:00","Mensal","Washington","Cruze RTI7G00","","Tenaris","","Executivo",766.27],
+        ["2026-01-20T07:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","16302","Tenaris","","Executivo",133.47],
+        ["2026-01-20T09:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-20T09:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","16312","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-20T10:00:00-03:00","ConcluÃ­do","Carlos","Cruze GEZ6D67","","Office","SÃ£o JosÃ© dos Campos","",0],
+        ["2026-01-20T13:00:00-03:00","ConcluÃ­do","Mauricio","Blindado GLM","","Particular","SÃ£o Paulo","",0],
+        ["2026-01-20T14:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Van",1080],
+        ["2026-01-20T15:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-20T17:00:00-03:00","Mensal","Isael","Spin TIU2F11","PG2026/3713","Embraer","","",216.9],
+        ["2026-01-20T19:00:00-03:00","Mensal","Isael","Spin TIU2F11","PG2026/3774","Embraer","","",558.62],
+        ["2026-01-20T21:30:00-03:00","Mensal","Jailton","F: Corolla GGR-4D15","PG2026/3774","Embraer","","",0],
+        ["2026-01-20T18:00:00-03:00","Mensal","Calastri","Corolla RUR8F13","PG2026/2966","Embraer","Guarulhos","Executivo",351.42],
+        ["2026-01-21T05:30:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","","Johnson&Johnson","SÃ£o Paulo","",864.89],
+        ["2026-01-21T05:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","8760","Tenaris","Rio de Janeiro","BÃ¡sico",1130.21],
+        ["2026-01-21T06:00:00-03:00","Concluido","Isael","Spin TIU2F11","","Becooper","Outras Cidades","",1500],
+        ["2026-01-21T06:45:00-03:00","Cancelado","Cancelado","","PG2026/3745","Embraer","","",0],
+        ["2026-01-21T07:00:00-03:00","ConcluÃ­do","Oliveira","","","Particular","Guarulhos","Spin",490.77],
+        ["2026-01-21T07:00:00-03:00","Cancelado","Cancelado","","PG2026/3669","Embraer","","",0],
+        ["2026-01-21T08:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","16307","Tenaris","","Executivo",93.46],
+        ["2026-01-21T08:30:00-03:00","Mensal","Jailton","F: Corolla GGR-4D15","PG2026/3716","Embraer","","",227.37],
+        ["2026-01-21T09:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Pindamonhangaba","Executivo",81.01],
+        ["2026-01-21T09:30:00-03:00","Mensal","Robson","Virtus STW5G55","16313","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-21T10:00:00-03:00","ConcluÃ­do","Mauricio","Blindado","","Particular","SÃ£o Paulo","",0],
+        ["2026-01-21T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-21T13:30:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/3736","Embraer","","",1531.57],
+        ["2026-01-21T15:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Pindamonhangaba","Executivo",81.01],
+        ["2026-01-21T17:00:00-03:00","Mensal","Calastri","Corolla RUR8F13","PG2026/3718","Embraer","","",216.9],
+        ["2026-01-21T17:30:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","","",339.77],
+        ["2026-01-21T19:20:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","",462.82],
+        ["2026-01-21T17:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","16304","Tenaris","","Executivo",133.47],
+        ["2026-01-21T17:30:00-03:00","Cancelado","Cancelado","","PG2026/3745","Embraer","","",0],
+        ["2026-01-21T19:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","16303","Tenaris","","Executivo",253.5],
+        ["2026-01-21T20:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-21T20:50:00-03:00","Mensal","Washington","Cruze RTI7G00","8698","Tenaris","Guarulhos","Executivo",615.33],
+        ["2026-01-21T20:50:00-03:00","Mensal","Danilo","Corolla RUH7G45","8703","Tenaris","Guarulhos","Executivo",654.03],
+        ["2026-01-21T23:55:00-03:00","Mensal","Calastri","Corolla RUR8F13","8734","Tenaris","Guarulhos","Executivo",626.33],
+        ["2026-01-22T05:00:00-03:00","ConcluÃ­do","Isael","Carro cliente","8683","Ball Corporation","Outras Cidades","Somente Motorista",2352.6],
+        ["2026-01-22T06:30:00-03:00","Mensal","Jailton","F: Corolla GGR-4D15","PG2026/2569","Embraer","","",776.92],
+        ["2026-01-22T07:20:00-03:00","Mensal","Washington","Cruze RTI7G00","8700","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-22T07:50:00-03:00","Mensal","Danilo","Corolla RUH7G45","8705","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-22T07:30:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","","Johnson&Johnson","SÃ£o Paulo","",808.95],
+        ["2026-01-22T08:00:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","8735","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-22T08:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","16306","Tenaris","","Executivo",93.46],
+        ["2026-01-22T08:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","","",1075.3],
+        ["2026-01-22T09:00:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8767","Tenaris","SÃ£o Paulo","BÃ¡sico",1410.43],
+        ["2026-01-22T09:00:00-03:00","Cancelado","Lorran","Corolla GDP2G67","","Tenaris","Pindamonhangaba","Executivo",0],
+        ["2026-01-22T09:30:00-03:00","ConcluÃ­do","Paulo Cezar","","8708","Tenaris","Pindamonhangaba","Van",1490],
+        ["2026-01-22T10:00:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8712","Ball Corporation","Guarulhos","Executivo",445],
+        ["2026-01-22T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-22T14:00:00-03:00","Mensal","Calastri","Cruze RTI7G00","16305","Tenaris","","Executivo",548.33],
+        ["2026-01-22T15:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/3737","Embraer","","",1938.3],
+        ["2026-01-22T15:00:00-03:00","Cancelado","Cancelado","","","Tenaris","Pindamonhangaba","Executivo",0],
+        ["2026-01-22T15:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","16314","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-22T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8761","Tenaris","Rio de Janeiro","BÃ¡sico",1130.21],
+        ["2026-01-22T16:40:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8762","Boeing","Guarulhos","Executivo",513],
+        ["2026-01-22T16:00:00-03:00","Mensal","Oliveira","","PG2026/4130","Embraer","Guarulhos","",351.42],
+        ["2026-01-22T17:00:00-03:00","Mensal","Office","","PG2026/4240","Embraer","Guarulhos","",351.42],
+        ["2026-01-22T17:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16314","Tenaris","","BÃ¡sico",162.02],
+        ["2026-01-22T18:40:00-03:00","Mensal","Washington","Corolla RUR8F13","8702","Tenaris","Pindamonhangaba","Executivo",333.52],
+        ["2026-01-22T18:40:00-03:00","Mensal","Danilo","Corolla RUH7G45","8707","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-22T18:40:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","8737","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-22T19:00:00-03:00","Mensal","Calastri","Cruze RTI7G00","PG2026/2646","Embraer","Guarulhos","",447.05],
+        ["2026-01-22T19:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8739","Tenaris","Vale do ParaÃ­ba","Executivo",93.46],
+        ["2026-01-22T20:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-23T04:55:00-03:00","ConcluÃ­do","Ricardo","Cruze  GDP2G67","8728","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-23T06:00:00-03:00","ConcluÃ­do","Lorran","Corolla GDP2G67","8775","Particular","SÃ£o Paulo","Executivo",726.26],
+        ["2026-01-23T06:30:00-03:00","Mensal","Oliveira","","PG2026/2574","Embraer","","",776.92],
+        ["2026-01-23T06:40:00-03:00","ConcluÃ­do","Jailton","F: Corolla GGR-4D15","8568","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-23T08:00:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","8736","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-23T07:20:00-03:00","Mensal","Washington","Corolla RUR8F13","8701","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-23T07:20:00-03:00","Mensal","Danilo","Corolla RUH7G45","8706","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-23T08:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Particular","SÃ£o Paulo","",2398],
+        ["2026-01-23T08:10:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/1857","Embraer","","Executivo",447.05],
+        ["2026-01-23T08:30:00-03:00","Mensal","Carlos","Cruze GEZ6D67","8738","Tenaris","Vale do ParaÃ­ba","Executivo",93.46],
+        ["2026-01-23T10:00:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","Pindamonhangaba","",93.46],
+        ["2026-01-23T10:30:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8753","Particular","Guarulhos","Executivo",415],
+        ["2026-01-23T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-23T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-23T09:40:00-03:00","Mensal","Danilo","","","Tenaris","","",81.01],
+        ["2026-01-23T14:15:00-03:00","Mensal","Danilo","Corolla RUH7G45","8704","Tenaris","Guarulhos","Executivo",576.03],
+        ["2026-01-23T14:20:00-03:00","Mensal","Washington","Corolla RUR8F13","8699","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-01-23T15:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8776","Particular","SÃ£o Paulo","Executivo",806.28],
+        ["2026-01-23T15:00:00-03:00","Cancelado","Cancelado","","8774","Tenaris","Vale do ParaÃ­ba","Executivo",0],
+        ["2026-01-23T15:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","8722","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-23T15:15:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","",194.41],
+        ["2026-01-23T17:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","8668","Particular","Guarulhos","Spin",450],
+        ["2026-01-23T17:20:00-03:00","Mensal","Lorran","Corolla GDP2G67","16317","Tenaris","","BÃ¡sico",109.01],
+        ["2026-01-23T17:35:00-03:00","Mensal","Washington","Corolla RUR8F13","PG2026/4425","Embraer","","",769.13],
+        ["2026-01-23T19:00:00-03:00","ConcluÃ­do","Mauricio","Blindado GLM","","Particular","Guarulhos","",0],
+        ["2026-01-23T20:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-23T20:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-23T20:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8649","Johnson&Johnson","Guarulhos","Executivo",887.62],
+        ["2026-01-23T20:30:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8713","Ball Corporation","Guarulhos","Executivo",481],
+        ["2026-01-23T20:30:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Boeing","Guarulhos","Spin",509.97],
+        ["2026-01-23T22:30:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8670","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-24T04:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-24T05:40:00-03:00","Mensal","Lorran","Corolla GDP2G67","PG2026/2355","Embraer","","",658.63],
+        ["2026-01-24T05:50:00-03:00","ConcluÃ­do","Jailton","F: Corolla GGR-4D15","8573","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-24T07:30:00-03:00","Mensal","Washington","Corolla RUR8F13","8595","Tenaris","Guarulhos","Executivo",655.34],
+        ["2026-01-24T08:50:00-03:00","Mensal","Josmar","Versa CUQ7E87","8742","Tenaris","Guarulhos","BÃ¡sico",674.62],
+        ["2026-01-24T12:00:00-03:00","Mensal","Calastri","Spin TIU2F11","PG2026/3846","Embraer","","Spin",563],
+        ["2026-01-24T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","Extrema","Van",2590],
+        ["2026-01-24T16:30:00-03:00","ConcluÃ­do","Danilo","Versa CUQ7E87","8743","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-24T16:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8745","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-24T16:30:00-03:00","ConcluÃ­do","Jailton","F: Corolla GGR-4D15","","Particular","Litoral","",790],
+        ["2026-01-24T17:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8633","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-01-24T17:00:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8642","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-01-24T17:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","8673","Johnson&Johnson","Guarulhos","Executivo",667.49],
+        ["2026-01-24T17:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Boeing","Guarulhos","Spin",396.05],
+        ["2026-01-24T20:30:00-03:00","Mensal","Danilo","Versa CUQ7E87","PG2026/3907","Embraer","","",599.34],
+        ["2026-01-25T05:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8770","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-25T07:15:00-03:00","Mensal","Oliveira","","PG2026/5022","Embraer","","",447.05],
+        ["2026-01-25T08:15:00-03:00","Mensal","Washington","Corolla RUR8F13","8766","Tenaris","Guarulhos","Executivo",511.77],
+        ["2026-01-25T08:45:00-03:00","ConcluÃ­do","Jailton","F: Corolla GGR-4D15","8714","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-25T09:30:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8622","Kenvue","Guarulhos","Executivo",733.4],
+        ["2026-01-25T12:15:00-03:00","Mensal","Danilo","Versa CUQ7E87","PG2026/3752","Embraer","","",457.21],
+        ["2026-01-25T16:00:00-03:00","ConcluÃ­do","Eduardo - SP","","8720","Particular","Guarulhos","Spin",386],
+        ["2026-01-25T17:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8640","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-01-25T17:30:00-03:00","Cancelado","Cancelado","","8772","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-01-25T17:30:00-03:00","ConcluÃ­do","Marcelo","Corolla RRI8497","","Boeing","Guarulhos","",396.05],
+        ["2026-01-25T20:00:00-03:00","Mensal","Calastri","Spin TIU2F11","","Tenaris","","Executivo",539.47],
+        ["2026-01-25T20:00:00-03:00","Mensal","Oliveira","","PG2026/3761","Embraer","","",351.42],
+        ["2026-01-26T05:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8768","Tenaris","Guarulhos","BÃ¡sico",483.25],
+        ["2026-01-26T05:00:00-03:00","Mensal","Robson","Virtus STW5G55","8783","Tenaris","Rio de Janeiro","BÃ¡sico",1873.69],
+        ["2026-01-26T05:30:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/4246","Embraer","","Executivo",1940.61],
+        ["2026-01-26T05:55:00-03:00","Mensal","Danilo","Versa CUQ7E87","8729","Tenaris","Guarulhos","Executivo",615.33],
+        ["2026-01-26T06:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","8781","Tenaris","SÃ£o Paulo","BÃ¡sico",924.24],
+        ["2026-01-26T07:50:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5070","Embraer","","Executivo",214.37],
+        ["2026-01-26T08:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8623","Kenvue","Guarulhos","Executivo",397.12],
+        ["2026-01-26T09:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8787","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-26T09:55:00-03:00","Cancelado","Cancelado","","8678","Particular","Guarulhos","Spin",0],
+        ["2026-01-26T10:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","8784","Tenaris","Guarulhos","Executivo",650.22],
+        ["2026-01-26T11:45:00-03:00","Mensal","Washington","Corolla RUR8F13","8729","Tenaris","Guarulhos","Executivo",661.22],
+        ["2026-01-26T12:30:00-03:00","Mensal","Amadeu","Cruze RUD3B91","PG2026/5098","Embraer","","Executivo",216.9],
+        ["2026-01-26T14:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8624","Kenvue","Guarulhos","Executivo",1038.64],
+        ["2026-01-26T15:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8790","Tenaris","Pindamonhangaba","Executivo",133.47],
+        ["2026-01-26T15:30:00-03:00","Cancelado","Cancelado","","","Embraer","","",0],
+        ["2026-01-26T16:00:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","","Particular","SÃ£o Paulo","",620],
+        ["2026-01-26T16:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","","Tenaris","","",1068.43],
+        ["2026-01-26T16:30:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5072","Embraer","","Executivo",216.9],
+        ["2026-01-26T17:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8730","Tenaris","Guarulhos","Executivo",173.48],
+        ["2026-01-26T17:30:00-03:00","Cancelado","Cancelado","","8751","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-01-26T18:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8785","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-26T18:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16318","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-26T21:15:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16319","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-26T23:00:00-03:00","ConcluÃ­do","Oliveira","","8772","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-01-26T23:55:00-03:00","ConcluÃ­do","Oliveira","","8755","Johnson&Johnson","Guarulhos","Spin",629.63],
+        ["2026-01-27T04:40:00-03:00","ConcluÃ­do","Washington","Corolla RUR8F13","","Tenaris","","Executivo",548.33],
+        ["2026-01-27T06:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8777","Tenaris","Rio de Janeiro","BÃ¡sico",1070.84],
+        ["2026-01-27T07:00:00-03:00","Mensal","Isael","","","Embraer","","",1163.69],
+        ["2026-01-27T07:15:00-03:00","ConcluÃ­do","Ricardo","","8710","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-27T07:00:00-03:00","Mensal","Mauricio","","","Embraer","","",1163.69],
+        ["2026-01-27T07:30:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","8625","Kenvue","Guarulhos","Executivo",1294.24],
+        ["2026-01-27T07:50:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/5081","Embraer","","Executivo",214.37],
+        ["2026-01-27T07:50:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8608","Johnson&Johnson","Guarulhos","Executivo",629.63],
+        ["2026-01-27T07:50:00-03:00","ConcluÃ­do","Jailton","","8610","Johnson&Johnson","Guarulhos","Executivo",629.63],
+        ["2026-01-27T07:50:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8757","Johnson&Johnson","SÃ£o Paulo","Executivo",901.54],
+        ["2026-01-27T07:50:00-03:00","Mensal","Lorran","Corolla GDP2G67","8732","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-27T08:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","8786","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-27T09:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/4488","Embraer","","Executivo",874.92],
+        ["2026-01-27T09:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","8788","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-27T09:15:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","Executivo",1217.63],
+        ["2026-01-27T09:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","16324","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-27T12:45:00-03:00","Mensal","Carlos","Virtus FNV6G64","16320","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-27T12:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-27T13:00:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8608","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-01-27T13:00:00-03:00","ConcluÃ­do","Jailton","","8610","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-01-27T14:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","Guarulhos","Executivo",576.03],
+        ["2026-01-27T16:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","8789","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-27T16:30:00-03:00","Mensal","Oliveira","","PG2026/5082","Embraer","","Executivo",216.9],
+        ["2026-01-27T17:00:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8612","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-27T17:00:00-03:00","ConcluÃ­do","Jailton","","8613","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-27T17:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8731","Tenaris","Guarulhos","Executivo",133.47],
+        ["2026-01-27T17:00:00-03:00","Mensal","Robson","Virtus STW5G55","16325","Tenaris","","BÃ¡sico",81.1],
+        ["2026-01-27T17:30:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5526","Embraer","","",335.48],
+        ["2026-01-27T18:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","8791","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-27T18:03:00-03:00","Mensal","Washington","Corolla RUR8F13","8731","Tenaris","Guarulhos","Executivo",0],
+        ["2026-01-27T21:15:00-03:00","Mensal","Lorran","Corolla GDP2G67","16319","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-28T05:20:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","8678","Particular","Guarulhos","Spin",350],
+        ["2026-01-28T06:30:00-03:00","Mensal","Cancelado","","PG2026/5512","Embraer","","",0],
+        ["2026-01-28T07:15:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/5524","Embraer","","",554.94],
+        ["2026-01-28T07:30:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8616","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-01-28T07:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8617","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-01-28T07:40:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",115.02],
+        ["2026-01-28T07:50:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/5083","Embraer","","",214.37],
+        ["2026-01-28T07:50:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","Guarulhos","Executivo",93.46],
+        ["2026-01-28T07:50:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","Executivo",93.46],
+        ["2026-01-28T07:50:00-03:00","Cancelado","Cancelado","","8733","Tenaris","Pindamonhangaba","Executivo",0],
+        ["2026-01-28T08:00:00-03:00","ConcluÃ­do","Office","","8799","Particular","SÃ£o JosÃ© dos Campos","BÃ¡sico",0],
+        ["2026-01-28T08:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8792","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-28T09:00:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-28T10:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","8803","Ball Corporation","SÃ£o Paulo","BÃ¡sico",0],
+        ["2026-01-28T10:00:00-03:00","ConcluÃ­do","Jailton","","8803","Ball Corporation","SÃ£o Paulo","BÃ¡sico",720.49],
+        ["2026-01-28T12:00:00-03:00","Mensal","Lorran","","PG2026/5677","Embraer","","",664.41],
+        ["2026-01-28T12:00:00-03:00","Mensal","Oliveira","","PG2026/5678","Embraer","","",664.41],
+        ["2026-01-28T09:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","",81.01],
+        ["2026-01-28T11:00:00-03:00","Mensal","Amadeu","","","Tenaris","","",910.45],
+        ["2026-01-28T12:45:00-03:00","Mensal","Carlos","Virtus FNV6G64","16321","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-28T13:30:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-28T15:00:00-03:00","Mensal","Isael","Cruze RTI7G00","PG2026/5208","Embraer","","",1055.11],
+        ["2026-01-28T15:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","",1070.84],
+        ["2026-01-28T15:40:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5524","Embraer","","",1295.47],
+        ["2026-01-28T16:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","8804","Tenaris","Guarulhos","BÃ¡sico",1036.83],
+        ["2026-01-28T16:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8778","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-01-28T16:30:00-03:00","Mensal","Oliveira","","PG2026/5084","Embraer","","",216.9],
+        ["2026-01-28T17:00:00-03:00","Cancelado","Cancelado","","","Tenaris","Guarulhos","Executivo",0],
+        ["2026-01-28T17:30:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","Executivo",173.48],
+        ["2026-01-28T17:00:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8614","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-28T17:00:00-03:00","ConcluÃ­do","Jailton","","8615","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-28T17:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","8668","Particular","Guarulhos","Spin",450],
+        ["2026-01-28T18:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","8793","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-28T18:15:00-03:00","Mensal","Robson","Virtus RFV4E20","","Tenaris","","",251.06],
+        ["2026-01-28T17:30:00-03:00","ConcluÃ­do","Oliveira","","8758","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-01-28T19:00:00-03:00","Mensal","Cancelado","","PG2026/5512","Embraer","","",0],
+        ["2026-01-28T21:15:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-01-28T19:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","8796","Tenaris","Guarulhos","BÃ¡sico",555.26],
+        ["2026-01-28T20:00:00-03:00","Mensal","Lorran","","PG2026/5739","Embraer","","",351.42],
+        ["2026-01-29T05:00:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8827","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-01-29T06:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","8759","Johnson&Johnson","SÃ£o Paulo","Executivo",957.75],
+        ["2026-01-29T06:15:00-03:00","Mensal","Edson","","PG2026/5769","Embraer","","",660.73],
+        ["2026-01-29T06:15:00-03:00","ConcluÃ­do","Lorran","","8825","Johnson&Johnson","SÃ£o Paulo","Executivo",767.13],
+        ["2026-01-29T06:30:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5354","Embraer","","",554.94],
+        ["2026-01-29T07:00:00-03:00","Mensal","Isael","Cruze RTI7G00","","Embraer","","",1163.69],
+        ["2026-01-29T07:00:00-03:00","Mensal","Ricardo","Cruze RNT4F01","16327","Tenaris","","BÃ¡sico",858.31],
+        ["2026-01-29T07:15:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/1757","Embraer","","",552.84],
+        ["2026-01-29T07:30:00-03:00","ConcluÃ­do","Jailton","","8618","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-01-29T07:30:00-03:00","ConcluÃ­do","Robson","Virtus RFV4E20","8619","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-01-29T07:30:00-03:00","Cancelado","Cancelado","","8620","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",0],
+        ["2026-01-29T07:30:00-03:00","Cancelado","Cancelado","","8621","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",0],
+        ["2026-01-29T07:50:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/5085","Embraer","","",214.37],
+        ["2026-01-29T07:50:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","Executivo",93.46],
+        ["2026-01-29T08:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","8794","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-01-29T08:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8797","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-29T08:10:00-03:00","ConcluÃ­do","Paulo Cezar","","8764","Ball Corporation","Vale do ParaÃ­ba","Van",790],
+        ["2026-01-29T08:10:00-03:00","ConcluÃ­do","Paulo Cezar","","8765","Ball Corporation","Vale do ParaÃ­ba","Van",790],
+        ["2026-01-29T08:30:00-03:00","Cancelado","Cancelado","","PG2026/5356","Embraer","","",0],
+        ["2026-01-29T08:45:00-03:00","ConcluÃ­do","Oliveira","","8715","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-29T11:00:00-03:00","ConcluÃ­do","Robson","Virtus RFV4E20","8835","Particular","SÃ£o Paulo","BÃ¡sico",620],
+        ["2026-01-29T12:45:00-03:00","Mensal","Carlos","Virtus FNV6G64","16322","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-29T13:30:00-03:00","Mensal","Washington","Corolla RUR8F13","8795","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-01-29T15:00:00-03:00","ConcluÃ­do","Betinho","","8836","Betinhos Executive Service","SÃ£o JosÃ© dos Campos","BÃ¡sico",0],
+        ["2026-01-29T11:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5085","Embraer","","",214.37],
+        ["2026-01-29T16:30:00-03:00","Mensal","Marcelo","","PG2026/5086","Embraer","","",216.9],
+        ["2026-01-29T16:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8609","Johnson&Johnson","Guarulhos","Executivo",509.42],
+        ["2026-01-29T16:30:00-03:00","ConcluÃ­do","Jailton","","8611","Johnson&Johnson","Guarulhos","Executivo",509.42],
+        ["2026-01-29T17:00:00-03:00","Mensal","Lorran","","PG2026/5769","Embraer","","",1295.47],
+        ["2026-01-29T17:00:00-03:00","Cancelado","Cancelado","","","Tenaris","","Executivo",0],
+        ["2026-01-29T17:00:00-03:00","ConcluÃ­do","Carlos","Virtus FNV6G64","8826","Johnson&Johnson","SÃ£o Paulo","Executivo",767.13],
+        ["2026-01-29T17:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","Executivo",81.01],
+        ["2026-01-29T17:00:00-03:00","Mensal","Robson","Virtus RFV4E20","16328","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-29T17:30:00-03:00","Mensal","Washington","Corolla RUR8F13","PG2026/5354","Embraer","","",1507.05],
+        ["2026-01-29T17:30:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5883","Embraer","","",216.9],
+        ["2026-01-29T18:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Ball Corporation","Vale do ParaÃ­ba","",150],
+        ["2026-01-29T21:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/5878","Embraer","","",351.42],
+        ["2026-01-29T21:15:00-03:00","Mensal","Robson","Virtus RFV4E20","8837","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-30T02:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","8756","Johnson&Johnson","Guarulhos","Executivo",509.42],
+        ["2026-01-30T05:30:00-03:00","ConcluÃ­do","Oliveira","","8830","Particular","SÃ£o Paulo","BÃ¡sico",750],
+        ["2026-01-30T05:40:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8771","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-30T06:00:00-03:00","Mensal","Calastri","Spin TIU2F11","PG2026/4550","Embraer","","Spin",658.63],
+        ["2026-01-30T06:20:00-03:00","ConcluÃ­do","Ricardo","","8718","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-30T07:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8686","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-01-30T07:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","16329","Tenaris","","BÃ¡sico",3304.4],
+        ["2026-01-30T07:10:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8773","Johnson&Johnson","Guarulhos","Executivo",555.86],
+        ["2026-01-30T07:15:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/5087","Embraer","","",320.16],
+        ["2026-01-30T07:15:00-03:00","Mensal","Gilberto","","PG2026/6278","Embraer","","",214.37],
+        ["2026-01-30T08:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","","Tenaris","","Executivo",93.46],
+        ["2026-01-30T08:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",93.46],
+        ["2026-01-30T10:00:00-03:00","Mensal","Robson","Virtus RFV4E20","","Tenaris","","",1080.29],
+        ["2026-01-30T12:45:00-03:00","Mensal","Carlos","Cruze RUD3B91","16323","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-30T13:00:00-03:00","Mensal","Robson","Virtus RFV4E20","","Tenaris","","",131.29],
+        ["2026-01-30T15:00:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","",1524.45],
+        ["2026-01-30T15:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8723","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-30T16:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","Executivo",93.46],
+        ["2026-01-30T16:30:00-03:00","Cancelado","Cancelado","","","Embraer","","",0],
+        ["2026-01-30T17:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",93.46],
+        ["2026-01-30T17:00:00-03:00","ConcluÃ­do","Amadeu","Cruze RUD3B91","8843","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-01-30T17:00:00-03:00","Mensal","Robson","Virtus RFV4E20","","Tenaris","","",81.01],
+        ["2026-01-30T17:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","8782","Tenaris","SÃ£o Paulo","BÃ¡sico",899.84],
+        ["2026-01-30T19:00:00-03:00","ConcluÃ­do","Amadeu","","","Particular","Litoral","",790],
+        ["2026-01-30T20:00:00-03:00","Mensal","Ricardo","","PG2026/4532","Embraer","","",447.05],
+        ["2026-01-30T21:00:00-03:00","Cancelado","Cancelado","","8752","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-01-30T21:15:00-03:00","Mensal","Lorran","Corolla GDP2G67","8838","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-01-31T04:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8798","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-01-31T04:55:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/4614","Embraer","","",552.84],
+        ["2026-01-31T06:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","16331","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-31T07:00:00-03:00","Mensal","Oliveira","","PG2026/4630","Embraer","","",769.28],
+        ["2026-01-31T07:00:00-03:00","ConcluÃ­do","Jailton","","8643","Johnson&Johnson","Guarulhos","Executivo",555.86],
+        ["2026-01-31T10:10:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8845","Ball Corporation","Guarulhos","Executivo",509],
+        ["2026-01-31T10:10:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8688","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-01-31T09:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","",81.01],
+        ["2026-01-31T15:25:00-03:00","Mensal","Robson","Virtus RFV4E20","16333","Tenaris","","BÃ¡sico",81.01],
+        ["2026-01-31T18:00:00-03:00","ConcluÃ­do","Oliveira","","","Boeing","Guarulhos","",445.97],
+        ["2026-01-31T16:00:00-03:00","ConcluÃ­do","Jailton","","8805","Boeing","Guarulhos","BÃ¡sico",396.05],
+        ["2026-01-31T16:30:00-03:00","ConcluÃ­do","Carlos","Cruze RUD3B91","8875","Johnson&Johnson","Guarulhos","Executivo",652.37],
+        ["2026-01-31T17:00:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8883","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-01-31T17:00:00-03:00","Cancelado","Cancelado","","8854","Tenaris","Guarulhos","BÃ¡sico",0],
+        ["2026-01-31T17:30:00-03:00","ConcluÃ­do","Lorran","","","Particular","SÃ£o Paulo","",1526.64],
+        ["2026-01-31T18:00:00-03:00","ConcluÃ­do","Robson","Virtus RFV4E20","8841","Johnson&Johnson","Guarulhos","Executivo",582.49],
+        ["2026-01-31T22:00:00-03:00","Mensal","Gilberto","","","Embraer","","",447.05],
+        ["2026-01-31T22:45:00-03:00","Cancelado","Cancelado","","16329","Tenaris","","BÃ¡sico",0],
+        ["2026-02-01T04:30:00-03:00","Cancelado","Cancelado","","8666","Kenvue","Guarulhos","Executivo",0],
+        ["2026-02-01T07:50:00-03:00","Mensal","Robson","Virtus RFV4E20","8853","Tenaris","Guarulhos","BÃ¡sico",550.25],
+        ["2026-02-01T08:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","8818","Tenaris","Guarulhos","BÃ¡sico",511.25],
+        ["2026-02-01T09:15:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8632","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-02-01T10:00:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8890","Boeing","Guarulhos","Executivo",546.05],
+        ["2026-02-01T11:35:00-03:00","ConcluÃ­do","Oliveira","","8888","Boeing","Guarulhos","Spin",495.89],
+        ["2026-02-01T16:30:00-03:00","ConcluÃ­do","Lorran","","","Boeing","Guarulhos","",445.97],
+        ["2026-02-01T19:30:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8813","Boeing","Guarulhos","BÃ¡sico",396.05],
+        ["2026-02-01T19:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8671","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-02-01T20:50:00-03:00","Cancelado","Cancelado","","8850","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-01T22:00:00-03:00","Mensal","Jailton","","PG2026/6216","Embraer","","",351.42],
+        ["2026-02-01T22:40:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8863","Kenvue","Guarulhos","Executivo",429.35],
+        ["2026-02-01T22:45:00-03:00","Cancelado","Cancelado","","16330","Tenaris","","BÃ¡sico",0],
+        ["2026-02-01T22:45:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-01T23:00:00-03:00","Mensal","Gilberto","","PG2026/5506","Embraer","","",351.42],
+        ["2026-02-01T23:55:00-03:00","Cancelado","Cancelado","","8848","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-02T03:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","","Tenaris","","",575.83],
+        ["2026-02-02T05:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","8866","Tenaris","SÃ£o Paulo","BÃ¡sico",691.44],
+        ["2026-02-02T05:30:00-03:00","ConcluÃ­do","Amadeu","Versa EKH6E73","8831","Particular","SÃ£o Paulo","BÃ¡sico",790],
+        ["2026-02-02T05:30:00-03:00","Cancelado","Cancelado","","8864","Kenvue","Guarulhos","Executivo",0],
+        ["2026-02-02T05:30:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/5867","Embraer","","",1094.29],
+        ["2026-02-02T06:00:00-03:00","ConcluÃ­do","Paulo Cezar","","8637","Johnson&Johnson","SÃ£o Paulo","Van",2651.03],
+        ["2026-02-02T06:25:00-03:00","Cancelado","Cancelado","","8851","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-02T06:30:00-03:00","ConcluÃ­do","Lorran","","8800","Eldorado do Brasil","Guarulhos","Executivo",649.95],
+        ["2026-02-02T07:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8846","Johnson&Johnson","SÃ£o Paulo","Executivo",938.07],
+        ["2026-02-02T07:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","16332","Tenaris","","BÃ¡sico",40.51],
+        ["2026-02-02T07:00:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","","Johnson&Johnson","SÃ£o Paulo","",5295.22],
+        ["2026-02-02T07:10:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8815","Johnson&Johnson","Guarulhos","Executivo",642.63],
+        ["2026-02-02T07:30:00-03:00","Cancelado","Cancelado","","8849","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-02T08:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","494","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-02T08:30:00-03:00","Mensal","Carlos","Cruze RUD3B91","8886","Tenaris","Rio de Janeiro","BÃ¡sico",1571.45],
+        ["2026-02-02T09:35:00-03:00","Mensal","Washington","Corolla RUR8F13","8832","Tenaris","Rio de Janeiro","Executivo",2468.69],
+        ["2026-02-02T16:25:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8810","Johnson&Johnson","SÃ£o Paulo","Executivo",777.56],
+        ["2026-02-02T17:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-02T17:00:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",160.51],
+        ["2026-02-02T17:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8751","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-02-02T17:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8854","Tenaris","Guarulhos","BÃ¡sico",507.65],
+        ["2026-02-02T19:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8855","Tenaris","Guarulhos","Executivo",579.33],
+        ["2026-02-02T23:45:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-03T04:00:00-03:00","Mensal","Ricardo","","PG2026/7202","Embraer","","",660.73],
+        ["2026-02-03T04:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8887","Tenaris","Rio de Janeiro","BÃ¡sico",1063.98],
+        ["2026-02-03T04:30:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8903","Johnson&Johnson","SÃ£o Paulo","Executivo",781],
+        ["2026-02-03T05:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8899","Johnson&Johnson","SÃ£o Paulo","Executivo",620.49],
+        ["2026-02-03T05:30:00-03:00","Mensal","Robson","Virtus RFV4E20","8904","Tenaris","Rio de Janeiro","BÃ¡sico",1096.2],
+        ["2026-02-03T05:40:00-03:00","ConcluÃ­do","Oliveira","","8865","Kenvue","Guarulhos","Executivo",493.35],
+        ["2026-02-03T06:00:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/7422","Embraer","","",1637.92],
+        ["2026-02-03T06:00:00-03:00","Mensal","Jailton","","490","Tenaris","","BÃ¡sico",974.9],
+        ["2026-02-03T07:00:00-03:00","ConcluÃ­do","Isael","Blindado","8877","Johnson&Johnson","SÃ£o Paulo","Blindado",725.01],
+        ["2026-02-03T07:30:00-03:00","ConcluÃ­do","Junior","Spin TIU2F11","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-03T08:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8833","Tenaris","Rio de Janeiro","Executivo",726.16],
+        ["2026-02-03T08:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8856","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-02-03T08:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","494","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-03T08:30:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","8902","Johnson&Johnson","SÃ£o Paulo","Blindado",4103.62],
+        ["2026-02-03T10:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8870","Tenaris","Rio de Janeiro","BÃ¡sico",1942.37],
+        ["2026-02-03T10:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Basico",113.4],
+        ["2026-02-03T10:20:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8816","Johnson&Johnson","Guarulhos","Executivo",797.93],
+        ["2026-02-03T11:00:00-03:00","Cancelado","Cancelado","","","Tenaris","","",0],
+        ["2026-02-03T11:00:00-03:00","Cancelado","Cancelado","","483","Tenaris","","BÃ¡sico",0],
+        ["2026-02-03T12:45:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16339","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-03T13:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","",478.02],
+        ["2026-02-03T13:20:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-03T14:20:00-03:00","Mensal","Robson","Virtus RFV4E20","16340","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-03T16:00:00-03:00","Mensal","Isael","Cruze RTI7G00","","Tenaris","","Executivo",2131.13],
+        ["2026-02-03T17:00:00-03:00","ConcluÃ­do","Oliveira","","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",545.86],
+        ["2026-02-03T17:00:00-03:00","Mensal","Robson","Virtus RFV4E20","495","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-03T18:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","8857","Tenaris","Pindamonhangaba","Executivo",133.47],
+        ["2026-02-03T18:00:00-03:00","ConcluÃ­do","Ibrahim","Blindado","8882","Johnson&Johnson","SÃ£o Paulo","Blindado",1940.06],
+        ["2026-02-03T20:55:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",670.04],
+        ["2026-02-03T23:50:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16340","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-04T05:30:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8871","Johnson&Johnson","SÃ£o Paulo","Executivo",1534.26],
+        ["2026-02-04T05:30:00-03:00","Mensal","Carlos","Cruze RUD3B91","8823","Tenaris","Rio de Janeiro","Executivo",1196.35],
+        ["2026-02-04T06:00:00-03:00","ConcluÃ­do","Oliveira","","8872","Johnson&Johnson","SÃ£o Paulo","Executivo",1534.26],
+        ["2026-02-04T07:30:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-04T07:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",93.46],
+        ["2026-02-04T07:45:00-03:00","Mensal","Jailton","","8809","Tenaris","Campinas","BÃ¡sico",1303.05],
+        ["2026-02-04T08:00:00-03:00","ConcluÃ­do","Ibrahim","Blindado","8878","Johnson&Johnson","SÃ£o Paulo","Blindado",725.01],
+        ["2026-02-04T08:00:00-03:00","Mensal","Washington","Corolla RUR8F13","8858","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-02-04T08:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","497","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-04T08:00:00-03:00","Cancelado","Cancelado","","8902","Johnson&Johnson","SÃ£o Paulo","Blindado",1000],
+        ["2026-02-04T10:40:00-03:00","Mensal","Danilo","Corolla RUH7G45","493","Tenaris","","Executivo",603.17],
+        ["2026-02-04T11:00:00-03:00","Mensal","Robson","Virtus FNV6G64","483","Tenaris","","BÃ¡sico",947.6],
+        ["2026-02-04T12:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","16341","Tenaris","","BÃ¡sico",511.25],
+        ["2026-02-04T14:20:00-03:00","Mensal","Marcelo","Corolla RRI8497","16344","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-04T15:30:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/7421","Embraer","","",1637.92],
+        ["2026-02-04T16:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","8824","Tenaris","Rio de Janeiro","Executivo",753.96],
+        ["2026-02-04T16:45:00-03:00","Mensal","Washington","Corolla RUR8F13","8901","Tenaris","SÃ£o Paulo","Executivo",860.67],
+        ["2026-02-04T17:00:00-03:00","ConcluÃ­do","Onoff","","8693","Johnson&Johnson","SÃ£o Paulo","Van",1789],
+        ["2026-02-04T17:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",706.37],
+        ["2026-02-04T17:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","498","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-04T18:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","8860","Tenaris","Pindamonhangaba","Executivo",46.73],
+        ["2026-02-04T18:30:00-03:00","ConcluÃ­do","Ibrahim","Blindado","8880","Johnson&Johnson","SÃ£o Paulo","Blindado",1940.06],
+        ["2026-02-04T18:40:00-03:00","Cancelado","Cancelado","","","Tenaris","","Executivo",0],
+        ["2026-02-04T19:30:00-03:00","Mensal","Lorran","","PG2026/7203","Embraer","","",660.73],
+        ["2026-02-04T20:00:00-03:00","Mensal","Vilela","","PG2026/7474","Embraer","","",364.42],
+        ["2026-02-04T20:20:00-03:00","Mensal","Gilberto","","PG2026/7277","Embraer","","",447.05],
+        ["2026-02-04T23:50:00-03:00","Mensal","Marcelo","Corolla RRI8497","16340","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-05T05:00:00-03:00","ConcluÃ­do","Mauricio","Blindado GLM","8885","Johnson&Johnson","SÃ£o Paulo","Blindado",1888.86],
+        ["2026-02-05T05:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8911","Johnson&Johnson","SÃ£o Paulo","Executivo",1391.19],
+        ["2026-02-05T07:30:00-03:00","Mensal","Carlos","Cruze RUD3B91","","Tenaris","","",994.35],
+        ["2026-02-05T07:30:00-03:00","ConcluÃ­do","Junior","Virtus STW5G55","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-05T07:35:00-03:00","Mensal","Calastri","Cruze RUD3B91","PG2026/7711","Embraer","","",552.84],
+        ["2026-02-05T07:45:00-03:00","ConcluÃ­do","Ibrahim","Blindado","8879","Johnson&Johnson","SÃ£o Paulo","Blindado",725.01],
+        ["2026-02-05T08:00:00-03:00","Cancelado","Cancelado","","8907","Johnson&Johnson","Guarulhos","Blindado",300],
+        ["2026-02-05T08:00:00-03:00","Cancelado","Cancelado","Corolla GDP2G67","8859","Tenaris","Pindamonhangaba","Executivo",0],
+        ["2026-02-05T08:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","499","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-05T09:15:00-03:00","Mensal","Washington","Corolla RUR8F13","8834","Tenaris","Rio de Janeiro","Executivo",1734.95],
+        ["2026-02-05T13:00:00-03:00","Mensal","Robson","Spin TIU2F11","526","Tenaris","","Spin",777.63],
+        ["2026-02-05T13:00:00-03:00","Cancelado","Cancelado","","525","Tenaris","","BÃ¡sico",0],
+        ["2026-02-05T15:00:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","8907","Johnson&Johnson","Guarulhos","Blindado",1172.94],
+        ["2026-02-05T15:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8900","Johnson&Johnson","SÃ£o Paulo","Executivo",924.88],
+        ["2026-02-05T14:20:00-03:00","Mensal","Marcelo","Corolla RRI8497","","Tenaris","","",81.01],
+        ["2026-02-05T15:00:00-03:00","Mensal","Robson","Spin TIU2F11","8861","Tenaris","Guarulhos","Executivo",576.03],
+        ["2026-02-05T16:00:00-03:00","ConcluÃ­do","Carlos","Cruze RUD3B91","8852","Johnson&Johnson","SÃ£o Paulo","Executivo",713.56],
+        ["2026-02-05T16:00:00-03:00","ConcluÃ­do","Ibrahim","Blindado","8852","Johnson&Johnson","SÃ£o Paulo","Blindado",2076.11],
+        ["2026-02-05T16:30:00-03:00","Cancelado","Cancelado","","8847","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-05T16:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","8905","Tenaris","Rio de Janeiro","BÃ¡sico",1130.21],
+        ["2026-02-05T17:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-05T17:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","500","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-05T18:30:00-03:00","Cancelado","Cancelado","","8881","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-05T20:20:00-03:00","Mensal","Calastri","Compass Blindada FCB8B61","PG2026/7995","Embraer","","",552.84],
+        ["2026-02-05T20:55:00-03:00","Mensal","Jailton","","PG2026/5725","Embraer","","",447.05],
+        ["2026-02-05T21:30:00-03:00","ConcluÃ­do","Carlos","Cruze RUD3B91","","Johnson&Johnson","Guarulhos","",713.56],
+        ["2026-02-05T18:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","","Tenaris","","",81.01],
+        ["2026-02-05T23:40:00-03:00","Mensal","Marcelo","Corolla RRI8497","","Tenaris","","",81.01],
+        ["2026-02-05T21:30:00-03:00","Mensal","Robson","Spin TIU2F11","16342","Tenaris","","BÃ¡sico",537.25],
+        ["2026-02-06T00:00:00-03:00","Cancelado","Cancelado","","8862","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-06T04:15:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","","Particular","Guarulhos","",300],
+        ["2026-02-06T06:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8811","Johnson&Johnson","SÃ£o Paulo","Executivo",713.56],
+        ["2026-02-06T06:30:00-03:00","Mensal","Oliveira","","PG2026/7303","Embraer","","",554.94],
+        ["2026-02-06T07:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","526","Tenaris","","Spin",1524.45],
+        ["2026-02-06T07:30:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","","Usiscrew","","",1650],
+        ["2026-02-06T07:10:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8844","Johnson&Johnson","Guarulhos","Executivo",555.86],
+        ["2026-02-06T07:30:00-03:00","ConcluÃ­do","Junior","Virtus STW5G55","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-06T08:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","501","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-06T08:40:00-03:00","ConcluÃ­do","Junior","Virtus STW5G55","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-06T09:00:00-03:00","Mensal","Calastri","Virtus STW5G55","PG2026/8528","Embraer","","",214.37],
+        ["2026-02-06T09:00:00-03:00","Mensal","Washington","Corolla RUR8F13","PG2026/8012","Embraer","","",554.94],
+        ["2026-02-06T10:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","529","Tenaris","","Apenas Motorista",81.01],
+        ["2026-02-06T10:10:00-03:00","ConcluÃ­do","Carlos","Cruze RUD3B91","8641","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-06T15:00:00-03:00","Mensal","","","PG2026/8866","Embraer","","",216.9],
+        ["2026-02-06T15:00:00-03:00","Mensal","Washington","Corolla RUR8F13","PG2026/8012","Embraer","","",1083.89],
+        ["2026-02-06T14:20:00-03:00","Mensal","Robson","","","Tenaris","","",81.01],
+        ["2026-02-06T15:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",252.01],
+        ["2026-02-06T15:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8724","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-02-06T15:30:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8801","Eldorado do Brasil","Guarulhos","Executivo",729.95],
+        ["2026-02-06T16:15:00-03:00","ConcluÃ­do","Calastri","Virtus STW5G55","","Johnson&Johnson","Guarulhos","Executivo",555.86],
+        ["2026-02-06T16:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8817","Johnson&Johnson","Guarulhos","Executivo",726.14],
+        ["2026-02-06T16:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","502","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-06T16:30:00-03:00","Mensal","Robson","Spin TIU2F11","16343","Tenaris","","BÃ¡sico",478.02],
+        ["2026-02-06T17:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","8867","Tenaris","SÃ£o Paulo","BÃ¡sico",0],
+        ["2026-02-06T17:00:00-03:00","Cancelado","Cancelado","","481","Tenaris","","BÃ¡sico",0],
+        ["2026-02-06T17:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","16350","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-06T17:35:00-03:00","Mensal","Amadeu","Cruze GEZ6D67","PG2026/6988","Embraer","","",552.84],
+        ["2026-02-06T19:25:00-03:00","Mensal","Danilo","Corolla RUH7G45","8819","Tenaris","Guarulhos","BÃ¡sico",521.25],
+        ["2026-02-06T20:00:00-03:00","Cancelado","Cancelado","","8667","Kenvue","Guarulhos","Executivo",0],
+        ["2026-02-06T20:20:00-03:00","ConcluÃ­do","Carlos","Cruze RUD3B91","8752","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-06T23:40:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-06T20:40:00-03:00","Mensal","Washington","Corolla RUR8F13","8769","Tenaris","Guarulhos","BÃ¡sico",584.26],
+        ["2026-02-07T03:30:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8922","Kenvue","Guarulhos","Executivo",493.35],
+        ["2026-02-07T04:00:00-03:00","Mensal","Robson","Spin TIU2F11","523","Tenaris","","BÃ¡sico",1036.83],
+        ["2026-02-07T04:50:00-03:00","Mensal","Marcelo","Corolla RRI8497","16351","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-07T05:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8842","Johnson&Johnson","Guarulhos","Executivo",646.49],
+        ["2026-02-07T05:00:00-03:00","ConcluÃ­do","Ricardo","","8679","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-07T05:00:00-03:00","ConcluÃ­do","Lorran","","8921","Particular","Dentro de SÃ£o Paulo","BÃ¡sico",890],
+        ["2026-02-07T14:20:00-03:00","Mensal","Marcelo","Corolla RRI8497","16353","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-07T17:30:00-03:00","Cancelado","Cancelado","","PG2026/6220","Embraer","","",0],
+        ["2026-02-07T17:30:00-03:00","ConcluÃ­do","Calastri","Virtus STW5G55","8912","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-02-07T19:00:00-03:00","ConcluÃ­do","Calastri","Virtus STW5G55","8814","Boeing","Guarulhos","BÃ¡sico",460.05],
+        ["2026-02-07T23:50:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16353","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-08T06:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8635","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-02-08T07:15:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8744","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-08T07:15:00-03:00","ConcluÃ­do","Calastri","Virtus STW5G55","8746","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-08T07:15:00-03:00","ConcluÃ­do","Oliveira","","8806","Boeing","Guarulhos","BÃ¡sico",460.05],
+        ["2026-02-08T08:15:00-03:00","ConcluÃ­do","Lorran","","8892","Boeing","Guarulhos","Executivo",509.97],
+        ["2026-02-08T10:30:00-03:00","ConcluÃ­do","Ricardo","","8584","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-02-08T10:40:00-03:00","Mensal","Danilo","Corolla RUH7G45","8822","Tenaris","Guarulhos","Executivo",646.48],
+        ["2026-02-08T12:00:00-03:00","Mensal","Washington","Corolla RUR8F13","","Tenaris","","Executivo",691.32],
+        ["2026-02-08T13:10:00-03:00","ConcluÃ­do","Lorran","","8891","Boeing","Guarulhos","Executivo",610.05],
+        ["2026-02-08T18:00:00-03:00","ConcluÃ­do","Jailton","","","Boeing","Guarulhos","",445.97],
+        ["2026-02-08T17:20:00-03:00","Mensal","Josmar","Versa CUQ7E87","16348","Tenaris","","BÃ¡sico",561.25],
+        ["2026-02-08T18:00:00-03:00","ConcluÃ­do","Ricardo","","","Boeing","Guarulhos","",396.05],
+        ["2026-02-08T23:50:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-08T18:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","534","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-08T18:40:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","","Johnson&Johnson","Guarulhos","",442.98],
+        ["2026-02-08T19:00:00-03:00","ConcluÃ­do","Robson","","8889","Boeing","Guarulhos","Spin",509.97],
+        ["2026-02-09T04:30:00-03:00","Mensal","Carlos","Cruze RUD3B91","496","Tenaris","","BÃ¡sico",1906.69],
+        ["2026-02-09T05:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","8868","Tenaris","SÃ£o Paulo","BÃ¡sico",634.03],
+        ["2026-02-09T05:00:00-03:00","Cancelado","Cancelado","","16336","Tenaris","","BÃ¡sico",0],
+        ["2026-02-09T05:40:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Particular","Campinas","",1073],
+        ["2026-02-09T07:00:00-03:00","Mensal","Robson","Virtus FNV6G64","527","Tenaris","","BÃ¡sico",707.49],
+        ["2026-02-09T08:00:00-03:00","Cancelado","Cancelado","","8920","Tenaris","Outras Cidades","BÃ¡sico",0],
+        ["2026-02-09T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","503","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-09T07:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","528","Tenaris","","Apenas Motorista",926.33],
+        ["2026-02-09T08:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","16349","Tenaris","","BÃ¡sico",81.03],
+        ["2026-02-09T09:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","16352","Tenaris","","BÃ¡sico",745.22],
+        ["2026-02-09T08:50:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",579.33],
+        ["2026-02-09T10:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",18676.18],
+        ["2026-02-09T14:00:00-03:00","ConcluÃ­do","Mauricio","Corolla RUP6H17","8779","Ball Corporation","SÃ£o Paulo","Executivo",689],
+        ["2026-02-09T14:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",6052],
+        ["2026-02-09T14:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",0],
+        ["2026-02-09T14:00:00-03:00","ConcluÃ­do","Jailton","","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",0],
+        ["2026-02-09T17:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","504","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-09T18:30:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",93.46],
+        ["2026-02-09T20:00:00-03:00","Mensal","Jailton","","PG2026/8967","Embraer","","",1294.71],
+        ["2026-02-09T21:00:00-03:00","ConcluÃ­do","Washington","Cruze RTC8A02","8893","Johnson&Johnson","SÃ£o Paulo","Executivo",777.56],
+        ["2026-02-09T09:00:00-03:00","Mensal","Jailton","","PG2026/9295","Embraer","","",214.37],
+        ["2026-02-09T13:30:00-03:00","Mensal","Jailton","","PG2026/9389","Embraer","","",216.9],
+        ["2026-02-10T05:00:00-03:00","ConcluÃ­do","Renato","Paulo","8908","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",2654],
+        ["2026-02-10T05:30:00-03:00","ConcluÃ­do","Lorran","","8927","Johnson&Johnson","SÃ£o Paulo","Executivo",1011.53],
+        ["2026-02-10T05:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","Executivo",1394.62],
+        ["2026-02-10T05:40:00-03:00","ConcluÃ­do","Paulo Cezar","","8915","Kenvue","Outras Cidades","Van",2873.55],
+        ["2026-02-10T05:40:00-03:00","ConcluÃ­do","Renato","Mauricio Santos","","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",3590],
+        ["2026-02-10T05:40:00-03:00","ConcluÃ­do","Danilo","Blindado Cruze GBJ9A70","","Particular","SÃ£o Paulo","Blindado",4354.55],
+        ["2026-02-10T06:50:00-03:00","Mensal","Mauricio","Corolla RUP6H17","PG2026/8965","Embraer","","Executivo",842.21],
+        ["2026-02-10T07:00:00-03:00","ConcluÃ­do","Isael","Blindado Renato","8909","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",2654],
+        ["2026-02-10T07:00:00-03:00","Mensal","Ibrahim","Blindado GLM","","Tenaris","","Executivo",93.46],
+        ["2026-02-10T07:20:00-03:00","ConcluÃ­do","Paulo Cezar","","","Johnson&Johnson","Outras Cidades","Van",2890],
+        ["2026-02-10T08:00:00-03:00","Mensal","Robson","Virtus FNV6G64","505","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-10T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-10T08:15:00-03:00","ConcluÃ­do","Amadeu","Spin TIU2F11","","Becooper","Outras Cidades","Spin",400],
+        ["2026-02-10T08:30:00-03:00","ConcluÃ­do","Washington","Cruze RTC8A02","8895","Johnson&Johnson","SÃ£o Paulo","Executivo",400.48],
+        ["2026-02-10T08:50:00-03:00","ConcluÃ­do","Calastri","Van Blindada","8910","Embraer/ Executive Jets","SÃ£o Paulo","Van Blindado",4964],
+        ["2026-02-10T10:00:00-03:00","Mensal","Washington","Cruze RTC8A02","8869","Tenaris","SÃ£o Paulo","BÃ¡sico",714.8],
+        ["2026-02-10T10:20:00-03:00","ConcluÃ­do","Ibrahim","Blindado GLM","8914","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",2654],
+        ["2026-02-10T11:20:00-03:00","ConcluÃ­do","Paulo Cezar","48 pessoas","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",5400],
+        ["2026-02-10T13:40:00-03:00","ConcluÃ­do","Paulo Cezar","38 pessoas","","Johnson&Johnson","SÃ£o JosÃ© dos Campos","",0],
+        ["2026-02-10T17:00:00-03:00","ConcluÃ­do","Washington","Cruze RTC8A02","8896","Johnson&Johnson","SÃ£o Paulo","Executivo",400.48],
+        ["2026-02-10T17:00:00-03:00","Mensal","Robson","Virtus FNV6G64","16356","Tenaris","","",81.01],
+        ["2026-02-10T17:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","506","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-10T17:00:00-03:00","Mensal","Jailton","","PG2025/9847","Embraer","","",852.48],
+        ["2026-02-10T18:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","16358","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-10T18:00:00-03:00","Mensal","Oliveira","","PG2026/9960","Embraer","","",216.9],
+        ["2026-02-10T20:35:00-03:00","Mensal","Gilberto","","PG2026/10006","Embraer","","",216.9],
+        ["2026-02-11T02:40:00-03:00","ConcluÃ­do","Mauricio","Compass","8932","Ball Corporation","Guarulhos","Executivo",3814],
+        ["2026-02-11T02:40:00-03:00","ConcluÃ­do","Calastri","Compass","8933","Ball Corporation","Guarulhos","Executivo",0],
+        ["2026-02-11T02:40:00-03:00","ConcluÃ­do","Ibrahim","Carro cliente","8934","Ball Corporation","Guarulhos","Executivo",0],
+        ["2026-02-11T04:00:00-03:00","Mensal","Carlos","Cruze RUD3B91","536","Tenaris","","BÃ¡sico",1184.25],
+        ["2026-02-11T04:40:00-03:00","ConcluÃ­do","Robson","Virtus FNV6G64","8952","Johnson&Johnson","SÃ£o Paulo","Executivo",1576.91],
+        ["2026-02-11T05:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8953","Johnson&Johnson","SÃ£o Paulo","Executivo",1255.93],
+        ["2026-02-11T05:30:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","8928","Johnson&Johnson","SÃ£o Paulo","Executivo",1011.53],
+        ["2026-02-11T05:45:00-03:00","ConcluÃ­do","Paulo Cezar","Van","8930","Johnson&Johnson","SÃ£o Paulo","Van",2651.03],
+        ["2026-02-11T05:45:00-03:00","ConcluÃ­do","Paulo Cezar","Van","8931","Johnson&Johnson","SÃ£o Paulo","Van",2651.03],
+        ["2026-02-11T06:00:00-03:00","ConcluÃ­do","Washington","Cruze RTC8A02","8897","Johnson&Johnson","SÃ£o Paulo","Executivo",1653.51],
+        ["2026-02-11T06:00:00-03:00","ConcluÃ­do","Oliveira",".","8956","Johnson&Johnson","Outras Cidades","Executivo",498.78],
+        ["2026-02-11T06:40:00-03:00","Mensal","Lorran",".","PG2026/9896","Embraer","","",1757.03],
+        ["2026-02-11T06:40:00-03:00","Mensal","Isael","Cruze RTI7G00","PG2026/7799","Embraer","","",1904.5],
+        ["2026-02-11T07:00:00-03:00","Cancelado","Cancelado",".","16337","Tenaris","","BÃ¡sico",0],
+        ["2026-02-11T07:50:00-03:00","Mensal","Jailton",".","PG2026/8441","Embraer","","",663.34],
+        ["2026-02-11T08:00:00-03:00","ConcluÃ­do","Junior","Spin TIU2F11","","Kenvue","","",160.51],
+        ["2026-02-11T08:00:00-03:00","ConcluÃ­do","Jailton","Carlos - Fornecedor","8630","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-02-11T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","507","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T08:00:00-03:00","Mensal","Fabio HonÃ³rio",".","16355","Tenaris","","BÃ¡sico",702.05],
+        ["2026-02-11T08:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","16359","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T09:15:00-03:00","Mensal","Marcelo","Corolla RRI8497","543","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T10:00:00-03:00","ConcluÃ­do","Danilo","Blindado Cruze GBJ9A70","","Particular","","Blindado",4290.55],
+        ["2026-02-11T13:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","16361","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","",1187.62],
+        ["2026-02-11T17:00:00-03:00","ConcluÃ­do","Jailton",".","","Kenvue","","",478.23],
+        ["2026-02-11T17:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","508","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T17:00:00-03:00","Mensal","Fabio HonÃ³rio",".","16357","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T18:00:00-03:00","ConcluÃ­do","Paulo Cezar",".","8923","Ball Corporation","SÃ£o JosÃ© dos Campos","Van",790],
+        ["2026-02-11T18:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","16360","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-11T18:30:00-03:00","ConcluÃ­do","Calastri",".","8935","Ball Corporation","Guarulhos","Executivo",0],
+        ["2026-02-11T18:30:00-03:00","ConcluÃ­do","Paulo Cezar",".","8839","Ball Corporation","SÃ£o JosÃ© dos Campos","Van",790],
+        ["2026-02-11T18:50:00-03:00","ConcluÃ­do","Paulo Cezar",".","8840","Ball Corporation","SÃ£o JosÃ© dos Campos","Van",790],
+        ["2026-02-12T05:15:00-03:00","ConcluÃ­do","Jamerson","Cruze RTC8A02","8946","Johnson&Johnson","SÃ£o Paulo","Executivo",962.65],
+        ["2026-02-12T05:15:00-03:00","ConcluÃ­do","Oliveira",".","8947","Johnson&Johnson","SÃ£o Paulo","Executivo",962.65],
+        ["2026-02-12T05:30:00-03:00","Mensal","Gilberto",".","542","Tenaris","","BÃ¡sico",812.49],
+        ["2026-02-12T05:30:00-03:00","ConcluÃ­do","Lorran",".","8929","Johnson&Johnson","SÃ£o Paulo","Executivo",1039.53],
+        ["2026-02-12T07:20:00-03:00","Mensal","Mauricio","Spin TIU2F11","PG2026/9390","Embraer","","",1860.89],
+        ["2026-02-12T07:20:00-03:00","Mensal","Jailton",".","PG2026/8442","Embraer","","",2054.71],
+        ["2026-02-12T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","509","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-12T08:00:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUR8F13","8898","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-02-12T10:00:00-03:00","Mensal","Isael",".","","Embraer","","",1057.9],
+        ["2026-02-12T10:00:00-03:00","Mensal","Ibrahim",".","","Embraer","","",1057.9],
+        ["2026-02-12T10:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8894","Johnson&Johnson","SÃ£o Paulo","Executivo",509.42],
+        ["2026-02-12T10:00:00-03:00","Mensal","Washington","Corolla RUP6H17","16362","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-12T10:40:00-03:00","Mensal","Carlos","Corolla RUR8F13","8696","Tenaris","Guarulhos","Executivo",693.04],
+        ["2026-02-12T15:00:00-03:00","ConcluÃ­do","Renato","","","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",2590],
+        ["2026-02-12T15:00:00-03:00","Mensal","Marcelo",".","PG2026/9611","Embraer","","",554.94],
+        ["2026-02-12T15:00:00-03:00","Mensal","Washington","Corolla RUP6H17","","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-02-12T16:00:00-03:00","ConcluÃ­do","Renato","Mauricio Santos","","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",3530],
+        ["2026-02-12T16:00:00-03:00","Cancelado","Cancelado",".","","Particular","SÃ£o Paulo","Blindado",0],
+        ["2026-02-12T16:00:00-03:00","ConcluÃ­do","Renato",".","","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",2590],
+        ["2026-02-12T16:00:00-03:00","ConcluÃ­do","Onoff","Van Blindada","","Embraer/ Executive Jets","SÃ£o Paulo","Van Blindado",4900],
+        ["2026-02-12T16:00:00-03:00","ConcluÃ­do","Calastri","Blindado GLM","","Embraer/ Executive Jets","SÃ£o Paulo","Blindado",2590],
+        ["2026-02-12T16:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","PG2026/9848","Embraer","","",852.48],
+        ["2026-02-12T16:00:00-03:00","Mensal","Vilela","","545","Tenaris","","BÃ¡sico",251.82],
+        ["2026-02-12T16:45:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","8926","Ball Corporation","Guarulhos","Executivo",515],
+        ["2026-02-12T17:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","510","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-12T17:00:00-03:00","ConcluÃ­do","Amadeu",".","8936","Ball Corporation","Guarulhos","Executivo",0],
+        ["2026-02-12T18:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","","Ball Corporation","","",689],
+        ["2026-02-12T17:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","",855.11],
+        ["2026-02-12T20:20:00-03:00","Mensal","Carlos","Corolla RUR8F13","548","Tenaris","","Executivo",726.26],
+        ["2026-02-13T03:45:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8960","Kenvue","SÃ£o Paulo","Executivo",733.37],
+        ["2026-02-13T07:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","","Ball Corporation","","",890],
+        ["2026-02-13T08:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","512","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-13T08:00:00-03:00","Cancelado","Cancelado",".","","Embraer","","",0],
+        ["2026-02-13T08:30:00-03:00","Mensal","Washington","Corolla RUP6H17","535","Tenaris","","BÃ¡sico",521.25],
+        ["2026-02-13T13:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","513","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-13T14:00:00-03:00","ConcluÃ­do","Renato","","8961","Kenvue","SÃ£o Paulo","Executivo",669.37],
+        ["2026-02-13T15:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8725","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-02-13T15:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Particular","","Executivo",1073],
+        ["2026-02-13T17:30:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","","Johnson&Johnson","","Executivo",442.98],
+        ["2026-02-13T18:00:00-03:00","Mensal","Mauricio","Spin TIU2F11","PG2026/11483","Embraer","","Executivo",351.42],
+        ["2026-02-13T18:00:00-03:00","Mensal","Jamerson","Cruze RTC8A02","PG2026/9001","Embraer","","Executivo",351.42],
+        ["2026-02-13T19:20:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","8913","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-13T22:15:00-03:00","Mensal","Vilela","","PG2026/11240","Embraer","","",216.9],
+        ["2026-02-14T02:00:00-03:00","Mensal","Vilela","","PG2026/11384","Embraer","","",214.37],
+        ["2026-02-14T03:00:00-03:00","Mensal","Danilo","Versa CUQ7E87","555","Tenaris","","BÃ¡sico",1036.83],
+        ["2026-02-14T03:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","539","Particular","","BÃ¡sico",350],
+        ["2026-02-14T06:00:00-03:00","Cancelado","Cancelado","","541","Tenaris","","BÃ¡sico",0],
+        ["2026-02-14T07:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8876","Johnson&Johnson","Guarulhos","Executivo",667.49],
+        ["2026-02-14T07:00:00-03:00","ConcluÃ­do","Mauricio","Spin TIU2F11","8884","Johnson&Johnson","Guarulhos","Executivo",555.86],
+        ["2026-02-14T07:15:00-03:00","ConcluÃ­do","Oliveira","","","Boeing","","",506.97],
+        ["2026-02-14T08:10:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","8966","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-14T09:00:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/9085","Embraer","Outras Cidades","Executivo",863.14],
+        ["2026-02-14T14:00:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","","Tenaris","Rio de Janeiro","Executivo",1276.37],
+        ["2026-02-14T15:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","540","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-15T05:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","8876","Johnson&Johnson","Guarulhos","Executivo",667.49],
+        ["2026-02-15T05:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Particular","Outras Cidades","BÃ¡sico",950],
+        ["2026-02-15T08:10:00-03:00","ConcluÃ­do","Jailton","","8957","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-02-15T11:00:00-03:00","Mensal","Amadeu","Cruze GEZ6D67","PG2026/11511","Embraer","","",351.42],
+        ["2026-02-15T18:00:00-03:00","ConcluÃ­do","Mauricio","Spin TIU2F11","8807","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-02-15T12:00:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","","Tenaris","","Executivo",1276.37],
+        ["2026-02-16T04:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","","Kenvue","","",2590],
+        ["2026-02-16T04:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","","Kenvue","","",0],
+        ["2026-02-16T12:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","","Kenvue","","",2590],
+        ["2026-02-16T12:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Kenvue","","",0],
+        ["2026-02-17T04:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Kenvue","","",2590],
+        ["2026-02-17T04:00:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","","Kenvue","","",0],
+        ["2026-02-17T12:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","","Kenvue","","",2590],
+        ["2026-02-17T12:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Kenvue","","",0],
+        ["2026-02-17T18:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","",776.2],
+        ["2026-02-17T18:20:00-03:00","Mensal","Amadeu","Cruze GEZ6D67","PG2026/11708","Embraer","","",216.9],
+        ["2026-02-17T20:30:00-03:00","Mensal","Vilela","","PG2026/11742","Embraer","","",216.9],
+        ["2026-02-18T04:00:00-03:00","ConcluÃ­do","Ibrahim","Cruze RTC8A02","","Kenvue","","",2590],
+        ["2026-02-18T04:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","","Kenvue","","",0],
+        ["2026-02-18T04:30:00-03:00","Mensal","Carlos","Corolla RUR8F13","554","Tenaris","","BÃ¡sico",1036.83],
+        ["2026-02-18T04:45:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8954","Johnson&Johnson","Guarulhos","Executivo",949.96],
+        ["2026-02-18T05:15:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Boeing","","",445.97],
+        ["2026-02-18T11:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Latasa","","",85],
+        ["2026-02-18T12:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Latasa","","",85],
+        ["2026-02-18T12:40:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Latasa","","",85],
+        ["2026-02-18T12:00:00-03:00","ConcluÃ­do","Isael","Cruze RTI7G00","","Kenvue","","",2590],
+        ["2026-02-18T12:00:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Kenvue","","",0],
+        ["2026-02-18T14:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","8965","Particular","SÃ£o JosÃ© dos Campos","BÃ¡sico",0],
+        ["2026-02-18T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","",2142.37],
+        ["2026-02-19T01:25:00-03:00","Cancelado","Cancelado","","PG2026/11096","Embraer","","",0],
+        ["2026-02-19T01:25:00-03:00","Mensal","Ibrahim","Cruze RTC8A02","PG2026/11097","Embraer","","",552.84],
+        ["2026-02-19T04:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Kenvue","","",2590],
+        ["2026-02-19T04:00:00-03:00","ConcluÃ­do","Carlos","Corolla RUR8F13","","Kenvue","","",0],
+        ["2026-02-19T07:30:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","","",823.62],
+        ["2026-02-19T07:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8967","Boeing","Guarulhos","Executivo",513],
+        ["2026-02-19T07:30:00-03:00","Mensal","Calastri",".","","Embraer","","",1163.69],
+        ["2026-02-19T08:00:00-03:00","Mensal","Washington","Corolla RUP6H17","","Tenaris","","Executivo",614.03],
+        ["2026-02-19T09:00:00-03:00","Mensal","Fabio HonÃ³rio","","","Tenaris","","",81.01],
+        ["2026-02-19T08:00:00-03:00","Cancelado","Cancelado","","546","Tenaris","","Apenas Motorista",0],
+        ["2026-02-19T08:00:00-03:00","Cancelado","Cancelado","","16363","Tenaris","","SÃ³ Motorista",0],
+        ["2026-02-19T10:00:00-03:00","ConcluÃ­do","Jailton","","","Boeing","","",460.05],
+        ["2026-02-19T12:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","","Kenvue","","",2590],
+        ["2026-02-19T12:00:00-03:00","ConcluÃ­do","Lorran","","","Kenvue","","",0],
+        ["2026-02-19T19:00:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/11103","Embraer","","",681.79],
+        ["2026-02-19T19:00:00-03:00","Cancelado","Cancelado","","PG2026/11104","Embraer","","",0],
+        ["2026-02-19T19:00:00-03:00","Mensal","Gilberto","","PG2026/12181","Embraer","","",167.74],
+        ["2026-02-19T20:00:00-03:00","ConcluÃ­do","Paulo Cezar","Van","","Kenvue","","",2590],
+        ["2026-02-19T20:00:00-03:00","Cancelado","Cancelado","","","Kenvue","","",0],
+        ["2026-02-19T20:15:00-03:00","ConcluÃ­do","Marcelo","","","Latasa","","",85],
+        ["2026-02-19T21:25:00-03:00","Mensal","Jailton","","PG2026/10926","Embraer","","",554.94],
+        ["2026-02-20T04:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","","Kenvue","","",2590],
+        ["2026-02-20T04:00:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","","Kenvue","","",0],
+        ["2026-02-20T08:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","16363","Tenaris","","SÃ³ Motorista",1206.88],
+        ["2026-02-20T08:30:00-03:00","Mensal","Calastri","Spin TIU2F11","PG2026/10946","Embraer","","Executivo",214.37],
+        ["2026-02-20T08:40:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",333.52],
+        ["2026-02-20T11:00:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","","Usiscrew","","",0],
+        ["2026-02-20T11:45:00-03:00","ConcluÃ­do","Paulo Cezar","1 micro","","Johnson&Johnson","","Van",4080],
+        ["2026-02-20T11:45:00-03:00","ConcluÃ­do","Paulo Cezar","1 van","","Johnson&Johnson","","Van",0],
+        ["2026-02-20T11:45:00-03:00","ConcluÃ­do","Paulo Cezar","1 van","","Johnson&Johnson","","Van",0],
+        ["2026-02-20T12:00:00-03:00","ConcluÃ­do","Eduardo - SP","","","Boeing","","",509.97],
+        ["2026-02-20T12:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","","Kenvue","","",2590],
+        ["2026-02-20T12:00:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","","Kenvue","","",0],
+        ["2026-02-20T12:30:00-03:00","Mensal","Calastri","Spin TIU2F11","PG2026/11938","Embraer","","Executivo",930.32],
+        ["2026-02-20T13:45:00-03:00","ConcluÃ­do","Paulo Cezar","1 van","","Johnson&Johnson","","Van",3060],
+        ["2026-02-20T13:45:00-03:00","ConcluÃ­do","Paulo Cezar","1 van","","Johnson&Johnson","","Van",0],
+        ["2026-02-20T13:45:00-03:00","ConcluÃ­do","Paulo Cezar","1 van","","Johnson&Johnson","","Van",0],
+        ["2026-02-20T14:00:00-03:00","Mensal","Gilberto","","PG2026/12342","Embraer","","",351.42],
+        ["2026-02-20T14:30:00-03:00","Mensal","Jailton","","PG2026/10947","Embraer","","Executivo",1023.11],
+        ["2026-02-20T14:30:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8763","Boeing","Guarulhos","Executivo",449],
+        ["2026-02-20T15:00:00-03:00","Mensal","Danilo","Corolla RUH7G45","","Tenaris","","Executivo",252.01],
+        ["2026-02-20T15:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","8726","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-02-20T16:00:00-03:00","Cancelado","Cancelado","","PG2026/11940","Embraer","","Executivo",0],
+        ["2026-02-20T18:15:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/12594","Embraer","","",216.9],
+        ["2026-02-20T18:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8916","Boeing","Guarulhos","BÃ¡sico",792.1],
+        ["2026-02-20T20:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","","",2590],
+        ["2026-02-20T20:00:00-03:00","Cancelado","Cancelado","","","Kenvue","","",0],
+        ["2026-02-20T20:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-21T02:00:00-03:00","Mensal","Vilela","","PG2026/12737","Embraer","","",214.37],
+        ["2026-02-21T04:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","","",2590],
+        ["2026-02-21T05:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","584","Tenaris","","BÃ¡sico",1070.84],
+        ["2026-02-21T05:40:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8944","Kenvue","Outras Cidades","Executivo",772.98],
+        ["2026-02-21T07:10:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8808","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-21T07:15:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Boeing","","spin",460.05],
+        ["2026-02-21T07:15:00-03:00","ConcluÃ­do","Ricardo","","","Boeing","","",509.97],
+        ["2026-02-21T07:45:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","8812","Boeing","Guarulhos","Executivo",460.05],
+        ["2026-02-21T11:15:00-03:00","ConcluÃ­do","Lorran","","","Latasa","","",85],
+        ["2026-02-21T12:00:00-03:00","ConcluÃ­do","Paulo Cezar","","","Kenvue","","",2590],
+        ["2026-02-21T17:30:00-03:00","Mensal","Jailton","","PG2026/11978","Embraer","","Executivo",351.42],
+        ["2026-02-21T18:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUH7G45","8948","Boeing","Guarulhos","Executivo",445.97],
+        ["2026-02-21T18:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","","Boeing","","",445.97],
+        ["2026-02-21T18:30:00-03:00","ConcluÃ­do","Calastri","Spin TIU2F11","","Boeing","","",445.97],
+        ["2026-02-21T23:55:00-03:00","Mensal","Robson","Virtus STW5G55","515","Tenaris","","BÃ¡sico",567.02],
+        ["2026-02-22T03:30:00-03:00","ConcluÃ­do","Lorran","","","Boeing","","",445.97],
+        ["2026-02-22T04:30:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","8989","Kenvue","Guarulhos","Executivo",589.86],
+        ["2026-02-22T06:55:00-03:00","ConcluÃ­do","Lorran","","","Johnson&Johnson","","Executivo",506.98],
+        ["2026-02-22T08:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8983","Johnson&Johnson","SÃ£o Paulo","Executivo",777.56],
+        ["2026-02-22T09:30:00-03:00","ConcluÃ­do","Calastri","Blindado GLM","","Particular","","Blindado",1825],
+        ["2026-02-22T10:20:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","8958","Particular","Guarulhos","BÃ¡sico",573.42],
+        ["2026-02-22T15:40:00-03:00","Mensal","Washington","Corolla RUP6H17","557","Tenaris","","BÃ¡sico",514.25],
+        ["2026-02-22T17:30:00-03:00","Cancelado","Cancelado","","8979","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-02-22T17:30:00-03:00","Cancelado","Cancelado","","8937","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-02-22T20:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","589","Tenaris","","Apenas Motorista",514.25],
+        ["2026-02-22T20:50:00-03:00","ConcluÃ­do","Danilo","Blindado Cruze","8981","Kenvue","Outras Cidades","Executivo",772.88],
+        ["2026-02-22T23:00:00-03:00","Mensal","Robson","Virtus STW5G55","8820","Tenaris","Guarulhos","BÃ¡sico",453.62],
+        ["2026-02-23T02:00:00-03:00","Cancelado","Cancelado","","8962","Johnson&Johnson","Guarulhos","BÃ¡sico",0],
+        ["2026-02-23T03:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","577","Tenaris","","BÃ¡sico",1130.84],
+        ["2026-02-23T04:30:00-03:00","Mensal","Menecucci","Virtus RFV4E20","560","Tenaris","","BÃ¡sico",748.85],
+        ["2026-02-23T05:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8828","Johnson&Johnson","SÃ£o Paulo","Executivo",669.37],
+        ["2026-02-23T05:45:00-03:00","ConcluÃ­do","Ricardo","","8969","Johnson&Johnson","SÃ£o Paulo","Executivo",781],
+        ["2026-02-23T06:00:00-03:00","ConcluÃ­do","Paulo Cezar","Giovani","8638","Johnson&Johnson","SÃ£o Paulo","Van",2651.03],
+        ["2026-02-23T06:00:00-03:00","ConcluÃ­do","Ibrahim","Corolla RUH7G45","8982","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-02-23T06:00:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","8986","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-02-23T06:00:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/12912","Embraer","","",1517.45],
+        ["2026-02-23T06:30:00-03:00","ConcluÃ­do","Jailton","","8987","Eldorado do Brasil","SÃ£o Paulo","Executivo",649.95],
+        ["2026-02-23T07:00:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","NFE_0003190052_1","Usiscrew","","",1650],
+        ["2026-02-23T07:10:00-03:00","ConcluÃ­do","Danilo","Blindado Cruze","","Johnson&Johnson","","",1114.43],
+        ["2026-02-23T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","558","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-23T11:00:00-03:00","ConcluÃ­do","Calastri","Carro cliente","8971","Johnson&Johnson","SÃ£o Paulo","Blindado",0],
+        ["2026-02-23T09:00:00-03:00","Em aprovaÃ§Ã£o","Calastri","","","Johnson&Johnson","","",139.58],
+        ["2026-02-23T09:00:00-03:00","Em aprovaÃ§Ã£o","Isael","Versa EKH6E73","","Johnson&Johnson","","",389.92],
+        ["2026-02-23T09:10:00-03:00","Mensal","Amadeu","Cruze GEZ6D67","564","Tenaris","","BÃ¡sico",561.65],
+        ["2026-02-23T13:00:00-03:00","ConcluÃ­do","Danilo","Blindado","","Johnson&Johnson","","",353.11],
+        ["2026-02-23T15:00:00-03:00","Em aprovaÃ§Ã£o","Junior","","","Johnson&Johnson","","",484.28],
+        ["2026-02-23T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","Rio de Janeiro","",1070.84],
+        ["2026-02-23T17:00:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","8970","Johnson&Johnson","SÃ£o Paulo","Executivo",781],
+        ["2026-02-23T17:00:00-03:00","ConcluÃ­do","Danilo","Blindado Cruze","","Johnson&Johnson","","",160.51],
+        ["2026-02-23T17:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",121.02],
+        ["2026-02-23T18:00:00-03:00","Mensal","Robson","Virtus STW5G55","566","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-23T23:00:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","8979","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-02-24T03:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","578","Tenaris","","BÃ¡sico",1070.84],
+        ["2026-02-24T05:30:00-03:00","ConcluÃ­do","Danilo","Spin TIU2F11","8975","Johnson&Johnson","SÃ£o Paulo","Spin",767.13],
+        ["2026-02-24T05:30:00-03:00","Mensal","Menecucci","Virtus RFV4E20","9000","Tenaris","Rio de Janeiro","BÃ¡sico",1148.21],
+        ["2026-02-24T05:30:00-03:00","Mensal","Ricardo","Cruze RNT4F01","599","Tenaris","","BÃ¡sico",514.25],
+        ["2026-02-24T05:45:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","9002","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.44],
+        ["2026-02-24T06:30:00-03:00","ConcluÃ­do","Alexandre","Cruze RTC8A02","","Johnson&Johnson","","",1060.41],
+        ["2026-02-24T06:30:00-03:00","Cancelado","Cancelado","","8984","Kenvue","SÃ£o Paulo","Executivo",0],
+        ["2026-02-24T06:30:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","8924","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",1011.53],
+        ["2026-02-24T06:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","601","Tenaris","","BÃ¡sico",1222.98],
+        ["2026-02-24T06:40:00-03:00","Mensal","Isael","","","Embraer","","",1163.69],
+        ["2026-02-24T07:00:00-03:00","Em aprovaÃ§Ã£o","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","",139.58],
+        ["2026-02-24T07:30:00-03:00","Mensal","Ibrahim",".","","Embraer","","",1163.69],
+        ["2026-02-24T07:30:00-03:00","Cancelado","Cancelado","","8993","Tenaris","Pindamonhangaba","BÃ¡sico",0],
+        ["2026-02-24T07:40:00-03:00","Mensal","Washington","Corolla RUP6H17","605","Tenaris","","",81.01],
+        ["2026-02-24T08:00:00-03:00","ConcluÃ­do","Calastri","","","Johnson&Johnson","","",173.51],
+        ["2026-02-24T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","567","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-24T08:00:00-03:00","Mensal","Fabio HonÃ³rio","","603","Tenaris","","fevereiro",81.01],
+        ["2026-02-24T09:00:00-03:00","ConcluÃ­do","Calastri","NÃ£o consta","","Betinhos Executive Service","","",0],
+        ["2026-02-24T09:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","582","Tenaris","","BÃ¡sico",1150.79],
+        ["2026-02-24T10:00:00-03:00","Mensal","Washington","Corolla RUP6H17","579","Tenaris","","BÃ¡sico",640.63],
+        ["2026-02-24T10:00:00-03:00","Mensal","Fabio HonÃ³rio","","606","Tenaris","","Apenas Motorista",81.01],
+        ["2026-02-24T11:00:00-03:00","Mensal","Robson","Virtus STW5G55","","Tenaris","","",228.42],
+        ["2026-02-24T11:00:00-03:00","Mensal","Danilo","Spin TIU2F11","","Tenaris","","",0],
+        ["2026-02-24T13:30:00-03:00","ConcluÃ­do","Robson","Virtus STW5G55","","Particular","","",615],
+        ["2026-02-24T15:00:00-03:00","ConcluÃ­do","Fabio HonÃ³rio","","","Latasa","","",85],
+        ["2026-02-24T15:00:00-03:00","Cancelado","Cancelado","","8985","Kenvue","SÃ£o Paulo","Executivo",0],
+        ["2026-02-24T15:00:00-03:00","ConcluÃ­do","Fabio HonÃ³rio","","","Latasa","","",85],
+        ["2026-02-24T16:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8997","Particular","SÃ£o Paulo","BÃ¡sico",620],
+        ["2026-02-24T17:00:00-03:00","ConcluÃ­do","Calastri","","","Johnson&Johnson","","",545.86],
+        ["2026-02-24T17:00:00-03:00","Cancelado","Cancelado","","","Johnson&Johnson","","",0],
+        ["2026-02-24T17:00:00-03:00","Cancelado","Cancelado","","","Johnson&Johnson","","",0],
+        ["2026-02-24T16:40:00-03:00","Mensal","Fabio HonÃ³rio","","","Tenaris","","",40.51],
+        ["2026-02-24T17:30:00-03:00","Cancelado","Cancelado","","8995","Tenaris","Pindamonhangaba","BÃ¡sico",0],
+        ["2026-02-24T17:30:00-03:00","Mensal","Danilo","Spin TIU2F11","609","Tenaris","","Executivo",595.63],
+        ["2026-02-24T17:40:00-03:00","Mensal","Fabio HonÃ³rio","","","Tenaris","","",81.01],
+        ["2026-02-24T20:30:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8829","Johnson&Johnson","SÃ£o Paulo","Executivo",669.37],
+        ["2026-02-24T18:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-24T19:00:00-03:00","Mensal","Fabio HonÃ³rio","","600","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-24T18:40:00-03:00","Mensal","Gilberto","","PG2026/13462","Embraer","","",216.9],
+        ["2026-02-24T20:20:00-03:00","Mensal","Gilberto","","PG2026/13471","Embraer","","",216.9],
+        ["2026-02-24T23:00:00-03:00","Mensal","Jailton","","PG2026/13515","Embraer","","",216.9],
+        ["2026-02-24T23:30:00-03:00","Mensal","Jailton","","PG2026/13522","Embraer","","",216.9],
+        ["2026-02-25T00:15:00-03:00","ConcluÃ­do","Ricardo","","","Kenvue","","",493.35],
+        ["2026-02-25T07:00:00-03:00","ConcluÃ­do","Alexandre","Cruze RTC8A02","8925","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",1011.53],
+        ["2026-02-25T07:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","586","Tenaris","","",912.76],
+        ["2026-02-25T07:00:00-03:00","Mensal","Isael","","9022","Embraer","","",1163.69],
+        ["2026-02-25T07:00:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","9008","Kenvue","","",1823.97],
+        ["2026-02-25T07:30:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8984","Kenvue","","",620.49],
+        ["2026-02-25T07:30:00-03:00","Cancelado","Cancelado","","8994","Tenaris","","",0],
+        ["2026-02-25T07:45:00-03:00","Mensal","Jailton","","PG2026/13528","Embraer","","",746.11],
+        ["2026-02-25T07:45:00-03:00","Mensal","Lorran","","PG2026/13531","Embraer","","",746.11],
+        ["2026-02-25T08:00:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","","Johnson&Johnson","","",173.51],
+        ["2026-02-25T08:00:00-03:00","Mensal","Fabio HonÃ³rio","","618","Tenaris","","Apenas Motorista",81.01],
+        ["2026-02-25T08:10:00-03:00","Mensal","Danilo","Spin TIU2F11","568","Tenaris","","Executivo",586.33],
+        ["2026-02-25T08:45:00-03:00","ConcluÃ­do","Junior","","","Kenvue","","",160.51],
+        ["2026-02-25T08:45:00-03:00","Mensal","","","PG2026/13527","Embraer","","",214.37],
+        ["2026-02-25T11:30:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Kenvue","","",431.78],
+        ["2026-02-25T14:50:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","9009","Particular","","",589],
+        ["2026-02-25T15:00:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","8992","Particular","","",1825],
+        ["2026-02-25T10:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-25T15:00:00-03:00","Mensal","Robson","Virtus STW5G55","8996","Tenaris","Rio de Janeiro","Executivo",1332.37],
+        ["2026-02-25T15:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8985","Kenvue","","",620.49],
+        ["2026-02-25T15:30:00-03:00","Mensal","Ibrahim",".","PG2026/13707","Embraer","","",216.9],
+        ["2026-02-25T16:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","",483.25],
+        ["2026-02-25T16:00:00-03:00","ConcluÃ­do","Jailton","","","Kenvue","","",160.51],
+        ["2026-02-25T16:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","9001","Tenaris","","",1124.2],
+        ["2026-02-25T17:00:00-03:00","ConcluÃ­do","Jailton","","","Johnson&Johnson","","",489.65],
+        ["2026-02-25T18:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-25T18:00:00-03:00","Mensal","Danilo","Spin TIU2F11","569","Tenaris","","Executivo",93.46],
+        ["2026-02-25T18:40:00-03:00","Mensal","Danilo","Spin TIU2F11","","Tenaris","","Executivo",753.96],
+        ["2026-02-25T19:00:00-03:00","ConcluÃ­do","Ibrahim",".","","Kenvue","","",516.54],
+        ["2026-02-25T21:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8918","Kenvue","","",772.88],
+        ["2026-02-25T21:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","","Tenaris","","",2766.17],
+        ["2026-02-25T21:30:00-03:00","Mensal","Fabio HonÃ³rio","","621","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-25T22:45:00-03:00","ConcluÃ­do","Renato","","8950","Kenvue","","",772.88],
+        ["2026-02-26T01:30:00-03:00","ConcluÃ­do","Ricardo","","8955","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-26T04:15:00-03:00","Mensal","Marcelo","Corolla RRI8497","620","Tenaris","","BÃ¡sico",838.09],
+        ["2026-02-26T05:15:00-03:00","Mensal","Carlos","Virtus FNV6G64","624","Tenaris","","Executivo",1450.89],
+        ["2026-02-26T05:45:00-03:00","ConcluÃ­do","Gilberto","","9003","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.44],
+        ["2026-02-26T05:45:00-03:00","ConcluÃ­do","Eduardo - SP","","","Boeing","","",460.05],
+        ["2026-02-26T06:00:00-03:00","ConcluÃ­do","Amadeu","Cruze GEZ6D67","8999","Kenvue","Campinas","Executivo",1056.24],
+        ["2026-02-26T06:00:00-03:00","ConcluÃ­do","Jailton","","8991","Johnson&Johnson","SÃ£o Paulo","Executivo",1158.17],
+        ["2026-02-26T06:00:00-03:00","ConcluÃ­do","Alexandre","Cruze RTC8A02","9027","BeCooper","Outras Cidades","BÃ¡sico",0],
+        ["2026-02-26T06:20:00-03:00","Mensal","Lorran","","PG2026/13726","Embraer","","",1574.08],
+        ["2026-02-26T07:00:00-03:00","Mensal","Edson","","PG2026/13744","Embraer","","",554.94],
+        ["2026-02-26T07:00:00-03:00","Mensal","Ibrahim","","9023","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",1163.69],
+        ["2026-02-26T07:00:00-03:00","Mensal","Calastri","","9023","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",1163.69],
+        ["2026-02-26T07:10:00-03:00","Mensal","Danilo","Spin TIU2F11","","Tenaris","","Executivo",224.31],
+        ["2026-02-26T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","618","Tenaris","","Apenas Motorista",81.01],
+        ["2026-02-26T08:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","616","Tenaris","","BÃ¡sico",2527.53],
+        ["2026-02-26T08:00:00-03:00","Mensal","Jamerson","Cruze RTI7G00","604","Tenaris","","BÃ¡sico",1096.2],
+        ["2026-02-26T08:00:00-03:00","Mensal","Washington","Corolla RUP6H17","570","Tenaris","","Executivo",93.46],
+        ["2026-02-26T09:00:00-03:00","Mensal","Washington","Corolla RUP6H17","","Tenaris","","",81.01],
+        ["2026-02-26T08:00:00-03:00","Mensal","Isael","","PG2026/13605","Embraer","","",1824.86],
+        ["2026-02-26T08:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","",173.51],
+        ["2026-02-26T08:40:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Kenvue","","",160.51],
+        ["2026-02-26T11:00:00-03:00","Mensal","Jailton","","","Tenaris","","",842.43],
+        ["2026-02-26T11:15:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/13838","Embraer","","",214.37],
+        ["2026-02-26T13:30:00-03:00","Mensal","Danilo","Spin TIU2F11","","Tenaris","","Executivo",576.03],
+        ["2026-02-26T14:00:00-03:00","Mensal","Fabio HonÃ³rio","","","Tenaris","","",81.01],
+        ["2026-02-26T15:00:00-03:00","ConcluÃ­do","Vilela","","8998","Particular","SÃ£o Paulo","BÃ¡sico",620],
+        ["2026-02-26T15:00:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/13923","Embraer","","",216.9],
+        ["2026-02-26T16:20:00-03:00","ConcluÃ­do","Danilo","Spin TIU2F11","","Particular","","",530],
+        ["2026-02-26T17:00:00-03:00","ConcluÃ­do","Edson","","8991","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-02-26T17:00:00-03:00","ConcluÃ­do","Eduardo - SP","","8976","Johnson&Johnson","SÃ£o Paulo","Spin",767.13],
+        ["2026-02-26T17:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","Blindado",1050.43],
+        ["2026-02-26T17:00:00-03:00","Mensal","Fabio HonÃ³rio","","","Tenaris","","",162.02],
+        ["2026-02-26T16:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Kenvue","","",160.51],
+        ["2026-02-26T18:30:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/13744","Embraer","","",1723.95],
+        ["2026-02-26T18:00:00-03:00","Cancelado","Cancelado","","","Tenaris","","",0],
+        ["2026-02-26T18:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","591","Tenaris","","BÃ¡sico",517.26],
+        ["2026-02-26T18:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","571","Tenaris","","Executivo",93.46],
+        ["2026-02-26T18:30:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Kenvue","","",173.51],
+        ["2026-02-26T19:30:00-03:00","ConcluÃ­do","Vilela","","","Kenvue","","",216.72],
+        ["2026-02-26T21:00:00-03:00","ConcluÃ­do","Danilo","Spin TIU2F11","","Particular","","",450],
+        ["2026-02-26T19:00:00-03:00","Mensal","Danilo","Spin TIU2F11","PG2026/13966","Embraer","","",216.9],
+        ["2026-02-26T21:00:00-03:00","Mensal","Vilela","","PG2026/13980","Embraer","","",216.9],
+        ["2026-02-26T21:15:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-02-26T23:30:00-03:00","Mensal","Jailton","","pg2026/13981","Embraer","","",433.8],
+        ["2026-02-27T05:30:00-03:00","ConcluÃ­do","Renato","","9037","Johnson&Johnson","SÃ£o Paulo","Executivo",713.56],
+        ["2026-02-27T06:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9032","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",864.89],
+        ["2026-02-27T07:00:00-03:00","Mensal","Jamerson","Cruze RTI7G00","","Tenaris","","",1070.84],
+        ["2026-02-26T23:30:00-03:00","Mensal","Jailton","","pg2026/13982","Embraer","","",0],
+        ["2026-02-27T07:00:00-03:00","Mensal","Calastri",".","9024","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",1163.69],
+        ["2026-02-27T07:00:00-03:00","Mensal","Isael",".","9026","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",1163.69],
+        ["2026-02-27T08:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","572","Tenaris","","Executivo",93.46],
+        ["2026-02-27T08:40:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","","Kenvue","","",173.51],
+        ["2026-02-27T09:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","627","Tenaris","","BÃ¡sico",244.55],
+        ["2026-02-27T09:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","639","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-27T09:30:00-03:00","Mensal","","","PG2026/14066","Embraer","","",214.37],
+        ["2026-02-27T12:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","521","Tenaris","","BÃ¡sico",149.03],
+        ["2026-02-27T13:00:00-03:00","Mensal","Danilo","Spin TIU2F11","633","Tenaris","","Executivo",663.26],
+        ["2026-02-27T14:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","8919","Kenvue","Outras Cidades","Executivo",772.88],
+        ["2026-02-27T14:30:00-03:00","Cancelado","Cancelado","","8951","Kenvue","Outras Cidades","Executivo",0],
+        ["2026-02-27T15:00:00-03:00","Mensal","Menecucci","Virtus RFV4E20","8727","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-02-27T15:00:00-03:00","ConcluÃ­do","Alexandre","Cruze RTC8A02","8945","Kenvue","Outras Cidades","Executivo",772.98],
+        ["2026-02-27T15:30:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","8988","Eldorado do Brasil","SÃ£o Paulo","Executivo",729.95],
+        ["2026-02-27T15:30:00-03:00","ConcluÃ­do","Jailton",".","8959","Particular","Guarulhos","BÃ¡sico",509.42],
+        ["2026-02-27T16:00:00-03:00","ConcluÃ­do","Lorran",".","","Kenvue","","",160.51],
+        ["2026-02-27T17:00:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","8968","Boeing","Guarulhos","Executivo",449],
+        ["2026-02-27T17:00:00-03:00","ConcluÃ­do","Alexandre","Cruze RTC8A02","8873","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-02-27T17:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","638","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-27T17:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","610","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-27T17:30:00-03:00","Mensal","Robson","Corolla GGR4D15","592","Tenaris","","BÃ¡sico",301.82],
+        ["2026-02-27T18:00:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/14071","Embraer","","",351.42],
+        ["2026-02-27T18:30:00-03:00","ConcluÃ­do","Lorran","","","Kenvue","","",590],
+        ["2026-02-27T19:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9016","Kenvue","SÃ£o Paulo","Executivo",772.98],
+        ["2026-02-27T20:30:00-03:00","ConcluÃ­do","Vilela","","","Johnson&Johnson","","",952.96],
+        ["2026-02-27T20:20:00-03:00","Mensal","Vilela","","PG2026/14250","Embraer","","",452.83],
+        ["2026-02-27T22:15:00-03:00","Mensal","Gilberto","","PG2026/14250","Embraer","","",0],
+        ["2026-02-27T20:40:00-03:00","Mensal","Carlos","Virtus FNV6G64","580","Tenaris","","BÃ¡sico",671.63],
+        ["2026-02-28T05:00:00-03:00","Cancelado","Cancelado","","636","Tenaris","","BÃ¡sico",0],
+        ["2026-02-28T05:00:00-03:00","Mensal","Robson","","636","Tenaris","","BÃ¡sico",1096.2],
+        ["2026-02-28T05:40:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/11981","Embraer","","",552.84],
+        ["2026-02-28T06:00:00-03:00","Mensal","Fabio HonÃ³rio","","642","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-28T06:00:00-03:00","Cancelado","Cancelado","","635","Tenaris","","BÃ¡sico",0],
+        ["2026-02-28T07:10:00-03:00","Cancelado","Cancelado","","8938","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-02-28T07:30:00-03:00","ConcluÃ­do","Isael","Corolla RUR8F13","8980","Johnson&Johnson","Guarulhos","Executivo",506.98],
+        ["2026-02-28T08:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","","Tenaris","","",81.01],
+        ["2026-02-28T09:30:00-03:00","Mensal","Danilo","Cruze GEZ6D67","615","Tenaris","","BÃ¡sico",748.6],
+        ["2026-02-28T15:45:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","643","Tenaris","","BÃ¡sico",81.01],
+        ["2026-02-28T17:00:00-03:00","Mensal","Washington","Corolla RUP6H17","628","Tenaris","","BÃ¡sico",483.25],
+        ["2026-02-28T19:00:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/12999","Embraer","","",552.84],
+        ["2026-02-28T22:15:00-03:00","ConcluÃ­do","Jailton","","9038","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-01T04:15:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","9020","Johnson&Johnson","Guarulhos","Executivo",582.49],
+        ["2026-03-01T05:40:00-03:00","ConcluÃ­do","Edson","","8973","Johnson&Johnson","SÃ£o Paulo","Executivo",777.56],
+        ["2026-03-01T06:00:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","","Blindado",1114.43],
+        ["2026-03-01T07:00:00-03:00","Mensal","Lorran","","PG2026/13183","Embraer","","",555.84],
+        ["2026-03-01T07:10:00-03:00","Mensal","Ibrahim","Cruze GHJ5F53","645","Tenaris","","Executivo",373.86],
+        ["2026-03-01T08:35:00-03:00","Mensal","Ibrahim","Particular","PG2026/13154","Embraer","","",555.84],
+        ["2026-03-01T11:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","530","Tenaris","","BÃ¡sico",548.33],
+        ["2026-03-01T13:00:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","9028","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-03-01T15:00:00-03:00","ConcluÃ­do","Paulo Cezar",".","9015","Johnson&Johnson","Guarulhos","Van",1350],
+        ["2026-03-01T15:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","647","Tenaris","","BÃ¡sico",548.26],
+        ["2026-03-01T16:40:00-03:00","ConcluÃ­do","Lorran",".","9018","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-01T18:40:00-03:00","Concluido","Washington","Corolla RUP6H17","9062","Kenvue","Guarulhos","Executivo",589.86],
+        ["2026-03-01T19:00:00-03:00","ConcluÃ­do","Jailton",".","9035","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-01T19:30:00-03:00","ConcluÃ­do","Gilberto",".","","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-01T19:30:00-03:00","ConcluÃ­do","Robson",".","9030","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-03-02T02:30:00-03:00","ConcluÃ­do","Lorran",".","9013","Johnson&Johnson","Guarulhos","Executivo",732],
+        ["2026-03-02T04:00:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","9042","Kenvue","Guarulhos","Executivo",589.86],
+        ["2026-03-02T04:30:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","9040","Johnson&Johnson","Guarulhos","BÃ¡sico",491.86],
+        ["2026-03-02T04:40:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","","Particular","","",300],
+        ["2026-03-02T05:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9033","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",864.89],
+        ["2026-03-02T06:30:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","","Blindado",1114.43],
+        ["2026-03-02T09:00:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","","Blindado",340.11],
+        ["2026-03-02T07:00:00-03:00","Mensal","Alexandre","Corolla RUR8F13","PG2026/14048","Embraer","","Executivo",555.84],
+        ["2026-03-02T07:30:00-03:00","Mensal","Calastri","Cruze RUD3B91","PG2026/13153","Embraer","","Executivo",2274.91],
+        ["2026-03-02T08:00:00-03:00","Mensal","Lorran",".","PG2026/13345","Embraer","","Executivo",450.05],
+        ["2026-03-02T08:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-02T08:50:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Kenvue","","Executivo",173.51],
+        ["2026-03-02T09:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/13184","Embraer","","Executivo",555.84],
+        ["2026-03-02T10:00:00-03:00","ConcluÃ­do","Isael","","","Johnson&Johnson","","Executivo",389.92],
+        ["2026-03-02T15:00:00-03:00","Mensal","Ibrahim","","PG2026/14049","Embraer","","Executivo",351.42],
+        ["2026-03-02T15:00:00-03:00","Mensal","Washington","Corolla RUP6H17","","Tenaris","","Executivo",642.34],
+        ["2026-03-02T15:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","","Tenaris","","",81.01],
+        ["2026-03-02T17:00:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","","Kenvue","","Executivo",160.51],
+        ["2026-03-02T17:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-02T18:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","658","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-02T21:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","",116.58],
+        ["2026-03-02T20:15:00-03:00","Em aprovaÃ§Ã£o","Carlos","Virtus FNV6G64","","Latasa","","",85],
+        ["2026-03-02T20:20:00-03:00","Mensal","","","PG2026/14795","Embraer","","",216.9],
+        ["2026-03-02T23:20:00-03:00","Mensal","Jailton","","PG2026/14816","Embraer","","",216.9],
+        ["2026-03-03T03:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","666","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-03T05:10:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","","Johnson&Johnson","","Executivo",1299.29],
+        ["2026-03-03T05:40:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","8990","Kenvue","Guarulhos","Executivo",653.86],
+        ["2026-03-03T05:45:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","9066","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.44],
+        ["2026-03-03T05:45:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9043","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-03-03T06:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9076","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-03T07:20:00-03:00","Mensal","Jailton","","","Embraer","","",214.37],
+        ["2026-03-03T07:30:00-03:00","Mensal","Calastri","Cruze RUD3B91","PG2026/13680","Embraer","","Executivo",1605.43],
+        ["2026-03-03T08:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9092","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-03T08:00:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9017","Johnson&Johnson","Guarulhos","BÃ¡sico",573.42],
+        ["2026-03-03T08:10:00-03:00","ConcluÃ­do","Oliveira","","","Kenvue","","",160.51],
+        ["2026-03-03T06:55:00-03:00","Mensal","Menecucci","Virtus RFV4E20","664","Tenaris","","",550.73],
+        ["2026-03-03T08:15:00-03:00","Mensal","Carlos","Virtus FNV6G64","659","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-03T09:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Betinhos Executive Service","","",0],
+        ["2026-03-03T09:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","653","Tenaris","","BÃ¡sico",162],
+        ["2026-03-03T11:15:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","","Kenvue","","",418.78],
+        ["2026-03-03T13:05:00-03:00","Mensal","Washington","Corolla RUP6H17","549","Tenaris","","Executivo",615.33],
+        ["2026-03-03T13:30:00-03:00","ConcluÃ­do","Menecucci","Virtus RFV4E20","","Betinhos Executive Service","","",0],
+        ["2026-03-03T14:00:00-03:00","Mensal","Calastri","","","Embraer","","",216.9],
+        ["2026-03-03T15:00:00-03:00","ConcluÃ­do","Robson","","","Betinhos Executive Service","","",0],
+        ["2026-03-03T17:00:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","","Kenvue","","",160.51],
+        ["2026-03-03T17:00:00-03:00","Cancelado","Cancelado","","9094","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",0],
+        ["2026-03-03T17:30:00-03:00","Mensal","Danilo","Cruze GEZ6D67","655","Tenaris","","BÃ¡sico",162],
+        ["2026-03-03T18:00:00-03:00","Em aprovaÃ§Ã£o","Junior","Virtus STW5G55","","Johnson&Johnson","","",139.58],
+        ["2026-03-03T18:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","550","Tenaris","","Executivo",213.49],
+        ["2026-03-03T19:00:00-03:00","Mensal","Ibrahim","","PG2026/13646","Embraer","","Executivo",555.84],
+        ["2026-03-04T02:00:00-03:00","ConcluÃ­do","Jailton","","","Kenvue","","",429.35],
+        ["2026-03-04T03:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","650","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-04T05:30:00-03:00","ConcluÃ­do","Oliveira","","9046","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",864.89],
+        ["2026-03-04T06:00:00-03:00","Mensal","Ibrahim","","9106","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",1163.69],
+        ["2026-03-04T06:00:00-03:00","Mensal","Isael","","9108","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",1163.69],
+        ["2026-03-04T06:10:00-03:00","Mensal","Alexandre","Corolla RUR8F13","665","Tenaris","","BÃ¡sico",607.62],
+        ["2026-03-04T06:30:00-03:00","ConcluÃ­do","Ricardo","","9057","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",767.16],
+        ["2026-03-04T07:00:00-03:00","Mensal","Edson","","PG2026/15157","Embraer","","",554.94],
+        ["2026-03-04T07:30:00-03:00","Cancelado","Cancelado","","PG2026/13686","Embraer","","Executivo",0],
+        ["2026-03-04T07:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","641","Tenaris","","BÃ¡sico",829.19],
+        ["2026-03-04T07:30:00-03:00","ConcluÃ­do","Gilberto","","9047","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",864.89],
+        ["2026-03-04T07:45:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","9091","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-03-04T08:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","551","Tenaris","","Executivo",93.46],
+        ["2026-03-04T08:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9093","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-04T08:30:00-03:00","ConcluÃ­do","Junior","Virtus STW5G55","9049","Johnson&Johnson","SÃ£o JosÃ© dos Campos","BÃ¡sico",160.51],
+        ["2026-03-04T09:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","656","Tenaris","","BÃ¡sico",162],
+        ["2026-03-04T09:20:00-03:00","Mensal","Jailton","","PG2026/15223","Embraer","","",214.37],
+        ["2026-03-04T09:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9059","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-03-04T09:40:00-03:00","Mensal","Washington","Corolla RUP6H17","9055","Tenaris","Rio de Janeiro","Executivo",2288.69],
+        ["2026-03-04T10:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","669","Tenaris","","BÃ¡sico",1052.77],
+        ["2026-03-04T12:30:00-03:00","Mensal","Amadeu","Corolla RUH7G45","","Tenaris","","",575.23],
+        ["2026-03-04T12:45:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/15366","Embraer","","",216.9],
+        ["2026-03-04T13:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","673","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-04T15:00:00-03:00","ConcluÃ­do","Jailton","","9061","Particular","SÃ£o Paulo","BÃ¡sico",641],
+        ["2026-03-04T16:30:00-03:00","Mensal","Danilo","Compass Blindada FCB8B61","","Tenaris","","Executivo",871.63],
+        ["2026-03-04T16:00:00-03:00","Mensal","","","PG2026/15370","Embraer","","",351.42],
+        ["2026-03-04T17:30:00-03:00","Mensal","Edson","","PG2026/15148","Embraer","","",554.94],
+        ["2026-03-04T17:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","657","Tenaris","","BÃ¡sico",194.41],
+        ["2026-03-04T17:00:00-03:00","ConcluÃ­do","Oliveira","","9095","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",545.86],
+        ["2026-03-04T17:00:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","9050","Johnson&Johnson","SÃ£o JosÃ© dos Campos","BÃ¡sico",160.51],
+        ["2026-03-04T18:30:00-03:00","Em aprovaÃ§Ã£o","Junior","","","Johnson&Johnson","","Executivo",139.58],
+        ["2026-03-04T18:30:00-03:00","ConcluÃ­do","Junior","","","Johnson&Johnson","","",0],
+        ["2026-03-04T18:30:00-03:00","Mensal","","","PG2026/15415","Embraer","","",1089.21],
+        ["2026-03-04T18:00:00-03:00","Mensal","Calastri","Cruze RUD3B91","PG2026/13185","Embraer","","Executivo",645.38],
+        ["2026-03-04T18:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","552","Tenaris","","Executivo",93.46],
+        ["2026-03-04T18:00:00-03:00","Concluido","Gilberto","","9121","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-03-05T04:00:00-03:00","Mensal","Robson","Corolla GGR4D15","660","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-05T05:00:00-03:00","ConcluÃ­do","Ricardo","","9048","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",864.89],
+        ["2026-03-05T05:00:00-03:00","ConcluÃ­do","Ibrahim","","9058","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",767.16],
+        ["2026-03-05T05:15:00-03:00","Mensal","Carlos","Virtus FNV6G64","670","Tenaris","","BÃ¡sico",1156.25],
+        ["2026-03-05T05:30:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","9067","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.44],
+        ["2026-03-05T05:45:00-03:00","ConcluÃ­do","Jailton","","9044","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-03-05T06:00:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","","Johnson&Johnson","","",391.2],
+        ["2026-03-05T06:00:00-03:00","Mensal","Cancelado","","9107","Embraer","SÃ£o JosÃ© dos Campos","Somente Motorista",0],
+        ["2026-03-05T06:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","553","Tenaris","","Executivo",548.33],
+        ["2026-03-05T06:00:00-03:00","Mensal","Calastri","Cruze RUD3B91","","Embraer","","",364.42],
+        ["2026-03-05T06:10:00-03:00","Mensal","Renato","","","Tenaris","","Executivo",726.26],
+        ["2026-03-05T06:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9120","Johnson&Johnson","SÃ£o Paulo","Executivo",1299.29],
+        ["2026-03-05T06:30:00-03:00","ConcluÃ­do","Paulo Cezar","","8977","Particular","Guarulhos","Van",685],
+        ["2026-03-05T08:00:00-03:00","ConcluÃ­do","Junior","","9096","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-05T08:00:00-03:00","Cancelado","Cancelado","","PG2026/15224","Embraer","","",0],
+        ["2026-03-05T08:10:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","","Boeing","","",460.05],
+        ["2026-03-05T08:30:00-03:00","ConcluÃ­do","Robson","Particular","9051","Johnson&Johnson","SÃ£o JosÃ© dos Campos","BÃ¡sico",160.51],
+        ["2026-03-05T08:45:00-03:00","Concluido","FÃ¡bio Ramos","","9056","Kenvue","Rio de Janeiro","Blindado",2895],
+        ["2026-03-05T09:15:00-03:00","Mensal","","","PG2026/15544","Embraer","","",214.27],
+        ["2026-03-05T11:45:00-03:00","Mensal","","","PG2026/15579","Embraer","","",214.27],
+        ["2026-03-05T11:55:00-03:00","ConcluÃ­do","Menecucci","Spin TIU2F11","9103","Kenvue","SÃ£o Paulo","BÃ¡sico",816.01],
+        ["2026-03-05T13:00:00-03:00","ConcluÃ­do","Menecucci","Spin TIU2F11","","Particular","","",0],
+        ["2026-03-05T13:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","678","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-05T15:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","9034","Tenaris","Rio de Janeiro","BÃ¡sico",1265.23],
+        ["2026-03-05T15:30:00-03:00","Mensal","Alexandre","Corolla RUR8F13","PG2026/13921","Embraer","","",216.9],
+        ["2026-03-05T16:30:00-03:00","Mensal","Alexandre","Corolla RUR8F13","PG2026/13186","Embraer","","",351.42],
+        ["2026-03-05T16:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9098","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-05T16:30:00-03:00","Mensal","Jailton","","PG2026/15586","Embraer","","",457.21],
+        ["2026-03-05T16:30:00-03:00","Mensal","Ibrahim","","PG2026/15587","Embraer","","",457.21],
+        ["2026-03-05T17:00:00-03:00","ConcluÃ­do","Danilo","Compass Blindada FCB8B61","9097","Johnson&Johnson","Guarulhos","Blindado",1050.42],
+        ["2026-03-05T17:00:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","9052","Johnson&Johnson","Guarulhos","BÃ¡sico",509.42],
+        ["2026-03-05T17:00:00-03:00","Cancelado","Cancelado","","PG2026/15225","Embraer","","",0],
+        ["2026-03-05T17:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","","Johnson&Johnson","","",391.2],
+        ["2026-03-05T18:00:00-03:00","Cancelado","Cancelado","","8754","Particular","Guarulhos","Executivo",0],
+        ["2026-03-05T18:00:00-03:00","Mensal","Lorran","","PG2026/13188","Embraer","","",351.42],
+        ["2026-03-05T18:10:00-03:00","Em aprovaÃ§Ã£o","Junior","Cruze GEZ6D67","","Johnson&Johnson","","",139.58],
+        ["2026-03-05T22:25:00-03:00","Mensal","Vilela","","PG2026/15710","Embraer","","",216.9],
+        ["2026-03-06T01:20:00-03:00","Cancelado","Cancelado","","9101","Johnson&Johnson","Guarulhos","Blindado",0],
+        ["2026-03-06T04:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","8974","Johnson&Johnson","SÃ£o Paulo","Executivo",442.98],
+        ["2026-03-06T05:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9031","Johnson&Johnson","Guarulhos","Executivo",558.86],
+        ["2026-03-06T06:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Johnson&Johnson","","",391.2],
+        ["2026-03-06T06:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","674","Tenaris","","BÃ¡sico",634.03],
+        ["2026-03-06T06:45:00-03:00","Cancelado","Cancelado","","9128","BeCooper","SÃ£o Paulo","Executivo",0],
+        ["2026-03-06T07:00:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","9117","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-06T07:00:00-03:00","Mensal","Renato","","PG2026/15699","Embraer","","",1623.24],
+        ["2026-03-06T07:20:00-03:00","Mensal","Lorran","","PG2026/15713","Embraer","","",425.95],
+        ["2026-03-06T08:00:00-03:00","ConcluÃ­do","Jailton","","9099","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-06T09:20:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","677","Tenaris","","BÃ¡sico",0],
+        ["2026-03-06T10:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","677","Tenaris","","BÃ¡sico",761.22],
+        ["2026-03-06T08:50:00-03:00","Mensal","Alexandre","Corolla RUR8F13","PG2026/15411","Embraer","","",555.84],
+        ["2026-03-06T08:50:00-03:00","Mensal","Ibrahim","","PG2026/15410","Embraer","","",555.84],
+        ["2026-03-06T08:50:00-03:00","Mensal","Calastri","Cruze RUD3B91","PG2026/15650","Embraer","","",555.84],
+        ["2026-03-06T09:20:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/15622","Embraer","","",555.84],
+        ["2026-03-06T12:30:00-03:00","Mensal","Menecucci","Menecucci","675","Tenaris","","BÃ¡sico",517.26],
+        ["2026-03-06T12:30:00-03:00","ConcluÃ­do","Lorran","","","Boeing","","",396.05],
+        ["2026-03-06T12:45:00-03:00","Mensal","Robson","Corolla GGR4D15","","Tenaris","","",723.25],
+        ["2026-03-06T13:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","","Particular","","",426],
+        ["2026-03-06T14:40:00-03:00","Mensal","","","PG2026/15976","Embraer","","",216.9],
+        ["2026-03-06T15:00:00-03:00","Mensal","Oliveira","","PG2026/13187","Embraer","","",351.42],
+        ["2026-03-06T17:00:00-03:00","ConcluÃ­do","Jailton","","9100","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-06T17:00:00-03:00","Mensal","Danilo","Cruze RTC8A02","PG2026/15554","Embraer","","",457.21],
+        ["2026-03-06T17:00:00-03:00","Mensal","Alexandre","Corolla RUR8F13","PG2026/15555","Embraer","","",457.21],
+        ["2026-03-06T17:00:00-03:00","Mensal","Isael","Versa EKH6E73","PG2026/15585","Embraer","","",351.42],
+        ["2026-03-06T17:20:00-03:00","Mensal","","","PG2026/16016","Embraer","","",216.9],
+        ["2026-03-06T19:00:00-03:00","Mensal","Robson","Corolla GGR4D15","661","Tenaris","","BÃ¡sico",216.41],
+        ["2026-03-06T17:30:00-03:00","ConcluÃ­do","Menecucci","Spin TIU2F11","9014","Johnson&Johnson","Guarulhos","Executivo",799],
+        ["2026-03-06T17:30:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Johnson&Johnson","","",391.2],
+        ["2026-03-06T20:00:00-03:00","Mensal","Isael","Versa EKH6E73","PG2026/15627","Embraer","","",1058.11],
+        ["2026-03-06T20:20:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","9029","Johnson&Johnson","Guarulhos","Executivo",558.86],
+        ["2026-03-06T22:40:00-03:00","ConcluÃ­do","Ibrahim","","","Particular","","",350],
+        ["2026-03-07T05:40:00-03:00","ConcluÃ­do","Ricardo","","9041","Johnson&Johnson","Guarulhos","BÃ¡sico",558.86],
+        ["2026-03-07T05:40:00-03:00","ConcluÃ­do","Lorran","","9021","Johnson&Johnson","Guarulhos","Executivo",649.49],
+        ["2026-03-07T05:45:00-03:00","ConcluÃ­do","Jailton","","9063","Kenvue","Guarulhos","Executivo",656.86],
+        ["2026-03-07T06:00:00-03:00","Mensal","Oliveira","","PG2026/15638","Embraer","","",2152.19],
+        ["2026-03-07T06:00:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","9070","Particular","Outras Cidades","Executivo",1890],
+        ["2026-03-07T06:15:00-03:00","Mensal","Robson","Corolla GGR4D15","682","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-07T07:00:00-03:00","ConcluÃ­do","Ibrahim","","8874","Johnson&Johnson","Guarulhos","Executivo",558.86],
+        ["2026-03-07T07:15:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9019","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-07T08:00:00-03:00","ConcluÃ­do","Edson","","","Boeing","","",512.97],
+        ["2026-03-07T08:00:00-03:00","ConcluÃ­do","Gilberto","","","Boeing","","",512.97],
+        ["2026-03-07T08:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","575","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-07T11:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","9102","Johnson&Johnson","Guarulhos","Blindado",1050.43],
+        ["2026-03-07T13:10:00-03:00","ConcluÃ­do","Ibrahim","","9125","Boeing","Guarulhos","Executivo",445.97],
+        ["2026-03-07T13:40:00-03:00","Mensal","Robson","","PG2026/15624","Embraer","","",351.42],
+        ["2026-03-07T13:40:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9123","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-03-07T14:00:00-03:00","ConcluÃ­do","Marcelo","","","Boeing","","",396.05],
+        ["2026-03-07T18:00:00-03:00","Mensal","Marcelo","","PG2026/16253","Embraer","","",351.42],
+        ["2026-03-07T18:00:00-03:00","Mensal","Jailton","","PG2026/15623","Embraer","","",563],
+        ["2026-03-07T18:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9053","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-07T18:20:00-03:00","Mensal","Danilo","Cruze RTC8A02","PG2026/15625","Embraer","","",538.84],
+        ["2026-03-07T19:40:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","","Particular","","",790],
+        ["2026-03-07T20:00:00-03:00","Mensal","Robson","","PG2026/15872","Embraer","","",351.42],
+        ["2026-03-07T21:00:00-03:00","Cancelado","Cancelado","","9119","Particular","Guarulhos","BÃ¡sico",0],
+        ["2026-03-07T22:40:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9129","Kenvue","Guarulhos","BÃ¡sico",545.23],
+        ["2026-03-08T02:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","652","Tenaris","","BÃ¡sico",583.22],
+        ["2026-03-08T03:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","681","Tenaris","","BÃ¡sico",453.62],
+        ["2026-03-06T21:30:00-03:00","Mensal","Danilo","Cruze RTC8A02","531","Tenaris","","BÃ¡sico",618.66],
+        ["2026-03-08T08:50:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","9138","Embraer/ Executive Jets","Guarulhos","Blindado",2226.9],
+        ["2026-03-08T10:00:00-03:00","ConcluÃ­do","Robson","","","Boeing","","",546.05],
+        ["2026-03-08T13:00:00-03:00","Mensal","Washington","Corolla RUP6H17","538","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-08T13:45:00-03:00","Mensal","Danilo","Cruze RTC8A02","667","Tenaris","","Executivo",548.33],
+        ["2026-03-08T14:00:00-03:00","ConcluÃ­do","Ricardo","","","Boeing","","",445.97],
+        ["2026-03-08T14:10:00-03:00","ConcluÃ­do","Robson","","9131","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-03-08T14:30:00-03:00","Concluido","Oliveira","","9133","Boeing","Guarulhos","Spin",495.89],
+        ["2026-03-08T14:40:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","9135","Boeing","Guarulhos","Executivo",445.97],
+        ["2026-03-08T15:30:00-03:00","ConcluÃ­do","Gilberto","","","Boeing","","",396.05],
+        ["2026-03-08T16:15:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","9130","Johnson&Johnson","Guarulhos","Executivo",573.42],
+        ["2026-03-08T07:35:00-03:00","Mensal","Calastri","Cruze RUD3B91","646","Tenaris","","Executivo",480.87],
+        ["2026-03-08T16:25:00-03:00","Mensal","Robson","Corolla GGR4D15","686","Tenaris","","BÃ¡sico",514.25],
+        ["2026-03-08T16:30:00-03:00","Mensal","Vilela","","PG2026/14645","Embraer","","",351.42],
+        ["2026-03-08T16:30:00-03:00","Mensal","Washington","Corolla RUP6H17","611","Tenaris","","BÃ¡sico",514.25],
+        ["2026-03-08T17:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","679","Tenaris","","BÃ¡sico",511.25],
+        ["2026-03-08T19:00:00-03:00","ConcluÃ­do","Gilberto","","","Boeing","","",396.05],
+        ["2026-03-08T19:15:00-03:00","Mensal","Danilo","Cruze RTC8A02","672","Tenaris","","Executivo",311.94],
+        ["2026-03-09T03:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","695","Tenaris","","BÃ¡sico",539.25],
+        ["2026-03-09T03:30:00-03:00","Cancelado","Cancelado","","662","Tenaris","","Executivo",0],
+        ["2026-03-09T05:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","701","Tenaris","","BÃ¡sico",1070.84],
+        ["2026-03-09T06:30:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","9104","Eldorado do Brasil","SÃ£o Paulo","Executivo",649.95],
+        ["2026-03-09T07:00:00-03:00","Concluido","Amadeu","Corolla RUH7G45","9144","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-03-09T07:00:00-03:00","Mensal","Washington","Corolla RUP6H17","692","Tenaris","","BÃ¡sico",634.03],
+        ["2026-03-09T07:00:00-03:00","Mensal","Isael",".","906218735","Embraer","","",349.11],
+        ["2026-03-09T07:10:00-03:00","ConcluÃ­do","Renato","","9080","Embraer/ Executive Jets","Guarulhos","Blindado",2226.9],
+        ["2026-03-09T07:10:00-03:00","Concluido","Calastri","Compass Blindada FCB8B61","","Johnson&Johnson","","Blindado",1117.43],
+        ["2026-03-09T08:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","NF 000314510","Usiscrew","","",1650],
+        ["2026-03-09T08:15:00-03:00","Mensal","Danilo","Cruze RTC8A02","704","Tenaris","","Executivo",93.46],
+        ["2026-03-09T08:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","687","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-09T09:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","700","Tenaris","","Apenas Motorista",820.09],
+        ["2026-03-09T09:00:00-03:00","Concluido","Calastri","Compass Blindada FCB8B61","","Johnson&Johnson","","Executivo",353.11],
+        ["2026-03-09T09:30:00-03:00","ConcluÃ­do","Ibrahim","","9071","Particular","Outras Cidades","Executivo",1790],
+        ["2026-03-09T14:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","PG2026/15923","Embraer","","",351.42],
+        ["2026-03-09T17:00:00-03:00","Concluido","Calastri","Cruze RUD3B91","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-09T17:20:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9083","Kenvue","SÃ£o Paulo","Executivo",780.56],
+        ["2026-03-09T18:00:00-03:00","ConcluÃ­do","Paulo Cezar","","9140","Johnson&Johnson","Guarulhos","Van",1152],
+        ["2026-03-09T18:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","688","Tenaris","","BÃ¡sico",115.02],
+        ["2026-03-09T18:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","","Tenaris","","Executivo",602.33],
+        ["2026-03-09T19:00:00-03:00","Mensal","Robson","Corolla GGR4D15","705","Tenaris","","Executivo",93.46],
+        ["2026-03-09T20:10:00-03:00","Mensal","Oliveira","","PG2026/15144","Embraer","","",555.84],
+        ["2026-03-09T21:00:00-03:00","ConcluÃ­do","Jailton","","9077","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-09T21:10:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","720","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-10T03:00:00-03:00","Mensal","Ricardo","Cruze RNT4F01","702","Tenaris","","Apenas Motorista",521.25],
+        ["2026-03-10T03:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","684","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-10T04:20:00-03:00","ConcluÃ­do","Mauricio","Virtus STW5G55","","Particular","","",300],
+        ["2026-03-10T05:00:00-03:00","Mensal","Robson","Corolla GGR4D15","9164","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-03-10T05:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","9147","Tenaris","Rio de Janeiro","Executivo",1096.2],
+        ["2026-03-10T05:15:00-03:00","ConcluÃ­do","Renato","","9177","Kenvue","SÃ£o Paulo","Blindado",1018.25],
+        ["2026-03-10T05:30:00-03:00","Mensal","Washington","Cruze RTC8A02","708","Tenaris","","BÃ¡sico",583.22],
+        ["2026-03-10T06:30:00-03:00","Mensal","Alexandre","Corolla RUR8F13","713","Tenaris","","BÃ¡sico",575.23],
+        ["2026-03-10T07:00:00-03:00","Cancelado","Cancelado","","709","Tenaris","","Executivo",0],
+        ["2026-03-10T08:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9085","Kenvue","SÃ£o Paulo","Executivo",397.12],
+        ["2026-03-10T09:00:00-03:00","Mensal","Ibrahim","Cruze GHJ5F53","676","Tenaris","","BÃ¡sico",521.25],
+        ["2026-03-10T08:00:00-03:00","Concluido","Calastri","Cruze RUD3B91","","Johnson&Johnson","","Executivo",173.51],
+        ["2026-03-10T08:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","706","Tenaris","","Executivo",93.46],
+        ["2026-03-10T08:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","689","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-10T08:30:00-03:00","Mensal","Washington","Cruze RTC8A02","PG2026/16725","Embraer","","",666.34],
+        ["2026-03-10T09:00:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","9072","Particular","SÃ£o JosÃ© dos Campos","Executivo",95],
+        ["2026-03-10T10:00:00-03:00","Mensal","Mauricio","Virtus STW5G55","","Tenaris","","",574.65],
+        ["2026-03-10T10:15:00-03:00","Mensal","Jamerson","Cruze RTI7G00","719","Tenaris","","Executivo",511.77],
+        ["2026-03-10T12:30:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/16668","Embraer","","",701.17],
+        ["2026-03-10T13:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","721","Tenaris","","BÃ¡sico",608.66],
+        ["2026-03-10T14:10:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9073","Particular","SÃ£o JosÃ© dos Campos","Executivo",95],
+        ["2026-03-10T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","648","Tenaris","","BÃ¡sico",1182.37],
+        ["2026-03-10T17:00:00-03:00","Concluido","Calastri","Compass Blindada FCB8B61","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-10T17:30:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","724","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-10T18:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","690","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-10T20:00:00-03:00","Em aprovaÃ§Ã£o","Lorran","","","Latasa","","",85],
+        ["2026-03-10T20:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9090","Kenvue","SÃ£o Paulo","Executivo",397.12],
+        ["2026-03-10T21:15:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","725","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-11T05:00:00-03:00","ConcluÃ­do","Amadeu",".","9243","Ball Corporation","SÃ£o Paulo","Somente Motorista",534],
+        ["2026-03-11T07:30:00-03:00","Mensal","Jamerson","Cruze RTI7G00","PG2026/15957","Embraer","","",2437.19],
+        ["2026-03-11T07:30:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","9074","Particular","SÃ£o Paulo","Executivo",890],
+        ["2026-03-11T08:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9086","Kenvue","SÃ£o Paulo","Executivo",397.12],
+        ["2026-03-11T08:00:00-03:00","Mensal","Washington","Cruze GEZ6D67","","Tenaris","","Executivo",93.46],
+        ["2026-03-11T08:00:00-03:00","Concluido","Mauricio","Virtus STW5G55","","Johnson&Johnson","","Executivo",173.51],
+        ["2026-03-11T08:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","691","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-11T08:40:00-03:00","Mensal","Calastri","Compass Blindada FCB8B61","PG2026/16875","Embraer","","",1918.65],
+        ["2026-03-11T08:40:00-03:00","Mensal","Jailton","Commander","PG2026/16876","Embraer","","",1918.65],
+        ["2026-03-11T11:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","723","Tenaris","","BÃ¡sico",1620.86],
+        ["2026-03-11T16:00:00-03:00","Mensal","Robson","Corolla GGR4D15","9165","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-03-11T16:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","9148","Tenaris","Rio de Janeiro","Executivo",1096.2],
+        ["2026-03-11T16:00:00-03:00","Mensal","Isael","Versa EKH6E73","","Tenaris","","",483.25],
+        ["2026-03-11T17:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","Executivo",93.46],
+        ["2026-03-11T17:00:00-03:00","Concluido","Mauricio","Virtus STW5G55","","Johnson&Johnson","","Executivo",446.44],
+        ["2026-03-11T17:30:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9089","Kenvue","SÃ£o Paulo","Executivo",397.12],
+        ["2026-03-11T17:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","730","Tenaris","","BÃ¡sico",194.41],
+        ["2026-03-11T18:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","693","Tenaris","","BÃ¡sico",230.04],
+        ["2026-03-11T18:10:00-03:00","ConcluÃ­do","Oliveira","","","Boeing","","",396.05],
+        ["2026-03-11T10:30:00-03:00","Mensal","","","PG2026/16999","Embraer","","",554.94],
+        ["2026-03-11T19:55:00-03:00","Mensal","Oliveira","","PG2026/15145","Embraer","","",555.84],
+        ["2026-03-11T22:10:00-03:00","Mensal","Josmar","Versa CUQ7E87","PG2026/14916","Embraer","","",216.9],
+        ["2026-03-12T03:50:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9166","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-03-12T03:50:00-03:00","Cancelado","Cancelado","","593","Tenaris","","Executivo",0],
+        ["2026-03-12T05:00:00-03:00","Mensal","Lorran","","PG2026/16493","Embraer","","",1866.46],
+        ["2026-03-12T05:15:00-03:00","ConcluÃ­do","Mauricio","Virtus STW5G55","9151","Johnson&Johnson","SÃ£o Paulo","Executivo",1332.55],
+        ["2026-03-12T05:30:00-03:00","ConcluÃ­do","Alexandre","Corolla RUR8F13","9150","Johnson&Johnson","SÃ£o Paulo","Executivo",1011.53],
+        ["2026-03-12T06:00:00-03:00","ConcluÃ­do","Jailton","","9082","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-12T06:00:00-03:00","ConcluÃ­do","Calastri","Cruze RUD3B91","","Particular","","",790],
+        ["2026-03-12T06:00:00-03:00","ConcluÃ­do","Paulo Cezar","","8964","Johnson&Johnson","Guarulhos","Van",1990],
+        ["2026-03-12T07:00:00-03:00","Mensal","Ibrahim","","PG2026/16943","Embraer","","",450.05],
+        ["2026-03-12T07:45:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9087","Kenvue","SÃ£o Paulo","Executivo",397.12],
+        ["2026-03-12T08:00:00-03:00","Concluido","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","Executivo",173.51],
+        ["2026-03-12T08:30:00-03:00","ConcluÃ­do","Amadeu","","9244","Ball Corporation","SÃ£o Paulo","Somente Motorista",534],
+        ["2026-03-12T08:00:00-03:00","ConcluÃ­do","Danilo","Corolla RUP6H17","9168","Tenaris","Pindamonhangaba","Executivo",173.48],
+        ["2026-03-12T08:30:00-03:00","Cancelado","Cancelado","","595","Tenaris","","Executivo",0],
+        ["2026-03-12T11:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","","Tenaris","","Executivo",548.33],
+        ["2026-03-12T11:00:00-03:00","Mensal","Danilo","Corolla RUP6H17","9004","Tenaris","Pindamonhangaba","Van",0],
+        ["2026-03-12T11:00:00-03:00","ConcluÃ­do","Paulo Cezar","","9004","Tenaris","Pindamonhangaba","Van",890],
+        ["2026-03-12T11:00:00-03:00","ConcluÃ­do","Paulo Cezar","","9005","Tenaris","Pindamonhangaba","Van",890],
+        ["2026-03-12T11:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9075","Particular","SÃ£o Paulo","Executivo",679],
+        ["2026-03-12T13:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","697","Tenaris","","BÃ¡sico",711.35],
+        ["2026-03-12T13:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","726","Tenaris","","BÃ¡sico",507.65],
+        ["2026-03-12T14:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","9178","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-03-12T14:00:00-03:00","Mensal","Ibrahim","","PG2026/16943","Embraer","","",880.37],
+        ["2026-03-12T16:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","","Tenaris","","",1127.8],
+        ["2026-03-12T17:00:00-03:00","Concluido","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-12T17:30:00-03:00","Mensal","Oliveira","","PG2026/15553","Embraer","","",351.42],
+        ["2026-03-12T18:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9169","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-03-12T18:00:00-03:00","Cancelado","Cancelado","","596","Tenaris","","Executivo",0],
+        ["2026-03-12T18:30:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","9081","Embraer/ Executive Jets","Guarulhos","Blindado",2159.9],
+        ["2026-03-12T20:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","696","Tenaris","","BÃ¡sico",574.65],
+        ["2026-03-12T20:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9088","Kenvue","SÃ£o Paulo","Executivo",397.12],
+        ["2026-03-12T20:45:00-03:00","Cancelado","Cancelado","","9036","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-03-13T05:00:00-03:00","Mensal","Jamerson","Cruze RTI7G00","734","Tenaris","","BÃ¡sico",518.42],
+        ["2026-03-13T05:45:00-03:00","Mensal","Robson","Corolla GGR4D15","728","Tenaris","","BÃ¡sico",600.73],
+        ["2026-03-13T06:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","703","Tenaris","","BÃ¡sico",507.65],
+        ["2026-03-13T02:30:00-03:00","Mensal","Carlos","Virtus FNV6G64","732","Tenaris","","BÃ¡sico",1022.46],
+        ["2026-03-13T07:00:00-03:00","ConcluÃ­do","Jailton","","9054","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-13T07:00:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9084","Kenvue","SÃ£o Paulo","Executivo",748.53],
+        ["2026-03-13T07:15:00-03:00","ConcluÃ­do","Oliveira","","","Johnson&Johnson","","",620.49],
+        ["2026-03-13T07:15:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9039","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-13T07:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","PG2026/16852","Embraer","","",1472.76],
+        ["2026-03-13T07:45:00-03:00","Mensal","Ricardo","","PG2026/17627","Embraer","","",351.42],
+        ["2026-03-13T08:00:00-03:00","ConcluÃ­do","Mauricio","Virtus STW5G55","9285","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",1060.41],
+        ["2026-03-13T08:00:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","9268","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-13T08:30:00-03:00","Cancelado","Cancelado","","9170","Tenaris","Pindamonhangaba","Executivo",0],
+        ["2026-03-13T08:30:00-03:00","Cancelado (prÃ©-programaÃ§Ã£o)","Cancelado","","597","Tenaris","","Executivo",0],
+        ["2026-03-13T09:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/16858","Embraer","","",555.84],
+        ["2026-03-13T11:30:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","","Betinhos Executive Service","","",0],
+        ["2026-03-13T12:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/17787","Embraer","","",554.94],
+        ["2026-03-13T12:40:00-03:00","Mensal","Menecucci","Spin TIU2F11","PG2026/17783","Embraer","","",364.42],
+        ["2026-03-13T14:35:00-03:00","Mensal","Menecucci","Spin TIU2F11","731","Tenaris","","BÃ¡sico",730],
+        ["2026-03-13T14:40:00-03:00","ConcluÃ­do","Alexandre","","","Betinhos Executive Service","","",0],
+        ["2026-03-13T15:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","9197","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-13T15:15:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9167","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-03-13T15:30:00-03:00","ConcluÃ­do","Isael","Versa EKH6E73","9105","Eldorado do Brasil","SÃ£o Paulo","Executivo",729.95],
+        ["2026-03-13T15:30:00-03:00","ConcluÃ­do","Alexandre","Equinox","9139","Embraer/ Executive Jets","Guarulhos","Blindado",2159.9],
+        ["2026-03-13T15:30:00-03:00","Cancelado (prÃ©-programaÃ§Ã£o)","Cancelado","","598","Tenaris","","Executivo",0],
+        ["2026-03-13T16:25:00-03:00","Cancelado (prÃ©-programaÃ§Ã£o)","Cancelado","","663","Tenaris","","Executivo",0],
+        ["2026-03-13T16:30:00-03:00","Concluido","Calastri","Compass Blindada FCB8B61","9267","Johnson&Johnson","Guarulhos","Blindado",1050.43],
+        ["2026-03-13T18:00:00-03:00","Mensal","Oliveira","","PG2026/17058","Embraer","","",351.42],
+        ["2026-03-13T18:25:00-03:00","ConcluÃ­do","Alexandre","Equinox","9036","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-13T19:00:00-03:00","Mensal","Washington","Corolla RUP6H17","668","Tenaris","","Executivo",619.34],
+        ["2026-03-13T19:30:00-03:00","Mensal","Jailton","","PG2026/17836","Embraer","","",351.42],
+        ["2026-03-13T20:00:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","9126","Boeing","Guarulhos","Executivo",512.97],
+        ["2026-03-13T21:00:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","","Johnson&Johnson","","",620.49],
+        ["2026-03-13T21:50:00-03:00","Mensal","Oliveira","","PG2026/15660","Embraer","","",450.05],
+        ["2026-03-14T04:00:00-03:00","Mensal","Carlos","Virtus FNV6G64","734","Tenaris","","BÃ¡sico",1036.83],
+        ["2026-03-14T02:50:00-03:00","Mensal","Ibrahim","Cruze GHJ5F53","632","Tenaris","","BÃ¡sico",521.25],
+        ["2026-03-14T03:00:00-03:00","Cancelado","Cancelado","","8972","Tenaris","Guarulhos","BÃ¡sico",0],
+        ["2026-03-14T04:30:00-03:00","Concluido","Amadeu","Corolla RUH7G45","","Kenvue","","",429.35],
+        ["2026-03-14T04:50:00-03:00","ConcluÃ­do","Ricardo","","9300","Boeing","Guarulhos","Executivo",512.97],
+        ["2026-03-14T06:25:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/17274","Embraer","","",555.84],
+        ["2026-03-14T06:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9286","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-14T07:00:00-03:00","ConcluÃ­do","Jailton","","9127","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-14T07:00:00-03:00","ConcluÃ­do","Alexandre","Equinox","9247","Embraer/ Executive Jets","Guarulhos","Blindado",2159],
+        ["2026-03-14T07:35:00-03:00","Mensal","Robson","","PG2026/16487","Embraer","","",760.13],
+        ["2026-03-14T07:35:00-03:00","Mensal","Vilela","","PG2026/16483","Embraer","","",555.84],
+        ["2026-03-14T08:00:00-03:00","Concluido","Mauricio","Compass Blindada FCB8B61","9264","Kenvue","Guarulhos","Blindado",1082.25],
+        ["2026-03-14T08:20:00-03:00","Mensal","","","","Embraer","","",214.37],
+        ["2026-03-14T08:40:00-03:00","Mensal","Alexandre","Equinox","PG2026/16484","Embraer","","",555.84],
+        ["2026-03-14T09:35:00-03:00","ConcluÃ­do","Lorran","","9010","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-14T10:30:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","9118","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-14T15:15:00-03:00","ConcluÃ­do","Vilela","","9137","Boeing","Guarulhos","Executivo",463.05],
+        ["2026-03-14T09:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-03-14T13:00:00-03:00","Mensal","Lorran","","PG2026/18131","Embraer","","",216.9],
+        ["2026-03-14T16:30:00-03:00","Cancelado","Cancelado","","576","Tenaris","","BÃ¡sico",0],
+        ["2026-03-14T16:40:00-03:00","ConcluÃ­do","Oliveira","","9134","Boeing","Guarulhos","Spin",562.89],
+        ["2026-03-14T16:40:00-03:00","ConcluÃ­do","Mauricio","Compass Blindada FCB8B61","9136","Boeing","Guarulhos","Executivo",512.97],
+        ["2026-03-14T16:45:00-03:00","ConcluÃ­do","Alexandre","Equinox","","Boeing","","",613.05],
+        ["2026-03-14T17:00:00-03:00","Mensal","Edson","","PG2026/15971","Embraer","","",843.54],
+        ["2026-03-14T09:15:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","","Tenaris","","",81.01],
+        ["2026-03-14T17:00:00-03:00","Mensal","Robson","Corolla GGR4D15","654","Tenaris","","BÃ¡sico",671.63],
+        ["2026-03-14T18:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9265","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-14T18:00:00-03:00","ConcluÃ­do","Jailton","","9283","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-14T18:20:00-03:00","Mensal","Marcelo","","PG2026/17177","Embraer","","",457.21],
+        ["2026-03-14T18:30:00-03:00","ConcluÃ­do","Ricardo","","9060","Boeing","Guarulhos","Executivo",463.05],
+        ["2026-03-14T18:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","8821","Tenaris","Guarulhos","BÃ¡sico",491.62],
+        ["2026-03-14T19:00:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","9132","Boeing","Guarulhos","Executivo",463.05],
+        ["2026-03-15T03:15:00-03:00","Mensal","","","PG2026/18172","Embraer","","",555.84],
+        ["2026-03-15T05:45:00-03:00","Cancelado","Cancelado","","PG2026/16521","Embraer","","",0],
+        ["2026-03-15T06:30:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/16911","Embraer","","",452.94],
+        ["2026-03-15T06:45:00-03:00","Mensal","","","PG2026/17989","Embraer","","",351.42],
+        ["2026-03-15T06:45:00-03:00","Mensal","Alexandre","","PG2026/17512","Embraer","","",538.84],
+        ["2026-03-15T07:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","9251","Kenvue","Guarulhos","Executivo",496.35],
+        ["2026-03-15T08:00:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","8917","Boeing","Guarulhos","BÃ¡sico",463.05],
+        ["2026-03-15T11:00:00-03:00","ConcluÃ­do","Jailton","","9279","Johnson&Johnson","SÃ£o Paulo","Executivo",713.56],
+        ["2026-03-15T11:55:00-03:00","ConcluÃ­do","Washington","Corolla RUP6H17","","Particular","","",590],
+        ["2026-03-15T16:30:00-03:00","Cancelado","Cancelado","","9146","Kenvue","Guarulhos","BÃ¡sico",0],
+        ["2026-03-15T17:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9011","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-15T07:15:00-03:00","Mensal","","","PG2026/17945","Embraer","","",555.84],
+        ["2026-03-15T18:00:00-03:00","Mensal","Jailton","","PG2026/17482","Embraer","","",555.84],
+        ["2026-03-15T18:00:00-03:00","Mensal","Washington","Corolla RUP6H17","PG2026/17483","Embraer","","",777.76],
+        ["2026-03-15T18:30:00-03:00","Concluido","Robson","","9299","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-03-15T18:40:00-03:00","Cancelado","Cancelado","","9149","Boeing","Guarulhos","Executivo",0],
+        ["2026-03-15T19:00:00-03:00","ConcluÃ­do","Marcelo","","9287","Particular","Guarulhos","BÃ¡sico",615.33],
+        ["2026-03-15T21:00:00-03:00","Mensal","Robson","Corolla GGR4D15","736","Tenaris","","BÃ¡sico",514.25],
+        ["2026-03-16T03:30:00-03:00","ConcluÃ­do","Alexandre","Equinox","9194","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-16T04:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","733","Tenaris","","Apenas Motorista",1070.84],
+        ["2026-03-16T04:30:00-03:00","ConcluÃ­do","Lorran","","9269","Johnson&Johnson","SÃ£o Paulo","Executivo",760.07],
+        ["2026-03-16T04:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","753","Tenaris","","BÃ¡sico",3101.07],
+        ["2026-03-16T05:30:00-03:00","Mensal","Washington","Corolla RUP6H17","","Tenaris","","",1070.84],
+        ["2026-03-16T05:50:00-03:00","ConcluÃ­do","Jailton","","9149","Boeing","Guarulhos","Executivo",463.05],
+        ["2026-03-16T04:30:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/18226","Embraer","","",336.43],
+        ["2026-03-16T06:00:00-03:00","Mensal","","","PG2026/18230","Embraer","","",554.94],
+        ["2026-03-16T06:00:00-03:00","Mensal","Ibrahim","","PG2026/17485","Embraer","","",777.76],
+        ["2026-03-16T07:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9064","Johnson&Johnson","Guarulhos","BÃ¡sico",442.98],
+        ["2026-03-16T07:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","9252","Kenvue","Guarulhos","Blindado",1932.77],
+        ["2026-03-16T07:30:00-03:00","ConcluÃ­do","Robson","","9289","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-16T07:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","737","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-16T07:50:00-03:00","Concluido","Alexandre","Virtus STW5G55","9145","Johnson&Johnson","Guarulhos","Executivo",558.86],
+        ["2026-03-16T07:00:00-03:00","Mensal","","","PG2026/18225","Embraer","","",555.84],
+        ["2026-03-16T08:00:00-03:00","Mensal","Oliveira","","PG2026/17994","Embraer","","",214.37],
+        ["2026-03-16T08:00:00-03:00","ConcluÃ­do","Calastri","Equinox","9253","Kenvue","Guarulhos","Blindado",1932.77],
+        ["2026-03-16T08:00:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","9254","Kenvue","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-16T08:50:00-03:00","ConcluÃ­do","Renato","Blindado Tiguan","","Johnson&Johnson","Dentro de SP","Blindado",53005.67],
+        ["2026-03-16T10:40:00-03:00","ConcluÃ­do","Renato","Blindado Tiguan","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-16T11:55:00-03:00","ConcluÃ­do","Robson","","9304","Particular","Guarulhos","BÃ¡sico",726.06],
+        ["2026-03-16T13:00:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/17486","Embraer","","",652.08],
+        ["2026-03-16T14:00:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","9256","Kenvue","SÃ£o JosÃ© dos Campos","Blindado",925.24],
+        ["2026-03-16T15:05:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9195","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-16T16:30:00-03:00","Mensal","Isael","Cruze GEZ6D67","PG2026/17995","Embraer","","",216.9],
+        ["2026-03-16T17:30:00-03:00","ConcluÃ­do","Renato","Blindado Tiguan","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-16T17:45:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","738","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-16T18:00:00-03:00","Mensal","Jamerson","Cruze RTI7G00","PG2026/18230","Embraer","","",2147.11],
+        ["2026-03-16T18:00:00-03:00","ConcluÃ­do","Calastri","Equinox","9255","Kenvue","SÃ£o JosÃ© dos Campos","Blindado",725.01],
+        ["2026-03-16T18:30:00-03:00","Mensal","Jailton","","PG2026/16823","Embraer","","",555.84],
+        ["2026-03-16T18:30:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/16824","Embraer","","",555.84],
+        ["2026-03-16T18:30:00-03:00","ConcluÃ­do","Robson","","9298","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-16T20:50:00-03:00","Mensal","Vilela","","PG2026/18227","Embraer","","",442.22],
+        ["2026-03-16T20:45:00-03:00","ConcluÃ­do","Isael","Cruze GEZ6D67","9142","Johnson&Johnson","SÃ£o Paulo","Executivo",780.56],
+        ["2026-03-16T01:30:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","","Tenaris","","",81.01],
+        ["2026-03-17T05:10:00-03:00","Mensal","Washington","Equinox Br.","762","Tenaris","","BÃ¡sico",540.66],
+        ["2026-03-17T05:00:00-03:00","Mensal","Clayton","Ricardo Jeep","PG2026/18267","Embraer","","",554.94],
+        ["2026-03-17T06:00:00-03:00","Mensal","Oliveira","","PG2026/18026","Embraer","","",1623.28],
+        ["2026-03-17T06:30:00-03:00","Mensal","Mauricio",".","906218735","Embraer","","",1163.69],
+        ["2026-03-17T06:30:00-03:00","Mensal","Ibrahim",".","PG2026/15545","Embraer","","",799.14],
+        ["2026-03-17T07:00:00-03:00","Mensal","Lorran",".","PG2026/17081","Embraer","","",1021.12],
+        ["2026-03-17T07:00:00-03:00","ConcluÃ­do","Alexandre","Virtus STW5G55","9115","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",1011.53],
+        ["2026-03-17T07:30:00-03:00","ConcluÃ­do","Paulo Cezar",".","9257","Kenvue","SÃ£o JosÃ© dos Campos","Van",1503.3],
+        ["2026-03-17T07:30:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","9245","Johnson&Johnson","SÃ£o Paulo","Executivo",400.48],
+        ["2026-03-17T07:30:00-03:00","ConcluÃ­do","Robson",".","9290","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-17T07:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","739","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-17T07:30:00-03:00","ConcluÃ­do","Calastri","NÃ£o consta","","Betinhos Executive Service","","",0],
+        ["2026-03-17T07:30:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","","Betinhos Executive Service","","",0],
+        ["2026-03-17T07:50:00-03:00","Mensal","Robson","Corolla GGR4D15","","Tenaris","","",74.52],
+        ["2026-03-17T07:50:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T07:50:00-03:00","ConcluÃ­do","Washington","Equinox Br.","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T08:00:00-03:00","Em aprovaÃ§Ã£o","Ricardo","","","Particular","","",554.94],
+        ["2026-03-17T08:00:00-03:00","Mensal","Vilela","","PG2026/17996","Embraer","","",214.37],
+        ["2026-03-17T08:30:00-03:00","ConcluÃ­do","Renato","","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T09:30:00-03:00","Cancelado","Cancelado","","9258","Kenvue","SÃ£o JosÃ© dos Campos","Van",0],
+        ["2026-03-17T11:30:00-03:00","ConcluÃ­do","Renato","","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T11:45:00-03:00","ConcluÃ­do","Washington","Equinox Br.","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T11:55:00-03:00","ConcluÃ­do","Robson","","9303","Kenvue","Guarulhos","Executivo",429.35],
+        ["2026-03-17T12:30:00-03:00","ConcluÃ­do","Calastri","Commander Renato","8939","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T13:20:00-03:00","ConcluÃ­do","Clayton","Ricardo Blindado","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T14:30:00-03:00","Mensal","Gilberto","","769","Tenaris","","BÃ¡sico",1682.52],
+        ["2026-03-17T15:00:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T15:00:00-03:00","ConcluÃ­do","Danilo","Commander Renato","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T14:00:00-03:00","Em aprovaÃ§Ã£o","Amadeu","Corolla RUH7G45","9306","Johnson&Johnson","SÃ£o Paulo","Executivo",816.01],
+        ["2026-03-17T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","9271","Tenaris","Rio de Janeiro","Executivo",1236.36],
+        ["2026-03-17T16:00:00-03:00","Mensal","Lorran","","PG2026/18546","Embraer","","",799.14],
+        ["2026-03-17T15:00:00-03:00","Mensal","Vilela","","PG2026/17997","Embraer","","",216.9],
+        ["2026-03-17T16:20:00-03:00","Mensal","Jamerson","Cruze RTI7G00","PG2026/18268","Embraer","","",666.34],
+        ["2026-03-17T17:00:00-03:00","ConcluÃ­do","Ibrahim","Blindado GLM","9259","Kenvue","SÃ£o Paulo","Blindado",1683.5],
+        ["2026-03-17T17:00:00-03:00","Cancelado","Cancelado","","9260","Kenvue","SÃ£o Paulo","Blindado",0],
+        ["2026-03-17T17:00:00-03:00","ConcluÃ­do","Jailton","","9301","Kenvue","Guarulhos","Executivo",925.7],
+        ["2026-03-17T17:30:00-03:00","ConcluÃ­do","Washington","Equinox Br.","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T17:30:00-03:00","Em aprovaÃ§Ã£o","Vilela","","","Particular","","",554.94],
+        ["2026-03-17T17:30:00-03:00","ConcluÃ­do","Ismael","Corolla Cross FWC6A43","9294","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-17T17:45:00-03:00","Mensal","Marcelo","Corolla RRI8497","740","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-17T18:00:00-03:00","ConcluÃ­do","Juliana","","9309","Particular","SÃ£o JosÃ© dos Campos","BÃ¡sico",0],
+        ["2026-03-17T18:00:00-03:00","ConcluÃ­do","JordÃ£o","","9307","Johnson&Johnson","SÃ£o Paulo","Executivo",620.49],
+        ["2026-03-17T18:00:00-03:00","ConcluÃ­do","Robson","","9308","Johnson&Johnson","SÃ£o Paulo","Executivo",620.49],
+        ["2026-03-17T19:00:00-03:00","Mensal","Eduardo - SP","","PG2026/18830","Embraer","","",883.55],
+        ["2026-03-17T20:10:00-03:00","Mensal","Marcelo","","PG2026/18543","Embraer","","",450.05],
+        ["2026-03-17T20:30:00-03:00","ConcluÃ­do","Renato","","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T20:30:00-03:00","ConcluÃ­do","Danilo","Commander Renato","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T20:30:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T20:30:00-03:00","ConcluÃ­do","Clayton","Ricardo","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T20:30:00-03:00","ConcluÃ­do","Washington","Equinox Br.","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-17T20:40:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","9246","Johnson&Johnson","SÃ£o Paulo","Executivo",400.48],
+        ["2026-03-18T03:00:00-03:00","Mensal","Marcelo","Corolla RRI8497","764","Tenaris","","BÃ¡sico",1547.85],
+        ["2026-03-18T04:30:00-03:00","Mensal","Ricardo","","PG2026/17121","Embraer","","",882.71],
+        ["2026-03-18T05:30:00-03:00","ConcluÃ­do","Lorran","","","Johnson&Johnson","","",620.49],
+        ["2026-03-18T06:30:00-03:00","Mensal","Mauricio",".","906218735","Embraer","","",1169.63],
+        ["2026-03-18T06:30:00-03:00","Cancelado","Cancelado",".",".","Embraer","","",0],
+        ["2026-03-18T07:00:00-03:00","ConcluÃ­do","Calastri","Commander Renato","8940","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-18T07:00:00-03:00","ConcluÃ­do","Danilo","Commander Renato","8941","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-18T07:00:00-03:00","ConcluÃ­do","Washington","NÃ£o consta","8942","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-18T07:00:00-03:00","ConcluÃ­do","Isael","","8943","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-18T07:00:00-03:00","ConcluÃ­do","Oliveira","","9116","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",1011.53],
+        ["2026-03-18T07:15:00-03:00","Mensal","Menecucci","Spin TIU2F11","742","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-18T07:30:00-03:00","Mensal","Jailton","Commander FPO8E53","","Tenaris","","",194.41],
+        ["2026-03-18T07:30:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","9272","Tenaris","Pindamonhangaba","Executivo",81.01],
+        ["2026-03-18T07:30:00-03:00","Em viagem","Jamerson","Cruze RTI7G00","9280","Kenvue","Guarulhos","Executivo",496.35],
+        ["2026-03-18T07:30:00-03:00","ConcluÃ­do","Ismael","Corolla Cross FWC6A43","9291","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-18T07:30:00-03:00","Mensal","Vilela","","PG2026/17123","Embraer","","",882.71],
+        ["2026-03-18T07:30:00-03:00","Mensal","Alexandre","Virtus STW5G55","PG2026/18009","Embraer","","",1205.47],
+        ["2026-03-18T07:45:00-03:00","Cancelado","Cancelado","","9261","Kenvue","SÃ£o Paulo","Blindado",0],
+        ["2026-03-18T07:45:00-03:00","ConcluÃ­do","Ibrahim","Equinox GLM","9262","Kenvue","SÃ£o Paulo","Blindado",725.01],
+        ["2026-03-18T07:50:00-03:00","ConcluÃ­do","Paulo Cezar","","8978","Particular","Guarulhos","Van",685],
+        ["2026-03-18T08:00:00-03:00","Mensal","Junior","verificar carro","PG2026/17998","Embraer","","",214.37],
+        ["2026-03-18T10:00:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","","Executivo",400.48],
+        ["2026-03-18T10:00:00-03:00","Mensal","Junior","verificar carro","PG2026/18783","Embraer","","",214.37],
+        ["2026-03-18T11:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/18978","Embraer","","",214.37],
+        ["2026-03-18T12:30:00-03:00","Mensal","Jamerson","Cruze RTI7G00","PG2026/18727","Embraer","","",351.42],
+        ["2026-03-18T15:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","743","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-18T15:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/17999","Embraer","","",216.9],
+        ["2026-03-18T15:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","683","Tenaris","","BÃ¡sico",521.25],
+        ["2026-03-18T15:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","775","Tenaris","","BÃ¡sico",1052.77],
+        ["2026-03-18T15:30:00-03:00","Mensal","Jailton","Commander FPO8E53","773","Tenaris","","Executivo",1006.98],
+        ["2026-03-18T15:45:00-03:00","ConcluÃ­do","Menecucci","Spin TIU2F11","9314","Particular","Guarulhos","BÃ¡sico",440],
+        ["2026-03-18T16:30:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/17126","Embraer","","",351.42],
+        ["2026-03-18T16:45:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-18T17:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","9274","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-03-18T17:00:00-03:00","ConcluÃ­do","Ibrahim","Equinox GLM","9263","Kenvue","SÃ£o Paulo","Blindado",1683.5],
+        ["2026-03-18T17:00:00-03:00","Em viagem","Junior","verificar carro","9281","Kenvue","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-18T18:00:00-03:00","ConcluÃ­do","Juliana","","9309","Particular","SÃ£o JosÃ© dos Campos","BÃ¡sico",0],
+        ["2026-03-18T18:00:00-03:00","ConcluÃ­do","Jamerson","Cruze RTI7G00","9270","Johnson&Johnson","SÃ£o Paulo","Executivo",857.83],
+        ["2026-03-18T18:00:00-03:00","ConcluÃ­do","Ismael","Corolla Cross FWC6A43","9295","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-18T18:35:00-03:00","Mensal","Junior","verificar carro","PG2026/19161","Embraer","","",216.9],
+        ["2026-03-18T19:15:00-03:00","Mensal","Menecucci","Spin TIU2F11","771","Tenaris","","BÃ¡sico",194.41],
+        ["2026-03-18T19:40:00-03:00","Mensal","Alexandre","Corolla RUP6H17","746","Tenaris","","Executivo",856.59],
+        ["2026-03-18T21:20:00-03:00","Mensal","Robson","Corolla GGR4D15","","Tenaris","","",81.01],
+        ["2026-03-18T22:25:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9305","Particular","Guarulhos","BÃ¡sico",793.06],
+        ["2026-03-19T06:00:00-03:00","Em viagem","Mauricio","Cruze RUD3B91","9282","Kenvue","SÃ£o JosÃ© dos Campos","Executivo",1241.04],
+        ["2026-03-19T06:00:00-03:00","Cancelado","Cancelado","","","Tenaris","","Executivo",0],
+        ["2026-03-19T06:30:00-03:00","Mensal","Ricardo","","PG2026/19123","Embraer","","",0],
+        ["2026-03-19T06:50:00-03:00","Mensal","Gilberto","","PG2026/17195","Embraer","","",555.84],
+        ["2026-03-19T07:00:00-03:00","Mensal","Ibrahim","","PG2026/18733","Embraer","","",988.5],
+        ["2026-03-19T07:00:00-03:00","ConcluÃ­do","Calastri","Commander Renato","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T07:00:00-03:00","ConcluÃ­do","Danilo","Commander Renato","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T07:15:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","744","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-19T07:20:00-03:00","ConcluÃ­do","Washington","NÃ£o consta","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T07:30:00-03:00","ConcluÃ­do","Robson","","9292","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-19T07:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","9273","Tenaris","Pindamonhangaba","Executivo",93.46],
+        ["2026-03-19T08:00:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/18001","Embraer","","",214.37],
+        ["2026-03-19T08:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","747","Tenaris","","Executivo",93.46],
+        ["2026-03-19T08:55:00-03:00","Mensal","Vilela","","PG2026/18887","Embraer","","",555.84],
+        ["2026-03-19T10:00:00-03:00","ConcluÃ­do","Robson","","9316","Johnson&Johnson","Guarulhos","BÃ¡sico",442.98],
+        ["2026-03-19T10:10:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/17156","Embraer","","",351.42],
+        ["2026-03-19T11:45:00-03:00","Mensal","Lorran","","PG2026/19308","Embraer","","",558.62],
+        ["2026-03-19T11:45:00-03:00","Mensal","Marcelo","","PG2026/19310","Embraer","","",558.62],
+        ["2026-03-19T11:45:00-03:00","Mensal","Gilberto","","PG2026/19309","Embraer","","",558.62],
+        ["2026-03-19T13:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","782","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-19T13:30:00-03:00","ConcluÃ­do","Calastri","Commander Renato","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T13:30:00-03:00","ConcluÃ­do","Danilo","Commander Renato","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T13:30:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T14:00:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","9250","Johnson&Johnson","SÃ£o Paulo","Executivo",713.6],
+        ["2026-03-19T15:00:00-03:00","Mensal","Lorran","","PG2026/18002","Embraer","","",216.9],
+        ["2026-03-19T15:00:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","745","Tenaris","","BÃ¡sico",149.03],
+        ["2026-03-19T15:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","9276","Tenaris","Rio de Janeiro","Executivo",1236.36],
+        ["2026-03-19T15:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","9277","Tenaris","Rio de Janeiro","Executivo",1196.35],
+        ["2026-03-19T15:30:00-03:00","ConcluÃ­do","OnOff","Alexandre","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T16:00:00-03:00","ConcluÃ­do","Robson","","","Johnson&Johnson","","",620.49],
+        ["2026-03-19T16:00:00-03:00","ConcluÃ­do","Washington","Equinox BR.","","Johnson&Johnson","Dentro de SP","Blindado",0],
+        ["2026-03-19T15:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","9275","Tenaris","Pindamonhangaba","Executivo",213.49],
+        ["2026-03-19T17:00:00-03:00","Cancelado","Cancelado","","","Embraer","","",0],
+        ["2026-03-19T18:30:00-03:00","ConcluÃ­do","Marcelo","","9296","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-19T19:00:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","748","Tenaris","","Executivo",133.47],
+        ["2026-03-19T20:10:00-03:00","Em aprovaÃ§Ã£o","","","","Latasa","","",85],
+        ["2026-03-19T17:40:00-03:00","ConcluÃ­do","Isael","Compass Blindada FCB8B61","9143","Johnson&Johnson","SÃ£o Paulo","Executivo",1514.56],
+        ["2026-03-20T05:30:00-03:00","Mensal","Lorran","Corolla GDP2G67","750","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-20T06:30:00-03:00","Mensal","Robson","Corolla GGR4D15","9278","Tenaris","Guarulhos","Executivo",548.33],
+        ["2026-03-20T06:30:00-03:00","Mensal","Jailton",".","PG2026/19391","Embraer","","",227.37],
+        ["2026-03-20T06:30:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/19392","Embraer","","",227.37],
+        ["2026-03-20T07:00:00-03:00","Mensal","Mauricio","Cruze RUD3B91","774","Tenaris","","BÃ¡sico",1068.43],
+        ["2026-03-20T07:00:00-03:00","Mensal","Lorran",".","PG2026/17209","Embraer","","",555.84],
+        ["2026-03-20T07:10:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9284","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-20T07:30:00-03:00","ConcluÃ­do","Ismael","Corolla Cross FWC6A43","9293","Particular","Pindamonhangaba","BÃ¡sico",93.47],
+        ["2026-03-20T08:00:00-03:00","Mensal","Jailton",".","PG2026/19392","Embraer","","",214.37],
+        ["2026-03-20T08:30:00-03:00","Mensal","Marcelo","Corolla RRI8497","749","Tenaris","","Executivo",93.46],
+        ["2026-03-20T08:30:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/19394","Embraer","","",351.42],
+        ["2026-03-20T08:30:00-03:00","Mensal","Jamerson","Cruze RTI7G00","PG2026/19397","Embraer","","",214.37],
+        ["2026-03-20T08:30:00-03:00","Mensal","Oliveira",".","PG2026/19398","Embraer","","",652.08],
+        ["2026-03-20T09:00:00-03:00","Mensal","Jailton",".","PG2026/19393","Embraer","","",0],
+        ["2026-03-20T09:50:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/18999","Embraer","","",555.84],
+        ["2026-03-20T10:00:00-03:00","ConcluÃ­do","Ibrahim",".","","Particular","","",690],
+        ["2026-03-20T10:00:00-03:00","Concluido","Isael","Virtus STW5G55","","Boeing","","",1622.34],
+        ["2026-03-20T12:30:00-03:00","Mensal","Robson","Corolla GGR4D15","785","Tenaris","","BÃ¡sico",507.65],
+        ["2026-03-20T13:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","781","Tenaris","","",690.03],
+        ["2026-03-20T13:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","781","Tenaris","","BÃ¡sico",97.61],
+        ["2026-03-20T15:00:00-03:00","Mensal","Washington","Virtus FNV6G64","9198","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-20T16:00:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","","Particular","","",690],
+        ["2026-03-20T16:30:00-03:00","Cancelado","Cancelado","","PG2026/18190","Embraer","","",0],
+        ["2026-03-20T16:40:00-03:00","Mensal","Menecucci","Spin TIU2F11","PG2026/18223","Embraer","","",457.21],
+        ["2026-03-20T18:30:00-03:00","Mensal","Ismael","Corolla Cross FWC6A43","","Tenaris","","",81.01],
+        ["2026-03-20T17:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","751","Tenaris","","Executivo",753.96],
+        ["2026-03-20T18:00:00-03:00","Concluido","Calastri","Cruze RTI7G00","9310","Boeing","Guarulhos","Executivo",396.05],
+        ["2026-03-20T18:30:00-03:00","ConcluÃ­do","Ismael","Corolla Cross FWC6A43","9297","Particular","Pindamonhangaba","BÃ¡sico",93.46],
+        ["2026-03-20T19:30:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","9317","Johnson&Johnson","Guarulhos","BÃ¡sico",509.98],
+        ["2026-03-20T23:55:00-03:00","ConcluÃ­do","Menecucci","Spin TIU2F11","9065","Johnson&Johnson","Guarulhos","BÃ¡sico",509.98],
+        ["2026-03-21T03:20:00-03:00","ConcluÃ­do","Danilo","Cruze GEZ6D67","9325","Johnson&Johnson","SÃ£o Paulo","Executivo",713.56],
+        ["2026-03-21T01:30:00-03:00","Mensal","Jailton",".","PG2026/19697","Embraer","","",351.42],
+        ["2026-03-21T06:30:00-03:00","Mensal","Ibrahim",".","PG2026/19506","Embraer","","",452.94],
+        ["2026-03-21T07:00:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","9266","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-21T07:00:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","9012","Johnson&Johnson","Guarulhos","Executivo",509.98],
+        ["2026-03-21T01:30:00-03:00","Mensal","Fabio HonÃ³rio","Cruze GCL9J98","","Tenaris","","",81.01],
+        ["2026-03-21T08:00:00-03:00","Mensal","Washington","Virtus FNV6G64","793","Tenaris","","Executivo",483.25],
+        ["2026-03-21T08:10:00-03:00","ConcluÃ­do","Oliveira",".","9124","Boeing","Guarulhos","Executivo",463.05],
+        ["2026-03-21T08:50:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/17424","Embraer","","Executivo",666.49],
+        ["2026-03-21T09:00:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","9288","Particular","Guarulhos","BÃ¡sico",548.33],
+        ["2026-03-21T12:30:00-03:00","Mensal","Calastri","Cruze RTI7G00","PG2026/19094","Embraer","","",351.42],
+        ["2026-03-21T16:45:00-03:00","Mensal","Ricardo",".","PG2026/18779","Embraer","","",652.08],
+        ["2026-03-21T17:30:00-03:00","Cancelado","Cancelado","","9068","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-03-21T19:00:00-03:00","Cancelado","Cancelado","","9324","Boeing","Guarulhos","Executivo",0],
+        ["2026-03-22T05:30:00-03:00","Mensal","Isael","Virtus STW5G55","PG2026/18261","Embraer","","",555.84],
+        ["2026-03-22T05:40:00-03:00","Mensal","Robson","","PG2026/19289","Embraer","","",760.13],
+        ["2026-03-22T05:40:00-03:00","Concluido","Calastri","Compass Blindada FCB8B61","","Johnson&Johnson","","Blindado",1117.43],
+        ["2026-03-22T06:45:00-03:00","Mensal","Oliveira","","PG2026/19401","Embraer","","",555.84],
+        ["2026-03-22T07:10:00-03:00","ConcluÃ­do","Paulo Cezar","","9141","Johnson&Johnson","Guarulhos","Van",1152],
+        ["2026-03-22T07:15:00-03:00","ConcluÃ­do","Ibrahim","","","Boeing","","",463.05],
+        ["2026-03-22T08:00:00-03:00","ConcluÃ­do","Menecucci","","8949","Boeing","Guarulhos","Executivo",512.97],
+        ["2026-03-22T08:20:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9179","Johnson&Johnson","Guarulhos","Executivo",576.42],
+        ["2026-03-22T09:30:00-03:00","Mensal","Isael","Virtus STW5G55","PG2026/18473","Embraer","","",555.84],
+        ["2026-03-22T10:20:00-03:00","ConcluÃ­do","Robson",".","9196","Johnson&Johnson","Guarulhos","Executivo",576.42],
+        ["2026-03-22T14:25:00-03:00","Concluido","Isael","Equinox GLM","","Johnson&Johnson","","Blindado",1117.43],
+        ["2026-03-22T15:40:00-03:00","Mensal","Menecucci","Spin TIU2F11","767","Tenaris","","BÃ¡sico",545.25],
+        ["2026-03-22T16:00:00-03:00","Mensal","Ibrahim",".","PG2026/19651","Embraer","","",555.84],
+        ["2026-03-22T16:00:00-03:00","Mensal","Oliveira",".","PG2026/19652","Embraer","","",555.84],
+        ["2026-03-22T18:00:00-03:00","ConcluÃ­do","Ricardo",".","","Boeing","","",859.1],
+        ["2026-03-22T20:55:00-03:00","Mensal","Ricardo",".","PG2026/17456","Embraer","","",555.84],
+        ["2026-03-22T19:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","","Tenaris","","Executivo",514.25],
+        ["2026-03-22T21:00:00-03:00","Cancelado","Cancelado",".","607","Tenaris","","Executivo",0],
+        ["2026-03-23T02:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","8962","Johnson&Johnson","Guarulhos","BÃ¡sico",491.86],
+        ["2026-03-23T03:40:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/19890","Embraer","","",1900.6],
+        ["2026-03-23T04:30:00-03:00","ConcluÃ­do","Ibrahim","","9318","Johnson&Johnson","SÃ£o Paulo","Executivo",1528.07],
+        ["2026-03-23T05:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","787","Tenaris","","BÃ¡sico",1096.2],
+        ["2026-03-23T05:50:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/19485","Embraer","","",555.84],
+        ["2026-03-23T06:00:00-03:00","Mensal","Washington","","9326","Tenaris","Rio de Janeiro","BÃ¡sico",1104.85],
+        ["2026-03-23T06:30:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/17476","Embraer","","",1900.6],
+        ["2026-03-23T06:30:00-03:00","ConcluÃ­do","Jailton","","9312","Eldorado do Brasil","SÃ£o Paulo","Executivo",649.95],
+        ["2026-03-23T07:00:00-03:00","Em aprovaÃ§Ã£o","Oliveira","","","Johnson&Johnson","","",237.34],
+        ["2026-03-23T07:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","786","Tenaris","","BÃ¡sico",1556.05],
+        ["2026-03-23T07:10:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","","Johnson&Johnson","","Executivo",576.42],
+        ["2026-03-23T07:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","784","Tenaris","","BÃ¡sico",950.62],
+        ["2026-03-23T07:30:00-03:00","Mensal","Danilo","Cruze GEZ6D67","783","Tenaris","","BÃ¡sico",980.03],
+        ["2026-03-23T07:40:00-03:00","Concluido","Calastri","Cruze RTI7G00","","Johnson&Johnson","","Executivo",173.51],
+        ["2026-03-23T07:45:00-03:00","ConcluÃ­do","Junior","Compass Blindada FCB8B61","9185","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-23T09:30:00-03:00","Mensal","Ricardo","","PG2026/18474","Embraer","","",555.84],
+        ["2026-03-23T09:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","","Particular","","",450],
+        ["2026-03-23T10:20:00-03:00","Mensal","Calastri","Cruze RTI7G00","PG2026/19523","Embraer","","",555.84],
+        ["2026-03-23T14:30:00-03:00","Mensal","Robson","","PG2026/19906","Embraer","","",1425.78],
+        ["2026-03-23T17:00:00-03:00","ConcluÃ­do","Ricardo","","9186","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-23T17:00:00-03:00","Mensal","Fabio Honorio","Cruze GCL9J98","9328","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-23T17:00:00-03:00","Concluido","Calastri","Cruze RTI7G00","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-23T17:30:00-03:00","Em aprovaÃ§Ã£o","Lorran","","","Boeing","","",445.97],
+        ["2026-03-23T17:30:00-03:00","Mensal","Isael","Virtus STW5G55","PG2026/19295","Embraer","","",555.84],
+        ["2026-03-23T18:00:00-03:00","ConcluÃ­do","Jailton","","","Particular","","",390],
+        ["2026-03-23T18:30:00-03:00","Mensal","Oliveira","","PG2026/19484","Embraer","","",555.84],
+        ["2026-03-23T20:50:00-03:00","Mensal","Lorran","Corolla GDP2G67","801","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-23T21:30:00-03:00","Mensal","Marcelo","Corolla RRI8497","798","Tenaris","","Apenas Motorista",491.62],
+        ["2026-03-24T06:30:00-03:00","Mensal","Washington","Virtus FNV6G64","804","Tenaris","","BÃ¡sico",469.81],
+        ["2026-03-24T06:30:00-03:00","Mensal","Isael","","906218735","Embraer","","",1169.63],
+        ["2026-03-24T06:30:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/19909","Embraer","","",1699.31],
+        ["2026-03-24T07:15:00-03:00","Mensal","Danilo","Cruze GEZ6D67","9332","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-24T07:40:00-03:00","Concluido","Calastri","Cruze RTI7G00","","Johnson&Johnson","","Executivo",173.51],
+        ["2026-03-24T07:45:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","9187","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-24T08:30:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","","Johnson&Johnson","","Executivo",173.51],
+        ["2026-03-24T08:30:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","","Betinhos Executive Service","","",0],
+        ["2026-03-24T09:00:00-03:00","ConcluÃ­do","Lorran","","","Betinhos Executive Service","","",0],
+        ["2026-03-24T16:00:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","","Betinhos Executive Service","","",0],
+        ["2026-03-24T17:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","9329","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-24T17:00:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","9191","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-24T17:00:00-03:00","Concluido","Calastri","Cruze RTI7G00","","Johnson&Johnson","","Executivo",160.51],
+        ["2026-03-24T17:00:00-03:00","Cancelado","Cancelado","","","Johnson&Johnson","","Executivo",0],
+        ["2026-03-24T17:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","805","Tenaris","","BÃ¡sico",275.4],
+        ["2026-03-24T18:00:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","","Johnson&Johnson","","",952.96],
+        ["2026-03-24T18:30:00-03:00","Mensal","Isael","Virtus STW5G55","PG2026/19682","Embraer","","",555.84],
+        ["2026-03-24T18:30:00-03:00","Mensal","Oliveira","","PG2026/19683","Embraer","","",555.84],
+        ["2026-03-24T17:40:00-03:00","Mensal","Junior","Compass Blindada FCB8B61","PG2026/20523","Embraer","","",216.9],
+        ["2026-03-24T20:30:00-03:00","ConcluÃ­do","Alexandre","Corolla RUP6H17","","Particular","","",490],
+        ["2026-03-24T20:50:00-03:00","Mensal","Jamerson","Versa EKH6E73","PG2026/19535","Embraer","","",555.84],
+        ["2026-03-25T05:00:00-03:00","Cancelado","Cancelado","","9351","Particular","Guarulhos","Spin",0],
+        ["2026-03-25T05:00:00-03:00","Cancelado","Cancelado","","9352","Particular","Guarulhos","Executivo",0],
+        ["2026-03-25T06:30:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/20134","Embraer","","",1940.61],
+        ["2026-03-25T07:00:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/17543","Embraer","","",882.71],
+        ["2026-03-25T07:00:00-03:00","Em aprovaÃ§Ã£o","Amadeu","Corolla RUH7G45","","Johnson&Johnson","","",237.34],
+        ["2026-03-25T07:15:00-03:00","Mensal","Washington","Virtus FNV6G64","9333","Tenaris","Pindamonhangaba","BÃ¡sico",264.05],
+        ["2026-03-25T07:30:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","9361","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-25T07:45:00-03:00","Concluido","Calastri","Cruze RTI7G00","9354","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-25T07:45:00-03:00","ConcluÃ­do","Josmar","Versa CUQ7E87","9188","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-25T08:00:00-03:00","Cancelado","Cancelado","","PG2026/19544","Embraer","","",0],
+        ["2026-03-25T08:10:00-03:00","Mensal","Ibrahim","","PG2026/19382","Embraer","","",555.84],
+        ["2026-03-25T08:30:00-03:00","ConcluÃ­do","Washington","Virtus FNV6G64","","Betinhos Executive Service","","",0],
+        ["2026-03-25T08:30:00-03:00","ConcluÃ­do","Jailton","","9353","Boeing","Guarulhos","Spin",974.01],
+        ["2026-03-25T09:00:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","","Betinhos Executive Service","","",0],
+        ["2026-03-25T09:30:00-03:00","Mensal","Calastri","Cruze RTI7G00","PG2026/20476","Embraer","","",889],
+        ["2026-03-25T09:40:00-03:00","Cancelado","Cancelado","","","Betinhos Executive Service","","",0],
+        ["2026-03-25T14:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","806","Tenaris","","Apenas Motorista",1555.25],
+        ["2026-03-25T14:00:00-03:00","Mensal","Isael","Virtus STW5G55","PG2026/20717","Embraer","","",216.9],
+        ["2026-03-25T16:30:00-03:00","Cancelado","Cancelado","","PG2026/19545","Embraer","","",0],
+        ["2026-03-25T16:40:00-03:00","Mensal","Washington","Virtus FNV6G64","9330","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-25T17:00:00-03:00","Concluido","Calastri","Cruze RTI7G00","9357","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",489.65],
+        ["2026-03-25T17:00:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","9192","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-25T18:30:00-03:00","Em aprovaÃ§Ã£o","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","",523.56],
+        ["2026-03-25T18:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","790","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-25T19:30:00-03:00","Mensal","Jailton","","PG2026/20740","Embraer","","",216.9],
+        ["2026-03-26T04:40:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/18344","Embraer","","Executivo",882.71],
+        ["2026-03-26T06:30:00-03:00","Mensal","Isael","","906218735","Embraer","","",1169.63],
+        ["2026-03-26T06:30:00-03:00","Mensal","Mauricio","","906245986","Embraer","","",1169.63],
+        ["2026-03-26T06:40:00-03:00","Pendente","Jamerson","Versa EKH6E73","9368","Kenvue","SÃ£o Paulo","Executivo",509.42],
+        ["2026-03-26T07:00:00-03:00","Em aprovaÃ§Ã£o","Ibrahim","","9382","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",139.58],
+        ["2026-03-26T07:15:00-03:00","Mensal","Menecucci","Spin TIU2F11","9334","Tenaris","Pindamonhangaba","BÃ¡sico",115.02],
+        ["2026-03-26T08:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","807","Tenaris","","Spin",634.03],
+        ["2026-03-26T07:45:00-03:00","Concluido","Calastri","Cruze RTI7G00","9355","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-26T07:45:00-03:00","ConcluÃ­do","Jailton","","9189","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-26T07:45:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/20856","Embraer","","",1593.52],
+        ["2026-03-26T08:00:00-03:00","Cancelado","Cancelado","","PG2026/19550","Embraer","","Executivo",0],
+        ["2026-03-26T08:00:00-03:00","Mensal","Lorran","Corolla GDP2G67","791","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-26T08:00:00-03:00","ConcluÃ­do","Oliveira","","9362","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-26T09:30:00-03:00","Mensal","Jamerson","Versa EKH6E73","PG2026/19552","Embraer","","Executivo",555.84],
+        ["2026-03-26T09:45:00-03:00","Mensal","Calastri","Cruze RTI7G00","PG2026/20963","Embraer","","",214.37],
+        ["2026-03-26T13:45:00-03:00","Mensal","","","PG2026/21001","Embraer","","",216.9],
+        ["2026-03-26T15:00:00-03:00","Mensal","Washington","Virtus FNV6G64","9327","Tenaris","Rio de Janeiro","BÃ¡sico",1036.83],
+        ["2026-03-26T16:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","9381","Tenaris","Rio de Janeiro","Executivo",1196.35],
+        ["2026-03-26T16:30:00-03:00","Cancelado","Cancelado",".","PG2026/19551","Embraer","","Executivo",0],
+        ["2026-03-26T17:00:00-03:00","Cancelado","Cancelado",".","9363","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-26T17:00:00-03:00","Concluido","Calastri","Cruze RTI7G00","9358","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-26T17:00:00-03:00","ConcluÃ­do","Ibrahim",".","9193","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-26T19:00:00-03:00","Cancelado","Cancelado",".","9338","Boeing","Guarulhos","Executivo",0],
+        ["2026-03-26T21:00:00-03:00","Mensal","Jailton",".","PG2026/19846","Embraer","","Executivo",555.84],
+        ["2026-03-26T22:00:00-03:00","Cancelado","Cancelado",".","PG2026/19844","Embraer","","Executivo",0],
+        ["2026-03-26T22:00:00-03:00","Cancelado","Cancelado",".","PG2026/19845","Embraer","","Executivo",0],
+        ["2026-03-26T21:00:00-03:00","Concluido","Ibrahim","","","Particular","","",450],
+        ["2026-03-26T21:10:00-03:00","Mensal","Marcelo","Corolla RRI8497","828","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-27T05:20:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/20250","Embraer","","",351.42],
+        ["2026-03-27T05:30:00-03:00","Mensal","Menecucci","Spin TIU2F11","768","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-27T06:30:00-03:00","Mensal","Mauricio","","906245986","Embraer","","",1169.63],
+        ["2026-03-27T07:00:00-03:00","Em aprovaÃ§Ã£o","Amadeu","Corolla RUH7G45","9383","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",237.34],
+        ["2026-03-27T07:30:00-03:00","Cancelado","Cancelado","","9069","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-03-27T07:45:00-03:00","Concluido","Calastri","Cruze RTI7G00","9356","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-27T07:45:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","9190","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-27T08:00:00-03:00","Mensal","Lorran","","PG2026/21054","Embraer","","",1593.52],
+        ["2026-03-27T08:00:00-03:00","Cancelado","Cancelado","","PG2026/19557","Embraer","","",0],
+        ["2026-03-27T08:00:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","9364","Johnson&Johnson","Guarulhos","Executivo",1218.24],
+        ["2026-03-27T09:00:00-03:00","Mensal","Menecucci","Spin TIU2F11","832","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-27T09:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","802","Tenaris","","BÃ¡sico",507.65],
+        ["2026-03-27T11:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","797","Tenaris","","BÃ¡sico",594.84],
+        ["2026-03-27T12:00:00-03:00","Mensal","Calastri","Equinox GLM","PG2026/21247","Embraer","","",558.62],
+        ["2026-03-27T12:00:00-03:00","Mensal","Jailton","","PG2026/21248","Embraer","","",558.62],
+        ["2026-03-27T12:00:00-03:00","Mensal","Oliveira","","PG2026/21249","Embraer","","",862.28],
+        ["2026-03-27T15:00:00-03:00","Mensal","Calastri","Equinox GLM","PG2026/21250","Embraer","","",428.48],
+        ["2026-03-27T16:30:00-03:00","Mensal","Washington","","","Tenaris","","",129.6],
+        ["2026-03-27T15:00:00-03:00","Mensal","Danilo","Cruze GEZ6D67","9199","Tenaris","Pindamonhangaba","BÃ¡sico",81.01],
+        ["2026-03-27T15:20:00-03:00","ConcluÃ­do","Alexandre","Corolla RUP6H17","9313","Eldorado do Brasil","SÃ£o Paulo","Executivo",729.95],
+        ["2026-03-27T16:30:00-03:00","Cancelado","Cancelado","","PG2026/19558","Embraer","","",0],
+        ["2026-03-27T16:30:00-03:00","ConcluÃ­do","Amadeu","Corolla RUH7G45","9184","Johnson&Johnson","Guarulhos","Executivo",509.42],
+        ["2026-03-27T17:00:00-03:00","Concluido","Jamerson","Compass Blindada FCB8B61","9360","Johnson&Johnson","Guarulhos","Blindado",1172.94],
+        ["2026-03-27T17:00:00-03:00","Concluido","Junior","Versa EKH6E73","9359","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-27T21:15:00-03:00","Mensal","Robson","Corolla GGR4D15","831","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-28T06:00:00-03:00","Mensal","Josmar","Versa CUQ7E87","808","Tenaris","","BÃ¡sico",1070.84],
+        ["2026-03-28T06:30:00-03:00","ConcluÃ­do","Ibrahim","","8963","Johnson&Johnson","Guarulhos","BÃ¡sico",558.86],
+        ["2026-03-28T07:45:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/20362","Embraer","","",555.84],
+        ["2026-03-28T10:00:00-03:00","Concluido","Mauricio","Cruze RUD3B91","","Betinhos Executive Service","","",0],
+        ["2026-03-28T13:30:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/20351","Embraer","","",351.42],
+        ["2026-03-28T14:00:00-03:00","Mensal","Washington","Spin TIU2F11","799","Tenaris","","BÃ¡sico",483.25],
+        ["2026-03-28T16:00:00-03:00","Mensal","Oliveira","","PG2026/21234","Embraer","","Spin",364.42],
+        ["2026-03-28T18:00:00-03:00","ConcluÃ­do","Alexandre","Corolla RUP6H17","9336","Kenvue","Guarulhos","Executivo",429.35],
+        ["2026-03-28T17:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/21598","Embraer","","",351.42],
+        ["2026-03-28T19:30:00-03:00","Mensal","Washington","Spin TIU2F11","PG2026/20710","Embraer","","",555.84],
+        ["2026-03-28T21:45:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/20322","Embraer","","",760.13],
+        ["2026-03-29T06:00:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/20304","Embraer","","",555.84],
+        ["2026-03-29T06:45:00-03:00","Mensal","Jailton","","PG2026/20517","Embraer","","",555.84],
+        ["2026-03-29T07:15:00-03:00","Mensal","Oliveira","","PG2026/20518","Embraer","","",555.84],
+        ["2026-03-29T17:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/21613","Embraer","","",364.42],
+        ["2026-03-29T18:00:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/21286","Embraer","","",555.84],
+        ["2026-03-29T19:15:00-03:00","Mensal","Marcelo","Corolla RRI8497","843","Tenaris","","BÃ¡sico",194.41],
+        ["2026-03-29T19:45:00-03:00","ConcluÃ­do","Vilela","","9315","Particular","Guarulhos","BÃ¡sico",490],
+        ["2026-03-29T20:00:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/20517","Embraer","","",555.84],
+        ["2026-03-29T21:00:00-03:00","ConcluÃ­do","Ricardo","","9366","Johnson&Johnson","Guarulhos","Executivo",952.96],
+        ["2026-03-30T03:00:00-03:00","Concluido","Isael","Virtus STW5G55","9319","Johnson&Johnson","SÃ£o Paulo","BÃ¡sico",1228.23],
+        ["2026-03-30T03:00:00-03:00","Concluido","Oliveira","","9386","Johnson&Johnson","Guarulhos","Executivo",540.74],
+        ["2026-03-30T03:00:00-03:00","Mensal","Jamerson","Versa EKH6E73","830","Tenaris","","BÃ¡sico",1096.2],
+        ["2026-03-30T03:10:00-03:00","Concluido","Ibrahim","","9384","Johnson&Johnson","Guarulhos","Executivo",491.86],
+        ["2026-03-30T03:30:00-03:00","Mensal","Menecucci","Virtus FNV6G64","779","Tenaris","","BÃ¡sico",1036.83],
+        ["2026-03-30T04:30:00-03:00","Mensal","Washington","Spin TIU2F11","839","Tenaris","","BÃ¡sico",2920.41],
+        ["2026-03-30T04:50:00-03:00","Mensal","Calastri","Compass Blindada FCB8B61","PG2026/20588","Embraer","","Executivo",587.34],
+        ["2026-03-30T05:20:00-03:00","Mensal","Lorran","Corolla GDP2G67","727","Tenaris","","BÃ¡sico",521.25],
+        ["2026-03-30T05:30:00-03:00","Mensal","Gilberto","","PG2026/21403","Embraer","","Executivo",1200.08],
+        ["2026-03-30T06:55:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","9388","Johnson&Johnson","Guarulhos","Blindado",1239.94],
+        ["2026-03-30T07:00:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","9369","Johnson&Johnson","Guarulhos","Executivo",632.63],
+        ["2026-03-30T07:30:00-03:00","Em aprovaÃ§Ã£o","Danilo","Cruze GEZ6D67","","Johnson&Johnson","","",139.58],
+        ["2026-03-30T07:30:00-03:00","Mensal","Robson","Corolla GGR4D15","829","Tenaris","","BÃ¡sico",1072.53],
+        ["2026-03-30T07:45:00-03:00","Concluido","Junior","Cruze RTI7G00","9171","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-30T08:00:00-03:00","Cancelado","Cancelado","","PG2026/19559","Embraer","","Executivo",0],
+        ["2026-03-30T08:00:00-03:00","Mensal","Oliveira","","PG2026/19383","Embraer","","Executivo",555.84],
+        ["2026-03-30T09:00:00-03:00","ConcluÃ­do","Marcelo","","9006","Johnson&Johnson","Guarulhos","BÃ¡sico",442.98],
+        ["2026-03-30T09:15:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","","Johnson&Johnson","","",952.96],
+        ["2026-03-30T09:30:00-03:00","Mensal","Ibrahim","","PG2026/21720","Embraer","","",555.84],
+        ["2026-03-30T09:30:00-03:00","Mensal","Alexandre","Corolla RUP6H17","PG2026/21407","Embraer","","Executivo",1517.45],
+        ["2026-03-30T09:30:00-03:00","Mensal","Danilo","Cruze GEZ6D67","PG2026/21408","Embraer","","Executivo",1517.45],
+        ["2026-03-30T10:15:00-03:00","Mensal","Renato","","PG2026/21276","Embraer","","Executivo",1411.66],
+        ["2026-03-30T10:30:00-03:00","Mensal","Oliveira","","PG2026/21735","Embraer","","",227.37],
+        ["2026-03-30T11:30:00-03:00","ConcluÃ­do","Mauricio","Cruze RUD3B91","","CBRE","","",575],
+        ["2026-03-30T12:00:00-03:00","Cancelado","Cancelado","","522","Tenaris","","BÃ¡sico",0],
+        ["2026-03-30T12:00:00-03:00","Mensal","Ibrahim","","PG2026/21748","Embraer","","",862.28],
+        ["2026-03-30T12:30:00-03:00","ConcluÃ­do","Calastri","Compass Blindada FCB8B61","9390","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Blindado",353.11],
+        ["2026-03-30T13:00:00-03:00","Mensal","Calastri","Compass Blindada FCB8B61","PG2026/21751","Embraer","","",558.62],
+        ["2026-03-30T13:00:00-03:00","ConcluÃ­do","Oliveira","","9372","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.41],
+        ["2026-03-30T13:00:00-03:00","ConcluÃ­do","Isael","Virtus STW5G55","9397","BeCooper","Campinas","BÃ¡sico",0],
+        ["2026-03-30T13:00:00-03:00","Mensal","Marcelo","","PG2026/21302","Embraer","","Executivo",351.42],
+        ["2026-03-30T16:30:00-03:00","Concluido","Oliveira","","9176","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-30T16:30:00-03:00","Cancelado","Cancelado","","PG2026/19560","Embraer","","Executivo",0],
+        ["2026-03-30T16:45:00-03:00","Mensal","Amadeu","Corolla RUH7G45","PG2026/21295","Embraer","","Executivo",351.42],
+        ["2026-03-30T17:15:00-03:00","ConcluÃ­do","Calastri","","9391","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-30T18:15:00-03:00","ConcluÃ­do","Oliveira","","9373","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-30T19:30:00-03:00","Mensal","Mauricio","Cruze RUD3B91","pg2026/21886","Embraer","","",364.42],
+        ["2026-03-30T21:00:00-03:00","Mensal","Gilberto","","PG2026/21889","Embraer","","",364.42],
+        ["2026-03-30T20:00:00-03:00","ConcluÃ­do","Renato","","","CBRE","","",575],
+        ["2026-03-30T21:15:00-03:00","Mensal","Fabio Honorio","Cruze GCL9J98","","Tenaris","","",81.01],
+        ["2026-03-31T04:00:00-03:00","Mensal","Ricardo","","PG2026/20919","Embraer","","",364.41],
+        ["2026-03-31T04:30:00-03:00","Mensal","Josmar","Versa CUQ7E87","PG2026/20969","Embraer","","",1516.38],
+        ["2026-03-31T04:30:00-03:00","Mensal","Lorran","","PG2026/21794","Embraer","","",1305.87],
+        ["2026-03-31T04:45:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","9155","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-31T05:00:00-03:00","Mensal","Vilela","","PG2026/21888","Embraer","","",554.94],
+        ["2026-03-31T05:15:00-03:00","ConcluÃ­do","Washington","Spin TIU2F11","9406","Johnson&Johnson","SÃ£o Paulo","Executivo",0],
+        ["2026-03-31T05:15:00-03:00","ConcluÃ­do","Oliveira","","9407","Johnson&Johnson","SÃ£o Paulo","Executivo",1060.41],
+        ["2026-03-31T05:25:00-03:00","Mensal","Ricardo","Cruze RNT4F01","809","Tenaris","","BÃ¡sico",629.27],
+        ["2026-03-31T05:40:00-03:00","Cancelado","Cancelado","","9370","Johnson&Johnson","Guarulhos","Executivo",0],
+        ["2026-03-31T06:00:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/21865","Embraer","","",863.14],
+        ["2026-03-31T06:00:00-03:00","Mensal","Calastri","Cruze RTI7G00","PG2026/20920","Embraer","","",227.37],
+        ["2026-03-31T06:00:00-03:00","Mensal","Gilberto","","PG2026/20921","Embraer","","",227.37],
+        ["2026-03-31T06:00:00-03:00","Mensal","Jamerson","Versa EKH6E73","PG2026/21892","Embraer","","",227.37],
+        ["2026-03-31T06:00:00-03:00","Cancelado","Cancelado","","PG2026/21925","Embraer","","",0],
+        ["2026-03-31T06:30:00-03:00","Mensal","Danilo","Corolla RUP6H17","796","Tenaris","","Executivo",1624.84],
+        ["2026-03-31T06:30:00-03:00","Mensal","Alexandre","Cruze GEZ6D67","795","Tenaris","","BÃ¡sico",1305.28],
+        ["2026-03-31T06:30:00-03:00","Mensal","Isael","","906249886","Embraer","","",1169.63],
+        ["2026-03-31T06:30:00-03:00","Cancelado","Cancelado","","","Embraer","","",0],
+        ["2026-03-31T07:00:00-03:00","ConcluÃ­do","Renato","","","CBRE","","",575],
+        ["2026-03-31T07:00:00-03:00","Mensal","Marcelo","","850","Tenaris","","BÃ¡sico",866.52],
+        ["2026-03-31T07:10:00-03:00","Mensal","Washington","Spin TIU2F11","855","Tenaris","","Executivo",224.31],
+        ["2026-03-31T07:30:00-03:00","Em aprovaÃ§Ã£o","Menecucci","Virtus FNV6G64","9408","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",139.58],
+        ["2026-03-31T07:30:00-03:00","Em aprovaÃ§Ã£o","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","",139.58],
+        ["2026-03-31T07:40:00-03:00","Concluido","Robson","","9172","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-31T07:45:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","9394","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-31T08:15:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","9374","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",173.51],
+        ["2026-03-31T09:00:00-03:00","Em aprovaÃ§Ã£o","Paulo Cezar","","","Tenaris","","Van",1490],
+        ["2026-03-31T09:45:00-03:00","Concluido","Menecucci","Virtus FNV6G64","9371","Johnson&Johnson","Guarulhos","Executivo",682.21],
+        ["2026-03-31T11:30:00-03:00","Cancelado","Cancelado","","9375","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",0],
+        ["2026-03-31T13:00:00-03:00","Mensal","Mauricio","Cruze RUD3B91","PG2026/20922","Embraer","","",364.42],
+        ["2026-03-31T14:00:00-03:00","Em aprovaÃ§Ã£o","Josmar","Versa CUQ7E87","9403","Johnson&Johnson","SÃ£o Paulo","Executivo",620.49],
+        ["2026-03-31T16:00:00-03:00","ConcluÃ­do","Jamerson","Versa EKH6E73","9160","Johnson&Johnson","Guarulhos","Executivo",442.98],
+        ["2026-03-31T16:00:00-03:00","ConcluÃ­do","Jailton","","","CBRE","","",575],
+        ["2026-03-31T15:45:00-03:00","Mensal","Lorran","","PG2026/22089","Embraer","","",216.9],
+        ["2026-03-31T15:45:00-03:00","Mensal","Robson","","PG2026/22090","Embraer","","",216.9],
+        ["2026-03-31T16:30:00-03:00","Concluido","Robson","","9174","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-31T16:40:00-03:00","ConcluÃ­do","Calastri","Cruze RTI7G00","9392","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",545.86],
+        ["2026-03-31T16:40:00-03:00","Em aprovaÃ§Ã£o","Junior","Compass Blindada FCB8B61","","Johnson&Johnson","","Executivo",816.84],
+        ["2026-03-31T16:40:00-03:00","Em aprovaÃ§Ã£o","Mauricio","Cruze RUD3B91","","Johnson&Johnson","","Executivo",489.65],
+        ["2026-03-31T17:30:00-03:00","Em aprovaÃ§Ã£o","Lorran","","","Johnson&Johnson","","",160.51],
+        ["2026-03-31T17:00:00-03:00","ConcluÃ­do","Ibrahim","","","Boeing","","",396.05],
+        ["2026-03-31T08:30:00-03:00","Mensal","Washington","","","Tenaris","","",81.01],
+        ["2026-03-31T17:00:00-03:00","Mensal","Washington","Spin TIU2F11","810","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-31T17:30:00-03:00","Cancelado","Cancelado","","","Johnson&Johnson","","Executivo",0],
+        ["2026-03-31T17:40:00-03:00","Mensal","Amadeu","Corolla RUH7G45","","Embraer","","",216.9],
+        ["2026-03-31T18:00:00-03:00","ConcluÃ­do","Robson","","9376","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-31T18:00:00-03:00","Concluido","Menecucci","Virtus FNV6G64","9376","Johnson&Johnson","SÃ£o JosÃ© dos Campos","Executivo",160.51],
+        ["2026-03-31T18:00:00-03:00","Mensal","Washington","Spin TIU2F11","847","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-31T19:00:00-03:00","Mensal","Robson","Corolla GGR4D15","","Tenaris","","",401.04],
+        ["2026-03-31T19:15:00-03:00","Mensal","Washington","Spin TIU2F11","","Tenaris","","Executivo",440.81],
+        ["2026-03-31T21:15:00-03:00","Mensal","Fabio Honorio","Cruze GCL9J98","858","Tenaris","","BÃ¡sico",81.01],
+        ["2026-03-31T21:30:00-03:00","Cancelado","Cancelado","","PG2026/20923","Embraer","","",0],
+      ];
 
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // DADOS FICTÃCIOS (MOCK) â€” DESENVOLVIMENTO LOCAL
@@ -52,6 +2049,14 @@
 
       function generateMockData() {
         const now = new Date();
+        const demoMode = new URLSearchParams(window.location.search).get("demo") === "1";
+        let demoSeed = 20260722;
+        const random = demoMode
+          ? () => {
+              demoSeed = (demoSeed * 1664525 + 1013904223) >>> 0;
+              return demoSeed / 4294967296;
+            }
+          : Math.random;
         const motores = [
           "JoÃ£o Silva",
           "Carlos Oliveira",
@@ -160,12 +2165,36 @@
           "Parceria",
         ];
         const statusMkt = ["Publicado", "Em ProduÃ§Ã£o", "Rascunho", "Aprovado"];
+        const expenseCategories = [
+          ["Abastecimento", "Frota"],
+          ["AlmoÃ§o", "Equipe"],
+          ["Aplicativos", "Operacional"],
+          ["CafÃ©", "Equipe"],
+          ["Estacionamento", "Operacional"],
+          ["Gastos a pedido do cliente", "Cliente"],
+          ["Hospedagem", "Equipe"],
+          ["Jantar", "Equipe"],
+          ["Lanche", "Equipe"],
+          ["Lavagem", "Frota"],
+          ["LocaÃ§Ã£o de carro", "Operacional"],
+          ["ManutenÃ§Ã£o", "Frota"],
+          ["Outros", "Outros"],
+          ["PedÃ¡gio", "Operacional"],
+        ];
+        const expensePayments = [
+          ["CartÃ£o de crÃ©dito", "CartÃ£o"],
+          ["CTF (Sem parar)", "Tag"],
+          ["TicketLog", "CartÃ£o"],
+          ["Particular (Reembolso)", "Reembolso"],
+          ["Dinheiro (Corporativo)", "Dinheiro"],
+          ["Faturado (Plano mensal)", "Faturado"],
+        ];
 
-        const r = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        const r = (arr) => arr[Math.floor(random() * arr.length)];
         const rand = (min, max) =>
-          Math.floor(Math.random() * (max - min + 1)) + min;
+          Math.floor(random() * (max - min + 1)) + min;
         const randF = (min, max) =>
-          parseFloat((Math.random() * (max - min) + min).toFixed(2));
+          parseFloat((random() * (max - min) + min).toFixed(2));
         const dt = (diasAtras) => {
           const d = new Date(now);
           d.setDate(d.getDate() - diasAtras);
@@ -175,6 +2204,10 @@
 
         const mock = {
           reservas: [],
+          clientes: [],
+          passageiros: [],
+          servicosPassageiro: [],
+          errosOperacionais: [],
           precos: [],
           manutencoes: [],
           multas: [],
@@ -183,12 +2216,16 @@
           veiculos: [],
           funcionarios: [],
           marketing: [],
+          despesas: [],
+          categoriasDespesas: [],
+          formasPagamentoDespesas: [],
+          anexosDespesas: [],
         };
 
         // PreÃ§os
         for (let i = 0; i < 60; i++) {
           const id = `mock-preco-${i}`;
-          const st = r(["ConcluÃ­da", "Pendente"]);
+          const st = r(demoMode ? ["ConcluÃ­da", "ConcluÃ­da", "ConcluÃ­da", "Pendente"] : ["ConcluÃ­da", "Pendente"]);
           mock.precos.push({
             cr40f_composicaodeprecosid: id,
             new_valortotal: randF(150, 3500),
@@ -206,6 +2243,13 @@
             cr40f_funcionariosid: `mock-func-${i}`,
             cr40f_nomecompleto: motores[i],
             new_apelido: motores[i].split(" ")[0],
+            cr40f_status: "Ativo",
+            "cr40f_status@OData.Community.Display.V1.FormattedValue": "Ativo",
+            cr40f_nomedaempresa: i % 3 === 0 ? 202410000 : 202410001,
+            "cr40f_nomedaempresa@OData.Community.Display.V1.FormattedValue":
+              i % 3 === 0
+                ? "BETINHOS L AUTO LTDA EPP"
+                : "DEPAULA L AUTO LTDA EPP",
             cr40f_funcao: r([
               "Motorista",
               "Gerente",
@@ -218,10 +2262,11 @@
 
         // Pagantes (deve vir antes de Reservas para que possam ser referenciados)
         for (let i = 0; i < 40; i++) {
-          const st = r(["Paga", "Pendente"]);
+          const st = r(demoMode ? ["Paga", "Paga", "Paga", "Paga", "Pendente"] : ["Paga", "Pendente"]);
           mock.pagantes.push({
             cr40f_pagantesid: `mock-pag-${i}`,
             _cr40f_financeiro_value: `mock-op-${i}`,
+            createdon: dt(rand(1, 12)),
             cr40f_status: st,
             "cr40f_status@OData.Community.Display.V1.FormattedValue": st,
             cr40f_valor: randF(150, 3500),
@@ -233,7 +2278,7 @@
 
         // VeÃ­culos
         for (let i = 0; i < 15; i++) {
-          const st = r(["DisponÃ­vel", "Em ManutenÃ§Ã£o", "Ativo", "Reservado"]);
+          const st = r(demoMode ? ["DisponÃ­vel", "DisponÃ­vel", "Ativo", "Ativo", "Reservado", "Em ManutenÃ§Ã£o"] : ["DisponÃ­vel", "Em ManutenÃ§Ã£o", "Ativo", "Reservado"]);
           const catVei = i < 10 ? "Proprio" : "Terceiro";
           mock.veiculos.push({
             cr40f_veiculosid: `mock-vei-${i}`,
@@ -241,12 +2286,25 @@
             cr40f_marca: r(marcas),
             cr40f_modelo: r(modelos),
             cr40f_anodefabricacao: rand(2018, 2024),
-            cr40f_blindado: Math.random() > 0.7,
+            cr40f_blindado: random() > 0.7,
             cr40f_statusdoveiculo: st,
             "cr40f_statusdoveiculo@OData.Community.Display.V1.FormattedValue":
               st,
             new_categoriadoveiculo: catVei,
             "new_categoriadoveiculo@OData.Community.Display.V1.FormattedValue": catVei,
+          });
+        }
+
+        clientes.forEach((nome, i) => mock.clientes.push({
+          cr40f_clientes1id: `mock-cliente-${i}`,
+          cr40f_nomedocliente: nome,
+        }));
+        for (let i = 0; i < 25; i++) {
+          mock.passageiros.push({
+            cr40f_bancodedadosid: `mock-passageiro-${i}`,
+            cr40f_nomedopassageiro: `Passageiro ${String(i + 1).padStart(2, "0")}`,
+            cr40f_datadenascimento: i === 0 ? new Date(now).toISOString().slice(0, 10) : `198${i % 10}-0${(i % 9) + 1}-1${i % 8}`,
+            _cr40f_cliente_value: `mock-cliente-${i % clientes.length}`,
           });
         }
 
@@ -287,13 +2345,18 @@
             },
             cr40f_Cliente: { cr40f_nomedocliente: cli },
           });
+          mock.servicosPassageiro.push({
+            cr40f_geral: `mock-res-${i}`,
+            cr40f_bancodedados: mock.passageiros[i % mock.passageiros.length].cr40f_bancodedadosid,
+          });
         }
 
         // ManutenÃ§Ãµes
         for (let i = 0; i < 25; i++) {
-          const st = r(["ConcluÃ­do", "Em Andamento", "Pendente"]);
+          const st = r(demoMode ? ["ConcluÃ­do", "ConcluÃ­do", "ConcluÃ­do", "Em Andamento", "Pendente"] : ["ConcluÃ­do", "Em Andamento", "Pendente"]);
           mock.manutencoes.push({
             cr40f_manutencoesid: `mock-man-${i}`,
+            createdon: dt(rand(91, 120)),
             cr40f_datamanutencao: dt(rand(0, 90)),
             cr40f_datadaaprovacao: dt(rand(91, 120)),
             cr40f_valor: randF(200, 4500),
@@ -309,13 +2372,18 @@
 
         // Multas
         for (let i = 0; i < 12; i++) {
-          const st = r(["Pendente", "Pago", "Indicado"]);
+          const st = r([202410000, 202410006, 202410005]);
+          const stLabel = {
+            202410000: "Notificar o Condutor",
+            202410005: "Finalizado",
+            202410006: "Pago",
+          }[st];
           const tipoMulta = r(tiposMulta);
           mock.multas.push({
             cr40f_multasesid: `mock-mul-${i}`,
             cr40f_dataehorario: dt(rand(0, 120)),
             cr40f_status: st,
-            "cr40f_status@OData.Community.Display.V1.FormattedValue": st,
+            "cr40f_status@OData.Community.Display.V1.FormattedValue": stLabel,
             _cr40f_codigodainfracao_value: `mock-inf-${i % tiposMulta.length}`,
             "_cr40f_codigodainfracao_value@OData.Community.Display.V1.FormattedValue": tipoMulta,
             _cr40f_motorista_value: `mock-func-${rand(0, 9)}`,
@@ -354,6 +2422,131 @@
           });
         }
 
+        expenseCategories.forEach(([name, dre], index) => {
+          mock.categoriasDespesas.push({
+            cr40f_categoriadespesaoperacionalid: `mock-exp-cat-${index}`,
+            cr40f_nome: name,
+            cr40f_grupodre: dre,
+            cr40f_ordem: index + 1,
+            cr40f_ativa: true,
+          });
+        });
+        expensePayments.forEach(([name, type], index) => {
+          mock.formasPagamentoDespesas.push({
+            cr40f_formapagamentodespesaid: `mock-exp-pay-${index}`,
+            cr40f_nome: name,
+            cr40f_tipo: type,
+            cr40f_ordem: index + 1,
+            cr40f_ativa: true,
+          });
+        });
+
+        const expenseFinancialStatuses = [
+          [100000000, "NÃ£o reembolsÃ¡vel"],
+          [100000001, "Aguardando pagamento"],
+          [100000002, "Pago"],
+          [100000003, "Cancelado"],
+        ];
+        const expenseOperationalStatuses = [
+          [100000000, "Enviado"],
+          [100000001, "Precisa corrigir"],
+          [100000002, "Validado"],
+          [100000003, "Recusado"],
+          [100000004, "Cancelado"],
+        ];
+        const expenseAttachmentStatuses = [
+          [100000000, "Sem anexo"],
+          [100000002, "Completo"],
+          [100000003, "Falhou"],
+        ];
+        const expenseEstablishments = [
+          "Posto Avenida",
+          "Restaurante Central",
+          "CafÃ© Executivo",
+          "Estacionamento Centro",
+          "Sem Parar",
+          "Hotel Paulista",
+          "Oficina Premium",
+        ];
+        for (let i = 0; i < 220; i++) {
+          const categoryIndex =
+            i % 4 === 0
+              ? r([1, 3, 7, 8])
+              : rand(0, expenseCategories.length - 1);
+          const paymentIndex = rand(0, expensePayments.length - 1);
+          const driverIndex = rand(0, mock.funcionarios.length - 1);
+          const category = expenseCategories[categoryIndex];
+          const payment = expensePayments[paymentIndex];
+          const financial = r(expenseFinancialStatuses);
+          const operational = r(expenseOperationalStatuses);
+          const attachment = random() > 0.84
+            ? r(expenseAttachmentStatuses.slice(1))
+            : expenseAttachmentStatuses[0];
+          const establishment = r(expenseEstablishments);
+          const expenseId = `mock-exp-${i}`;
+          const reservationId =
+            random() > 0.78
+              ? mock.reservas[rand(0, mock.reservas.length - 1)]
+                  .cr40f_reservadeveculosid
+              : null;
+          const amount =
+            category[1] === "Frota"
+              ? randF(120, 1800)
+              : category[1] === "Equipe"
+                ? randF(18, 240)
+                : randF(35, 780);
+          const row = {
+            cr40f_despesaoperacionalid: expenseId,
+            cr40f_nome: `${category[0]} - ${establishment}`,
+            cr40f_datagasto: dt(rand(0, 180)),
+            cr40f_valor: amount,
+            cr40f_estabelecimento: establishment,
+            cr40f_observacao: i % 8 === 0 ? "Despesa operacional da equipe" : "",
+            cr40f_statusfinanceiro: financial[0],
+            "cr40f_statusfinanceiro@OData.Community.Display.V1.FormattedValue":
+              financial[1],
+            cr40f_statusoperacional: operational[0],
+            "cr40f_statusoperacional@OData.Community.Display.V1.FormattedValue":
+              operational[1],
+            cr40f_statusanexo: attachment[0],
+            "cr40f_statusanexo@OData.Community.Display.V1.FormattedValue":
+              attachment[1],
+            cr40f_origem: 100000000,
+            "cr40f_origem@OData.Community.Display.V1.FormattedValue": "App",
+            cr40f_possivelduplicidade: i % 91 === 0,
+            cr40f_protocolo: `DSP-${String(i + 1).padStart(5, "0")}`,
+            _cr40f_categoria_value: `mock-exp-cat-${categoryIndex}`,
+            "_cr40f_categoria_value@OData.Community.Display.V1.FormattedValue":
+              category[0],
+            _cr40f_formapagamento_value: `mock-exp-pay-${paymentIndex}`,
+            "_cr40f_formapagamento_value@OData.Community.Display.V1.FormattedValue":
+              payment[0],
+            _cr40f_motorista_value: `mock-func-${driverIndex}`,
+            "_cr40f_motorista_value@OData.Community.Display.V1.FormattedValue":
+              mock.funcionarios[driverIndex].cr40f_nomecompleto,
+            _cr40f_veiculo_value: `mock-vei-${rand(0, 14)}`,
+            createdon: dt(rand(0, 180)),
+          };
+          if (reservationId) row._cr40f_reserva_value = reservationId;
+          mock.despesas.push(row);
+
+          if (attachment[0] === 100000002) {
+            mock.anexosDespesas.push({
+              cr40f_anexodespesaoperacionalid: `mock-exp-attachment-${i}`,
+              _cr40f_despesa_value: expenseId,
+              cr40f_nomearquivo: `comprovante-${i + 1}.pdf`,
+              cr40f_status: 100000000,
+              "cr40f_status@OData.Community.Display.V1.FormattedValue": "Enviado",
+              cr40f_tipo: 100000000,
+              "cr40f_tipo@OData.Community.Display.V1.FormattedValue":
+                "Comprovante",
+              cr40f_urlsharepoint: "",
+              cr40f_sharelink: "",
+              createdon: dt(rand(0, 180)),
+            });
+          }
+        }
+
         return mock;
       }
 
@@ -365,19 +2558,67 @@
           label: "PROD",
           url: "https://orgf261ae8e.crm2.dynamics.com",
           cls: "env-prod",
+          logoResource: "cr40f_LogoBetinhosB",
         },
         org23b93544: {
           label: "DEV",
           url: "https://org23b93544.crm2.dynamics.com",
           cls: "env-dev",
+          logoResource: "cr40f_LogoBetinhosB",
         },
       };
+      const DEFAULT_LOGO_RESOURCE = "cr40f_LogoBetinhosB";
       let BASE = "";
+      let ACTIVE_ENV = null;
       const API = () => `${BASE}/api/data/v9.2`;
 
       function shouldUseMockData() {
         const params = new URLSearchParams(window.location.search);
         return IS_LOCAL || params.get("mock") === "1";
+      }
+
+      function getSnapshotEnvironment() {
+        const params = new URLSearchParams(window.location.search);
+        const environment = params.get("snapshot")?.toLowerCase();
+        return IS_LOCAL && ["dev", "prod"].includes(environment) ? environment : null;
+      }
+
+      function shouldUseSnapshot() {
+        return getSnapshotEnvironment() !== null;
+      }
+
+      async function loadSnapshot() {
+        const environment = getSnapshotEnvironment();
+        const environmentLabel = environment.toUpperCase();
+        const command = `npm run snapshot:${environment}`;
+        const response = await fetch(`data/dashboard-${environment}-snapshot.json`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Snapshot ${environmentLabel} indisponÃ­vel (HTTP ${response.status}). Rode ${command}.`);
+
+        const snapshot = await response.json();
+        const requiredCollections = ["reservas", "clientes", "passageiros", "servicosPassageiro", "errosOperacionais", "precos", "manutencoes", "multas", "trocas", "pagantes", "veiculos", "funcionarios", "marketing", "despesas", "categoriasDespesas", "formasPagamentoDespesas", "anexosDespesas"];
+        if (snapshot?.schemaVersion !== 1 || !snapshot?.data || snapshot?.source?.environment?.toLowerCase() !== environment) {
+          throw new Error(`Snapshot ${environmentLabel} invÃ¡lido ou de outro ambiente. Rode ${command} novamente.`);
+        }
+
+        for (const collection of requiredCollections) {
+          if (!Array.isArray(snapshot.data[collection])) {
+            throw new Error(`Snapshot ${environmentLabel} invÃ¡lido: coleÃ§Ã£o '${collection}' ausente.`);
+          }
+        }
+
+        DB = {
+          clientes: [],
+          passageiros: [],
+          servicosPassageiro: [],
+          despesas: [],
+          categoriasDespesas: [],
+          formasPagamentoDespesas: [],
+          anexosDespesas: [],
+          ...snapshot.data,
+        };
+        const exportedAt = new Date(snapshot.exportedAt);
+        const timestamp = Number.isNaN(exportedAt.getTime()) ? "data desconhecida" : exportedAt.toLocaleString("pt-BR");
+        showAlert("warn", `<strong>SNAPSHOT ${environmentLabel}:</strong> dados reais exportados em ${timestamp}. Atualize com <code>${command}</code>.`);
       }
 
       function makeHeaders(wantAnno, wantPage) {
@@ -419,7 +2660,11 @@
         if (typeof value === "string") return redactLogText(value);
         if (Array.isArray(value)) return value.map((item) => redactLogValue(item, key, depth + 1));
         if (typeof value === "object") {
-          return Object.fromEntries(Object.entries(value).map(([entryKey, entryValue]) => [entryKey, redactLogValue(entryValue, entryKey, depth + 1)]));
+          const redacted = {};
+          Object.keys(value).forEach((entryKey) => {
+            redacted[entryKey] = redactLogValue(value[entryKey], entryKey, depth + 1);
+          });
+          return redacted;
         }
         return value;
       }
@@ -457,6 +2702,7 @@
           name: redactLogText(error.name || "Error"),
           code: redactLogText(error.code || ""),
         };
+
         if (typeof error === "string") return { message: redactLogText(error), stack: "", name: "Error", code: "" };
         return { message: redactLogText(safeLogJson(error) || "Erro inesperado."), stack: "", name: "Error", code: "" };
       }
@@ -613,6 +2859,10 @@
 
       const T = {
         reservas: "cr40f_reservadeveculoses",
+        clientes: "cr40f_clientes1s",
+        passageiros: "cr40f_bancodedadoses",
+        servicosPassageiro: "cr40f_servicosporpassageiros",
+        errosOperacionais: "cr40f_errooperacionals",
         precos: "cr40f_composicaodeprecoses",
         manutencoes: "cr40f_manutencoeses",
         multas: "cr40f_multases",
@@ -621,6 +2871,14 @@
         veiculos: "cr40f_veiculoses",
         funcionarios: "cr40f_funcionarioses",
         marketing: "new_marketings",
+        despesas: "cr40f_despesaoperacionals",
+        categoriasDespesas: "cr40f_categoriadespesaoperacionals",
+        formasPagamentoDespesas: "cr40f_formapagamentodespesas",
+        anexosDespesas: "cr40f_anexodespesaoperacionals",
+        infracoes: "cr40f_infracaodetransitos",
+        telemetriaInfleet: "new_telemetriadiariainfleets",
+        eventosInfleet: "new_eventoinfleets",
+        viagensInfleet: "new_viageminfleets",
       };
       const F = {
         res: {
@@ -634,9 +2892,17 @@
           navMot: "cr40f_Motorista",
           navCli: "cr40f_Cliente",
           catItem: "new_categoriadoitem",
+          solicitante: "_cr40f_solicitante_value",
           lookupPreco: "_new_composicaodepreco_value",
           lookupOP: "_cr40f_financeiro_value",
         },
+        passageiro: {
+          id: "cr40f_bancodedadosid",
+          nome: "cr40f_nomedopassageiro",
+          nascimento: "cr40f_datadenascimento",
+          cliente: "_cr40f_cliente_value",
+        },
+        cliente: { id: "cr40f_clientes1id", nome: "cr40f_nomedocliente" },
         preco: { valorTotal: "new_valortotal", status: "new_status" },
         man: {
           data: "cr40f_datamanutencao",
@@ -653,6 +2919,12 @@
           status: "cr40f_status",
           tipo: "cr40f_codigodainfracao",
         },
+        erroOperacional: { data: "cr40f_dataocorrencia" },
+        inf: {
+          id: "cr40f_infracaodetransitoid",
+          codigo: "cr40f_codigodainfracao",
+          descricao: "cr40f_descricaodainfracao",
+        },
         trc: {
           data: "cr40f_dataehorariodatroca",
           status: "cr40f_statusdatroca",
@@ -663,6 +2935,7 @@
           status: "cr40f_status",
           valor: "cr40f_valor",
           forma: "cr40f_formadepagamento",
+          dataPrimeiroPagamento: "cr40f_datadoprimeiropagamento",
         },
         vei: {
           id: "cr40f_veiculosid",
@@ -676,20 +2949,156 @@
         },
         fun: {
           nome: "cr40f_nomecompleto",
+          status: "cr40f_status",
           funcao: "cr40f_funcao",
           cnh: "cr40f_validadedacnh",
           apelido: "new_apelido",
+          empresa: "cr40f_nomedaempresa",
+        },
+        despesa: {
+          id: "cr40f_despesaoperacionalid",
+          nome: "cr40f_nome",
+          data: "cr40f_datagasto",
+          valor: "cr40f_valor",
+          categoria: "_cr40f_categoria_value",
+          formaPagamento: "_cr40f_formapagamento_value",
+          motorista: "_cr40f_motorista_value",
+          veiculo: "_cr40f_veiculo_value",
+          reserva: "_cr40f_reserva_value",
+          cidade: "_cr40f_cidade_value",
+          manutencao: "_cr40f_manutencao_value",
+          estabelecimento: "cr40f_estabelecimento",
+          observacao: "cr40f_observacao",
+          observacaoInterna: "cr40f_observacaointerna",
+          statusFinanceiro: "cr40f_statusfinanceiro",
+          statusOperacional: "cr40f_statusoperacional",
+          statusAnexo: "cr40f_statusanexo",
+          origem: "cr40f_origem",
+          possivelDuplicidade: "cr40f_possivelduplicidade",
+          protocolo: "cr40f_protocolo",
+          km: "cr40f_kminformado",
+          litros: "cr40f_litros",
+          criadoEm: "createdon",
+          alteradoEm: "modifiedon",
+        },
+        categoriaDespesa: {
+          id: "cr40f_categoriadespesaoperacionalid",
+          nome: "cr40f_nome",
+          dre: "cr40f_grupodre",
+          ordem: "cr40f_ordem",
+          ativa: "cr40f_ativa",
+        },
+        formaDespesa: {
+          id: "cr40f_formapagamentodespesaid",
+          nome: "cr40f_nome",
+          tipo: "cr40f_tipo",
+          ordem: "cr40f_ordem",
+          ativa: "cr40f_ativa",
+        },
+        anexoDespesa: {
+          id: "cr40f_anexodespesaoperacionalid",
+          despesa: "_cr40f_despesa_value",
+          nomeArquivo: "cr40f_nomearquivo",
+          url: "cr40f_urlsharepoint",
+          shareLink: "cr40f_sharelink",
+          status: "cr40f_status",
+          tipo: "cr40f_tipo",
+          criadoEm: "createdon",
         },
         mkt: {
           status: "new_status",
           cat: "new_categoria",
           data: "new_datadepublicacao",
         },
+        infleetDiaria: {
+          data: "new_data",
+          veiculo: "_new_veiculo_value",
+          placa: "new_placanormalizada",
+          distancia: "new_distanciapercorridakm",
+          velocidadeMedia: "new_velocidademedia",
+          velocidadeMaxima: "new_velocidademaxima",
+          excessos: "new_excessosdevelocidade",
+          autonomia: "new_autonomiakml",
+          odometroFinal: "new_odometrofinal",
+          motorOciosoMin: "new_tempomotorociosomin",
+          tempoAcimaVelocidadeMin: "new_tempoacimavelocidademin",
+          sincronizadoEm: "new_sincronizadoem",
+        },
+        infleetEvento: {
+          id: "new_infleeteventid",
+          infleetDriverId: "new_infleetdriverid",
+          reportadoEm: "new_reportadoem",
+          veiculo: "_new_veiculo_value",
+          motorista: "_new_motorista_value",
+          placa: "new_placanormalizada",
+          motoristaRecebido: "new_nomemotoristarecebido",
+          tipo: "new_slug",
+          descricao: "new_descricao",
+          velocidade: "new_velocidaderegistrada",
+          limite: "new_limitedevelocidade",
+          endereco: "new_endereco",
+          latitude: "new_latitude",
+          longitude: "new_longitude",
+          statusMotorista: "new_statusmapeamentomotorista",
+        },
+        infleetViagem: {
+          id: "new_infleettripid",
+          infleetDriverId: "new_infleetdriverid",
+          iniciadoEm: "new_iniciadoem",
+          finalizadoEm: "new_finalizadoem",
+          veiculo: "_new_veiculo_value",
+          motorista: "_new_motorista_value",
+          placa: "new_placanormalizada",
+          motoristaRecebido: "new_nomemotoristarecebido",
+          distancia: "new_distanciakm",
+          velocidadeMedia: "new_velocidademedia",
+          velocidadeMaxima: "new_velocidademaxima",
+          tempoAcimaVelocidadeMin: "new_tempoacimavelocidademin",
+          combustivelLitros: "new_combustivelconsumidolitros",
+          custoCombustivel: "new_custocombustivelconsumido",
+          autonomia: "new_autonomiakml",
+          statusMotorista: "new_statusmapeamentomotorista",
+        },
       };
       const DV_STATUS_FAT_PAGO = 202410010;
+      const DV_STATUS_FAT_PAGANTE_EM_VIAGEM = 202410006;
+      const DV_STATUS_FAT_MENSAL = 202410008;
+      const EXPENSE_STATUS = {
+        financeiro: {
+          100000000: "NÃ£o reembolsÃ¡vel",
+          100000001: "Aguardando pagamento",
+          100000002: "Pago",
+          100000003: "Cancelado",
+        },
+        operacional: {
+          100000000: "Enviado",
+          100000001: "Precisa corrigir",
+          100000002: "Validado",
+          100000003: "Recusado",
+          100000004: "Cancelado",
+        },
+        anexo: {
+          100000000: "Sem anexo",
+          100000001: "Enviando",
+          100000002: "Completo",
+          100000003: "Falhou",
+          100000004: "Parcial",
+        },
+      };
+      const EXPENSE_FOOD_CATEGORIES = new Set([
+        "alimentacao",
+        "almoco",
+        "cafe",
+        "jantar",
+        "lanche",
+      ]);
 
       let DB = {
         reservas: [],
+        clientes: [],
+        passageiros: [],
+        servicosPassageiro: [],
+        errosOperacionais: [],
         precos: [],
         manutencoes: [],
         multas: [],
@@ -698,14 +3107,43 @@
         veiculos: [],
         funcionarios: [],
         marketing: [],
+        despesas: [],
+        categoriasDespesas: [],
+        formasPagamentoDespesas: [],
+        anexosDespesas: [],
+        infracoes: [],
+        telemetriaInfleet: [],
+        eventosInfleet: [],
+        viagensInfleet: [],
       };
-      let VW = { reservas: [], manutencoes: [], multas: [], trocas: [] };
+      let VW = {
+        reservas: [],
+        manutencoes: [],
+        multas: [],
+        trocas: [],
+        despesas: [],
+      };
+      const markpointState = { records: [], fileName: "", importedAt: null, meta: null, busy: false };
+      let markpointDriverMetrics = new Map();
+      const MARKPOINT_TABLE = "cr40f_jornadacolaborador";
+      const MARKPOINT_ENTITY_SET = "cr40f_jornadacolaboradors";
       let charts = {},
         sparks = {},
+        detailCharts = [],
         srtSt = {},
         tblCache = {};
       let msState = { St: [], Cl: [], Mo: [], Tp: [] };
+      let expenseFilters = {
+        company: "",
+        category: "",
+        payment: "",
+        financial: "",
+        operational: "",
+        attachment: "",
+      };
+      let expenseSearchQuery = "";
       let funcMapGlobal = new Map();
+      let infracaoMapGlobal = new Map();
 
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // UTILS
@@ -752,8 +3190,16 @@
           .toLocaleString("pt-BR", { month: "short", year: "2-digit" })
           .replace(".", "");
       };
+      const monthTableLabel = (k) => {
+        if (!k) return "â€”";
+        const [year, month] = k.split("-");
+        const monthLabel = getDashboardMonthLabels()[parseInt(month, 10) - 1];
+        return monthLabel ? `${monthLabel}/${String(year).slice(-2)}` : k;
+      };
       const fv = (r, f) =>
         r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
+      const isActiveFuncionario = (r) =>
+        stL(String(fv(r, F.fun.status) || "")) === "ativo";
       const sumV = (a) => a.reduce((s, r) => s + (r._valor || 0), 0);
       async function copyToClipboard(text) {
         try {
@@ -803,6 +3249,10 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
+      const DV_STATUS_MUL_NOTIFICAR = 202410000;
+      const DV_CAT_ITEM_SERVICO = 100000000;
+      const isMultaPendente = (r) =>
+        Number(r?.[F.mul.status]) === DV_STATUS_MUL_NOTIFICAR;
       const pad2 = (n) => String(n).padStart(2, "0");
       const ymd = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
       const parseBRDate = (s) => {
@@ -841,14 +3291,16 @@
         const day = String(dateValue).slice(0, 10);
         return day >= startStr && day <= endStr;
       };
-      const daysBetween = (startStr, endStr) => {
+      const shouldShowLM = (startStr, endStr) => {
         const s = parseBRDate(startStr);
         const e = parseBRDate(endStr);
-        if (!s || !e || e < s) return 0;
-        return Math.floor((e - s) / 86400000) + 1;
+        const today = new Date();
+        return !!s && !!e &&
+          s.getFullYear() === today.getFullYear() &&
+          e.getFullYear() === today.getFullYear() &&
+          s.getMonth() === today.getMonth() &&
+          e.getMonth() === today.getMonth();
       };
-      const shouldShowLM = (startStr, endStr) =>
-        !!startStr && !!endStr && daysBetween(startStr, endStr) <= 62;
       const isProducedReservation = (r) => {
         const k = normL(r?._stL);
         return k.includes("conclu") || k.includes("realiz") || k.includes("finaliz");
@@ -857,12 +3309,10 @@
         const k = normL(r?._stL);
         return k.includes("viagem") || k.includes("transit") || k.includes("execu");
       };
-      const isPendingScheduledReservation = (r) => {
-        const k = normL(r?._stL);
-        return k.includes("pend") || k.includes("progr") || k.includes("program") || k.includes("solicit");
-      };
       const isReceivedPayment = (r) => {
-        return r[F.pag.status] === 202410002;
+        const formatted = r[`${F.pag.status}@OData.Community.Display.V1.FormattedValue`];
+        const label = normL(formatted || r[F.pag.status] || "");
+        return r[F.pag.status] === 202410002 || label === "pago" || label === "paga";
       };
       const isTicketEligibleReservation = (r) =>
         r?._cpConcluida === true && (parseFloat(r?._valor) || 0) > 0;
@@ -882,6 +3332,20 @@
       };
       const paymentOp = (r) => String(r?.[F.pag.lookupOP] || "").toLowerCase();
       const paymentValue = (r) => parseFloat(r?.[F.pag.valor]) || 0;
+      const getRecebimentoStats = (rows) => {
+        const recebido = rows
+          .filter((r) => r[F.res.fatStatus] === DV_STATUS_FAT_PAGO && r._valor > 0)
+          .reduce((s, r) => s + r._valor, 0);
+        const base = rows
+          .filter(
+            (r) =>
+              r[F.res.fatStatus] !== DV_STATUS_FAT_PAGANTE_EM_VIAGEM &&
+              r[F.res.fatStatus] !== DV_STATUS_FAT_MENSAL &&
+              r._valor > 0,
+          )
+          .reduce((s, r) => s + r._valor, 0);
+        return { recebido, base, percentual: base ? (recebido / base) * 100 : 0 };
+      };
       const lookupValue = (r, lookupName) =>
         r?.[`_${lookupName}_value@OData.Community.Display.V1.FormattedValue`] ||
         r?.[`${lookupName}@OData.Community.Display.V1.FormattedValue`] ||
@@ -905,68 +3369,6 @@
         if (k.includes("prevent") || k.includes("revis") || k.includes("oleo")) return "Preventiva programada";
         return "Corretiva nao critica";
       };
-      function maintenanceKpiRows(mans, manFv) {
-        const byCat = grp(mans, (r) => maintenanceCategory(manFv(r, F.man.tipo)));
-        const catRows = (cat) => byCat[cat] || [];
-        const prevProg = catRows("Preventiva programada");
-        const prevProgMeasured = prevProg.filter((r) => daysBetweenValues(r[F.man.aprovacao], r[F.man.data]) !== null);
-        const prevProgOk = prevProgMeasured.filter((r) => {
-          const days = daysBetweenValues(r[F.man.aprovacao], r[F.man.data]);
-          return days >= 0 && days <= 10;
-        }).length;
-        const prevProgPct = prevProgMeasured.length ? (prevProgOk / prevProgMeasured.length) * 100 : null;
-        const cond = catRows("Preventiva condicao");
-        const corrNaoCrit = catRows("Corretiva nao critica");
-        const corrCrit = catRows("Corretiva critica");
-        const conserv = catRows("Conservacao");
-        const avaria = catRows("Avaria");
-        const fmtPct = (v) => v == null ? "s/dado" : `${v.toFixed(1)}%`;
-        const coverage = (measured, total) => total ? `${measured}/${total}` : "0/0";
-        return [
-          {
-            categoria: "Preventiva programada",
-            resultado: metricSplit(fmtPct(prevProgPct), `${prevProgOk}/${prevProgMeasured.length || prevProg.length} ate 10 dias`),
-            meta: ">= 98%",
-            cobertura: coverage(prevProgMeasured.length, prevProg.length),
-            ok: prevProgPct == null ? null : prevProgPct >= 98,
-          },
-          {
-            categoria: "Preventiva por condicao",
-            resultado: metricSplit(cond.length.toLocaleString("pt-BR"), "sem campo de pane vinculada"),
-            meta: "0 panes",
-            cobertura: "tipo reparo",
-            ok: null,
-          },
-          {
-            categoria: "Corretiva nao critica",
-            resultado: corrNaoCrit.length.toLocaleString("pt-BR"),
-            meta: "<= 5 no mes",
-            cobertura: "tipo reparo",
-            ok: corrNaoCrit.length <= 5,
-          },
-          {
-            categoria: "Corretiva critica/emergencial",
-            resultado: corrCrit.length.toLocaleString("pt-BR"),
-            meta: "0 no mes",
-            cobertura: "tipo reparo",
-            ok: corrCrit.length === 0,
-          },
-          {
-            categoria: "Conservacao, conforto e imagem",
-            resultado: metricSplit(conserv.length.toLocaleString("pt-BR"), "sem campo de inspecao aprovada"),
-            meta: ">= 95%",
-            cobertura: "tipo reparo",
-            ok: null,
-          },
-          {
-            categoria: "Avaria ou sinistro preventavel",
-            resultado: avaria.length.toLocaleString("pt-BR"),
-            meta: "0 no mes",
-            cobertura: "tipo reparo",
-            ok: avaria.length === 0,
-          },
-        ];
-      }
       function renderMetricLines(rows) {
         return rows
           .map(([label, value]) => `<div class="metric-line"><span>${label}</span><b>${value}</b></div>`)
@@ -1006,41 +3408,52 @@
           moneyValue = false,
           participationByValue = false,
           limit = 10,
+          labelMax = 28,
         } = options;
-        const tableRows = rows.slice(0, limit);
-        const hasValue = tableRows.some((r) => r.value !== undefined);
         const partBase = participationByValue
           ? rows.reduce((s, r) => s + Number(r.value || 0), 0)
           : total;
-        const cols = hasValue ? 4 : 3;
+        const tableRows = topByShare(
+          rows,
+          partBase,
+          (r) => participationByValue ? Number(r.value || 0) : Number(r.qtd || 0),
+          limit,
+        );
+        const hasValue = tableRows.some((r) => r.value !== undefined);
+        const countIsParticipation = !hasValue && !participationByValue;
+        const cols = hasValue ? 4 : countIsParticipation ? 2 : 3;
         const mobileRows = tableRows
           .map((r, i) => {
             const qtd = Number(r.qtd || 0);
             const value = Number(r.value || 0);
             const partValue = participationByValue ? value : qtd;
             const part = partBase ? (partValue / partBase) * 100 : 0;
-            const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, 28);
+            const countPct = total ? (qtd / total) * 100 : 0;
+            const labelHtml = badgeLabels ? badge(r.label) : trunc(r.label, labelMax);
             const valueStat = hasValue
               ? `<span><small>${valueLabel}</small><b>${moneyValue ? brl(value) : value.toLocaleString("pt-BR")}</b></span>`
               : "";
-            return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${labelHtml}</span><div class="metric-mobile-stats"><span><small>${countLabel}</small><b>${qtd.toLocaleString("pt-BR")}</b></span>${valueStat}</div></div>${metricMobileProgress(part, PAL[i % PAL.length])}</div>`;
+            return `<div class="metric-mobile-row"><div class="metric-mobile-row-head"><span class="metric-mobile-label">${labelHtml}</span><div class="metric-mobile-stats"><span><small>${countLabel}</small><b>${countPct.toFixed(1)}%</b><em>${qtd.toLocaleString("pt-BR")}</em></span>${valueStat}</div></div>${metricMobileProgress(part, PAL[i % PAL.length])}</div>`;
           })
           .join("");
         const mobileMarkup = mobileRows || '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
         const valueHead = hasValue ? '<th class="r">' + valueLabel + '</th>' : '';
-        const tableHead = '<thead><tr><th>' + label + '</th><th class="r">' + countLabel + '</th>' + valueHead + '<th>Participacao</th></tr></thead>';
+        const countHead = countIsParticipation ? '' : '<th class="r">' + countLabel + '</th>';
+        const tableHead = '<thead><tr><th>' + label + '</th>' + countHead + valueHead + '<th>Participa&ccedil;&atilde;o</th></tr></thead>';
         const tableBody = tableRows.map((r, i) => {
           const qtd = Number(r.qtd || 0);
           const value = Number(r.value || 0);
           const partValue = participationByValue ? value : qtd;
           const part = partBase ? (partValue / partBase) * 100 : 0;
+          const countPct = total ? (qtd / total) * 100 : 0;
           const secondary = participationByValue && hasValue
             ? (moneyValue ? brlS(value) : value.toLocaleString("pt-BR"))
             : `${qtd.toLocaleString("pt-BR")} ${countLabel.toLowerCase()}`;
           const valueCell = hasValue
             ? '<td class="r em">' + (moneyValue ? brl(value) : value.toLocaleString("pt-BR")) + '</td>'
             : '';
-          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, 28)) + '</td><td class="r">' + qtd.toLocaleString("pt-BR") + '</td>' + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
+          const countCell = countIsParticipation ? '' : '<td class="r">' + metricSplit(`${countPct.toFixed(1)}%`, qtd.toLocaleString("pt-BR"), "r") + '</td>';
+          return '<tr><td class="em">' + (badgeLabels ? badge(r.label) : trunc(r.label, labelMax)) + '</td>' + countCell + valueCell + '<td>' + progressCell(part, secondary, PAL[i % PAL.length]) + '</td></tr>';
         }).join("") || emptyRow(cols);
         el.classList.add("has-mobile-list");
         el.innerHTML = '<table>' + tableHead + '<tbody>' + tableBody + '</tbody></table><div class="metric-mobile-list">' + mobileMarkup + '</div>';
@@ -1056,8 +3469,9 @@
           if (typeof av === "string") return st.asc ? av.localeCompare(bv) : bv.localeCompare(av);
           return st.asc ? av - bv : bv - av;
         });
-        const body = sortedRows.length
-          ? sortedRows
+        const shareRows = topByShare(sortedRows, totalFat, (r) => r.fat);
+        const body = shareRows.length
+          ? shareRows
               .map((r, i) => {
                 const pctQtd = totalQtd ? (r.qtd / totalQtd) * 100 : 0;
                 const pctFat = totalFat ? (r.fat / totalFat) * 100 : 0;
@@ -1065,8 +3479,8 @@
               })
               .join("")
           : emptyRow(4);
-        const mobileBody = sortedRows.length
-          ? sortedRows
+        const mobileBody = shareRows.length
+          ? shareRows
               .map((r, i) => {
                 const pctQtd = totalQtd ? (r.qtd / totalQtd) * 100 : 0;
                 const pctFat = totalFat ? (r.fat / totalFat) * 100 : 0;
@@ -1075,7 +3489,7 @@
               .join("")
           : `<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>`;
         el.classList.add("has-mobile-list");
-        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">Participacao</th></tr></thead><tbody>${body}</tbody></table><div class="metric-mobile-list">${mobileBody}</div>`;
+        el.innerHTML = `<table><thead><tr><th class="${shareSortClass(targetId, "nome")}" onclick="srtShare('${targetId}','nome',this)">Destino</th><th class="r ${shareSortClass(targetId, "qtdPct")}" onclick="srtShare('${targetId}','qtdPct',this)">% sob QT</th><th class="r ${shareSortClass(targetId, "fatPct")}" onclick="srtShare('${targetId}','fatPct',this)">% sob R$</th><th class="${shareSortClass(targetId, "fat")}" onclick="srtShare('${targetId}','fat',this)">ParticipaÃ§Ã£o</th></tr></thead><tbody>${body}</tbody></table><div class="metric-mobile-list">${mobileBody}</div>`;
       }
       function srtShare(targetId, field) {
         const key = `share:${targetId}`;
@@ -1084,8 +3498,18 @@
         const cached = tblCache[targetId];
         if (cached) renderShareTable(targetId, cached.rows, cached.totalQtd, cached.totalFat);
       }
+      function isActiveVehicle(row) {
+        const status = normL(fv(row, F.vei.status)).trim();
+        return status === "ativo" || status === "ativo(a)";
+      }
       function isOwnVehicle(row) {
-        return normL(fv(row, F.vei.cat)).includes("proprio");
+        return isActiveVehicle(row) && normL(fv(row, F.vei.cat)).includes("proprio");
+      }
+      function isThirdPartyVehicle(row) {
+        return isActiveVehicle(row) && normL(fv(row, F.vei.cat)).includes("terceiro");
+      }
+      function isRentalVehicle(row) {
+        return isActiveVehicle(row) && normL(fv(row, F.vei.cat)).includes("aluguel");
       }
       function isReservableService(row) {
         const k = normL(row?._stL);
@@ -1110,13 +3534,30 @@
             .map((v) => String(v[F.vei.id] || "").toLowerCase())
             .filter(Boolean)
         );
+        const thirdIds = new Set(
+          vehicles
+            .filter(isThirdPartyVehicle)
+            .map((v) => String(v[F.vei.id] || "").toLowerCase())
+            .filter(Boolean)
+        );
         const totalOwn = ownIds.size;
+        const totalThird = thirdIds.size;
+        const rentalIds = new Set(
+          vehicles
+            .filter(isRentalVehicle)
+            .map((v) => String(v[F.vei.id] || "").toLowerCase())
+            .filter(Boolean)
+        );
+        const totalRental = rentalIds.size;
         const rowsByDay = new Map();
         reservas.filter(isReservableService).forEach((r) => {
-          if (!r._veiId || !ownIds.has(r._veiId) || !r[F.res.data]) return;
+          if (!r._veiId || !r[F.res.data] || (!ownIds.has(r._veiId) && !thirdIds.has(r._veiId) && !rentalIds.has(r._veiId))) return;
           const day = String(r[F.res.data]).slice(0, 10);
-          if (!rowsByDay.has(day)) rowsByDay.set(day, new Set());
-          rowsByDay.get(day).add(r._veiId);
+          if (!rowsByDay.has(day)) rowsByDay.set(day, { own: new Set(), third: new Set(), rental: new Set() });
+          const dayRows = rowsByDay.get(day);
+          if (ownIds.has(r._veiId)) dayRows.own.add(r._veiId);
+          if (thirdIds.has(r._veiId)) dayRows.third.add(r._veiId);
+          if (rentalIds.has(r._veiId)) dayRows.rental.add(r._veiId);
         });
         const byMonth = new Map();
         eachDateBetween(startStr, endStr).forEach((d) => {
@@ -1126,26 +3567,33 @@
           if (!byMonth.has(key)) {
             byMonth.set(key, {
               mes: key,
-              weekday: { days: 0, pctSum: 0, withSum: 0, withoutSum: 0 },
-              weekend: { days: 0, pctSum: 0, withSum: 0, withoutSum: 0 },
+              weekday: { days: 0, pctSum: 0, withoutSum: 0, thirdSum: 0, rentalSum: 0 },
+              weekend: { days: 0, pctSum: 0, withoutSum: 0, thirdSum: 0, rentalSum: 0 },
             });
           }
-          const used = totalOwn ? (rowsByDay.get(day)?.size || 0) : 0;
+          const dayRows = rowsByDay.get(day);
+          const used = totalOwn ? (dayRows?.own.size || 0) : 0;
+          const third = totalThird ? (dayRows?.third.size || 0) : 0;
+          const rental = totalRental ? (dayRows?.rental.size || 0) : 0;
           const free = Math.max(0, totalOwn - used);
           const bucket = byMonth.get(key)[type];
           bucket.days += 1;
-          bucket.withSum += used;
           bucket.withoutSum += free;
+          bucket.thirdSum += third;
+          bucket.rentalSum += rental;
           bucket.pctSum += totalOwn ? (used / totalOwn) * 100 : 0;
         });
         const fmtBucket = (b) => ({
           days: b.days,
           pct: b.days ? b.pctSum / b.days : 0,
-          withAvg: b.days ? b.withSum / b.days : 0,
           withoutAvg: b.days ? b.withoutSum / b.days : 0,
+          thirdAvg: b.days ? b.thirdSum / b.days : 0,
+          rentalAvg: b.days ? b.rentalSum / b.days : 0,
         });
         return {
           totalOwn,
+          totalThird,
+          totalRental,
           rows: [...byMonth.values()]
             .map((m) => ({ mes: m.mes, weekday: fmtBucket(m.weekday), weekend: fmtBucket(m.weekend) }))
             .sort((a, b) => a.mes.localeCompare(b.mes)),
@@ -1154,10 +3602,10 @@
       function renderFleetUsageRows(rows) {
         const cell = (b) =>
           b.days
-            ? metricSplit(`${b.pct.toFixed(1)}%`, `${b.withAvg.toFixed(1)} com / ${b.withoutAvg.toFixed(1)} sem`)
+            ? metricSplit(`${b.pct.toFixed(1)}%`, `${b.withoutAvg.toFixed(1)} ociosos / ${b.thirdAvg.toFixed(1)} terceiros / ${b.rentalAvg.toFixed(1)} aluguel`)
             : '<span class="dim">sem dias</span>';
         const tbody = rows.length
-          ? rows.map((r) => `<tr><td class="em">${mL(r.mes)}</td><td>${cell(r.weekday)}</td><td>${cell(r.weekend)}</td></tr>`).join("")
+          ? rows.map((r) => `<tr><td class="em">${monthTableLabel(r.mes)}</td><td>${cell(r.weekday)}</td><td>${cell(r.weekend)}</td></tr>`).join("")
           : emptyRow(3);
         html("tblFrotaUso", tbody);
       }
@@ -1166,7 +3614,6 @@
         tbFat: { col: 3, asc: false },
         tbFrota: { col: 0, asc: true },
         tbMot: { col: 3, asc: false },
-        tbMan: { col: 0, asc: false },
         tbMul: { col: 0, asc: false },
         tbTrc: { col: 0, asc: false },
         tbMkt: { col: 0, asc: false },
@@ -1193,6 +3640,8 @@
       }
       function parseTableValue(text) {
         const raw = String(text || "").trim();
+        const month = raw.match(/^(\d{4})-(\d{2})$/);
+        if (month) return new Date(Number(month[1]), Number(month[2]) - 1, 1).getTime();
         const date = raw.match(/^(\d{2})\/(\d{2})\/(\d{2,4})(?:,\s*(\d{2}):(\d{2}))?/);
         if (date) {
           const y = Number(date[3].length === 2 ? `20${date[3]}` : date[3]);
@@ -1221,8 +3670,8 @@
         if (!tbody) return;
         const rows = [...tbody.rows].filter((r) => !r.querySelector(".empty"));
         rows.sort((a, b) => {
-          const av = parseTableValue(a.cells[col]?.textContent);
-          const bv = parseTableValue(b.cells[col]?.textContent);
+          const av = parseTableValue(a.cells[col]?.dataset.sortValue || a.cells[col]?.textContent);
+          const bv = parseTableValue(b.cells[col]?.dataset.sortValue || b.cells[col]?.textContent);
           if (typeof av === "number" && typeof bv === "number") return asc ? av - bv : bv - av;
           return asc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
         });
@@ -1267,6 +3716,12 @@
         }
         return out;
       }
+      function topByShare(rows, total, valueFn, max = 10) {
+        const ranked = rows.slice(0, max);
+        if (!total || ranked.length <= 3) return ranked;
+        const eligible = ranked.filter((row) => (valueFn(row) / total) * 100 > 10);
+        return eligible.length >= 3 ? eligible : ranked.slice(0, 3);
+      }
 
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // REGRA GLOBAL: Dados Dataverse prÃ©-2026 suprimidos
@@ -1279,14 +3734,67 @@
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // FETCH
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      async function fetchAll(url) {
+      const DASHBOARD_DATA_REQUEST_TIMEOUT_MS = 60 * 1000;
+      const DASHBOARD_DATA_REQUEST_MAX_ATTEMPTS = 2;
+      const DASHBOARD_DATASET_CONCURRENCY = 4;
+      const DASHBOARD_TRANSIENT_HTTP_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+
+      function waitForDashboardRetry(attempt, response) {
+        const retryAfterSeconds = Number(response?.headers?.get("Retry-After"));
+        const delay = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+          ? Math.min(retryAfterSeconds * 1000, 10 * 1000)
+          : attempt * 750;
+        return new Promise((resolve) => window.setTimeout(resolve, delay));
+      }
+
+      async function fetchDashboardData(url, options = {}) {
+        const wantAnnotations = options.wantAnnotations !== false;
+        for (let attempt = 1; attempt <= DASHBOARD_DATA_REQUEST_MAX_ATTEMPTS; attempt++) {
+          const controller = typeof AbortController === "function" ? new AbortController() : null;
+          let timeoutId = null;
+          let timedOut = false;
+          try {
+            const timeoutPromise = new Promise((_, reject) => {
+              timeoutId = window.setTimeout(() => {
+                timedOut = true;
+                controller?.abort();
+                reject(new Error("Tempo limite da consulta ao Dataverse excedido."));
+              }, DASHBOARD_DATA_REQUEST_TIMEOUT_MS);
+            });
+            const response = await Promise.race([
+              fetch(url, {
+                credentials: "same-origin",
+                headers: makeHeaders(wantAnnotations, true),
+                ...(controller ? { signal: controller.signal } : {}),
+              }),
+              timeoutPromise,
+            ]);
+            if (attempt < DASHBOARD_DATA_REQUEST_MAX_ATTEMPTS && DASHBOARD_TRANSIENT_HTTP_STATUSES.has(response.status)) {
+              await waitForDashboardRetry(attempt, response);
+              continue;
+            }
+            return response;
+          } catch (error) {
+            if (attempt < DASHBOARD_DATA_REQUEST_MAX_ATTEMPTS && (timedOut || error?.name === "TypeError")) {
+              await waitForDashboardRetry(attempt);
+              continue;
+            }
+            if (timedOut) {
+              throw new Error("Consulta ao Dataverse excedeu 60 segundos apÃ³s nova tentativa. Verifique login e conexÃ£o da TV.");
+            }
+            throw error;
+          } finally {
+            if (timeoutId !== null) window.clearTimeout(timeoutId);
+          }
+        }
+        throw new Error("NÃ£o foi possÃ­vel consultar o Dataverse.");
+      }
+
+      async function fetchAll(url, options = {}) {
         let res = [],
           next = url;
         while (next) {
-          const r = await fetch(next, {
-            credentials: "same-origin",
-            headers: makeHeaders(true, true),
-          });
+          const r = await fetchDashboardData(next, options);
           if (!r.ok) {
             const t = await r.text();
             let msg = `HTTP ${r.status}`;
@@ -1313,6 +3821,7 @@ function detectEnv(){
   const h=window.location.hostname;
   for(const[k,e] of Object.entries(ENVS)){
     if(h.includes(k)){
+      ACTIVE_ENV = e;
       BASE=e.url;
       const p=document.getElementById('envPill');
       p.textContent=e.label;p.className='env-pill '+e.cls;
@@ -1321,26 +3830,333 @@ function detectEnv(){
     }
   }
   BASE=window.location.origin;
+  ACTIVE_ENV = null;
   const p=document.getElementById('envPill');
   p.textContent='LOCAL';p.className='env-pill env-local';
   IS_LOCAL = true;
 }
 
+function setBrandLogo() {
+  const logo = document.getElementById("brandLogo");
+  if (!logo || !BASE) return;
+  const resourceName = ACTIVE_ENV?.logoResource || logo.dataset.webresource || DEFAULT_LOGO_RESOURCE;
+  logo.src = new URL(`/WebResources/${resourceName}`, `${BASE}/`).href;
+}
+
+function setAppVersion() {
+  const label = window.__DASHBOARD_BUILD_INFO?.label || "vâ€”";
+  const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(window.location.hostname || "");
+  const text = isLocalHost ? `${label} Â· LOCAL` : label;
+  const versions = document.querySelectorAll("#appVersion, #tvAppVersion, #tvPinVersion");
+  for (let index = 0; index < versions.length; index += 1) {
+    const version = versions[index];
+    version.textContent = text;
+    version.hidden = false;
+    version.style.display = "block";
+  }
+}
+
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // LOAD
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-      async function loadAll() {
+      function markpointFmtMinutes(value) {
+        if (!Number.isFinite(value)) return "â€”";
+        const abs = Math.abs(Math.round(value));
+        return `${value < 0 ? "-" : ""}${String(Math.floor(abs / 60)).padStart(2, "0")}h${String(abs % 60).padStart(2, "0")}`;
+      }
+      function markpointNormalizeName(value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim(); }
+      function markpointParseDate(value) { if (value instanceof Date && Number.isFinite(value.getTime())) return new Date(value.getFullYear(), value.getMonth(), value.getDate()); const text = String(value || "").trim(); const br = text.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/); if (br) return new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1])); const parsed = new Date(text); return Number.isFinite(parsed.getTime()) ? new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate()) : null; }
+      function markpointParseMinutes(value) { const match = String(value || "").trim().match(/^(\d{1,3}):(\d{2})$/); return match ? Number(match[1]) * 60 + Number(match[2]) : null; }
+      function markpointValidSignature(bytes) { return bytes && bytes.length >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b && bytes[2] === 0x03 && bytes[3] === 0x04; }
+      let markpointFeedbackTimer;
+      function markpointDismissFeedback() { const feedback = document.getElementById("markpointFeedback"); if (!feedback) return; clearTimeout(markpointFeedbackTimer); feedback.classList.remove("is-visible"); setTimeout(() => { feedback.hidden = true; }, 180); }
+      function markpointSetUploadBusy(busy) { const button = document.getElementById("markpointHeaderUpload"); if (!button) return; button.disabled = busy; button.classList.toggle("is-loading", busy); button.setAttribute("aria-busy", String(busy)); button.lastChild.textContent = busy ? "Carregando" : "Upload MarQ"; }
+      function markpointSetStatus(message, tone = "") {
+        const text = String(message).replace(/<[^>]*>/g, "");
+        const title = tone === "error" ? "NÃ£o foi possÃ­vel importar" : /Lendo/.test(text) ? "Lendo arquivo" : /Validando/.test(text) ? "Validando relatÃ³rio" : /Sincronizando/.test(text) ? "Salvando dados" : /sincronizado|carregado|PrÃ©via pronta/.test(text) ? "RelatÃ³rio pronto" : "MarQPonto";
+        const feedback = document.getElementById("markpointFeedback");
+        const detail = document.getElementById("markpointFeedbackDetail");
+        const heading = document.getElementById("markpointFeedbackTitle");
+        const icon = document.getElementById("markpointFeedbackIcon");
+        if (feedback && detail && heading && icon) {
+          clearTimeout(markpointFeedbackTimer);
+          feedback.className = `markpoint-feedback ${tone || (/sincronizado|carregado|PrÃ©via pronta/.test(text) ? "success" : "")}`;
+          heading.textContent = title;
+          detail.textContent = text;
+          icon.innerHTML = tone === "error" ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5m0 4h.01M10 3.8 2.6 17a2 2 0 0 0 1.74 3h15.32A2 2 0 0 0 21.4 17L14 3.8a2.3 2.3 0 0 0-4 0Z"/></svg>' : /sincronizado|carregado|PrÃ©via pronta/.test(text) ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 4.2 4.2L19 6.5"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="8.5"/></svg>';
+          feedback.hidden = false;
+          requestAnimationFrame(() => feedback.classList.add("is-visible"));
+          if (tone !== "error" && /sincronizado|carregado|PrÃ©via pronta/.test(text)) markpointFeedbackTimer = setTimeout(markpointDismissFeedback, 6500);
+        }
+      }
+      async function markpointHash(buffer) { if (window.crypto?.subtle) { const digest = await window.crypto.subtle.digest("SHA-256", buffer); return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join(""); } return `${buffer.byteLength}-${Date.now()}`; }
+      function markpointFuncionario(employeeKey) { return (DB.funcionarios || []).find((record) => markpointNormalizeName(record[F.fun.nome] || record[F.fun.apelido]) === employeeKey); }
+      function markpointRecordKey(record) {
+        const date = record.date;
+        const day = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        return `${day}|${record.employeeKey}`.slice(0, 180);
+      }
+      function markpointPayload(record, fileName) {
+        const payload = {
+          cr40f_name: `${record.employee} Â· ${fmtD(record.date)}`.slice(0, 850),
+          cr40f_data: record.date.toISOString(),
+          cr40f_colaborador: record.employee,
+          cr40f_horastrabalhadasminutos: Math.round(record.worked),
+          cr40f_descansoanteriorminutos: Number.isFinite(record.rest) && record.rest >= 0 ? Math.round(record.rest) : null,
+          cr40f_qualidaderegistro: record.quality,
+          cr40f_chavedeimportacao: markpointRecordKey(record),
+          cr40f_nomedoarquivo: fileName,
+          cr40f_importadoem: new Date().toISOString(),
+          cr40f_pontosdodia: record.points.join(" - "),
+        };
+        if (record.start != null) payload.cr40f_iniciojornada = new Date(record.date.getTime() + record.start * 60000).toISOString();
+        if (record.end != null) payload.cr40f_fimjornada = new Date(record.date.getTime() + record.end * 60000).toISOString();
+        const funcionario = markpointFuncionario(record.employeeKey);
+        if (funcionario?.cr40f_funcionariosid) payload["cr40f_funcionario@odata.bind"] = `/cr40f_funcionarioses(${funcionario.cr40f_funcionariosid})`;
+        return payload;
+      }
+      async function markpointExistingRecords() {
+        const existing = new Map();
+        const xrm = getDashboardXrm();
+        if (xrm?.WebApi?.retrieveMultipleRecords) {
+          let query = "?$select=cr40f_jornadacolaboradorid,cr40f_chavedeimportacao";
+          do {
+            const page = await xrm.WebApi.retrieveMultipleRecords(MARKPOINT_TABLE, query);
+            (page.entities || []).forEach((item) => {
+              if (item.cr40f_chavedeimportacao) existing.set(item.cr40f_chavedeimportacao, item.cr40f_jornadacolaboradorid);
+            });
+            query = page.nextLink ? page.nextLink.replace(/^.*\/api\/data\/v[\d.]+\/cr40f_jornadacolaboradors/i, "") : "";
+          } while (query);
+          return existing;
+        }
+        let nextUrl = `${API()}/${MARKPOINT_ENTITY_SET}?$select=cr40f_jornadacolaboradorid,cr40f_chavedeimportacao`;
+        while (nextUrl) {
+          const response = await fetchDashboardData(nextUrl, { wantAnnotations: false });
+          if (!response.ok) throw new Error(`Falha ao consultar jornadas existentes (HTTP ${response.status}).`);
+          const page = await response.json();
+          (page.value || []).forEach((item) => {
+            if (item.cr40f_chavedeimportacao) existing.set(item.cr40f_chavedeimportacao, item.cr40f_jornadacolaboradorid);
+          });
+          nextUrl = page["@odata.nextLink"] || "";
+        }
+        return existing;
+      }
+      async function markpointPersistRecords(records, fileName) {
+        if (IS_LOCAL || window.__DASHBOARD_TV_MODE) return { saved: false, reason: "local" };
+        const payloadByKey = new Map();
+        records.forEach((record) => {
+          const payload = markpointPayload(record, fileName);
+          payloadByKey.set(payload.cr40f_chavedeimportacao, payload);
+        });
+        const payloads = [...payloadByKey.values()];
+        const duplicatesSkipped = records.length - payloads.length;
+        const existing = await markpointExistingRecords();
+        const xrm = getDashboardXrm();
+        let created = 0;
+        let updated = 0;
+        for (let offset = 0; offset < payloads.length; offset += 25) {
+          const batch = payloads.slice(offset, offset + 25);
+          await Promise.all(batch.map(async (payload) => {
+            const recordId = existing.get(payload.cr40f_chavedeimportacao);
+            if (xrm?.WebApi?.createRecord && xrm?.WebApi?.updateRecord) {
+              if (recordId) {
+                await xrm.WebApi.updateRecord(MARKPOINT_TABLE, recordId, payload);
+                updated += 1;
+              } else {
+                const result = await xrm.WebApi.createRecord(MARKPOINT_TABLE, payload);
+                existing.set(payload.cr40f_chavedeimportacao, result.id);
+                created += 1;
+              }
+              return;
+            }
+            const headers = makeHeaders(false, false);
+            headers.set("Content-Type", "application/json; charset=utf-8");
+            const url = recordId ? `${API()}/${MARKPOINT_ENTITY_SET}(${recordId})` : `${API()}/${MARKPOINT_ENTITY_SET}`;
+            const response = await fetch(url, {
+              method: recordId ? "PATCH" : "POST",
+              credentials: "same-origin",
+              headers,
+              body: JSON.stringify(payload),
+            });
+            if (!response.ok) throw new Error(`Falha ao salvar jornada no Dataverse (HTTP ${response.status}).`);
+            if (recordId) updated += 1;
+            else created += 1;
+          }));
+        }
+        return { saved: true, count: payloads.length, created, updated, duplicatesSkipped };
+      }
+      async function markpointLoadFromDataverse() {
+        if (IS_LOCAL || window.__DASHBOARD_TV_MODE) return;
+        try {
+          const items = [];
+          let nextUrl = `${API()}/${MARKPOINT_ENTITY_SET}?$select=cr40f_data,cr40f_colaborador,cr40f_horastrabalhadasminutos,cr40f_iniciojornada,cr40f_fimjornada,cr40f_descansoanteriorminutos,cr40f_qualidaderegistro,cr40f_nomedoarquivo,cr40f_pontosdodia&$orderby=cr40f_data asc`;
+          while (nextUrl) {
+            const response = await fetchDashboardData(nextUrl, { wantAnnotations: false });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const page = await response.json();
+            items.push(...(page.value || []));
+            nextUrl = page["@odata.nextLink"] || "";
+          }
+          const records = items.map((item, index) => ({
+            row: index + 1,
+            date: markpointParseDate(item.cr40f_data),
+            employee: item.cr40f_colaborador || "â€”",
+            employeeKey: markpointNormalizeName(item.cr40f_colaborador),
+            worked: Number(item.cr40f_horastrabalhadasminutos || 0),
+            start: item.cr40f_iniciojornada ? ((new Date(item.cr40f_iniciojornada).getTime() - new Date(item.cr40f_data).setHours(0, 0, 0, 0)) / 60000) : null,
+            end: item.cr40f_fimjornada ? ((new Date(item.cr40f_fimjornada).getTime() - new Date(item.cr40f_data).setHours(0, 0, 0, 0)) / 60000) : null,
+            rest: item.cr40f_descansoanteriorminutos == null ? null : Number(item.cr40f_descansoanteriorminutos),
+            points: String(item.cr40f_pontosdodia || "").split(" - ").filter(Boolean),
+            validPoints: item.cr40f_qualidaderegistro === "VÃ¡lido",
+            quality: item.cr40f_qualidaderegistro || "Incompleto",
+            fileName: item.cr40f_nomedoarquivo || "",
+          }));
+          if (!records.length) return;
+          markpointAssignConsecutiveRests(records);
+          markpointState.records = records;
+          markpointState.fileName = records.at(-1)?.fileName || "Dataverse";
+          markpointState.meta = {
+            total: records.length,
+            employees: new Set(records.map((record) => record.employeeKey)).size,
+            incomplete: records.filter((record) => !record.validPoints).length,
+          };
+          markpointSetStatus(`Dados carregados do Dataverse Â· ${records.length} registros`);
+          renderMarkpointModule();
+        } catch (error) {
+          console.warn("MarQPonto: leitura Dataverse indisponÃ­vel", error);
+        }
+      }
+      function markpointAssignConsecutiveRests(records) {
+        records.sort((a, b) => a.employeeKey.localeCompare(b.employeeKey) || a.date - b.date || (a.start ?? Infinity) - (b.start ?? Infinity));
+        const previous = new Map();
+        records.forEach((record) => {
+          record.rest = null;
+          if (!record.validPoints || !Number.isFinite(record.start) || !Number.isFinite(record.end)) {
+            previous.delete(record.employeeKey);
+            return;
+          }
+          const start = record.date.getTime() / 60000 + record.start;
+          const prior = previous.get(record.employeeKey);
+          const daysSincePrior = prior ? Math.round((record.date - prior.date) / 86400000) : null;
+          const rest = prior && (daysSincePrior === 0 || daysSincePrior === 1) ? start - prior.end : null;
+          record.rest = Number.isFinite(rest) && rest >= 0 ? rest : null;
+          previous.set(record.employeeKey, { date: record.date, end: record.date.getTime() / 60000 + record.end });
+        });
+      }
+      function markpointParseWorkbook(buffer, fileName) {
+        if (!window.XLSX) throw new Error("Leitor XLSX nÃ£o foi carregado. Recarregue o dashboard.");
+        if (!markpointValidSignature(new Uint8Array(buffer, 0, Math.min(8, buffer.byteLength)))) throw new Error("Arquivo nÃ£o Ã© um XLSX vÃ¡lido.");
+        const workbook = window.XLSX.read(buffer, { type: "array", cellDates: true, cellNF: false, cellStyles: false, dense: true }); const sheet = workbook.Sheets[workbook.SheetNames[0]]; if (!sheet) throw new Error("Planilha sem abas vÃ¡lidas.");
+        const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "", raw: true }); const headers = (rows.shift() || []).map((value) => String(value || "").trim().toLowerCase());
+        const indexOf = (name) => headers.findIndex((header) => header === name || header.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")); const dateIndex = indexOf("data"); const employeeIndex = indexOf("funcionÃ¡rio"); const workedIndex = indexOf("horas trabalhadas"); const pointsIndex = indexOf("pontos do dia");
+        if ([dateIndex, employeeIndex, workedIndex, pointsIndex].some((index) => index < 0)) throw new Error("Colunas obrigatÃ³rias ausentes: Data, FuncionÃ¡rio, Horas trabalhadas e Pontos do dia.");
+        const records = rows.map((row, rowIndex) => { const date = markpointParseDate(row[dateIndex]); const employee = String(row[employeeIndex] || "").trim(); const worked = markpointParseMinutes(row[workedIndex]); const points = String(row[pointsIndex] || "").split(/\s*-\s*/).filter(Boolean).map(markpointParseMinutes); const validPoints = points.length >= 2 && points.length % 2 === 0 && points.every((point) => Number.isFinite(point)); let timeline = []; if (validPoints) { let offset = 0; timeline = points.map((point, index) => { if (index && point < points[index - 1]) offset += 1440; return point + offset; }); } return { row: rowIndex + 2, date, employee, employeeKey: markpointNormalizeName(employee), worked, points, start: validPoints ? timeline[0] : null, end: validPoints ? timeline[timeline.length - 1] : null, validPoints, quality: !date || !employee ? "InvÃ¡lido" : validPoints ? "VÃ¡lido" : "Incompleto" }; }).filter((record) => record.date && record.employee && record.worked != null);
+        if (!records.length) throw new Error("RelatÃ³rio nÃ£o contÃ©m registros vÃ¡lidos.");
+        markpointAssignConsecutiveRests(records);
+        return { records, fileName, importedAt: new Date(), meta: { total: records.length, employees: new Set(records.map((record) => record.employeeKey)).size, incomplete: records.filter((record) => !record.validPoints).length, minDate: new Date(Math.min(...records.map((record) => record.date))), maxDate: new Date(Math.max(...records.map((record) => record.date))) } };
+      }
+      function markpointFilteredRecords() { const start = document.getElementById("fS")?.value ? new Date(`${document.getElementById("fS").value}T00:00:00`) : null; const end = document.getElementById("fE")?.value ? new Date(`${document.getElementById("fE").value}T23:59:59`) : null; return markpointState.records.filter((record) => (!start || record.date >= start) && (!end || record.date <= end) && (!msState.Mo.length || msState.Mo.some((name) => markpointNormalizeName(name) === record.employeeKey))); }
+      function renderMarkpointModule() {
+        const records = markpointFilteredRecords();
+        const hasData = markpointState.records.length > 0;
+        document.getElementById("markpointKpis")?.toggleAttribute("hidden", !hasData);
+        document.getElementById("markpointTableCard")?.toggleAttribute("hidden", !hasData);
+        document.getElementById("markpointClear")?.toggleAttribute("hidden", !hasData);
+        if (!hasData) return;
+
+        const total = records.reduce((sum, record) => sum + record.worked, 0);
+        const rests = records.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
+        const avg = records.length ? total / records.length : null;
+        const restAvg = rests.length ? rests.reduce((sum, record) => sum + record.rest, 0) / rests.length : null;
+        const ranking = [...new Map(records.map((record) => [record.employeeKey, record])).entries()].map(([employeeKey, sample]) => {
+          const employeeRecords = records.filter((record) => record.employeeKey === employeeKey);
+          const employeeRests = employeeRecords.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
+          return {
+            employee: sample.employee,
+            employeeKey,
+            avgRest: employeeRests.length ? employeeRests.reduce((sum, record) => sum + record.rest, 0) / employeeRests.length : null,
+            avgWorked: employeeRecords.length ? employeeRecords.reduce((sum, record) => sum + record.worked, 0) / employeeRecords.length : null,
+            totalWorked: employeeRecords.reduce((sum, record) => sum + record.worked, 0),
+            totalRest: employeeRests.reduce((sum, record) => sum + record.rest, 0),
+            evaluatedJourneys: employeeRests.length,
+          };
+        }).sort((a, b) => (b.avgRest ?? -Infinity) - (a.avgRest ?? -Infinity) || a.employee.localeCompare(b.employee, "pt-BR"));
+
+        document.getElementById("mpHours").textContent = markpointFmtMinutes(total);
+        document.getElementById("mpHoursNote").textContent = `${records.length} registros no filtro`;
+        document.getElementById("mpDaily").textContent = markpointFmtMinutes(avg);
+        document.getElementById("mpRest").textContent = markpointFmtMinutes(restAvg);
+        document.getElementById("mpIncomplete").textContent = records.filter((record) => !record.validPoints).length.toLocaleString("pt-BR");
+        const rankingByKey = new Map(ranking.map((item) => [item.employeeKey, item]));
+        markpointDriverMetrics = new Map(ranking.map((item) => [item.employeeKey, item]));
+        if (tblCache.tbMot) renderMotTable(tblCache.tbMot, sumV(VW.reservas));
+        const activeDrivers = [...new Map((DB.funcionarios || []).filter(isActiveFuncionario).map((driver) => {
+          const employee = driver[F.fun.nome] || driver[F.fun.apelido] || "Motorista sem nome";
+          const employeeKey = markpointNormalizeName(employee);
+          return [employeeKey, rankingByKey.get(employeeKey) || { employee, employeeKey, totalWorked: 0, avgWorked: null, avgRest: null, evaluatedJourneys: 0 }];
+        })).values()].sort((a, b) => (b.avgRest ?? -Infinity) - (a.avgRest ?? -Infinity) || a.employee.localeCompare(b.employee, "pt-BR"));
+        document.getElementById("markpointTableMeta").textContent = `${activeDrivers.length} motoristas ativos Â· descanso mÃ©dio em ordem decrescente`;
+        const body = document.getElementById("markpointTableBody");
+        body.innerHTML = activeDrivers.map((item) => `<tr><td class="em">${item.employee}</td><td class="r">${markpointFmtMinutes(item.totalWorked)}</td><td class="r">${markpointFmtMinutes(item.avgWorked)}</td><td class="r">${markpointFmtMinutes(item.avgRest)}</td><td class="r">${item.evaluatedJourneys.toLocaleString("pt-BR")}</td></tr>`).join("") || emptyRow(5);
+      }
+      function markpointShowFiles(files) { const valid = [...files].filter((file) => /\.xlsx$/i.test(file.name)); if (!valid.length) return markpointSetStatus("Arquivo recusado. Selecione um .xlsx do Markpoint.", "error"); if (valid.length > 1) return markpointSetStatus(`Foram encontrados ${valid.length} arquivos. Selecione apenas um relatÃ³rio .xlsx.`, "error"); markpointImportFile(valid[0]); }
+      async function markpointImportFile(file) { if (!file || markpointState.busy) return; markpointState.busy = true; markpointSetUploadBusy(true); markpointSetStatus(`Lendo <strong>${file.name}</strong>â€¦`); try { const buffer = await file.arrayBuffer(); markpointSetStatus("Validando estrutura do relatÃ³rioâ€¦"); await new Promise((resolve) => setTimeout(resolve, 0)); const parsed = markpointParseWorkbook(buffer, file.name); markpointSetStatus(IS_LOCAL ? "PrÃ©via pronta (ambiente local)." : "Sincronizando registros no Dataverseâ€¦"); const persistence = await markpointPersistRecords(parsed.records, file.name); Object.assign(markpointState, parsed); markpointSetStatus(persistence.saved ? `<strong>${file.name}</strong> sincronizado Â· ${persistence.created} criados Â· ${persistence.updated} atualizados Â· ${persistence.duplicatesSkipped ? `${persistence.duplicatesSkipped} repetidos ignorados Â· ` : ""}${parsed.meta.incomplete} incompletos` : `<strong>${file.name}</strong> carregado Â· ${parsed.meta.total} registros Â· sessÃ£o local`); renderMarkpointModule(); nav("motoristas", document.querySelector('.sb-item[data-nav="motoristas"]')); } catch (error) { markpointSetStatus(error?.message || "NÃ£o foi possÃ­vel importar o relatÃ³rio.", "error"); } finally { markpointState.busy = false; markpointSetUploadBusy(false); } }
+      function clearMarkpointImport() { markpointState.records = []; markpointState.meta = null; markpointState.fileName = ""; markpointState.importedAt = null; markpointSetStatus("Nenhum relatÃ³rio importado."); renderMarkpointModule(); }
+      function initMarkpointImport() { const input = document.getElementById("markpointFileInput"); const choose = document.getElementById("markpointChooseFile"); const headerChoose = document.getElementById("markpointHeaderUpload"); const clear = document.getElementById("markpointClear"); const zone = document.getElementById("markpointUploadZone"); const overlay = document.getElementById("markpointDropOverlay"); let depth = 0; choose?.addEventListener("click", () => input?.click()); headerChoose?.addEventListener("click", () => input?.click()); input?.addEventListener("change", () => markpointShowFiles(input.files || [])); clear?.addEventListener("click", clearMarkpointImport); document.addEventListener("dragenter", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.types?.includes("Files")) return; depth += 1; overlay?.classList.add("is-visible"); zone?.classList.add("is-active"); }); document.addEventListener("dragover", (event) => { if (event.dataTransfer?.types?.includes("Files")) event.preventDefault(); }); document.addEventListener("dragleave", () => { depth = Math.max(0, depth - 1); if (!depth) { overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); document.addEventListener("drop", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.files?.length) return; event.preventDefault(); depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); markpointShowFiles(event.dataTransfer.files); }); document.addEventListener("paste", (event) => { if (event.clipboardData?.files?.length) { event.preventDefault(); markpointShowFiles(event.clipboardData.files); } }); document.addEventListener("keydown", (event) => { if (event.key === "Escape") { depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); void markpointLoadFromDataverse(); }
+      const DASHBOARD_AUTO_REFRESH_INTERVAL_MS = 60 * 1000;
+      let dashboardLoadInProgress = false;
+      let dashboardSilentLoad = false;
+      let dashboardAutoRefreshTimer = null;
+      const loadedDataSets = new Set();
+      const dataLoadPromises = new Map();
+      const tabDataDependencies = {
+        resumo: ["reservas", "precos", "clientes", "funcionarios", "veiculos", "passageiros", "servicosPassageiro", "manutencoes", "pagantes", "multas", "infracoes", "trocas", "errosOperacionais", "marketing"],
+        servicos: ["reservas", "precos", "funcionarios", "clientes", "passageiros", "servicosPassageiro"],
+        faturamento: ["reservas", "precos"],
+        pagantes: ["reservas", "precos", "pagantes"],
+        despesas: ["despesas", "categoriasDespesas", "formasPagamentoDespesas", "anexosDespesas", "funcionarios", "reservas", "precos"],
+        frota: ["reservas", "precos", "manutencoes", "veiculos", "funcionarios", "telemetriaInfleet", "eventosInfleet", "viagensInfleet"],
+        motoristas: ["reservas", "precos", "funcionarios"],
+        manutencoes: ["manutencoes"],
+        multas: ["multas", "infracoes", "funcionarios"],
+        trocas: ["trocas"],
+        marketing: ["marketing"],
+        tvdiagnostico: [],
+      };
+
+      function setDashboardLastUpdated(date) {
+        const value = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        const sidebar = document.getElementById("sidebarLastUpdated");
+        if (sidebar) sidebar.textContent = `Ultima atualizacao: ${value}`;
+        const topbar = document.getElementById("ts");
+        if (topbar) topbar.textContent = `Atualizado ${value}`;
+      }
+
+      async function loadAll(options = {}) {
+        if (dashboardLoadInProgress) return;
+        const silent = options.silent === true;
+        const requestedTab = options.tabId || document.querySelector(".page.on")?.id.replace(/^page-/, "") || "resumo";
+        dashboardLoadInProgress = true;
+        dashboardSilentLoad = silent;
+        hideDashboardLoadError();
         clearAlerts();
         setLoading(true, "Iniciando cargaâ€¦");
         const btn = document.getElementById("btnRef");
-        btn.disabled = true;
-        btn.classList.add("spin");
+        if (!silent) {
+          btn.disabled = true;
+          btn.classList.add("spin");
+        }
         try {
-          if (shouldUseMockData()) {
+          if (shouldUseSnapshot()) {
+            USING_MOCK_DATA = false;
+            await loadSnapshot();
+            markAllDataSetsLoaded();
+          } else if (shouldUseMockData()) {
             // Usar dados fictÃ­cios para desenvolvimento local
             USING_MOCK_DATA = true;
             const mock = generateMockData();
             DB = { ...mock };
+            markAllDataSetsLoaded();
             showAlert(
               "warn",
               "<strong>MODO DESENVOLVIMENTO:</strong> VocÃª estÃ¡ visualizando dados <strong>FICTÃCIOS</strong> gerados apenas para testes. Nenhum dado real estÃ¡ sendo exibido.",
@@ -1355,20 +4171,11 @@ function detectEnv(){
               veiculos: DB.veiculos.length,
               funcionarios: DB.funcionarios.length,
               marketing: DB.marketing.length,
+              despesas: DB.despesas.length,
             });
           } else {
             USING_MOCK_DATA = false;
-            await Promise.all([
-              loadReservas(),
-              loadPrecos(),
-              loadManutencoes(),
-              loadMultas(),
-              loadTrocas(),
-              loadPagantes(),
-              loadVeiculos(),
-              loadFuncionarios(),
-              loadMarketing(),
-            ]);
+            await loadDataSets(tabDataDependencies[requestedTab] || tabDataDependencies.resumo);
           }
           console.log("Dados carregados:", {
             reservas: DB.reservas.length,
@@ -1380,19 +4187,18 @@ function detectEnv(){
             veiculos: DB.veiculos.length,
             funcionarios: DB.funcionarios.length,
             marketing: DB.marketing.length,
+            despesas: DB.despesas.length,
           });
           buildFuncMap();
+          buildInfracaoMap();
           enrichReservas();
           populateFilters();
-          quickFilter("esteAno", document.querySelector(".btn-qf.active"));
-          const now = new Date().toLocaleString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          document.getElementById("ts").textContent = `Atualizado ${now}`;
+          if (silent) applyF(true);
+          else quickFilter("esteAno", document.querySelector(".btn-qf.active"));
+          setDashboardLastUpdated(new Date());
         } catch (e) {
+          showDashboardLoadError(e);
+          reportDashboardError(e, { source: "dashboard", action: "loadAll", phase: "initial-load" });
           showAlert(
             "err",
             `<strong>Erro ao carregar dados:</strong> ${e.message}`,
@@ -1400,13 +4206,16 @@ function detectEnv(){
           console.error("Erro no loadAll:", e);
         } finally {
           setLoading(false);
-          btn.disabled = false;
-          btn.classList.remove("spin");
+          if (!silent) {
+            btn.disabled = false;
+            btn.classList.remove("spin");
+          }
+          dashboardSilentLoad = false;
+          dashboardLoadInProgress = false;
         }
       }
 
       async function loadReservas() {
-        setLoading(true, "Carregando serviÃ§osâ€¦");
         const sel = [
           F.res.id,
           F.res.data,
@@ -1416,8 +4225,10 @@ function detectEnv(){
           F.res.veiTipo,
           F.res.veiculo,
           F.res.catItem,
+          F.res.solicitante,
           F.res.lookupPreco,
           F.res.lookupOP,
+          "createdon",
         ].filter(Boolean).join(",");
         const exp = [
           `${F.res.navMot}($select=cr40f_funcionariosid,${F.fun.nome},${F.fun.apelido})`,
@@ -1427,22 +4238,47 @@ function detectEnv(){
           `${API()}/${T.reservas}?$select=${sel}&$expand=${exp}&$orderby=${F.res.data} desc`,
         );
       }
+      async function loadPassageiros() {
+        DB.passageiros = await fetchAll(
+          `${API()}/${T.passageiros}?$select=${F.passageiro.id},${F.passageiro.nome},${F.passageiro.nascimento},${F.passageiro.cliente}`,
+        );
+      }
+      async function loadClientes() {
+        DB.clientes = await fetchAll(
+          `${API()}/${T.clientes}?$select=${F.cliente.id},${F.cliente.nome}`,
+        );
+      }
+      async function loadServicosPassageiro() {
+        DB.servicosPassageiro = await fetchAll(
+          `${API()}/${T.servicosPassageiro}?$select=_cr40f_bancodedados_value,_cr40f_geral_value`,
+        );
+      }
+      async function loadErrosOperacionais() {
+        DB.errosOperacionais = await fetchAll(
+          `${API()}/${T.errosOperacionais}?$select=${F.erroOperacional.data}&$orderby=${F.erroOperacional.data} desc`,
+        );
+      }
       async function loadPrecos() {
         const sel = [
           `cr40f_composicaodeprecosid`,
           F.preco.valorTotal,
           F.preco.status,
         ].join(",");
-        DB.precos = await fetchAll(`${API()}/${T.precos}?$select=${sel}`);
+        DB.precos = await fetchAll(`${API()}/${T.precos}?$select=${sel}`, { wantAnnotations: false });
       }
       async function loadManutencoes() {
         DB.manutencoes = await fetchAll(
-          `${API()}/${T.manutencoes}?$select=${F.man.data},${F.man.aprovacao},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`,
+          `${API()}/${T.manutencoes}?$select=createdon,${F.man.data},${F.man.aprovacao},${F.man.valor},${F.man.status},${F.man.tipo},_${F.man.veiculo}_value&$orderby=${F.man.data} desc`,
         );
       }
       async function loadMultas() {
         DB.multas = await fetchAll(
-          `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.tipo}_value,_${F.mul.mot}_value,_${F.mul.placa}_value&$orderby=${F.mul.data} desc`,
+          `${API()}/${T.multas}?$select=${F.mul.data},${F.mul.status},_${F.mul.tipo}_value,_${F.mul.mot}_value,_${F.mul.placa}_value&$expand=cr40f_Codigodainfracao($select=${F.inf.codigo},${F.inf.descricao})&$orderby=${F.mul.data} desc`,
+        );
+      }
+      async function loadInfracoes() {
+        DB.infracoes = await fetchAll(
+          `${API()}/${T.infracoes}?$select=${F.inf.id},${F.inf.codigo},${F.inf.descricao}`,
         );
       }
       async function loadTrocas() {
@@ -1452,7 +4288,7 @@ function detectEnv(){
       }
       async function loadPagantes() {
         DB.pagantes = await fetchAll(
-          `${API()}/${T.pagantes}?$select=cr40f_pagantesid,${F.pag.lookupOP},${F.pag.status},${F.pag.valor},${F.pag.forma}`,
+          `${API()}/${T.pagantes}?$select=cr40f_pagantesid,createdon,${F.pag.lookupOP},${F.pag.status},${F.pag.valor},${F.pag.forma},${F.pag.dataPrimeiroPagamento}`,
         );
       }
       async function loadVeiculos() {
@@ -1462,13 +4298,167 @@ function detectEnv(){
       }
       async function loadFuncionarios() {
         DB.funcionarios = await fetchAll(
-          `${API()}/${T.funcionarios}?$select=cr40f_funcionariosid,${F.fun.nome},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido}`,
+          `${API()}/${T.funcionarios}?$select=cr40f_funcionariosid,${F.fun.nome},${F.fun.status},${F.fun.funcao},${F.fun.cnh},${F.fun.apelido},${F.fun.empresa}`,
         );
       }
       async function loadMarketing() {
         DB.marketing = await fetchAll(
           `${API()}/${T.marketing}?$select=${F.mkt.status},${F.mkt.cat},${F.mkt.data}&$orderby=${F.mkt.data} desc`,
         );
+      }
+      async function loadDespesas() {
+        const fields = [
+          F.despesa.id,
+          F.despesa.nome,
+          F.despesa.data,
+          F.despesa.valor,
+          F.despesa.categoria,
+          F.despesa.formaPagamento,
+          F.despesa.motorista,
+          F.despesa.veiculo,
+          F.despesa.reserva,
+          F.despesa.cidade,
+          F.despesa.manutencao,
+          F.despesa.estabelecimento,
+          F.despesa.observacao,
+          F.despesa.observacaoInterna,
+          F.despesa.statusFinanceiro,
+          F.despesa.statusOperacional,
+          F.despesa.statusAnexo,
+          F.despesa.origem,
+          F.despesa.possivelDuplicidade,
+          F.despesa.protocolo,
+          F.despesa.km,
+          F.despesa.litros,
+          F.despesa.criadoEm,
+          F.despesa.alteradoEm,
+        ].join(",");
+        DB.despesas = await fetchAll(
+          `${API()}/${T.despesas}?$select=${fields}&$filter=statecode eq 0&$orderby=${F.despesa.data} desc`,
+        );
+      }
+      async function loadCategoriasDespesas() {
+        const fields = Object.keys(F.categoriaDespesa)
+          .map((key) => F.categoriaDespesa[key])
+          .join(",");
+        DB.categoriasDespesas = await fetchAll(
+          `${API()}/${T.categoriasDespesas}?$select=${fields}&$filter=statecode eq 0 and ${F.categoriaDespesa.ativa} eq true&$orderby=${F.categoriaDespesa.ordem} asc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadFormasPagamentoDespesas() {
+        const fields = Object.keys(F.formaDespesa)
+          .map((key) => F.formaDespesa[key])
+          .join(",");
+        DB.formasPagamentoDespesas = await fetchAll(
+          `${API()}/${T.formasPagamentoDespesas}?$select=${fields}&$filter=statecode eq 0 and ${F.formaDespesa.ativa} eq true&$orderby=${F.formaDespesa.ordem} asc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadAnexosDespesas() {
+        const fields = Object.keys(F.anexoDespesa)
+          .map((key) => F.anexoDespesa[key])
+          .join(",");
+        DB.anexosDespesas = await fetchAll(
+          `${API()}/${T.anexosDespesas}?$select=${fields}&$filter=statecode eq 0&$orderby=${F.anexoDespesa.criadoEm} desc`,
+        );
+      }
+      async function loadTelemetriaInfleet() {
+        const fields = Object.keys(F.infleetDiaria).map((key) => F.infleetDiaria[key]).join(",");
+        DB.telemetriaInfleet = await fetchAll(
+          `${API()}/${T.telemetriaInfleet}?$select=${fields}&$filter=${F.infleetDiaria.data} ge 2026-01-01&$orderby=${F.infleetDiaria.data} desc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadEventosInfleet() {
+        const fields = Object.keys(F.infleetEvento).map((key) => F.infleetEvento[key]).join(",");
+        DB.eventosInfleet = await fetchAll(
+          `${API()}/${T.eventosInfleet}?$select=${fields}&$filter=${F.infleetEvento.reportadoEm} ge 2026-01-01T00:00:00Z&$orderby=${F.infleetEvento.reportadoEm} desc`,
+          { wantAnnotations: false },
+        );
+      }
+      async function loadViagensInfleet() {
+        const fields = Object.keys(F.infleetViagem).map((key) => F.infleetViagem[key]).join(",");
+        DB.viagensInfleet = await fetchAll(
+          `${API()}/${T.viagensInfleet}?$select=${fields}&$filter=${F.infleetViagem.iniciadoEm} ge 2026-01-01T00:00:00Z&$orderby=${F.infleetViagem.iniciadoEm} desc`,
+          { wantAnnotations: false },
+        );
+      }
+
+      const dataSetLoaders = {
+        reservas: loadReservas,
+        clientes: loadClientes,
+        passageiros: loadPassageiros,
+        servicosPassageiro: loadServicosPassageiro,
+        errosOperacionais: loadErrosOperacionais,
+        precos: loadPrecos,
+        manutencoes: loadManutencoes,
+        multas: loadMultas,
+        infracoes: loadInfracoes,
+        trocas: loadTrocas,
+        pagantes: loadPagantes,
+        veiculos: loadVeiculos,
+        funcionarios: loadFuncionarios,
+        marketing: loadMarketing,
+        despesas: loadDespesas,
+        categoriasDespesas: loadCategoriasDespesas,
+        formasPagamentoDespesas: loadFormasPagamentoDespesas,
+        anexosDespesas: loadAnexosDespesas,
+        telemetriaInfleet: loadTelemetriaInfleet,
+        eventosInfleet: loadEventosInfleet,
+        viagensInfleet: loadViagensInfleet,
+      };
+
+      function markAllDataSetsLoaded() {
+        Object.keys(dataSetLoaders).forEach((key) => loadedDataSets.add(key));
+      }
+
+      async function loadDataSets(keys) {
+        if (shouldUseSnapshot() || shouldUseMockData() || USING_MOCK_DATA) {
+          markAllDataSetsLoaded();
+          return;
+        }
+        const missing = keys.filter((key) => !loadedDataSets.has(key));
+        if (!missing.length) return;
+        let nextIndex = 0;
+        async function loadNextDataSet() {
+          while (nextIndex < missing.length) {
+            const key = missing[nextIndex++];
+            if (!dataLoadPromises.has(key)) {
+              const promise = dataSetLoaders[key]().then(() => {
+                loadedDataSets.add(key);
+              }).finally(() => dataLoadPromises.delete(key));
+              dataLoadPromises.set(key, promise);
+            }
+            await dataLoadPromises.get(key);
+          }
+        }
+        const workerCount = Math.min(DASHBOARD_DATASET_CONCURRENCY, missing.length);
+        await Promise.all(Array.from({ length: workerCount }, loadNextDataSet));
+      }
+
+      function setTabLoading(tabId, loading) {
+        const page = document.getElementById(`page-${tabId}`);
+        if (!page) return;
+        page.classList.toggle("tab-loading", loading);
+        page.setAttribute("aria-busy", loading ? "true" : "false");
+      }
+
+      async function ensureTabData(tabId) {
+        const keys = tabDataDependencies[tabId] || tabDataDependencies.resumo;
+        if (!keys.some((key) => !loadedDataSets.has(key))) return;
+
+        setTabLoading(tabId, true);
+        try {
+          await loadDataSets(keys);
+          buildFuncMap();
+          buildInfracaoMap();
+          enrichReservas();
+          populateFilters();
+          if (document.querySelector(`#page-${tabId}.on`)) applyF(true);
+        } finally {
+          setTabLoading(tabId, false);
+        }
       }
 
       function buildFuncMap() {
@@ -1480,6 +4470,66 @@ function detectEnv(){
           if (id) funcMapGlobal.set(id.toLowerCase(), apelido);
           funcMapGlobal.set(nome.toLowerCase(), apelido);
         }
+      }
+
+      function buildInfracaoMap() {
+        infracaoMapGlobal.clear();
+        for (const infracao of DB.infracoes || []) {
+          const id = String(infracao[F.inf.id] || "").toLowerCase();
+          if (!id) continue;
+          const descricao = String(infracao[F.inf.descricao] || "").trim();
+          const codigo = String(infracao[F.inf.codigo] || "").trim();
+          infracaoMapGlobal.set(id, [codigo, descricao].filter(Boolean).join(" - "));
+        }
+      }
+
+      function buildLegacy2026Reservation(row, index) {
+        const [data, status, motorista, carro, sourceId, cliente, tipo, veiculoTipo, valor] = row;
+        const normalizedStatus = normL(status);
+        const statusDisplay = normalizedStatus === "concluido"
+          ? "ConcluÃ­do"
+          : normalizedStatus.indexOf("cancelado") === 0 ? "Cancelado" : status;
+        const motDisplay = motorista && motorista !== "-" ? motorista : "Sem motorista";
+        const cliDisplay = cliente && cliente !== "-" ? cliente : "Sem cliente";
+        const vehicleDisplay = carro && carro !== "." && carro !== "-" ? carro : "â€”";
+        const vehicleKey = vehicleDisplay === "â€”" ? "" : `legacy:${normL(vehicleDisplay)}`;
+        const id = `legacy-2026-${String(index + 1).padStart(4, "0")}`;
+        return {
+          [F.res.id]: id,
+          [F.res.data]: data,
+          [F.res.status]: statusDisplay,
+          [`${F.res.status}@OData.Community.Display.V1.FormattedValue`]: statusDisplay || "Sem status",
+          [F.res.fatStatus]: "HistÃ³rico CSV",
+          [`${F.res.fatStatus}@OData.Community.Display.V1.FormattedValue`]: "HistÃ³rico CSV",
+          [F.res.tipo]: tipo,
+          [`${F.res.tipo}@OData.Community.Display.V1.FormattedValue`]: tipo || "â€”",
+          [F.res.veiTipo]: veiculoTipo,
+          [`${F.res.veiTipo}@OData.Community.Display.V1.FormattedValue`]: veiculoTipo || "â€”",
+          [F.res.veiculo]: vehicleKey,
+          [`${F.res.veiculo}@OData.Community.Display.V1.FormattedValue`]: vehicleDisplay,
+          [F.res.navMot]: { [F.fun.nome]: motDisplay },
+          [F.res.navCli]: { cr40f_nomedocliente: cliDisplay },
+          [F.res.catItem]: DV_CAT_ITEM_SERVICO,
+          _id: id,
+          _legacy2026: true,
+          _legacySourceId: sourceId,
+          _legacySourceStatus: status,
+          _motId: "",
+          _motKey: `nome:${normL(motDisplay)}`,
+          _mot: motDisplay,
+          _cli: cliDisplay,
+          _stL: statusDisplay || "Sem status",
+          _fatStL: "HistÃ³rico CSV",
+          _tipoL: tipo || "â€”",
+          _veiL: veiculoTipo || "â€”",
+          _veiId: vehicleKey,
+          _veiNome: vehicleDisplay,
+          _valor: valor,
+          _cpPendente: false,
+          _cpConcluida: false,
+          _opId: "",
+          _ts: new Date(data).getTime(),
+        };
       }
 
       function enrichReservas() {
@@ -1500,7 +4550,11 @@ function detectEnv(){
           "reservas:",
           DB.reservas.length,
         );
-        DB.reservas = DB.reservas.map((r) => {
+        DB.reservas = DB.reservas.filter((r) => {
+          if (r._legacy2026) return false;
+          const date = String(r[F.res.data] || "").slice(0, 10);
+          return date < "2026-01-01" || date > "2026-03-31";
+        }).map((r) => {
           const entry =
             precoMap.get((r[F.res.lookupPreco] || "").toLowerCase());
           const valor = entry?.valor || 0;
@@ -1517,6 +4571,7 @@ function detectEnv(){
             _motKey: motKey,
             _mot: motDisplay,
             _cli: r[F.res.navCli]?.cr40f_nomedocliente || "Sem cliente",
+            _solicitante: String(fv(r, F.res.solicitante) || "N&atilde;o informado"),
             _stL: String(fv(r, F.res.status) || "Sem status"),
             _fatStL: String(fv(r, F.res.fatStatus) || "â€”"),
             _tipoL: String(fv(r, F.res.tipo) || "â€”"),
@@ -1530,6 +4585,7 @@ function detectEnv(){
             _ts: r[F.res.data] ? new Date(r[F.res.data]).getTime() : 0,
           };
         });
+        DB.reservas = DB.reservas.concat(legacy2026Rows.map(buildLegacy2026Reservation));
         console.log(
           "Reservas enriquecidas:",
           DB.reservas.length,
@@ -1598,6 +4654,7 @@ function detectEnv(){
       function toggleMS(id) {
         const dd = document.getElementById(`${id}-dd`);
         const btn = document.getElementById(`${id}-btn`);
+        const panel = document.getElementById("filterPanel");
         const isOpen = dd.classList.contains("open");
         document
           .querySelectorAll(".ms-dd")
@@ -1605,9 +4662,11 @@ function detectEnv(){
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+        panel?.classList.remove("ms-open");
         if (!isOpen) {
           dd.classList.add("open");
           btn.classList.add("open");
+          panel?.classList.add("ms-open");
           const inp = dd.querySelector(".ms-search");
           if (inp) setTimeout(() => inp.focus(), 50);
         }
@@ -1659,6 +4718,7 @@ function detectEnv(){
         document
           .querySelectorAll(".ms-btn")
           .forEach((b) => b.classList.remove("open"));
+        document.getElementById("filterPanel")?.classList.remove("ms-open");
       }
       let filterActionsAnimation = null;
       let filterActionsFrame = 0;
@@ -1721,6 +4781,7 @@ function detectEnv(){
         document.body.classList.toggle("filter-sheet-open", open);
         if (!open) closeMultiselects();
         animateFilterActions(actions, wasOpen, first);
+        applyTvViewportLayout();
       }
       function updateFilterSummary() {
         const summary = document.getElementById("filterSummary");
@@ -1881,6 +4942,7 @@ function detectEnv(){
         if (ano === 2023 && typeof fat2023 !== "undefined") return fat2023[mes] || 0;
         if (ano === 2024 && typeof fat2024 !== "undefined") return fat2024[mes] || 0;
         if (ano === 2025 && typeof fat2025 !== "undefined") return fat2025[mes] || 0;
+        if (ano === 2026 && typeof fat2026 !== "undefined") return fat2026[mes] || 0;
         return 0;
       }
       function calcularMetaMensal(ano, mes) {
@@ -2161,7 +5223,22 @@ function detectEnv(){
         );
       }
 
-      Chart.register(ChartDataLabels);
+      function initializeDashboardCharts() {
+        const ChartConstructor = window.Chart;
+        const dataLabelsPlugin = window.ChartDataLabels;
+        if (typeof ChartConstructor !== "function" || !dataLabelsPlugin) {
+          throw new Error("Bibliotecas de grÃ¡ficos nÃ£o foram inicializadas neste navegador.");
+        }
+        ChartConstructor.register(dataLabelsPlugin);
+      }
+
+      function createDashboardChart(target, config) {
+        const ChartConstructor = window.Chart;
+        if (typeof ChartConstructor !== "function") {
+          throw new Error("Biblioteca de grÃ¡ficos indisponÃ­vel durante a renderizaÃ§Ã£o.");
+        }
+        return new ChartConstructor(target, config);
+      }
       const PAL = [
         "#2159d2",
         "#2159d2",
@@ -2174,10 +5251,12 @@ function detectEnv(){
         "#168f57",
         "#6b4b9b",
       ];
-const monthsLabelsAll = [
-  "jan", "fev", "mar", "abr", "mai", "jun",
-  "jul", "ago", "set", "out", "nov", "dez",
-];
+      function getDashboardMonthLabels() {
+        return [
+          "jan", "fev", "mar", "abr", "mai", "jun",
+          "jul", "ago", "set", "out", "nov", "dez",
+        ];
+      }
 
       function ensureExecutiveLayout() {
         const page = document.getElementById("page-resumo");
@@ -2213,9 +5292,9 @@ const monthsLabelsAll = [
               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">CP Pendente</div><div class="kpi-val" id="kSemVal">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kSemValD"></div></div></div>
               <div class="kpi-spark"><canvas id="spSemValor"></canvas></div>
             </div>
-            <div class="kpi executive kpi-tone-red">
+            <div class="kpi executive kpi-tone-green">
               <div class="kpi-accent" style="background: var(--green)"></div>
-              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div>
+              <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Recebimento</div><div class="kpi-val sm" id="kRecebPct">&mdash;</div><div class="kpi-receipt-detail" id="kRecebPctSub">&mdash;</div></div><div class="kpi-right"><div class="kpi-delta" id="kRecebPctD"></div></div></div>
               <div class="kpi-spark"><canvas id="spRecebPct"></canvas></div>
             </div>
           </div>
@@ -2223,10 +5302,11 @@ const monthsLabelsAll = [
             <div class="exec-alert" id="alertSemValor"><div><strong>&mdash;</strong><span>CP pendente</span></div><b>Conferir</b></div>
             <div class="exec-alert" id="alertCnh"><div><strong>&mdash;</strong><span>CNH</span></div><b>Operacao</b></div>
             <div class="exec-alert" id="alertMultas"><div><strong>&mdash;</strong><span>Multas</span></div><b>Risco</b></div>
+            <div class="exec-alert" id="alertOcorrencias"><div><strong>&mdash;</strong><span>Ocorr&ecirc;ncias</span></div><b>Operacao</b></div>
           </div>
           <div class="exec-alerts">
-            <div class="exec-alert" id="dqSemPreco"><div><strong>&mdash;</strong><span>Sem preco</span></div><b>Dados</b></div>
-            <div class="exec-alert" id="dqSemOP"><div><strong>&mdash;</strong><span>Sem OP</span></div><b>Dados</b></div>
+            <div class="exec-alert" id="dqSemVeiculo"><div><strong>&mdash;</strong><span>Sem ve&iacute;culo</span></div><b>Dados</b></div>
+            <div class="exec-alert" id="dqSemTipoVeiculo"><div><strong>&mdash;</strong><span>Sem tipo de ve&iacute;culo</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemMotorista"><div><strong>&mdash;</strong><span>Sem motorista</span></div><b>Dados</b></div>
             <div class="exec-alert" id="dqSemCliente"><div><strong>&mdash;</strong><span>Sem cliente</span></div><b>Dados</b></div>
           </div>
@@ -2251,12 +5331,12 @@ const monthsLabelsAll = [
           rows[1]?.remove();
           serv.insertAdjacentHTML("afterbegin", `
             <div class="kpi-row kpi-2">
-              <div class="kpi executive kpi-tone-blue">
-                <div class="kpi-accent" style="background: var(--blue-g)"></div>
-                <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Operacao</div><div class="kpi-val" id="sOpTotal">&mdash;</div></div></div>
-                <div class="metric-list" id="sOpMix"></div>
-              </div>
-              <div class="kpi executive kpi-tone-green">
+              <div class="kpi executive kpi-tone-blue service-summary-card">
+               <div class="kpi-accent" style="background: var(--blue-g)"></div>
+               <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Operacao</div><div class="kpi-val" id="sOpTotal">&mdash;</div></div></div>
+               <div class="metric-list" id="sOpMix"></div>
+             </div>
+              <div class="kpi executive kpi-tone-green service-summary-card">
                 <div class="kpi-accent" style="background: var(--green)"></div>
                 <div class="kpi-main"><div class="kpi-left"><div class="kpi-lbl">Financeiro</div><div class="kpi-val sm" id="sFinTotal">&mdash;</div></div></div>
                 <div class="metric-list" id="sFinMix"></div>
@@ -2277,46 +5357,17 @@ const monthsLabelsAll = [
               <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Total recebido</div><div class="kpi-val sm" id="pTot">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--yellow)"></div><div class="kpi-lbl">A receber</div><div class="kpi-val sm" id="pPend">&mdash;</div></div>
               <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Cartao</div><div class="kpi-val sm" id="pCartao">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Tempo pagamento</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
+              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Atrasados +5 dias</div><div class="kpi-val sm" id="pPrazo">&mdash;</div></div>
             </div>
           `);
           const oldTable = pag.querySelector(".tc");
           oldTable?.replaceWith(document.createRange().createContextualFragment(`
             <div class="cc">
-              <div class="cc-hdr"><div><div class="cc-title">Tempo de pagamento por cliente</div><div class="tc-meta">Pendente de data de pagamento/vencimento no fetch atual</div></div></div>
-              <div id="paymentInsight" class="metric-note"></div>
+              <div class="cc-hdr"><div><div class="cc-title">Tempo de pagamento por cliente</div><div class="tc-meta" id="paymentInsightMeta">Primeiro pagamento confirmado</div></div></div>
+              <div id="paymentInsight" class="metric-table-wrap"></div>
             </div>
           `));
           pag.dataset.reviewLayout = "1";
-        }
-
-        const frota = document.getElementById("page-frota");
-        if (frota && frota.dataset.reviewLayout !== "1") {
-          const row = frota.querySelector(":scope > .kpi-row");
-          row?.remove();
-          frota.insertAdjacentHTML("afterbegin", `
-            <div class="kpi-row kpi-6">
-              <div class="kpi"><div class="kpi-accent" style="background: var(--blue-g)"></div><div class="kpi-lbl">Preventiva programada</div><div class="kpi-val" id="frPrevProg">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--blue)"></div><div class="kpi-lbl">Preventiva condicao</div><div class="kpi-val" id="frPrevCond">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--orange)"></div><div class="kpi-lbl">Corretiva nao critica</div><div class="kpi-val" id="frCorrNaoCrit">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--red)"></div><div class="kpi-lbl">Corretiva critica</div><div class="kpi-val" id="frCorrCrit">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Conservacao</div><div class="kpi-val" id="frConserv">&mdash;</div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Avaria</div><div class="kpi-val" id="frAvaria">&mdash;</div></div>
-            </div>
-            <div class="tc">
-              <div class="tc-bar"><div><div class="tc-title">KPIs de manutencao</div><div class="tc-meta" id="metaFrotaKpis">Metas solicitadas na revisao</div></div></div>
-              <div class="tc-wrap"><table><thead><tr><th>Categoria</th><th>Resultado</th><th>Meta mensal</th><th>Cobertura</th></tr></thead><tbody id="tblFrotaKpis"></tbody></table></div>
-            </div>
-            <div class="kpi-row kpi-2">
-              <div class="kpi"><div class="kpi-accent" style="background: var(--green)"></div><div class="kpi-lbl">Frota propria - dias uteis</div><div class="kpi-val sm" id="frUsoSemana">&mdash;</div><div class="metric-list" id="frUsoSemanaD"></div></div>
-              <div class="kpi"><div class="kpi-accent" style="background: var(--purple)"></div><div class="kpi-lbl">Frota propria - fim de semana</div><div class="kpi-val sm" id="frUsoFim">&mdash;</div><div class="metric-list" id="frUsoFimD"></div></div>
-            </div>
-            <div class="tc">
-              <div class="tc-bar"><div><div class="tc-title">Uso mensal da frota propria</div><div class="tc-meta" id="metaFrotaUso">Media diaria por mes</div></div></div>
-              <div class="tc-wrap"><table><thead><tr><th>Mes</th><th>Dias uteis</th><th>Fim de semana</th></tr></thead><tbody id="tblFrotaUso"></tbody></table></div>
-            </div>
-          `);
-          frota.dataset.reviewLayout = "1";
         }
 
         const multas = document.getElementById("page-multas");
@@ -2347,9 +5398,785 @@ const monthsLabelsAll = [
         });
       }
 
+      function addKpiGoalDirections() {
+        const shouldIncrease = /tempo de pagamento/i;
+        const shouldDecrease = /pendente|a receber|multa|cancelad|manuten|custo|cnh|corretiva|avaria|em andamento|falta|sem pre[cÃ§]o|sem op|sem motorista|sem cliente/i;
+        document.querySelectorAll(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .meta-kpi-pill > span, .exec-alert span").forEach((label) => {
+          const isExpenseLabel = Boolean(label.closest("#page-despesas"));
+          const isExpenseMetric = isExpenseLabel && label.classList.contains("kpi-lbl");
+          if (isExpenseLabel && !isExpenseMetric) {
+            label.classList.remove("goal-direction-label");
+            delete label.dataset.goalDirection;
+            label.title = "AnÃ¡lise descritiva das despesas no perÃ­odo filtrado.";
+            return;
+          }
+          const direction = isExpenseMetric
+            ? "down"
+            : shouldIncrease.test(label.textContent)
+              ? "up"
+              : shouldDecrease.test(label.textContent)
+                ? "down"
+                : "up";
+          label.classList.add("goal-direction-label");
+          label.dataset.goalDirection = direction;
+          label.title = `Para um resultado positivo, este indicador deve ${direction === "up" ? "subir" : "descer"}.`;
+        });
+      }
+
+      function getCardDetailTitle(card) {
+        return card.querySelector(".kpi-lbl, .cc-title, .tc-title, .cc2-label, .exec-alert span")?.textContent.trim() || "Detalhes do indicador";
+      }
+
+      function repairCardDetailText(value) {
+        const raw = String(value ?? "");
+        if (!/[ÃƒÃ‚Ã¢]/.test(raw)) return raw;
+        try {
+          const encoded = Array.from(raw)
+            .map((char) => "%" + char.charCodeAt(0).toString(16).padStart(2, "0"))
+            .join("");
+          const repaired = decodeURIComponent(encoded);
+          return repaired.includes("\ufffd") ? raw : repaired;
+        } catch {
+          return raw;
+        }
+      }
+
+      function createCardDetailElement(tag, className, text) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (text != null) element.textContent = repairCardDetailText(text);
+        return element;
+      }
+
+      function getCardPrimaryValue(card) {
+        return card.querySelector(".kpi-val, .cc2-bigval, .exec-alert strong, .cc-kv")?.textContent.trim() || "Sem dado";
+      }
+
+      function getCardDetailNotes(card) {
+        const title = getCardDetailTitle(card);
+        if (/cnh/i.test(title)) {
+          const total = DB.funcionarios.length;
+          const semValidade = DB.funcionarios.filter((r) => !r[F.fun.cnh]).length;
+          const vencidas = DB.funcionarios.filter((r) => {
+            if (!r[F.fun.cnh]) return false;
+            return new Date(r[F.fun.cnh]) < new Date();
+          }).length;
+          const proximas = DB.funcionarios.filter((r) => {
+            if (!r[F.fun.cnh]) return false;
+            const dias = (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24);
+            return dias >= 0 && dias < 90;
+          }).length;
+          return [
+            `Total de motoristas: ${total}`,
+            `Sem validade cadastrada: ${semValidade}`,
+            `CNH vencida: ${vencidas}`,
+            `Vence em atÃ© 90 dias: ${proximas}`,
+            "O indicador soma CNHs sem validade, vencidas ou com vencimento nos prÃ³ximos 90 dias.",
+          ];
+        }
+        const seen = new Set();
+        return [...card.querySelectorAll(".cc2-sub, .tc-meta, .kpi-delta, .metric-list, .badge-kpi, .metric-line, .exec-alert b")]
+          .map((element) => element.textContent.replace(/\s+/g, " ").trim())
+          .filter((text) => text && !seen.has(text) && seen.add(text))
+          .slice(0, 16);
+      }
+
+      function addCardDetailStat(container, label, value) {
+        const stat = createCardDetailElement("div", "card-detail-stat");
+        stat.append(createCardDetailElement("span", "", label), createCardDetailElement("strong", "", value));
+        container.appendChild(stat);
+      }
+
+      function getChartValue(value, title) {
+        const rawValue = typeof value === "object" && value !== null ? (value.y ?? value.x ?? "") : value;
+        const numericValue = Number(rawValue);
+        if (!Number.isFinite(numericValue)) return String(rawValue ?? "â€”");
+        if (/fatur|ticket|custo|receb|meta|produz/i.test(title)) return brl(numericValue);
+        return numericValue.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+      }
+
+      function getCardLogic(card) {
+        const title = normL(getCardDetailTitle(card));
+        const filterText = document.getElementById("filterSummary")?.textContent.trim() || "Todos os dados";
+        const toUserText = (value) => repairCardDetailText(String(value ?? ""))
+          .replace(/DB\.funcionarios/g, "cadastro de funcionÃ¡rios")
+          .replace(/DB\.pagantes/g, "registros de pagamento")
+          .replace(/DB\.veiculos/g, "cadastro de veÃ­culos")
+          .replace(/DB\.marketing/g, "publicaÃ§Ãµes de marketing")
+          .replace(/DB\.reservas|VW\.reservas/g, "serviÃ§os e reservas do perÃ­odo")
+          .replace(/VW\.multas/g, "registros de multas do perÃ­odo")
+          .replace(/VW\.manutencoes/g, "registros de manutenÃ§Ã£o do perÃ­odo")
+          .replace(/VW\.trocas/g, "registros de trocas do perÃ­odo")
+          .replace(/F\.res\.catItem/g, "categoria do item")
+          .replace(/DV_CAT_ITEM_SERVICO/g, "categoria de serviÃ§o")
+          .replace(/F\.mul\.status/g, "status da multa")
+          .replace(/DV_STATUS_MUL_NOTIFICAR/g, "status de notificaÃ§Ã£o")
+          .replace(/F\.pag\.status/g, "status do pagamento")
+          .replace(/F\.pag\.valor/g, "valor do pagamento")
+          .replace(/F\.man\.valor/g, "valor da manutenÃ§Ã£o")
+          .replace(/_cpConcluida/g, "composiÃ§Ã£o de preÃ§o concluÃ­da")
+          .replace(/_opId/g, "ordem de pagamento")
+          .replace(/_motId/g, "motorista vinculado")
+          .replace(/r\._mot/g, "motorista")
+          .replace(/r\._cli/g, "cliente")
+          .replace(/_fatStL|fatStatus/g, "status de faturamento")
+          .replace(/isProducedReservation\(\)/g, "serviÃ§o produzido")
+          .replace(/maintenanceCategory\(tipo\)/g, "categoria do reparo")
+          .replace(/grp\(rv, campo do componente\)/g, "agrupamento por campo do grÃ¡fico")
+          .replace(/\bDB\b|\bVW\b/g, "fontes de dados")
+          .replace(/\bF\.[A-Za-z0-9_.]+\b/g, "campo correspondente")
+          .replace(/\bDV_[A-Z0-9_]+\b/g, "valor configurado");
+        const getCardUserDetails = (cardTitle) => {
+          if (["dqSemVeiculo", "dqSemTipoVeiculo", "dqSemMotorista", "dqSemCliente"].includes(card.id)) {
+            const qualityDetails = {
+              dqSemVeiculo: [
+                "Fonte: Reservas de serviÃ§os.",
+                "Campos: Data de saÃ­da, Motorista e VeÃ­culo.",
+                "Valores e condiÃ§Ãµes: considera serviÃ§os nÃ£o cancelados com saÃ­da a partir de 01/06/2026, vÃ­nculo de motorista preenchido e veÃ­culo nÃ£o preenchido; a validaÃ§Ã£o usa o lookup do motorista, nÃ£o o nome exibido.",
+              ],
+              dqSemTipoVeiculo: [
+                "Fonte: Reservas de serviÃ§os.",
+                "Campos: Categoria do item e Tipo de veÃ­culo.",
+                "Valores e condiÃ§Ãµes: considera itens da categoria ServiÃ§o cujo tipo de veÃ­culo nÃ£o estÃ¡ preenchido.",
+              ],
+              dqSemMotorista: [
+                "Fonte: Reservas de serviÃ§os.",
+                "Campos: Data de saÃ­da, Categoria do item, Status do serviÃ§o e Motorista.",
+                "Valores e condiÃ§Ãµes: considera itens classificados como ServiÃ§o, a partir de 10/04/2026, nos status Confirmado, Programado ou ConcluÃ­do, quando o Motorista nÃ£o estÃ¡ preenchido.",
+              ],
+              dqSemCliente: [
+                "Fonte: Reservas de serviÃ§os.",
+                "Campos: Data de saÃ­da e Cliente.",
+                "Valores e condiÃ§Ãµes: considera serviÃ§os a partir de 01/04/2026 cujo Cliente aparece como Sem cliente.",
+              ],
+            };
+            return qualityDetails[card.id];
+          }
+          if (card.id === "alertCnh" || cardTitle.includes("cnh")) return [
+            "Fonte: FuncionÃ¡rios e motoristas ativos.",
+            "Campos: Nome, FunÃ§Ã£o, Status e Validade da CNH.",
+            "Valores e condiÃ§Ãµes: considera documentos sem validade, jÃ¡ vencidos ou com vencimento nos prÃ³ximos 90 dias.",
+          ];
+          if (card.id === "alertMultas" || cardTitle.includes("multa")) return [
+            "Fonte: Multas.",
+            "Campos: Data da multa, Status da multa, Motorista, Placa e Tipo de infraÃ§Ã£o.",
+            "Valores e condiÃ§Ãµes: o total conta as multas do perÃ­odo; a parte pendente identifica o status de notificaÃ§Ã£o configurado para acompanhamento do condutor.",
+          ];
+          if (card.id === "alertOcorrencias" || cardTitle.includes("numero de ocorrencias")) return [
+            "Fonte: OcorrÃªncias operacionais.",
+            "Campo: Data da ocorrÃªncia e data de saÃ­da dos serviÃ§os.",
+            "Valores e condiÃ§Ãµes: conta as ocorrÃªncias do perÃ­odo, compara com o total de serviÃ§os e mostra a frequÃªncia mÃ©dia no formato 1 a cada X serviÃ§os.",
+          ];
+          if (card.id === "alertSemValor" || cardTitle.includes("cp pendente") || cardTitle.includes("sem valor")) return [
+            "Fonte: Reservas de serviÃ§os e ComposiÃ§Ã£o de preÃ§o.",
+            "Campos: Categoria do item, Status da composiÃ§Ã£o de preÃ§o, Status de faturamento, Ordem de pagamento e Valor total.",
+            "Valores e condiÃ§Ãµes: considera itens ServiÃ§o jÃ¡ produzidos, com composiÃ§Ã£o de preÃ§o pendente e faturamento pendente; cada composiÃ§Ã£o Ã© contada uma vez.",
+          ];
+          if (cardTitle.includes("total produzido") || cardTitle.includes("meta x realizado")) return [
+            "Fonte: Reservas de serviÃ§os e histÃ³rico de faturamento.",
+            "Campos: Data de saÃ­da, Categoria do item, Valor total e Meta mensal.",
+            "Valores e condiÃ§Ãµes: compara o faturamento dos serviÃ§os no perÃ­odo com uma meta baseada no histÃ³rico; em perÃ­odos parciais, a meta acompanha a quantidade de dias.",
+          ];
+          if (cardTitle.includes("faturamento por cliente") || cardTitle.includes("top clientes faturamento")) return [
+            "Fonte: Reservas de serviÃ§os.",
+            "Campos: Cliente, Categoria do item e Valor total.",
+            "Valores e condiÃ§Ãµes: agrupa os serviÃ§os por Cliente, soma o Valor total e ordena os maiores faturamentos; a participaÃ§Ã£o Ã© a parcela de cada cliente no total.",
+          ];
+          if (cardTitle.includes("top clientes volume") || cardTitle.includes("clientes ativos")) return [
+            "Fonte: Reservas de serviÃ§os e cadastro de clientes.",
+            "Campos: Cliente, Categoria do item e Data de saÃ­da.",
+            "Valores e condiÃ§Ãµes: conta serviÃ§os por cliente e desconsidera registros exibidos como Sem cliente no ranking de clientes ativos.",
+          ];
+          if (cardTitle.includes("ticket")) return [
+            "Fonte: Reservas de serviÃ§os e ComposiÃ§Ã£o de preÃ§o.",
+            "Campos: Valor total, Status da composiÃ§Ã£o de preÃ§o e Data de saÃ­da.",
+            "Valores e condiÃ§Ãµes: soma os serviÃ§os com composiÃ§Ã£o concluÃ­da e Valor total maior que R$ 0,00 e divide pelo nÃºmero desses serviÃ§os.",
+          ];
+          if (cardTitle.includes("recebimento")) return [
+            "Fonte: Reservas de serviÃ§os e informaÃ§Ãµes de faturamento.",
+            "Campos: Valor total, Status de faturamento, Status da composiÃ§Ã£o de preÃ§o e Ordem de pagamento.",
+            "Valores e condiÃ§Ãµes: considera valores maiores que zero; recebido Ã© o que estÃ¡ como Pago, enquanto Pagante em viagem e Mensal ficam fora da base de comparaÃ§Ã£o.",
+          ];
+          if (cardTitle.includes("a receber")) return [
+            "Fonte: Reservas de serviÃ§os e informaÃ§Ãµes de faturamento.",
+            "Campos: Valor total, Status da composiÃ§Ã£o de preÃ§o, Ordem de pagamento e Status de faturamento.",
+            "Valores e condiÃ§Ãµes: considera serviÃ§os concluÃ­dos, com Ordem de pagamento, valor maior que zero e ainda nÃ£o marcados como Pago.",
+          ];
+          if ((cardTitle.includes("manuten") || cardTitle.includes("custo frota") || cardTitle.includes("reparo")) && !cardTitle.includes("kpis de manutencao")) return [
+            "Fonte: ManutenÃ§Ãµes.",
+            "Campos: Data da manutenÃ§Ã£o, Valor da manutenÃ§Ã£o, Tipo de reparo, Status e VeÃ­culo.",
+            "Valores e condiÃ§Ãµes: conta registros pela Data da manutenÃ§Ã£o, soma os valores informados e separa custo total, custo mÃ©dio e participaÃ§Ã£o por tipo de reparo.",
+          ];
+          if (cardTitle.includes("frota propria") || cardTitle.includes("uso mensal da frota")) return [
+            "Fonte: VeÃ­culos e Reservas de serviÃ§os.",
+            "Campos: Categoria do veÃ­culo, Status do veÃ­culo, VeÃ­culo e Data de saÃ­da.",
+            "Valores e condiÃ§Ãµes: considera veÃ­culos da categoria PrÃ³pria com serviÃ§o no dia; cancelados e recusados nÃ£o contam, e o resultado separa dias Ãºteis de fins de semana.",
+          ];
+          if (cardTitle.includes("preventiva") || cardTitle.includes("corretiva") || cardTitle.includes("conservacao") || cardTitle.includes("avaria") || cardTitle.includes("kpis de manutencao")) return [
+            "Fonte: ManutenÃ§Ãµes.",
+            "Campos: Tipo de reparo, Data da manutenÃ§Ã£o, Data de aprovaÃ§Ã£o e Status.",
+            "Valores e condiÃ§Ãµes: classifica os registros como Preventiva, Corretiva, ConservaÃ§Ã£o ou Avaria e compara cada grupo com sua meta operacional.",
+          ];
+          if (cardTitle.includes("pagamento") || cardTitle.includes("cartao") || cardTitle.includes("forma de pagamento")) return [
+            "Fonte: Pagamentos.",
+            "Campos: Valor do pagamento, Status do pagamento e Forma de pagamento.",
+            "Valores e condiÃ§Ãµes: agrupa os registros por forma ou status; o grupo recebido usa o status Pago e as formas sÃ£o reconhecidas pelos nomes exibidos, como CartÃ£o, CrÃ©dito, Link e MÃ¡quina.",
+            "Limite: nÃ£o hÃ¡ cÃ¡lculo de prazo ou atraso porque as datas de vencimento e baixa nÃ£o sÃ£o carregadas.",
+          ];
+          if (cardTitle.includes("frota") || cardTitle.includes("blindad") || cardTitle.includes("veiculo") || cardTitle.includes("dispon") || cardTitle.includes("por marca")) return [
+            "Fonte: VeÃ­culos.",
+            "Campos: Status do veÃ­culo, Categoria, Marca, Modelo, Ano, Placa e Blindagem.",
+            "Valores e condiÃ§Ãµes: agrupa a frota por status, marca ou blindagem; disponÃ­veis consideram os status exibidos como DisponÃ­vel, Ativo ou Livre, e em manutenÃ§Ã£o consideram o status correspondente.",
+          ];
+          if (cardTitle.includes("troca")) return [
+            "Fonte: Trocas.",
+            "Campos: Data da troca, Status da troca e Tipo de troca.",
+            "Valores e condiÃ§Ãµes: conta as trocas do perÃ­odo e separa os grupos pelos nomes exibidos de status e tipo; nÃ£o hÃ¡ valor financeiro nesta pÃ¡gina.",
+          ];
+          if (cardTitle.includes("publica") || cardTitle.includes("marketing")) return [
+            "Fonte: PublicaÃ§Ãµes de marketing.",
+            "Campos: Data, Categoria e Status da publicaÃ§Ã£o.",
+            "Valores e condiÃ§Ãµes: conta os registros carregados e agrupa o conteÃºdo pelos nomes exibidos de categoria e status, como Publicada, Em produÃ§Ã£o ou Pendente.",
+          ];
+          if (cardTitle.includes("status dos servicos") || cardTitle.includes("por status")) return [
+            "Fonte: Reservas de serviÃ§os.",
+            "Campos: Status do serviÃ§o, Categoria do item, Cliente, Motorista e Data de saÃ­da.",
+            "Valores e condiÃ§Ãµes: agrupa os serviÃ§os pelos nomes exibidos de status e calcula a participaÃ§Ã£o de cada grupo no total filtrado.",
+          ];
+          if (cardTitle.includes("servico") || cardTitle.includes("operacao") || cardTitle.includes("por tipo")) return [
+            "Fonte: Reservas de serviÃ§os.",
+            "Campos: Data de saÃ­da, Categoria do item, Status do serviÃ§o, Cliente, Motorista, VeÃ­culo e Valor total.",
+            "Valores e condiÃ§Ãµes: considera itens classificados como ServiÃ§o e aplica o perÃ­odo, o status e os filtros escolhidos antes de contar, agrupar ou somar.",
+          ];
+          return [
+            "Fonte: Dados carregados para a seÃ§Ã£o atual do dashboard.",
+            "Campos: perÃ­odo, status, categoria, valores e relacionamentos exibidos no card ou grÃ¡fico.",
+            "Valores e condiÃ§Ãµes: o resultado usa os nomes de exibiÃ§Ã£o dos registros e respeita os filtros globais aplicados na tela.",
+          ];
+        };
+        const applyFilter = (rule) => ({
+          ...rule,
+          conditions: ["Filtros globais neste momento: " + filterText].concat(rule.conditions || [], rule.codeChoices || []),
+          limitations: rule.limitations || ["Sem registros elegÃ­veis, o dashboard mostra zero ou s/dado."],
+          userSource: toUserText(rule.userSource || rule.source),
+          userDetails: rule.userDetails || getCardUserDetails(title),
+          userConditions: ["O resultado respeita os filtros globais mostrados acima."].concat(
+            (rule.userConditions || rule.conditions || []).map(toUserText),
+          ),
+          steps: rule.steps || [
+            "1. O dashboard parte da fonte indicada.",
+            "2. Aplica o perÃ­odo e os recortes compatÃ­veis com essa fonte.",
+            "3. Executa a contagem, soma, mÃ©dia ou agrupamento descrito.",
+            "4. Exibe o resultado final neste card ou grÃ¡fico.",
+          ],
+          reading: rule.reading || "O valor deve ser lido junto com o perÃ­odo, os filtros e as condiÃ§Ãµes acima; se qualquer um deles mudar, o resultado pode mudar.",
+        });
+        const reservations = "Reservas de serviÃ§o enriquecidas em DB.reservas e filtradas em VW.reservas.";
+
+        if (card.id === "dqSemVeiculo") {
+          return applyFilter({
+            user: "Conta serviÃ§os nÃ£o cancelados desde 01/06/2026 jÃ¡ realizados ou vencidos que ainda nÃ£o tÃªm veÃ­culo vinculado.",
+            source: reservations,
+            formula: "count(rv.filter(!status_cancelado && r._motId && !r[F.res.veiculo] && '2026-06-01' <= data_saida <= agora))",
+            conditions: ["A data de saÃ­da precisa existir e ser igual ou posterior a 01/06/2026.", "O status nÃ£o pode conter 'cancel'.", "O lookup de motorista (_motId) precisa estar preenchido.", "O veÃ­culo precisa estar vazio."],
+          });
+        }
+        if (card.id === "dqSemTipoVeiculo") {
+          return applyFilter({
+            user: "Conta serviÃ§os sem tipo de veÃ­culo definido.",
+            source: reservations,
+            formula: "count(rv.filter(!r[F.res.veiTipo]))",
+            codeChoices: ["F.res.catItem: 100000000 = ServiÃ§o."],
+            conditions: ["A categoria precisa ser DV_CAT_ITEM_SERVICO.", "O tipo de veÃ­culo precisa estar vazio."],
+          });
+        }
+        if (card.id === "dqSemMotorista") {
+          return applyFilter({
+            user: "Mostra serviÃ§os do intervalo monitorado que seguem sem motorista.",
+            source: reservations,
+            formula: "count(!r._motId && 10/04/2026 <= data_saida <= agora && status in {202410001,202410005,202410008})",
+            codeChoices: ["F.res.status: 202410001, 202410005 e 202410008; F.res.catItem: 100000000."],
+            conditions: ["O perÃ­odo monitorado comeÃ§a em 10/04/2026.", "A categoria precisa ser DV_CAT_ITEM_SERVICO."],
+          });
+        }
+        if (card.id === "dqSemCliente") {
+          return applyFilter({
+            user: "Conta serviÃ§os a partir de 01/04/2026 que ainda aparecem sem cliente.",
+            source: reservations,
+            formula: "count(rv.filter(data_saida >= '2026-04-01' && r._cli == 'Sem cliente'))",
+            conditions: ["O nome do cliente Ã© o valor enriquecido em r._cli."],
+          });
+        }
+        if (card.id === "alertCnh" || title.includes("cnh")) {
+          return applyFilter({
+            user: "Conta motoristas ativos com CNH vencida ou vencendo nos prÃ³ximos 90 dias.",
+            source: "DB.funcionarios, somente registros classificados como ativos.",
+            formula: "count(ativos.filter(cnhDate existe && (cnhDate - agora) / 86400000 <= 90))",
+            conditions: ["CNH sem data vÃ¡lida nÃ£o entra.", "Datas vencidas tambÃ©m entram."],
+          });
+        }
+        if (card.id === "alertMultas" || title.includes("multa")) {
+          return applyFilter({
+            user: "Conta multas e destaca como pendentes as que tÃªm o status de notificaÃ§Ã£o configurado.",
+            source: "VW.multas, preenchido pela tabela de multas e filtrado por data.",
+            formula: "total = muls.length; pendentes = count(Number(F.mul.status) == DV_STATUS_MUL_NOTIFICAR)",
+            codeChoices: ["F.mul.status: 202410000 = DV_STATUS_MUL_NOTIFICAR (notificar o condutor)."],
+            conditions: ["O percentual Ã© pendentes / total x 100."],
+          });
+        }
+        if (card.id === "alertSemValor" || title.includes("cp pendente") || title.includes("sem valor")) {
+          return applyFilter({
+            user: "Conta composiÃ§Ãµes de preÃ§o pendentes que jÃ¡ tÃªm serviÃ§o produzido e faturamento pendente.",
+            source: reservations + " O preÃ§o Ã© identificado pelo lookup da composiÃ§Ã£o.",
+            formula: "semValor = count(distinct precoId where _cpPendente && isProducedReservation && _fatStL inclui 'pend'); projecao = ticketAtual x semValor",
+            codeChoices: ["F.res.catItem: 100000000 = serviÃ§o; _cpPendente vem do status da composiÃ§Ã£o de preÃ§o."],
+            conditions: ["Cada composiÃ§Ã£o Ã© contada uma Ãºnica vez.", "A projeÃ§Ã£o usa o ticket atual."],
+            limitations: ["A projeÃ§Ã£o Ã© estimativa, nÃ£o faturamento confirmado."],
+          });
+        }
+        if (card.id === "alertOcorrencias" || title.includes("numero de ocorrencias")) {
+          return applyFilter({
+            user: "Conta os erros operacionais registrados no perÃ­odo e mostra a frequÃªncia deles entre os serviÃ§os.",
+            source: "DB.errosOperacionais, tabela lÃ³gica cr40f_errooperacional do MÃ³dulo Qualidade.",
+            formula: "ocorrencias = count(erros no perÃ­odo); percentual = ocorrencias / rv.length x 100; frequencia = rv.length / ocorrencias",
+            conditions: ["O denominador Ã© o total de serviÃ§os filtrados no mesmo perÃ­odo.", "OcorrÃªncias sem data ficam fora quando hÃ¡ filtro de data.", "O valor de X Ã© arredondado para o nÃºmero inteiro mais prÃ³ximo."],
+            limitations: ["Se nÃ£o houver serviÃ§os ou ocorrÃªncias, a frequÃªncia aparece como s/dado."],
+          });
+        }
+        if (title.includes("total produzido") || title.includes("meta x realizado")) {
+          return applyFilter({
+            user: "Compara o faturamento realizado com uma meta mensal baseada no histÃ³rico.",
+            source: reservations + " Janeiro a marÃ§o de 2026 tambÃ©m incluem serviÃ§os individuais importados do CSV de faturamento.",
+            formula: "realizado = periodo ? getPeriodValueAndCount().value : sumV(rv) + soma(historico); atingimento = realizado / meta x 100",
+            conditions: ["Meta mensal = 50% ano anterior + 40% de dois anos atrÃ¡s + 10% de trÃªs anos atrÃ¡s, com +13%.", "PerÃ­odos parciais recebem meta proporcional aos dias."],
+            limitations: ["O histÃ³rico estÃ¡ fixo no cÃ³digo."],
+          });
+        }
+        if (title.includes("faturamento por cliente") || title.includes("top clientes faturamento")) {
+          return applyFilter({
+            user: "Agrupa serviÃ§os por cliente, soma o faturamento e ordena do maior para o menor.",
+            source: reservations + " O cliente Ã© r._cli.",
+            formula: "byCli = grp(rv, r => r._cli); valorCliente = sumV(byCli[cliente]); ranking = sort(desc); exibido = topByShare(ranking, fat)",
+            conditions: ["ParticipaÃ§Ã£o = valor do cliente / faturamento total x 100."],
+          });
+        }
+        if (title.includes("top clientes volume") || title.includes("clientes ativos")) {
+          return applyFilter({
+            user: "Conta quantos serviÃ§os cada cliente possui e mostra os mais representativos.",
+            source: reservations + " O cliente Ã© r._cli.",
+            formula: "byCli = grp(rv, r => r._cli); volume = rows.length; ranking = sort(desc); exibido = topByShare(ranking, rv.length)",
+            conditions: ["ParticipaÃ§Ã£o = serviÃ§os do cliente / serviÃ§os totais x 100."],
+          });
+        }
+        if (title.includes("ticket")) {
+          return applyFilter({
+            user: "Ã‰ o valor mÃ©dio dos serviÃ§os elegÃ­veis para ticket.",
+            source: reservations,
+            formula: "elegiveis = rows.filter(_cpConcluida == true && _valor > 0); ticket = sumV(elegiveis) / elegiveis.length",
+            conditions: ["SÃ³ entram composiÃ§Ã£o concluÃ­da e valor maior que zero.", "No grÃ¡fico mensal, a conta Ã© repetida dentro de cada mÃªs."],
+          });
+        }
+        if (title.includes("recebimento")) {
+          return applyFilter({
+            user: "Mostra quanto do valor elegÃ­vel jÃ¡ foi recebido.",
+            source: reservations,
+            formula: "recebido = sum(_valor where fatStatus == PAGO); base = sum(_valor where fatStatus != PAGANTE_EM_VIAGEM && fatStatus != MENSAL); percentual = recebido / base x 100",
+            codeChoices: ["F.res.fatStatus: 202410010 = pago; 202410006 = pagante em viagem; 202410008 = mensal."],
+            conditions: ["SÃ³ valores maiores que zero entram.", "Pagante em viagem e Mensal ficam fora da base."],
+          });
+        }
+        if (title.includes("a receber")) {
+          return applyFilter({
+            user: "Soma serviÃ§os concluÃ­dos que tÃªm OP, ainda nÃ£o estÃ£o pagos e tÃªm valor.",
+            source: reservations,
+            formula: "aReceber = sum(_valor where _cpConcluida && _opId && fatStatus != PAGO && _valor > 0)",
+            codeChoices: ["F.res.fatStatus: 202410010 = pago."],
+            conditions: ["O percentual pendente compara este valor com o faturamento total."],
+          });
+        }
+        if (title.includes("manuten") || title.includes("custo frota") || title.includes("reparo")) {
+          return applyFilter({
+            user: "Conta registros de manutenÃ§Ã£o e soma o valor informado para mostrar custo e mÃ©dia.",
+            source: "VW.manutencoes, filtrado pelo perÃ­odo global; valores vÃªm de F.man.valor.",
+            formula: "custoTotal = sum(parseFloat(r[F.man.valor]) || 0); custoMedio = custoTotal / mans.length; categoria = maintenanceCategory(tipo)",
+            conditions: ["A porcentagem do resumo Ã© custoTotal / faturamento x 100.", "A categoria Ã© definida por palavras do tipo de reparo."],
+          });
+        }
+        if (title.includes("frota propria") || title.includes("uso mensal da frota")) {
+          return applyFilter({
+            user: "Mede quantos carros prÃ³prios tÃªm serviÃ§o em cada dia e calcula a mÃ©dia por dia Ãºtil e fim de semana.",
+            source: "DB.veiculos + VW.reservas, somente veÃ­culos cuja categoria Ã© prÃ³pria.",
+            formula: "ocupacao diaria = carros com serviÃ§o / carros proprios x 100; media final = media ponderada pelos dias",
+            conditions: ["Cancelados e recusados nÃ£o contam.", "Sem perÃ­odo, a janela usa o ano atual."],
+          });
+        }
+        if (title.includes("preventiva") || title.includes("corretiva") || title.includes("conservacao") || title.includes("avaria")) {
+          return applyFilter({
+            user: "Classifica manutenÃ§Ãµes pelo tipo de reparo e compara cada categoria com sua meta.",
+            source: "VW.manutencoes.",
+            formula: "categoria = maintenanceCategory(tipo); cobertura = medidos / total da categoria; OK = resultado atende a meta",
+            conditions: ["Preventiva programada mede aprovaÃ§Ã£o atÃ© data em atÃ© 10 dias.", "Corretiva crÃ­tica tem meta zero; nÃ£o crÃ­tica tem meta de atÃ© 5 no mÃªs."],
+            limitations: ["Categorias sem campo de mediÃ§Ã£o aparecem como s/dado."],
+          });
+        }
+        if (title.includes("pagamento") || title.includes("cartao") || title.includes("forma de pagamento")) {
+          return applyFilter({
+            user: "Usa os registros de pagamento para somar valores, contar registros e agrupar por forma ou status.",
+            source: "DB.pagantes; createdon inicia o prazo e cr40f_datadoprimeiropagamento encerra o prazo.",
+            formula: "tempo_dias = (dataPrimeiroPagamento - createdon) / 86400000; media_cliente = sum(tempo_dias) / pagamentos_medidos",
+            conditions: ["Recebido usa F.pag.status == 202410002.", "SÃ³ entram pagamentos com as duas datas vÃ¡lidas e duraÃ§Ã£o nÃ£o negativa."],
+            limitations: ["Pagamentos anteriores ao plug-in permanecem sem prazo atÃ© eventual backfill confiÃ¡vel."],
+          });
+        }
+        if (title.includes("frota") || title.includes("blindad") || title.includes("veiculo") || title.includes("dispon") || title.includes("por marca")) {
+          return applyFilter({
+            user: "Conta veÃ­culos e os agrupa por status, marca, blindagem ou situaÃ§Ã£o operacional.",
+            source: "DB.veiculos, usando valores formatados do Dataverse quando disponÃ­veis.",
+            formula: "disponiveis = status inclui dispon/ativo/livre; blindados = blindado == true/'true'/1; manutencao = status inclui manut; grupos = grp(veiculos, campo)",
+            conditions: ["Os totais de frota nÃ£o usam reservas para contar veÃ­culos."],
+          });
+        }
+        if (title.includes("troca")) {
+          return applyFilter({
+            user: "Conta registros de troca e separa pendentes, concluÃ­dos e agrupamentos por status ou tipo.",
+            source: "VW.trocas, filtrado pelo perÃ­odo global.",
+            formula: "pendentes = status inclui pend/aguard; concluidas = status inclui conclu/realiz; total = trcs.length",
+            conditions: ["A tabela detalha os registros retornados pela consulta."],
+          });
+        }
+        if (title.includes("publica") || title.includes("marketing")) {
+          return applyFilter({
+            user: "Conta publicaÃ§Ãµes e agrupa o conteÃºdo por categoria ou status.",
+            source: "DB.marketing, com status e categoria formatados do Dataverse.",
+            formula: "publicadas = status inclui public/ativo; producao = status inclui produc/pend/rascunho; grupos = grp(mkts, categoria/status)",
+            conditions: ["O total representa os registros disponÃ­veis no retorno atual."],
+          });
+        }
+        if (title.includes("status dos servicos") || title.includes("por status")) {
+          return applyFilter({
+            user: "Agrupa os serviÃ§os pelo status e mostra a participaÃ§Ã£o de cada grupo.",
+            source: reservations + " O status Ã© r._stL.",
+            formula: "bySt = grp(rv, r => r._stL); participacao = quantidade do status / rv.length x 100",
+            conditions: ["ConcluÃ­dos usam isProducedReservation().", "Cancelados contam status contendo cancel ou recus."],
+          });
+        }
+        if (title.includes("servico") || title.includes("operacao") || title.includes("por tipo")) {
+          return applyFilter({
+            user: "Conta ou agrupa serviÃ§os conforme o recorte mostrado no card ou grÃ¡fico.",
+            source: reservations,
+            formula: "rv = VW.reservas filtradas; contagem = rv.length; agrupamento = grp(rv, campo do componente); soma = sumV(grupo)",
+            codeChoices: ["F.res.catItem: 100000000 = serviÃ§o (DV_CAT_ITEM_SERVICO)."],
+            conditions: ["A reserva entra como serviÃ§o quando F.res.catItem == DV_CAT_ITEM_SERVICO.", "PerÃ­odo, status, cliente, motorista e tipo de veÃ­culo sÃ£o aplicados antes da renderizaÃ§Ã£o."],
+          });
+        }
+        return applyFilter({
+          user: "Este detalhe usa os registros e transformaÃ§Ãµes que o componente jÃ¡ renderizou para a aba atual.",
+          source: "Estado de dados do dashboard (DB/VW) e o renderizador da seÃ§Ã£o.",
+          formula: "dados carregados -> filtros ativos -> filtro/agrupamento do componente -> valor exibido",
+          conditions: ["O valor respeita o perÃ­odo e os filtros globais atuais."],
+          limitations: ["Este indicador nÃ£o possui uma regra nominal especÃ­fica no catÃ¡logo; a cadeia comum Ã© exibida de forma transparente."],
+        });
+      }
+
+      function appendLogicSection(container, label, value, options = {}) {
+        const section = createCardDetailElement("section", "card-detail-logic-section" + (options.wide ? " card-detail-logic-section--wide" : ""));
+        section.appendChild(createCardDetailElement("p", "card-detail-logic-label", label));
+        if (Array.isArray(value)) {
+          const list = createCardDetailElement("ul", "card-detail-logic-list");
+          value.forEach((item) => {
+            const text = String(item ?? "");
+            const match = text.match(/^(Valores e condiÃ§Ãµes):\s*(.*)$/i);
+            const itemElement = createCardDetailElement("li", "");
+            if (match) {
+              itemElement.appendChild(createCardDetailElement("strong", "card-detail-logic-emphasis", match[1] + ":"));
+              itemElement.appendChild(document.createTextNode(" "));
+              itemElement.appendChild(createCardDetailElement("span", "card-detail-logic-condition-detail", match[2]));
+            } else {
+              itemElement.textContent = text;
+            }
+            list.appendChild(itemElement);
+          });
+          section.appendChild(list);
+        } else {
+          section.appendChild(createCardDetailElement(options.code ? "code" : "p", options.code ? "card-detail-logic-code" : "card-detail-logic-copy", value));
+        }
+        container.appendChild(section);
+      }
+
+      function buildCardLogic(card) {
+        const title = getCardDetailTitle(card);
+        const logic = getCardLogic(card);
+        const root = createCardDetailElement("section", "card-detail-logic");
+        const head = createCardDetailElement("div", "card-detail-logic-head");
+        const copy = createCardDetailElement("div");
+        copy.append(
+          createCardDetailElement("h3", "card-detail-logic-title", "Como este dado foi calculado"),
+          createCardDetailElement("p", "card-detail-logic-subtitle", title + ": escolha UsuÃ¡rio para entender o resultado ou CÃ³digo para conferir a implementaÃ§Ã£o."),
+        );
+        const modes = createCardDetailElement("div", "card-detail-mode-switch");
+        [["user", "UsuÃ¡rio"], ["technical", "CÃ³digo"]].forEach(([mode, label], index) => {
+          const button = createCardDetailElement("button", "card-detail-mode", label);
+          button.type = "button";
+          button.dataset.cardDetailMode = mode;
+          button.setAttribute("aria-selected", String(index === 0));
+          modes.appendChild(button);
+        });
+        head.append(copy, modes);
+
+        const userMode = createCardDetailElement("div", "card-detail-logic-mode");
+        userMode.dataset.cardDetailLogicMode = "user";
+        const userGrid = createCardDetailElement("div", "card-detail-logic-grid");
+        appendLogicSection(userGrid, "O que este nÃºmero significa", logic.user, { wide: true });
+        appendLogicSection(userGrid, "Detalhamento para vocÃª", logic.userDetails, { wide: true });
+        appendLogicSection(userGrid, "Como ele chega ao resultado", logic.steps, { wide: true });
+        appendLogicSection(userGrid, "De onde vem", logic.userSource);
+        appendLogicSection(userGrid, "O que entra na conta", logic.userConditions);
+        appendLogicSection(userGrid, "Como interpretar", logic.reading, { wide: true });
+        appendLogicSection(userGrid, "Cuidados e limites", logic.limitations);
+        userMode.appendChild(userGrid);
+
+        const technicalMode = createCardDetailElement("div", "card-detail-logic-mode");
+        technicalMode.dataset.cardDetailLogicMode = "technical";
+        technicalMode.hidden = true;
+        const technicalGrid = createCardDetailElement("div", "card-detail-logic-grid");
+        appendLogicSection(technicalGrid, "Fonte e escopo", logic.source);
+        appendLogicSection(technicalGrid, "FÃ³rmula / transformaÃ§Ã£o", logic.formula, { code: true });
+        appendLogicSection(technicalGrid, "Fluxo de execuÃ§Ã£o", logic.steps, { wide: true });
+        appendLogicSection(technicalGrid, "CondiÃ§Ãµes", logic.conditions);
+        appendLogicSection(technicalGrid, "LimitaÃ§Ãµes conhecidas", logic.limitations);
+        technicalMode.appendChild(technicalGrid);
+
+        root.append(head, userMode, technicalMode);
+        return root;
+      }
+
+      function createChartDataTable(chart, title) {
+        const wrap = createCardDetailElement("div", "card-detail-table-wrap");
+        const table = document.createElement("table");
+        const head = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        const labels = chart.data.labels || [];
+        ["PerÃ­odo", ...chart.data.datasets.map((dataset) => dataset.label || "SÃ©rie")].forEach((text) => {
+          headRow.appendChild(createCardDetailElement("th", "", text));
+        });
+        head.appendChild(headRow);
+        const body = document.createElement("tbody");
+        labels.forEach((label, index) => {
+          const row = document.createElement("tr");
+          row.appendChild(createCardDetailElement("td", "em", label));
+          chart.data.datasets.forEach((dataset) => {
+            row.appendChild(createCardDetailElement("td", "r", getChartValue(dataset.data?.[index], title)));
+          });
+          body.appendChild(row);
+        });
+        table.append(head, body);
+        wrap.appendChild(table);
+        return wrap;
+      }
+
+      function cloneCardTable(table) {
+        const clone = table.cloneNode(true);
+        clone.querySelectorAll("[id], [onclick], [onchange]").forEach((element) => {
+          element.removeAttribute("id");
+          element.removeAttribute("onclick");
+          element.removeAttribute("onchange");
+        });
+        return clone;
+      }
+
+      function destroyDetailCharts() {
+        detailCharts.forEach((chart) => chart.destroy());
+        detailCharts = [];
+      }
+
+      function buildCardDetail(card) {
+        const title = getCardDetailTitle(card);
+        const primaryValue = getCardPrimaryValue(card);
+        const notes = getCardDetailNotes(card);
+        const layout = createCardDetailElement("div", "card-detail-layout");
+        const main = createCardDetailElement("div", "card-detail-main");
+        const side = createCardDetailElement("aside", "card-detail-side");
+        const focus = createCardDetailElement("section", "card-detail-focus");
+        focus.append(
+          createCardDetailElement("p", "card-detail-focus-label", title),
+          createCardDetailElement("p", "card-detail-focus-value", primaryValue),
+        );
+        if (notes[0]) focus.appendChild(createCardDetailElement("p", "card-detail-focus-context", notes[0]));
+        main.appendChild(focus);
+
+        const summary = createCardDetailElement("section", "card-detail-section");
+        summary.appendChild(createCardDetailElement("p", "card-detail-section-title", "Resumo do filtro"));
+        const stats = createCardDetailElement("div", "card-detail-stats");
+        addCardDetailStat(stats, "Indicador", title);
+        addCardDetailStat(stats, "Valor atual", primaryValue);
+        addCardDetailStat(stats, "Tipo", card.querySelector("canvas") ? "GrÃ¡fico" : card.querySelector("table") ? "Tabela" : "Indicador");
+        addCardDetailStat(stats, "Filtro", document.getElementById("filterSummary")?.textContent.trim() || "Todos os dados");
+        summary.appendChild(stats);
+        side.appendChild(summary);
+
+        if (notes.length) {
+          const context = createCardDetailElement("section", "card-detail-section");
+          context.appendChild(createCardDetailElement("p", "card-detail-section-title", "Leitura atual"));
+          const list = createCardDetailElement("ul", "card-detail-notes");
+          notes.forEach((note) => list.appendChild(createCardDetailElement("li", "", note)));
+          context.appendChild(list);
+          side.appendChild(context);
+        }
+
+        const canvas = card.querySelector("canvas");
+        const sourceChart = canvas ? charts[canvas.id] : null;
+        if (sourceChart) {
+          const chartWrap = createCardDetailElement("section", "card-detail-chart-wrap");
+          const chartCanvas = document.createElement("canvas");
+          chartWrap.appendChild(chartCanvas);
+          main.appendChild(chartWrap);
+          try {
+            const expandedChart = createDashboardChart(chartCanvas, {
+              type: sourceChart.config.type,
+              data: {
+                labels: [...(sourceChart.data.labels || [])],
+                datasets: sourceChart.data.datasets.map((dataset) => ({ ...dataset, data: [...(dataset.data || [])] })),
+              },
+              options: { responsive: true, maintainAspectRatio: false },
+            });
+            detailCharts.push(expandedChart);
+          } catch {
+            chartWrap.remove();
+          }
+          const dataset = createCardDetailElement("section", "card-detail-section");
+          dataset.appendChild(createCardDetailElement("p", "card-detail-section-title", "Dados do grÃ¡fico"));
+          dataset.appendChild(createChartDataTable(sourceChart, title));
+          side.appendChild(dataset);
+        }
+
+        const table = card.querySelector("table");
+        if (table) {
+          const records = createCardDetailElement("section", "card-detail-section");
+          records.appendChild(createCardDetailElement("p", "card-detail-section-title", "Registros exibidos"));
+          const wrap = createCardDetailElement("div", "card-detail-table-wrap");
+          wrap.appendChild(cloneCardTable(table));
+          records.appendChild(wrap);
+          main.appendChild(records);
+        }
+
+        layout.append(main, side);
+        const overview = createCardDetailElement("div", "card-detail-view");
+        overview.dataset.cardDetailView = "overview";
+        overview.appendChild(layout);
+        const logicView = createCardDetailElement("div", "card-detail-view");
+        logicView.dataset.cardDetailView = "logic";
+        logicView.hidden = true;
+        logicView.appendChild(buildCardLogic(card));
+        const tabs = createCardDetailElement("nav", "card-detail-tabs");
+        tabs.setAttribute("aria-label", "NavegaÃ§Ã£o do detalhamento");
+        [["overview", "VisÃ£o geral"], ["logic", "Como foi calculado"]].forEach(([view, label], index) => {
+          const button = createCardDetailElement("button", "card-detail-tab", label);
+          button.type = "button";
+          button.dataset.cardDetailTab = view;
+          button.setAttribute("aria-selected", String(index === 0));
+          tabs.appendChild(button);
+        });
+        const shell = createCardDetailElement("div", "card-detail-shell");
+        shell.append(tabs, overview, logicView);
+        return shell;
+      }
+
+      function installCardDetailDialog() {
+        const dialog = document.getElementById("cardDetailDialog");
+        const title = document.getElementById("cardDetailTitle");
+        const body = document.getElementById("cardDetailBody");
+        const close = document.getElementById("cardDetailClose");
+        const start = document.getElementById("cardDetailStart");
+        const end = document.getElementById("cardDetailEnd");
+        const apply = document.getElementById("cardDetailApplyFilter");
+        const clear = document.getElementById("cardDetailClearFilter");
+        if (!dialog || !title || !body || !close || !start || !end || !apply || !clear) return;
+
+        let activeCard = null;
+        const getCardType = (card) => ["kpi", "cc", "tc", "exec-alert"].find((type) => card.classList.contains(type));
+        const renderActiveCard = () => {
+          if (!activeCard) return;
+          const selector = `.${activeCard.type}`;
+          const candidates = [...document.querySelectorAll(selector)];
+          const card = (activeCard.id && document.getElementById(activeCard.id)) ||
+            candidates.find((item, index) => index === activeCard.index && getCardDetailTitle(item) === activeCard.title) ||
+            candidates.find((item) => getCardDetailTitle(item) === activeCard.title);
+          if (!card) return;
+          title.textContent = getCardDetailTitle(card);
+          destroyDetailCharts();
+          body.replaceChildren(buildCardDetail(card));
+        };
+        const syncAndApplyPeriod = () => {
+          document.getElementById("fS").value = start.value;
+          document.getElementById("fE").value = end.value;
+          applyF(true);
+          renderActiveCard();
+        };
+
+        const closeDialog = () => dialog.close();
+        close.addEventListener("click", closeDialog);
+        apply.addEventListener("click", syncAndApplyPeriod);
+        clear.addEventListener("click", () => {
+          start.value = "";
+          end.value = "";
+          syncAndApplyPeriod();
+        });
+        body.addEventListener("click", (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          const tab = target?.closest("[data-card-detail-tab]");
+          const mode = target?.closest("[data-card-detail-mode]");
+          if (tab) {
+            body.querySelectorAll("[data-card-detail-tab]").forEach((button) => {
+              button.setAttribute("aria-selected", String(button === tab));
+            });
+            body.querySelectorAll("[data-card-detail-view]").forEach((view) => {
+              view.hidden = view.dataset.cardDetailView !== tab.dataset.cardDetailTab;
+            });
+          }
+          if (mode) {
+            body.querySelectorAll("[data-card-detail-mode]").forEach((button) => {
+              button.setAttribute("aria-selected", String(button === mode));
+            });
+            body.querySelectorAll("[data-card-detail-logic-mode]").forEach((view) => {
+              view.hidden = view.dataset.cardDetailLogicMode !== mode.dataset.cardDetailMode;
+            });
+          }
+        });
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) closeDialog();
+        });
+        dialog.addEventListener("close", () => {
+          destroyDetailCharts();
+          body.replaceChildren();
+          activeCard = null;
+        });
+
+        document.addEventListener("click", (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          if (!target || target.closest("#cardDetailDialog")) return;
+          if (target.closest("a, button, input, select, textarea, th, [contenteditable='true']")) return;
+          const card = target.closest(".kpi, .cc, .tc, .exec-alert");
+          if (!card) return;
+          const cardType = getCardType(card);
+          activeCard = {
+            title: getCardDetailTitle(card),
+            type: cardType,
+            id: card.id || "",
+            index: [...document.querySelectorAll("." + cardType)].indexOf(card),
+          };
+          start.value = document.getElementById("fS").value;
+          end.value = document.getElementById("fE").value;
+          renderActiveCard();
+          dialog.showModal();
+        });
+      }
+
       function renderAll() {
+        const monthsLabelsAll = getDashboardMonthLabels();
         const dvDisabled = isDataverseDisabled();
-        const rv = dvDisabled ? [] : VW.reservas;
+        const rv = dvDisabled
+          ? []
+          : VW.reservas.filter((r) => Number(r[F.res.catItem]) === DV_CAT_ITEM_SERVICO);
         const fat = sumV(rv);
         const byM = grp(rv, (r) => mK(r[F.res.data]));
         const mks = mKeys(byM);
@@ -2363,7 +6190,7 @@ const monthsLabelsAll = [
           if (!start && !end) return records;
           return records.filter(r => {
             const rDate = r[dateField];
-            if (!rDate) return true; // Incluir se nÃ£o tem data
+            if (!rDate) return false; // Com filtro de data, registro sem data fica fora
             if (start) {
               const startDate = new Date(start + "T00:00:00-03:00");
               if (new Date(rDate) < startDate) return false;
@@ -2378,6 +6205,7 @@ const monthsLabelsAll = [
         VW.manutencoes = filterByDate(DB.manutencoes, F.man.data);
         VW.multas = filterByDate(DB.multas, F.mul.data);
         VW.trocas = filterByDate(DB.trocas, F.trc.data);
+        VW.despesas = filterByDate(DB.despesas, F.despesa.data);
 
         const pagReceb = DB.pagantes.filter(isReceivedPayment);
 
@@ -2424,11 +6252,19 @@ const monthsLabelsAll = [
           });
         };
         const semValor = getSemValorRows(rv);
-        const pendentes = rv.filter(isPendingScheduledReservation);
         const cancelados = rv.filter(
           (r) =>
             stL(r._stL).includes("cancel") || stL(r._stL).includes("recus"),
         );
+        const ocorrenciasOperacionais = dvDisabled
+          ? []
+          : filterByDate(DB.errosOperacionais, F.erroOperacional.data);
+        const ocorrenciasPct = rv.length
+          ? (ocorrenciasOperacionais.length / rv.length * 100)
+          : 0;
+        const ocorrenciasFrequencia = ocorrenciasOperacionais.length && rv.length
+          ? Math.round(rv.length / ocorrenciasOperacionais.length)
+          : null;
 
         const now = new Date();
         const brNow = new Date(now.getTime() - 3 * 60 * 60 * 1000);
@@ -2448,11 +6284,26 @@ const monthsLabelsAll = [
         const activeStart = start || `${currentYear}-01-01`;
         const activeEnd = end || `${currentYear}-12-31`;
         const showLM = shouldShowLM(start, end);
+        const showLY = showLM;
         const lmPeriod = samePeriodLastMonth(activeStart, activeEnd);
         const lyPeriod = samePeriodLastYear(activeStart, activeEnd);
         const lmData = lmPeriod ? getPeriodValueAndCount(lmPeriod.start, lmPeriod.end) : { value: 0, count: null, hasData: false };
         const lmValue = lmData.hasData ? lmData.value : 0;
         const lmSrvCount = lmData.count !== null ? lmData.count : 0;
+        const producedPeriodData = getPeriodValueAndCount(activeStart, activeEnd);
+        const producedPeriodValue = producedPeriodData.value;
+        const hardcodedFaturamentoTotal = Object.keys(yearDataMap).reduce(
+          (total, year) =>
+            total +
+            (yearDataMap[year] || []).reduce(
+              (sum, value) => sum + (value || 0),
+              0,
+            ),
+          0,
+        );
+        const faturamentoProduzido = start || end
+          ? producedPeriodValue
+          : fat + hardcodedFaturamentoTotal;
 
         // LY deve comparar o perÃ­odo atual com o mesmo perÃ­odo do ano anterior
         let lyValue = 0;
@@ -2514,14 +6365,15 @@ const monthsLabelsAll = [
         set("kSrv", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
         html("kSrvD", dvDisabled ? "" :
           (showLM ? (lmSrvCount ? fmtCntChip(rv.length, lmSrvCount, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
-          (lySrvCount ? fmtCntChip(rv.length, lySrvCount, "LY", "badge-ly") : ndChip("LY", "badge-ly")));
-        set("kFat", dvDisabled ? "â€”" : brlS(fat));
+          (showLY ? (lySrvCount ? fmtCntChip(rv.length, lySrvCount, "LY", "badge-ly") : ndChip("LY", "badge-ly")) : ""));
+        set("kFat", dvDisabled ? "â€”" : brlS(faturamentoProduzido));
         html("kFatD", dvDisabled ? "" :
-          (showLM ? fmtKpiChip(fat, lmValue, "LM", "badge-lm") : "") + fmtKpiChip(fat, lyValue, "LY", "badge-ly"));
+          (showLM ? fmtKpiChip(faturamentoProduzido, lmValue, "LM", "badge-lm") : "") +
+          (showLY ? fmtKpiChip(faturamentoProduzido, lyValue, "LY", "badge-ly") : ""));
         set("kTk", dvDisabled ? "â€”" : brl(curTk));
         html("kTkD", dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
-          (lyTkVal ? fmtKpiChip(curTk, lyTkVal, "LY", "badge-ly") : ndChip("LY", "badge-ly")));
+          (showLY ? (lyTkVal ? fmtKpiChip(curTk, lyTkVal, "LY", "badge-ly") : ndChip("LY", "badge-ly")) : ""));
         set("kMan", dvDisabled ? "â€”" : VW.manutencoes.length);
         const custoTotal = dvDisabled
           ? 0
@@ -2533,32 +6385,18 @@ const monthsLabelsAll = [
         html("kManD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta"><span class="bk-label">CUSTO</span><span class="bk-val">${brlS(custoTotal)}</span><span class="bk-pct ${custoTotal <= fat * 0.1 ? "du" : "dd"}">${cfPctRec}% rec</span></span>`);
         set("kMul", dvDisabled ? "â€”" : VW.multas.length);
-        const mulFv2 = (r, f) =>
-          r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
-        const mulPen2 = VW.multas.filter(
-          (r) =>
-            stL(String(mulFv2(r, F.mul.status) || "")).includes("pend") ||
-            stL(String(mulFv2(r, F.mul.status) || "")).includes("indicad"),
-        );
+        const mulPen2 = VW.multas.filter(isMultaPendente);
         const mulPenPct = VW.multas.length ? (mulPen2.length / VW.multas.length * 100).toFixed(0) : 0;
         html("kMulD", dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${mulPen2.length > 0 ? " below" : ""}"><span class="bk-label">PEND</span><span class="bk-val">${mulPen2.length}</span><span class="bk-pct">${mulPenPct}%</span></span>`);
         set("kSemVal", dvDisabled ? "â€”" : semValor.length);
-        const semValPct = rv.length ? (semValor.length / rv.length * 100).toFixed(1) : 0;
         const projecao = dvDisabled ? 0 : curTk * semValor.length;
-        const produzidoValor = sumV(conclServices);
-        const emViagemValor = sumV(emViagemRows);
-        const producedOps = new Set(
-          conclServices.map((r) => r._opId).filter(Boolean)
-        );
-        const recebidoProduzido = pagReceb
-          .filter((p) => producedOps.has(paymentOp(p)))
-          .reduce((s, p) => s + paymentValue(p), 0);
-        const baseRecebimento = Math.max(0, produzidoValor - emViagemValor);
-        const recebimentoPct = baseRecebimento ? (recebidoProduzido / baseRecebimento) * 100 : 0;
+        const recebimentoStats = getRecebimentoStats(rv);
+        const recebidoProduzido = recebimentoStats.recebido;
+        const baseRecebimento = recebimentoStats.base;
+        const recebimentoPct = recebimentoStats.percentual;
         html("kSemValD", dvDisabled ? "" :
-          `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">%</span><span class="bk-val">${semValor.length}</span><span class="bk-pct">${semValPct}% tot</span></span>` +
-          (semValor.length > 0 ? `<span class="badge-kpi badge-meta"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span><span class="bk-pct">potencial</span></span>` : ""));
+          `<span class="badge-kpi badge-meta${semValor.length > 0 ? " below" : ""}"><span class="bk-label">PROJ</span><span class="bk-val">${brlS(projecao)}</span></span>`);
         const aReceber = dvDisabled ? 0 :
           rv
             .filter(r => r._cpConcluida === true && r._opId && r[F.res.fatStatus] !== DV_STATUS_FAT_PAGO && r._valor > 0)
@@ -2567,16 +6405,17 @@ const monthsLabelsAll = [
         const aReceberPct = fat > 0 ? (aReceber / fat * 100).toFixed(0) : 0;
         html("kPPendD", dvDisabled ? "" :
           `<span class="badge-kpi badge-ly"><span class="bk-label">%FAT</span><span class="bk-val">${aReceberPct}%</span><span class="bk-pct">pendente</span></span>`);
-        set("kRecebPct", dvDisabled ? "Ã¢â‚¬â€" : `${recebimentoPct.toFixed(0)}%`);
-        html("kRecebPctD", dvDisabled ? "" :
-          `<span class="badge-kpi badge-meta"><span class="bk-label">REC</span><span class="bk-val">${brlS(recebidoProduzido)}</span><span class="bk-pct">recebido</span></span>` +
-          `<span class="badge-kpi badge-meta${recebimentoPct >= 90 ? "" : " below"}"><span class="bk-label">BASE</span><span class="bk-val">${brlS(baseRecebimento)}</span><span class="bk-pct">${recebimentoPct.toFixed(1)}%</span></span>`);
-        const cnhWarn = DB.funcionarios.filter((r) => {
-          if (!r[F.fun.cnh]) return true;
-          return (
-            (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24) < 90
-          );
-        });
+        set("kRecebPct", dvDisabled ? "â€”" : `${recebimentoPct.toFixed(0)}%`);
+        html("kRecebPctSub", dvDisabled ? "" :
+          `<span class="receipt-value">${brlS(recebidoProduzido)}</span>` +
+          `<span class="receipt-separator">recebido de</span>` +
+          `<span class="receipt-base">${brlS(baseRecebimento)}</span>`);
+        html("kRecebPctD", "");
+        const cnhWarn = DB.funcionarios.filter((r) => isActiveFuncionario(r) && (() => {
+          const cnhDate = r[F.fun.cnh] ? new Date(r[F.fun.cnh]).getTime() : NaN;
+          if (!Number.isFinite(cnhDate)) return false;
+          return (cnhDate - Date.now()) / (1000 * 60 * 60 * 24) <= 90;
+        })());
         set("kCnhW", dvDisabled ? "â€”" : cnhWarn.length);
         html("kCnhWD", dvDisabled
           ? ""
@@ -2614,13 +6453,7 @@ const monthsLabelsAll = [
             .reduce((s, r) => s + r._valor, 0);
         });
         const trendRecebPct = trendKeys.map((k) => {
-          const rows = (byM[k] || []).filter(isProducedReservation);
-          const base = sumV(rows);
-          const ops = new Set(rows.map((r) => r._opId).filter(Boolean));
-          const recebido = pagReceb
-            .filter((p) => ops.has(paymentOp(p)))
-            .reduce((s, p) => s + paymentValue(p), 0);
-          return base ? (recebido / base) * 100 : 0;
+          return getRecebimentoStats(byM[k] || []).percentual;
         });
         const trendSemValor = trendKeys.map((k) =>
           getSemValorRows(byM[k] || []).length
@@ -2635,15 +6468,34 @@ const monthsLabelsAll = [
         setExecAlert("alertSemValor", semValor.length, "CP pendente", semValor.length ? `${brlS(projecao)} potencial` : "OK", semValor.length ? "warn" : "ok");
         setExecAlert("alertCnh", cnhWarn.length, "CNH", cnhWarn.length ? "Atencao" : "OK", cnhWarn.length ? "danger" : "ok");
         setExecAlert("alertMultas", mulPen2.length, "Multas", `${mulPenPct}% pend./indic.`, mulPen2.length ? "danger" : "ok");
+        setExecAlert("alertOcorrencias", dvDisabled ? "â€”" : ocorrenciasOperacionais.length, "OcorrÃªncias", rv.length && ocorrenciasOperacionais.length ? `${ocorrenciasPct.toFixed(1)}% dos serviÃ§os Â· 1 a cada ${ocorrenciasFrequencia}` : "s/dado", ocorrenciasOperacionais.length ? "danger" : "ok");
         const afterOperationalStart = (r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01";
-        const dqSemPreco = rv.filter((r) => !r[F.res.lookupPreco]).length;
-        const dqSemOP = rv.filter((r) => !r._opId).length;
-        const dqSemMotorista = rv.filter((r) => afterOperationalStart(r) && r._mot === "Sem motorista").length;
+        const inicioSemVeiculo = new Date("2026-06-01T00:00:00-03:00").getTime();
+        const dqSemVeiculo = rv.filter((r) => {
+          const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
+          return !stL(r._stL).includes("cancel") && Boolean(r._motId) && !r[F.res.veiculo] && Number.isFinite(saida) && saida >= inicioSemVeiculo && saida <= Date.now();
+        }).length;
+        const dqSemTipoVeiculo = rv.filter((r) => !r[F.res.veiTipo]).length;
+        const statusSemMotorista = new Set([202410001, 202410005, 202410008]);
+        const inicioSemMotorista = new Date("2026-04-10T00:00:00-03:00").getTime();
+        const agoraSemMotorista = Date.now();
+        const dqSemMotorista = rv.filter((r) => {
+          const saida = r[F.res.data] ? new Date(r[F.res.data]).getTime() : NaN;
+          return (
+            !r._motId &&
+            Number.isFinite(saida) &&
+            saida >= inicioSemMotorista &&
+            saida <= agoraSemMotorista &&
+            statusSemMotorista.has(Number(r[F.res.status])) &&
+            Number(r[F.res.catItem]) === DV_CAT_ITEM_SERVICO
+          );
+        }).length;
         const dqSemCliente = rv.filter((r) => afterOperationalStart(r) && r._cli === "Sem cliente").length;
-        setExecAlert("dqSemPreco", dqSemPreco, "Sem preco", "sem tabela preco", dqSemPreco ? "warn" : "ok");
-        setExecAlert("dqSemOP", dqSemOP, "Sem OP", "sem financeiro vinculado", dqSemOP ? "warn" : "ok");
-        setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", dqSemMotorista ? "Corrigir" : "OK", dqSemMotorista ? "warn" : "ok");
-        setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", dqSemCliente ? "Corrigir" : "OK", dqSemCliente ? "warn" : "ok");
+        const qualityShare = (count) => rv.length ? `${(count / rv.length * 100).toFixed(1)}% dos serviÃ§os` : "s/dado";
+        setExecAlert("dqSemVeiculo", dqSemVeiculo, "Sem veÃ­culo", qualityShare(dqSemVeiculo), dqSemVeiculo ? "warn" : "ok");
+        setExecAlert("dqSemTipoVeiculo", dqSemTipoVeiculo, "Sem tipo de veÃ­culo", qualityShare(dqSemTipoVeiculo), dqSemTipoVeiculo ? "warn" : "ok");
+        setExecAlert("dqSemMotorista", dqSemMotorista, "Sem motorista", qualityShare(dqSemMotorista), dqSemMotorista ? "warn" : "ok");
+        setExecAlert("dqSemCliente", dqSemCliente, "Sem cliente", qualityShare(dqSemCliente), dqSemCliente ? "warn" : "ok");
 
         const monthsLabels = [
           "Jan",
@@ -2740,12 +6592,12 @@ const monthsLabelsAll = [
               },
             ],
           },
-          options: opts0({ noLegend: false, yBrl: true, datalabels: false }),
+          options: { ...opts0({ noLegend: false, yBrl: true, datalabels: false }), maintainAspectRatio: false },
         });
 
-        // Cards de Total Produzido
+        // Cards de Total Produzido: para anos histÃ³ricos, usa o faturamento mensal hardcoded.
         const meta = getMetaParaPeriodoProporcional(start, end);
-        const accumulated = dvDisabled ? 0 : fat;
+        const accumulated = dvDisabled ? 0 : faturamentoProduzido;
         const metaProgress = meta ? (accumulated / meta) * 100 : 0;
         const lyDelta = lyValue ? ((accumulated - lyValue) / lyValue) * 100 : 0;
         const lmDelta = lmValue ? ((accumulated - lmValue) / lmValue) * 100 : 0;
@@ -2766,7 +6618,7 @@ const monthsLabelsAll = [
           document.getElementById("v_totalProd").textContent = dvDisabled ? "â€”" : brlS(accumulated);
         document.getElementById("indicatorsLM_LY_META").innerHTML =
           (showLM ? mkChip("LM", lmValue, lmDelta, "badge-lm") : "") +
-          mkChip("LY", lyValue, lyDelta, "badge-ly") +
+          (showLY ? mkChip("LY", lyValue, lyDelta, "badge-ly") : "") +
           metaChip;
 
         // Barra de progresso da meta
@@ -2811,7 +6663,7 @@ const monthsLabelsAll = [
         // Ticket MÃ©dio chips: LM only if last month is in current period; LY not available (count unknown)
         document.getElementById("ind_tm").innerHTML = dvDisabled ? "" :
           (showLM ? (lmTkVal ? fmtKpiChip(curTk, lmTkVal, "LM", "badge-lm") : ndChip("LM", "badge-lm")) : "") +
-          ndChip("LY", "badge-ly");
+          (showLY ? ndChip("LY", "badge-ly") : "");
 
         // Meta x Realizado por MÃªs
         {
@@ -2819,11 +6671,7 @@ const monthsLabelsAll = [
             const m = String(i + 1).padStart(2, "0");
             return `${currentYear}-${m}`;
           });
-          const mvrLabels = allMks.map(k => {
-            const [y, m] = k.split("-");
-            const d = new Date(parseInt(y), parseInt(m) - 1, 1);
-            return d.toLocaleString("pt-BR", { month: "short" }).replace(".", "");
-          });
+          const mvrLabels = allMks.map(monthTableLabel);
           const mvrReal = allMks.map(k => mks.length > 0 ? sumV(byM[k] || []) : (yearDataMap[currentYear]?.[parseInt(k.split("-")[1]) - 1] || 0));
           const mvrMeta = allMks.map(k => {
             const [y, m] = k.split("-");
@@ -2835,48 +6683,27 @@ const monthsLabelsAll = [
           const mvrAchieved = pctGlobal >= 100;
           set("sub_mvr", `${allMks.length} meses Â· ${pctGlobal.toFixed(1)}% da meta`);
           set("v_totalMvr", dvDisabled ? "â€”" : brlS(totalMvrReal));
+          const mvrRows = mvrLabels.map((label, i) => {
+            const pct = mvrMeta[i] > 0 ? (mvrReal[i] / mvrMeta[i] * 100) : 0;
+            const color = pct >= 100 ? "var(--green)" : pct >= 75 ? "var(--blue)" : "var(--orange)";
+            return "<tr><td class=\"em\" data-sort-value=\"" + allMks[i] + "\">" + label + "</td><td class=\"r\">" + brl(mvrMeta[i]) + "</td><td class=\"r em\">" + brl(mvrReal[i]) + "</td><td><div class=\"prg\"><div class=\"prg-bg\"><div class=\"prg-fill\" style=\"width:" + Math.min(100, pct).toFixed(0) + "%;background:" + color + ";\"></div></div><span class=\"prg-pct\">" + pct.toFixed(1) + "%</span></div></td></tr>";
+          }).join("");
           html("mvrSummary", dvDisabled ? "" : `
-            <table><thead><tr><th>Meta [R$]</th><th>Alcancado [R$]</th><th>Participacao</th></tr></thead>
-            <tbody><tr><td class="r em">${brl(totalMvrMeta)}</td><td class="r em">${brl(totalMvrReal)}</td><td><div class="prg"><div class="prg-bg"><div class="prg-fill" style="width:${Math.min(100, pctGlobal).toFixed(0)}%;background:${pctGlobal >= 100 ? "var(--green)" : pctGlobal >= 75 ? "var(--blue)" : "var(--orange)"};"></div></div><span class="prg-pct">${pctGlobal.toFixed(1)}%</span></div></td></tr></tbody></table>
+            <table><thead><tr><th>MÃªs</th><th class="r">Meta</th><th class="r">Realizado</th><th>Atingimento</th></tr></thead><tbody>${mvrRows}</tbody></table>
           `);
           document.getElementById("ind_mvr").innerHTML = dvDisabled ? "" :
             (totalMvrMeta > 0 ? `<span class="badge-kpi badge-meta${mvrAchieved ? "" : " below"}"><span class="bk-label">META</span><span class="bk-val">${brlS(totalMvrMeta)}</span><span class="bk-pct" style="font-weight:800;">${pctGlobal.toFixed(0)}%${mvrAchieved ? " âœ“" : ""}</span></span>` : "") +
-            fmtKpiChip(totalMvrReal, lyValue, "LY", "badge-ly");
-          mkChart("cMetaVsReal", {
-            type: "bar",
-            data: {
-              labels: mvrLabels,
-              datasets: [
-                { label: "Realizado", data: mvrReal, backgroundColor: "#2159d2", borderRadius: 4 },
-                { label: "Meta", data: mvrMeta, backgroundColor: "rgba(201,162,39,0.35)", borderColor: "#b17a00", borderWidth: 1.5, borderRadius: 4, type: "bar" },
-              ],
-            },
-            options: opts0({ yBrl: true, datalabels: false }),
-          });
+            (showLY ? fmtKpiChip(totalMvrReal, lyValue, "LY", "badge-ly") : "");
         }
 
         // Faturamento por Cliente por MÃªs
         {
           const allMks2 = mks.length > 0 ? mks : monthsLabelsAll.map((_, i) => `${currentYear}-${String(i + 1).padStart(2, "0")}`);
-          const fcLabels = allMks2.map(k => {
-            const [y, m] = k.split("-");
-            return new Date(parseInt(y), parseInt(m) - 1, 1).toLocaleString("pt-BR", { month: "short" }).replace(".", "");
-          });
+          const fcLabels = allMks2.map(monthTableLabel);
           const cliEntries = Object.entries(byCli)
             .filter(([k]) => k !== "__null__" && k !== "Sem cliente")
             .sort((a, b) => sumV(b[1]) - sumV(a[1]))
             .slice(0, 6);
-          const cliColors = ["#2159d2","#2159d2","#6b4b9b","#9a4e12","#168f57","#b17a00"];
-          const fcDatasets = cliEntries.map(([cliName, recs], i) => {
-            const byMCli = grp(recs, r => mK(r[F.res.data]));
-            return {
-              label: trunc(cliName, 14),
-              data: allMks2.map(k => sumV(byMCli[k] || [])),
-              backgroundColor: cliColors[i % cliColors.length],
-              stack: "c",
-              borderRadius: 3,
-            };
-          });
           if (cliEntries.length > 0) {
             const top1Fat = sumV(cliEntries[0][1]);
             const top1Pct = fat > 0 ? (top1Fat / fat * 100).toFixed(1) : 0;
@@ -2888,13 +6715,29 @@ const monthsLabelsAll = [
           } else {
             set("sub_fatcli", `${cliEntries.length} clientes`);
           }
-          if (fcDatasets.length > 0) {
-            mkChart("cFatCli", {
-              type: "bar",
-              data: { labels: fcLabels, datasets: fcDatasets },
-              options: opts0({ yBrl: true, datalabels: false }),
-            });
-          }
+          const fatCliCols = allMks2.length + 3;
+          const fatCliHead = `<thead><tr><th>Cliente</th>${fcLabels.map((label) => `<th class="r">${label}</th>`).join("")}<th class="r">Total</th><th>ParticipaÃ§Ã£o</th></tr></thead>`;
+          const fatCliDelta = (current, previous) => {
+            if (previous === null || previous === 0) {
+              return `<span class="metric-secondary" style="color:${previous === 0 && current > 0 ? "var(--green)" : "var(--yellow)"}">${previous === 0 && current > 0 ? "Novo" : "â€”"}</span>`;
+            }
+            const pct = ((current - previous) / previous) * 100;
+            const color = pct > 0 ? "var(--green)" : pct < 0 ? "var(--red)" : "var(--yellow)";
+            return `<span class="metric-secondary" style="color:${color}">${pct > 0 ? "+" : ""}${pct.toFixed(1)}%</span>`;
+          };
+          const fatCliBody = cliEntries.map(([cliName, recs], i) => {
+            const byMCli = grp(recs, r => mK(r[F.res.data]));
+            const clientTotal = sumV(recs);
+            const clientPct = fat > 0 ? (clientTotal / fat) * 100 : 0;
+            const monthCells = allMks2.map((monthKey, monthIndex) => {
+              const current = sumV(byMCli[monthKey] || []);
+              const previousKey = allMks2[monthIndex - 1];
+              const previous = previousKey ? sumV(byMCli[previousKey] || []) : null;
+              return `<td class="r">${metricSplit(brlS(current), fatCliDelta(current, previous), "r")}</td>`;
+            }).join("");
+            return `<tr><td class="em">${trunc(cliName, 28)}</td>${monthCells}<td class="r em">${brlS(clientTotal)}</td><td>${progressCell(clientPct, brlS(clientTotal), PAL[i % PAL.length])}</td></tr>`;
+          }).join("") || emptyRow(fatCliCols);
+          html("tblFatCliResumo", `<table class="fat-cli-table"><thead>${fatCliHead.replace("<thead>", "").replace("</thead>", "")}</thead><tbody>${fatCliBody}</tbody></table>`);
         }
 
         // Status dos serviÃ§os
@@ -2908,14 +6751,14 @@ const monthsLabelsAll = [
         document.getElementById("ind_st").innerHTML = dvDisabled ? "" :
           `<span class="badge-kpi badge-meta${concluPct >= 75 ? "" : " below"}"><span class="bk-label">CONC</span><span class="bk-val">${conclServices.length}</span><span class="bk-pct">${concluPct}%</span></span>` +
           (cancelados.length ? `<span class="badge-kpi" style="background:var(--red-l);color:var(--red);"><span class="bk-label" style="background:var(--red);color:#fff;">CAN</span><span class="bk-val">${cancelados.length}</span><span class="bk-pct">${rv.length ? (cancelados.length/rv.length*100).toFixed(1) : 0}%</span></span>` : "");
-        const stRows = takeUntilShare(stKeys, rv.length, (k) => bySt[k].length)
+        const stRows = topByShare(stKeys, rv.length, (k) => bySt[k].length)
           .map((k) => ({ status: k, qtd: bySt[k].length }));
         html("tblStatusResumo", dvDisabled ? "" : `
-          <table><thead><tr><th>Status</th><th class="r">Qt de servicos</th><th>Participacao</th></tr></thead>
+          <table><thead><tr><th>Status</th><th>Participa&ccedil;&atilde;o</th></tr></thead>
           <tbody>${stRows.map((r, i) => {
             const p = rv.length ? (r.qtd / rv.length) * 100 : 0;
-            return `<tr><td>${badge(r.status)}</td><td class="r em">${r.qtd.toLocaleString("pt-BR")}</td><td>${progressCell(p, `${r.qtd.toLocaleString("pt-BR")} serv.`, PAL[i % PAL.length])}</td></tr>`;
-          }).join("") || emptyRow(3)}</tbody></table>
+            return `<tr><td>${badge(r.status)}</td><td>${progressCell(p, `${r.qtd.toLocaleString("pt-BR")} serv.`, PAL[i % PAL.length])}</td></tr>`;
+          }).join("") || emptyRow(2)}</tbody></table>
         `);
 
         // Custo frota
@@ -2955,9 +6798,9 @@ const monthsLabelsAll = [
         });
 
         // Top clientes
-        const top10v = Object.entries(byCli)
+        const top10vRanked = Object.entries(byCli)
           .sort((a, b) => b[1].length - a[1].length)
-          .slice(0, 10);
+        const top10v = topByShare(top10vRanked, rv.length, ([, rows]) => rows.length);
         if (top10v.length > 0) {
           const t1vPct = rv.length ? (top10v[0][1].length / rv.length * 100).toFixed(1) : 0;
           set("v_topVol", dvDisabled ? "â€”" : top10v[0][1].length.toLocaleString("pt-BR"));
@@ -2970,11 +6813,11 @@ const monthsLabelsAll = [
           "tblTopVolResumo",
           top10v.map(([label, rows]) => ({ label, qtd: rows.length })),
           rv.length,
-          { label: "Cliente", countLabel: "Servicos" },
+          { label: "Cliente", countLabel: "Servi\u00e7os" },
         );
-        const top10f = Object.entries(byCli)
-          .sort((a, b) => sumV(b[1]) - sumV(a[1]))
-          .slice(0, 10);
+        const top10fRanked = Object.entries(byCli)
+          .sort((a, b) => sumV(b[1]) - sumV(a[1]));
+        const top10f = topByShare(top10fRanked, fat, ([, rows]) => sumV(rows));
         if (top10f.length > 0) {
           const t1fPct = fat > 0 ? (sumV(top10f[0][1]) / fat * 100).toFixed(1) : 0;
           set("v_topFat", dvDisabled ? "â€”" : brlS(sumV(top10f[0][1])));
@@ -2983,7 +6826,7 @@ const monthsLabelsAll = [
             `<span class="badge-kpi badge-meta"><span class="bk-label">1Â°</span><span class="bk-val">${brlS(sumV(top10f[0][1]))}</span><span class="bk-pct">${t1fPct}%</span></span>` +
             (top10f.length > 1 ? `<span class="badge-kpi badge-ly"><span class="bk-label">2Â°</span><span class="bk-val">${brlS(sumV(top10f[1][1]))}</span><span class="bk-pct">${fat > 0 ? (sumV(top10f[1][1])/fat*100).toFixed(1) : 0}%</span></span>` : "");
         }
-        const topFatRows = takeUntilShare(top10f, fat, ([, rows]) => sumV(rows));
+        const topFatRows = top10f;
         html("tblTopFatResumo", dvDisabled ? "" : `
           <table><thead><tr><th>Cliente</th><th class="r">Faturamento</th><th class="r">Ticket medio</th><th>Participacao</th></tr></thead>
           <tbody>${topFatRows.map(([nome, rows], i) => {
@@ -3047,23 +6890,42 @@ const monthsLabelsAll = [
           options: opts0({ legendRight: true }),
         });
 
+        const motMonthKeys = mks.length > 0
+          ? mks
+          : monthsLabelsAll.map((_, i) => `${currentYear}-${String(i + 1).padStart(2, "0")}`);
+        const motMonthLabels = motMonthKeys.map(monthTableLabel);
+        const motMonthTotals = motMonthKeys.map((monthKey) => (byM[monthKey] || []).length);
+        const motRows = mots.map((m) => {
+          const monthly = motMonthKeys.map((monthKey, monthIndex) => {
+            const qtd = (byM[monthKey] || []).filter((r) => (r._motKey || r._mot) === m.key).length;
+            const pct = motMonthTotals[monthIndex] ? `${(qtd / motMonthTotals[monthIndex] * 100).toFixed(1)}%` : "â€”";
+            return { qtd, pct };
+          });
+          return { ...m, monthly, total: monthly.reduce((sum, month) => sum + month.qtd, 0) };
+        }).sort((a, b) => b.total - a.total || a.label.localeCompare(b.label));
+        const motTableHead = `<tr><th>Motorista</th>${motMonthLabels.map((label) => `<th>${label}</th>`).join("")}<th>Total</th><th>Participa&ccedil;&atilde;o</th></tr>`;
+        const motTableBody = motRows.map((row, i) => {
+          const monthlyCells = row.monthly.map((month) => `<td>${metricSplit(month.qtd.toLocaleString("pt-BR"), month.pct, "r")}</td>`).join("");
+          const totalPct = rv.length ? (row.total / rv.length * 100).toFixed(1) : "0.0";
+          return `<tr><td class="em">${trunc(row.label, 28)}</td>${monthlyCells}<td>${metricSplit(row.total.toLocaleString("pt-BR"), `${totalPct}%`, "r")}</td><td>${progressCell(Number(totalPct), `${row.total.toLocaleString("pt-BR")} servi&ccedil;os`, PAL[i % PAL.length])}</td></tr>`;
+        }).join("") || emptyRow(motMonthKeys.length + 3);
+        html("tblMotResumo", dvDisabled ? "" : `<table><thead>${motTableHead}</thead><tbody>${motTableBody}</tbody></table>`);
+
         // ===== PÃGINA SERVIÃ‡OS =====
         set("sT", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
         set("sCon", dvDisabled ? "â€”" : conclServices.length);
-        set("sPen", dvDisabled ? "â€”" : pendentes.length);
         set("sCan", dvDisabled ? "â€”" : cancelados.length);
         set("sTk", dvDisabled ? "â€”" : brl(curTk));
         set("sSemVal", dvDisabled ? "â€”" : semValor.length);
         set("sFat", dvDisabled ? "â€”" : brlS(fat));
-        set("sOpTotal", dvDisabled ? "Ã¢â‚¬â€" : rv.length.toLocaleString("pt-BR"));
+        set("sOpTotal", dvDisabled ? "â€”" : rv.length.toLocaleString("pt-BR"));
         html("sOpMix", dvDisabled ? "" : renderMetricLines([
-          ["Concluidos", conclServices.length.toLocaleString("pt-BR")],
-          ["Pendentes/Prog.", pendentes.length.toLocaleString("pt-BR")],
+          ["ConcluÃ­dos", conclServices.length.toLocaleString("pt-BR")],
           ["Cancelados", cancelados.length.toLocaleString("pt-BR")],
         ]));
-        set("sFinTotal", dvDisabled ? "Ã¢â‚¬â€" : brlS(fat));
+        set("sFinTotal", dvDisabled ? "â€”" : brlS(fat));
         html("sFinMix", dvDisabled ? "" : renderMetricLines([
-          ["Ticket medio", brl(curTk)],
+          ["Ticket mÃ©dio", brl(curTk)],
           ["CP pendente", semValor.length.toLocaleString("pt-BR")],
           ["A receber", brlS(aReceber)],
         ]));
@@ -3087,12 +6949,23 @@ const monthsLabelsAll = [
           qtd: byVei[k].length,
           fat: sumV(byVei[k]),
         })), totalServicos, fat);
+        const servicosEmergenciais = rv
+          .filter((r) => {
+            const criadoEm = String(r.createdon || "").slice(0, 10);
+            const saidaEm = String(r[F.res.data] || "").slice(0, 10);
+            return criadoEm && saidaEm && criadoEm === saidaEm;
+          })
+          .sort((a, b) => b._ts - a._ts);
+        set("sEmergCount", dvDisabled ? "Ã¢â‚¬â€" : servicosEmergenciais.length.toLocaleString("pt-BR"));
+        html("tblServicosEmergenciais", dvDisabled ? "" : `<table><thead><tr><th>Solicitante</th><th>Sa&iacute;da</th><th>Status</th></tr></thead><tbody>${servicosEmergenciais
+          .map((r) => `<tr><td class="em">${r._solicitante}<div class="metric-secondary">${r._cli}</div></td><td class="dim">${fmtDt(r[F.res.data])}</td><td>${badge(r._stL)}</td></tr>`)
+          .join("") || emptyRow(3)}</tbody></table>`);
         tblCache.tbSrv = rv;
         set(
           "metaSrv",
           dvDisabled ? "â€”" : `${rv.length.toLocaleString("pt-BR")} registros`,
         );
-        renderSrvTable(rv);
+        renderPassengerRanking(rv);
 
         // Demais abas
         renderFaturamento(dvDisabled, rv, fat, curTk, mks, mls, byM, byCli, currentYear, yearDataMap);
@@ -3103,13 +6976,16 @@ const monthsLabelsAll = [
           recebimentoPct,
           pagReceb,
         });
-        renderFrota(dvDisabled);
+        renderDespesas(dvDisabled);
+        renderFrota(dvDisabled, rv);
         renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap);
         renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap);
         renderMultas(dvDisabled);
         renderTrocas(dvDisabled);
         renderMarketing(dvDisabled);
+        addKpiGoalDirections();
         enhanceSortableTables();
+        applyTvViewportLayout();
       }
 
       // FunÃ§Ãµes de renderizaÃ§Ã£o das outras abas (implementaÃ§Ã£o funcional)
@@ -3125,7 +7001,17 @@ const monthsLabelsAll = [
         currentYear,
         yearDataMap,
       ) {
-        set("fT", dvDisabled ? "â€”" : brlS(fat));
+        const monthsLabelsAll = getDashboardMonthLabels();
+        const faturamentoMensal = getMonthlyDataFromDataverse(
+          currentYear,
+          document.getElementById("fS")?.value || "",
+          document.getElementById("fE")?.value || "",
+        );
+        const faturamentoTotal = faturamentoMensal.reduce(
+          (total, value) => total + (value || 0),
+          0,
+        );
+        set("fT", dvDisabled ? "â€”" : brlS(faturamentoTotal));
         set("fTk", dvDisabled ? "â€”" : brlS(curTk));
         const maxVal = rv.length ? Math.max(...rv.map((r) => r._valor)) : 0;
         set("fMax", dvDisabled ? "â€”" : brlS(maxVal));
@@ -3133,40 +7019,57 @@ const monthsLabelsAll = [
           rv.map((r) => r._cli).filter((x) => x !== "Sem cliente"),
         ).size;
         set("fCli", dvDisabled ? "â€”" : cliAtivos);
-        const fmLabels = mks.length > 0
-          ? mls.map(label => label.split(" ")[0])
-          : monthsLabelsAll;
-        const fmData =
-          mks.length > 0
-            ? mks.map((k) => sumV(byM[k]))
-            : monthsLabelsAll.map((m, i) => yearDataMap[currentYear]?.[i] || 0);
+        const fmLabels = monthsLabelsAll;
+        const fmData = faturamentoMensal;
+        const fmChartOptions = opts0({ noLegend: true, yBrl: true });
+        fmChartOptions.plugins.datalabels = {
+          ...fmChartOptions.plugins.datalabels,
+          display: (context) => Number(context.dataset.data[context.dataIndex] || 0) > 0,
+          anchor: "end",
+          align: "top",
+          offset: 3,
+          color: "#334155",
+          font: { ...FONT, size: 9, weight: "700" },
+        };
+        fmChartOptions.scales.x = {
+          ...fmChartOptions.scales.x,
+          grid: { display: false },
+          ticks: { ...fmChartOptions.scales.x.ticks, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+        };
+        fmChartOptions.scales.y = {
+          ...fmChartOptions.scales.y,
+          grace: "12%",
+          ticks: { ...fmChartOptions.scales.y.ticks, maxTicksLimit: 5 },
+        };
         mkChart("cFM2", {
-          type: "line",
+          type: "bar",
           data: {
             labels: fmLabels,
             datasets: [
               {
-                label: "Fat.",
+                label: "Faturamento",
                 data: fmData,
                 borderColor: "#2159d2",
-                backgroundColor: "rgba(10,147,150,.08)",
-                fill: true,
-                tension: 0.45,
-                pointRadius: 2,
-                pointBackgroundColor: "#2159d2",
+                backgroundColor: "rgba(33,89,210,.78)",
+                borderWidth: 0,
+                borderRadius: 6,
+                borderSkipped: false,
+                barPercentage: 0.72,
+                categoryPercentage: 0.78,
               },
             ],
           },
-          options: opts0({ noLegend: true, yBrl: true }),
+          options: fmChartOptions,
         });
-        const byFatSt = grp(rv, (r) => r._fatStL);
+        const fatStatusRows = rv.filter((r) => String(r[F.res.data] || "").slice(0, 10) >= "2026-04-01");
+        const byFatSt = grp(fatStatusRows, (r) => r._fatStL);
         const fsK = Object.keys(byFatSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byFatSt[b].length - byFatSt[a].length);
         renderDistributionTable(
           "tblFatStatus",
           fsK.map((k) => ({ label: k, qtd: byFatSt[k].length, value: sumV(byFatSt[k]) })),
-          rv.length,
+          fatStatusRows.length,
           { label: "Status", countLabel: "Servicos", valueLabel: "Faturamento", badgeLabels: true, moneyValue: true },
         );
         const cliRows = Object.entries(byCli)
@@ -3192,6 +7095,12 @@ const monthsLabelsAll = [
         const cartaoRecebido = pagReceb
           .filter(isCardPayment)
           .reduce((s, r) => s + paymentValue(r), 0);
+        const limiteAtraso = 5 * 24 * 60 * 60 * 1000;
+        const agora = Date.now();
+        const atrasados = pags.filter((r) => {
+          const criadoEm = new Date(r.createdon || "").getTime();
+          return !isReceivedPayment(r) && Number.isFinite(criadoEm) && agora - criadoEm > limiteAtraso;
+        });
         set(
           "pTot",
           dvDisabled
@@ -3201,8 +7110,7 @@ const monthsLabelsAll = [
         set("pPend", dvDisabled ? "â€”" : brlS(resumo.aReceber || 0));
         set("pQtd", dvDisabled ? "â€”" : pags.length);
         set("pCartao", dvDisabled ? "â€”" : brlS(cartaoRecebido));
-        set("pPrazo", dvDisabled ? "â€”" : "s/dado");
-        html("paymentInsight", dvDisabled ? "" : "Para calcular nome e tempo de pagamento por cliente, falta incluir no fetch uma data de pagamento/baixa e, se existir, data de vencimento. Sem esse campo, qualquer ranking de atrasados seria falso.");
+        set("pPrazo", dvDisabled ? "â€”" : atrasados.length);
         const byForma = grp(pags, (r) => String(pgFv(r, F.pag.forma) || "â€”"));
         const byPagSt = grp(pags, (r) => String(pgFv(r, F.pag.status) || "â€”"));
         const fmK = Object.keys(byForma)
@@ -3223,19 +7131,1161 @@ const monthsLabelsAll = [
           pags.length,
           { label: "Status", countLabel: "Registros", valueLabel: "Valor", badgeLabels: true, moneyValue: true, participationByValue: true },
         );
-        set("metaPag", dvDisabled ? "â€”" : `${pags.length} registros`);
-        const tbPag = document.getElementById("tbPag");
-        if (tbPag) tbPag.innerHTML =
-          pags
-            .slice(0, 300)
-            .map(
-              (r) =>
-                `<tr><td>${badge(String(pgFv(r, F.pag.status) || "â€”"))}</td><td>${String(pgFv(r, F.pag.forma) || "â€”")}</td><td class="r em">${brl(parseFloat(r[F.pag.valor]) || 0)}</td></tr>`,
-            )
-            .join("") || emptyRow(3);
+        const clientePorOp = new Map(
+          (DB.reservas || [])
+            .filter((r) => r._opId)
+            .map((r) => [r._opId, r._cli || "Sem cliente"]),
+        );
+        const clienteDoPagamento = (r) => clientePorOp.get(paymentOp(r)) || "Sem cliente";
+        const temposPagos = pagReceb
+          .map((r) => {
+            const criadoEm = new Date(r.createdon || "").getTime();
+            const pagoEm = new Date(r[F.pag.dataPrimeiroPagamento] || "").getTime();
+            const dias = (pagoEm - criadoEm) / 86400000;
+            return Number.isFinite(dias) && dias >= 0
+              ? { cliente: clienteDoPagamento(r), dias }
+              : null;
+          })
+          .filter(Boolean);
+        const temposPorCliente = grp(temposPagos, (r) => r.cliente);
+        const linhasTempo = Object.keys(temposPorCliente)
+          .filter((k) => k !== "__null__")
+          .map((cliente) => {
+            const tempos = temposPorCliente[cliente].map((r) => r.dias);
+            const media = tempos.reduce((s, dias) => s + dias, 0) / tempos.length;
+            const ateCinco = tempos.filter((dias) => dias <= 5).length;
+            return { cliente, qtd: tempos.length, media, ateCinco };
+          })
+          .sort((a, b) => b.media - a.media);
+        const formatPaymentDays = (days) => days < 1
+          ? `${Math.max(1, Math.round(days * 24))} h`
+          : `${days.toFixed(1).replace(".", ",")} dias`;
+        set(
+          "paymentInsightMeta",
+          dvDisabled ? "â€”" : `${temposPagos.length} de ${pagReceb.length} pagamentos com data confiÃ¡vel`,
+        );
+        html(
+          "paymentInsight",
+          dvDisabled || !linhasTempo.length
+            ? '<div class="empty"><div class="em-msg">Nenhum pagamento com data confiÃ¡vel</div></div>'
+            : `<table class="fat-cli-table"><thead><tr><th>Cliente</th><th class="r">Pagos</th><th class="r">Prazo mÃ©dio</th><th class="r">AtÃ© 5 dias</th></tr></thead><tbody>${linhasTempo
+                .slice(0, 10)
+                .map((r) => `<tr><td>${trunc(r.cliente, 32)}</td><td class="r">${r.qtd.toLocaleString("pt-BR")}</td><td class="r">${formatPaymentDays(r.media)}</td><td class="r">${((r.ateCinco / r.qtd) * 100).toFixed(1).replace(".", ",")}%</td></tr>`)
+                .join("")}</tbody></table>`,
+        );
+        const porCliente = grp(pags, clienteDoPagamento);
+        const clientes = Object.keys(porCliente)
+          .filter((k) => k !== "__null__")
+          .sort((a, b) =>
+            porCliente[b].reduce((s, r) => s + paymentValue(r), 0) -
+            porCliente[a].reduce((s, r) => s + paymentValue(r), 0),
+          );
+        renderDistributionTable(
+          "tblPagCliente",
+          clientes.map((k) => ({ label: k, qtd: porCliente[k].length, value: porCliente[k].reduce((s, r) => s + paymentValue(r), 0) })),
+          pags.length,
+          { label: "Cliente", countLabel: "Registros", valueLabel: "Valor", moneyValue: true, participationByValue: true },
+        );
+        const atrasadosPorCliente = grp(atrasados, clienteDoPagamento);
+        const clientesAtrasados = Object.keys(atrasadosPorCliente)
+          .filter((k) => k !== "__null__")
+          .sort((a, b) =>
+            atrasadosPorCliente[b].reduce((s, r) => s + paymentValue(r), 0) -
+            atrasadosPorCliente[a].reduce((s, r) => s + paymentValue(r), 0),
+          );
+        renderDistributionTable(
+          "tblPagAtrasados",
+          clientesAtrasados.map((k) => ({ label: k, qtd: atrasadosPorCliente[k].length, value: atrasadosPorCliente[k].reduce((s, r) => s + paymentValue(r), 0) })),
+          atrasados.length,
+          { label: "Cliente", countLabel: "Atrasados", valueLabel: "Valor", moneyValue: true, participationByValue: true },
+        );
       }
-      function renderFrota(dvDisabled) {
-        const vei = dvDisabled ? [] : DB.veiculos;
+      function escapeDashboardText(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function expenseId(value) {
+        return String(value || "").replace(/[{}]/g, "").toLowerCase();
+      }
+
+      function expenseCompanyLabel(value) {
+        const label = String(value || "").trim();
+        const normalized = normL(label);
+        if (normalized.includes("betinhos")) return "BETINHOS";
+        if (normalized.includes("depaula")) return "DEPAULA";
+        return label || "Sem empresa";
+      }
+
+      function expenseStatusLabel(row, field, group) {
+        const raw = row?.[field];
+        return EXPENSE_STATUS[group]?.[raw] || String(fv(row || {}, field) || "NÃ£o informado");
+      }
+
+      function safeExpenseUrl(value) {
+        const raw = String(value || "").trim();
+        if (!raw) return "";
+        try {
+          const parsed = new URL(raw, window.location.href);
+          return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : "";
+        } catch (_) {
+          return "";
+        }
+      }
+
+      function buildExpenseRows() {
+        const categoryMap = new Map(
+          (DB.categoriasDespesas || []).map((row) => [
+            expenseId(row[F.categoriaDespesa.id]),
+            {
+              name: String(row[F.categoriaDespesa.nome] || "Sem categoria"),
+              dre: String(fv(row, F.categoriaDespesa.dre) || row[F.categoriaDespesa.dre] || "Sem grupo DRE"),
+            },
+          ]),
+        );
+        const paymentMap = new Map(
+          (DB.formasPagamentoDespesas || []).map((row) => [
+            expenseId(row[F.formaDespesa.id]),
+            String(row[F.formaDespesa.nome] || "Sem forma de pagamento"),
+          ]),
+        );
+        const employeeMap = new Map(
+          (DB.funcionarios || []).map((row) => [
+            expenseId(row.cr40f_funcionariosid),
+            {
+              name: String(row[F.fun.nome] || row[F.fun.apelido] || "Sem motorista"),
+              company: expenseCompanyLabel(fv(row, F.fun.empresa)),
+            },
+          ]),
+        );
+        const reservationMap = new Map(
+          (DB.reservas || []).map((row) => [
+            expenseId(row[F.res.id]),
+            {
+              client: String(row._cli || row[F.res.navCli]?.[F.cliente.nome] || "Sem cliente"),
+              date: row[F.res.data] || "",
+            },
+          ]),
+        );
+        const attachmentsByExpense = new Map();
+        for (const row of DB.anexosDespesas || []) {
+          const key = expenseId(row[F.anexoDespesa.despesa]);
+          if (!key) continue;
+          const current = attachmentsByExpense.get(key) || [];
+          current.push(row);
+          attachmentsByExpense.set(key, current);
+        }
+
+        return (DB.despesas || []).map((source) => {
+          const id = expenseId(source[F.despesa.id]);
+          const categoryId = expenseId(source[F.despesa.categoria]);
+          const paymentId = expenseId(source[F.despesa.formaPagamento]);
+          const driverId = expenseId(source[F.despesa.motorista]);
+          const reservationId = expenseId(source[F.despesa.reserva]);
+          const categoryMaster = categoryMap.get(categoryId);
+          const employee = employeeMap.get(driverId);
+          const reservation = reservationMap.get(reservationId);
+          const attachments = attachmentsByExpense.get(id) || [];
+          const attachment = attachments.find((row) =>
+            safeExpenseUrl(row[F.anexoDespesa.shareLink] || row[F.anexoDespesa.url]),
+          ) || attachments[0];
+          const receiptUrl = attachment
+            ? safeExpenseUrl(
+                attachment[F.anexoDespesa.shareLink] ||
+                  attachment[F.anexoDespesa.url],
+              )
+            : "";
+          const category =
+            categoryMaster?.name ||
+            String(fv(source, F.despesa.categoria) || "Sem categoria");
+          const payment =
+            paymentMap.get(paymentId) ||
+            String(fv(source, F.despesa.formaPagamento) || "Sem forma de pagamento");
+          const driver =
+            employee?.name ||
+            String(fv(source, F.despesa.motorista) || "Sem motorista");
+          const financial = expenseStatusLabel(
+            source,
+            F.despesa.statusFinanceiro,
+            "financeiro",
+          );
+          const operational = expenseStatusLabel(
+            source,
+            F.despesa.statusOperacional,
+            "operacional",
+          );
+          const attachmentStatus = expenseStatusLabel(
+            source,
+            F.despesa.statusAnexo,
+            "anexo",
+          );
+          const value = Number(source[F.despesa.valor] || 0);
+          const date = String(source[F.despesa.data] || "");
+          const company = employee?.company || "Sem empresa";
+          const client = reservation?.client || "";
+          const link = reservationId
+            ? `Reserva${client ? ` Â· ${client}` : ""}`
+            : "Sem reserva";
+          const noReceipt =
+            Number(source[F.despesa.statusAnexo]) !== 100000002 &&
+            attachments.length === 0;
+          const row = {
+            id,
+            source,
+            date,
+            dateKey: date.slice(0, 10),
+            name: String(source[F.despesa.nome] || "Despesa sem tÃ­tulo"),
+            establishment: String(source[F.despesa.estabelecimento] || ""),
+            observation: String(source[F.despesa.observacao] || ""),
+            internalObservation: String(
+              source[F.despesa.observacaoInterna] || "",
+            ),
+            protocol: String(source[F.despesa.protocolo] || ""),
+            value,
+            categoryId,
+            category,
+            dre: categoryMaster?.dre || "Sem grupo DRE",
+            paymentId,
+            payment,
+            driverId,
+            driver,
+            driverKey: driverId || `nome:${normL(driver)}`,
+            company,
+            reservationId,
+            client,
+            link,
+            financialValue: String(source[F.despesa.statusFinanceiro] ?? ""),
+            financial,
+            operationalValue: String(source[F.despesa.statusOperacional] ?? ""),
+            operational,
+            attachmentValue: String(source[F.despesa.statusAnexo] ?? ""),
+            attachmentStatus,
+            noReceipt,
+            receiptUrl,
+            possibleDuplicate: source[F.despesa.possivelDuplicidade] === true,
+          };
+          row.searchText = normL(
+            [
+              row.name,
+              row.establishment,
+              row.protocol,
+              row.company,
+              row.category,
+              row.dre,
+              row.payment,
+              row.driver,
+              row.client,
+              row.observation,
+              row.internalObservation,
+              row.financial,
+              row.operational,
+              row.attachmentStatus,
+            ].join(" "),
+          );
+          return row;
+        });
+      }
+
+      function setExpenseSelectOptions(id, options, defaultLabel, selected) {
+        const select = document.getElementById(id);
+        if (!select) return;
+        const unique = new Map();
+        for (const option of options) {
+          const value = String(option.value ?? "");
+          if (!value || unique.has(value)) continue;
+          unique.set(value, String(option.label || value));
+        }
+        select.innerHTML =
+          `<option value="">${escapeDashboardText(defaultLabel)}</option>` +
+          [...unique.entries()]
+            .sort((a, b) => a[1].localeCompare(b[1], "pt-BR"))
+            .map(
+              ([value, label]) =>
+                `<option value="${escapeDashboardText(value)}">${escapeDashboardText(label)}</option>`,
+            )
+            .join("");
+        select.value = selected || "";
+      }
+
+      function populateExpenseFilters(rows) {
+        setExpenseSelectOptions(
+          "expenseCompanyFilter",
+          rows.map((row) => ({ value: row.company, label: row.company })),
+          "Todas",
+          expenseFilters.company,
+        );
+        setExpenseSelectOptions(
+          "expenseCategoryFilter",
+          (DB.categoriasDespesas || []).map((row) => ({
+            value: expenseId(row[F.categoriaDespesa.id]),
+            label: row[F.categoriaDespesa.nome],
+          })),
+          "Todas",
+          expenseFilters.category,
+        );
+        setExpenseSelectOptions(
+          "expensePaymentFilter",
+          (DB.formasPagamentoDespesas || []).map((row) => ({
+            value: expenseId(row[F.formaDespesa.id]),
+            label: row[F.formaDespesa.nome],
+          })),
+          "Todas",
+          expenseFilters.payment,
+        );
+        setExpenseSelectOptions(
+          "expenseFinancialFilter",
+          Object.entries(EXPENSE_STATUS.financeiro).map(([value, label]) => ({
+            value,
+            label,
+          })),
+          "Todos",
+          expenseFilters.financial,
+        );
+        setExpenseSelectOptions(
+          "expenseOperationalFilter",
+          Object.entries(EXPENSE_STATUS.operacional).map(([value, label]) => ({
+            value,
+            label,
+          })),
+          "Todos",
+          expenseFilters.operational,
+        );
+        setExpenseSelectOptions(
+          "expenseAttachmentFilter",
+          Object.entries(EXPENSE_STATUS.anexo).map(([value, label]) => ({
+            value,
+            label,
+          })),
+          "Todos",
+          expenseFilters.attachment,
+        );
+      }
+
+      function expenseMatchesFilters(row, includeDate = true, dateRange = null) {
+        const selectedDriverKeys = (msState.Mo || []).map((value) =>
+          expenseId(value) || normL(value),
+        );
+        const driverMatches =
+          !selectedDriverKeys.length ||
+          selectedDriverKeys.includes(row.driverKey) ||
+          selectedDriverKeys.includes(`nome:${normL(row.driver)}`);
+        if (!driverMatches) return false;
+        if (expenseFilters.company && row.company !== expenseFilters.company) return false;
+        if (expenseFilters.category && row.categoryId !== expenseFilters.category) return false;
+        if (expenseFilters.payment && row.paymentId !== expenseFilters.payment) return false;
+        if (expenseFilters.financial && row.financialValue !== expenseFilters.financial) return false;
+        if (expenseFilters.operational && row.operationalValue !== expenseFilters.operational) return false;
+        if (expenseFilters.attachment && row.attachmentValue !== expenseFilters.attachment) return false;
+        if (!includeDate) return true;
+        const start =
+          dateRange?.start ?? document.getElementById("fS")?.value ?? "";
+        const end =
+          dateRange?.end ?? document.getElementById("fE")?.value ?? "";
+        if ((start || end) && !row.dateKey) return false;
+        if (start && row.dateKey < start) return false;
+        if (end && row.dateKey > end) return false;
+        return true;
+      }
+
+      function getPreviousExpensePeriod(start, end) {
+        if (!start || !end) return null;
+        const startDate = new Date(`${start}T12:00:00`);
+        const endDate = new Date(`${end}T12:00:00`);
+        if (
+          Number.isNaN(startDate.getTime()) ||
+          Number.isNaN(endDate.getTime()) ||
+          endDate < startDate
+        ) {
+          return null;
+        }
+        const days = Math.round((endDate - startDate) / 86400000) + 1;
+        const previousEnd = new Date(startDate);
+        previousEnd.setDate(previousEnd.getDate() - 1);
+        const previousStart = new Date(previousEnd);
+        previousStart.setDate(previousStart.getDate() - days + 1);
+        return { start: ymd(previousStart), end: ymd(previousEnd) };
+      }
+
+      function expenseDeltaMarkup(current, previous, options = {}) {
+        const {
+          currency = false,
+          higherIsWorse = true,
+          label = "ANT.",
+        } = options;
+        if (previous == null) {
+          return `<span class="badge-kpi badge-lm"><span class="bk-label">${label}</span><span class="bk-val">&mdash;</span><span class="bk-pct">s/dado</span></span>`;
+        }
+        const previousLabel = currency
+          ? brlS(previous)
+          : Number(previous).toLocaleString("pt-BR");
+        if (!previous) {
+          return `<span class="badge-kpi badge-lm"><span class="bk-label">${label}</span><span class="bk-val">${previousLabel}</span><span class="bk-pct">base zero</span></span>`;
+        }
+        const delta = ((current - previous) / Math.abs(previous)) * 100;
+        const favorable = higherIsWorse ? delta <= 0 : delta >= 0;
+        return `<span class="badge-kpi badge-lm"><span class="bk-label">${label}</span><span class="bk-val">${previousLabel}</span><span class="bk-pct ${favorable ? "du" : "dd"}">${delta >= 0 ? "â–²" : "â–¼"}${Math.abs(delta).toFixed(1)}%</span></span>`;
+      }
+
+      function aggregateExpenses(rows, keyFn) {
+        const grouped = new Map();
+        for (const row of rows) {
+          const key = String(keyFn(row) || "NÃ£o informado");
+          const current = grouped.get(key) || { label: key, qtd: 0, value: 0 };
+          current.qtd += 1;
+          current.value += row.value;
+          grouped.set(key, current);
+        }
+        return [...grouped.values()].sort(
+          (a, b) => b.value - a.value || b.qtd - a.qtd || a.label.localeCompare(b.label, "pt-BR"),
+        );
+      }
+
+      function aggregateFoodExpensesByDriver(rows) {
+        const grouped = new Map();
+        for (const row of rows) {
+          if (!row.driverId || !EXPENSE_FOOD_CATEGORIES.has(normL(row.category))) continue;
+          const current = grouped.get(row.driverId) || { label: row.driver, qtd: 0, value: 0, days: new Set() };
+          current.qtd += 1;
+          current.value += row.value;
+          if (row.dateKey) current.days.add(row.dateKey);
+          grouped.set(row.driverId, current);
+        }
+        return [...grouped.values()]
+          .map((item) => ({ ...item, dailyAverage: item.days.size ? item.value / item.days.size : 0 }))
+          .sort((a, b) => b.value - a.value || b.qtd - a.qtd || a.label.localeCompare(b.label, "pt-BR"));
+      }
+
+      function expenseSubsetMetrics(rows) {
+        const total = rows.reduce((sum, row) => sum + row.value, 0);
+        const foodRows = rows.filter((row) =>
+          EXPENSE_FOOD_CATEGORIES.has(normL(row.category)),
+        );
+        const pendingRows = rows.filter(
+          (row) => row.financialValue === "100000001",
+        );
+        return {
+          total,
+          food: foodRows.reduce((sum, row) => sum + row.value, 0),
+          pending: pendingRows.reduce((sum, row) => sum + row.value, 0),
+          ticket: rows.length ? total / rows.length : 0,
+          noReceipt: rows.filter((row) => row.noReceipt).length,
+          noReservation: rows.filter((row) => !row.reservationId).length,
+        };
+      }
+
+      function renderExpenseTable(rows) {
+        const body = document.getElementById("tbDespesas");
+        const mobile = document.getElementById("expenseMobileList");
+        if (!body || !mobile) return;
+        tblCache.tbDespesasView = rows;
+        const maxDesktop = 500;
+        const maxMobile = 120;
+        const desktopRows = rows.slice(0, maxDesktop);
+        const mobileRows = rows.slice(0, maxMobile);
+        body.innerHTML =
+          desktopRows
+            .map((row) => {
+              const detail = [
+                row.establishment,
+                row.protocol,
+                row.observation || row.internalObservation
+                  ? trunc(row.observation || row.internalObservation, 48)
+                  : "",
+              ]
+                .filter(Boolean)
+                .map(escapeDashboardText)
+                .join(" Â· ");
+              const receipt = row.receiptUrl
+                ? `<a class="expense-receipt-link" href="${escapeDashboardText(row.receiptUrl)}" target="_blank" rel="noopener noreferrer">Abrir</a>`
+                : badge(row.attachmentStatus);
+              return `<tr>
+                <td class="dim">${fmtD(row.date)}</td>
+                <td class="em">${escapeDashboardText(row.name)}${detail ? `<span class="expense-cell-detail">${detail}</span>` : ""}</td>
+                <td>${escapeDashboardText(row.company)}</td>
+                <td>${escapeDashboardText(row.category)}<span class="expense-cell-detail">${escapeDashboardText(row.dre)}</span></td>
+                <td>${escapeDashboardText(row.driver)}</td>
+                <td>${escapeDashboardText(row.link)}</td>
+                <td>${escapeDashboardText(row.payment)}</td>
+                <td>${badge(row.operational)}</td>
+                <td>${badge(row.financial)}</td>
+                <td>${receipt}</td>
+                <td class="r em">${brl(row.value)}</td>
+                <td><button class="expense-record-button" type="button" onclick="openExpenseRecord('${escapeDashboardText(row.id)}')">Abrir registro</button></td>
+              </tr>`;
+            })
+            .join("") || emptyRow(12);
+        mobile.innerHTML =
+          mobileRows
+            .map((row) => {
+              const receipt = row.receiptUrl
+                ? `<a class="expense-receipt-link" href="${escapeDashboardText(row.receiptUrl)}" target="_blank" rel="noopener noreferrer">Comprovante</a>`
+                : badge(row.attachmentStatus);
+              return `<article class="expense-mobile-card">
+                <div class="expense-mobile-card-head">
+                  <div><div class="expense-mobile-card-title">${escapeDashboardText(row.name)}</div><div class="expense-cell-detail">${fmtD(row.date)} Â· ${escapeDashboardText(row.company)}</div></div>
+                  <div class="expense-mobile-card-value">${brl(row.value)}</div>
+                </div>
+                <div class="expense-mobile-card-row"><span>Categoria</span><b>${escapeDashboardText(row.category)}</b></div>
+                <div class="expense-mobile-card-row"><span>Motorista</span><b>${escapeDashboardText(row.driver)}</b></div>
+                <div class="expense-mobile-card-row"><span>VÃ­nculo</span><b>${escapeDashboardText(row.link)}</b></div>
+                <div class="expense-mobile-card-row"><span>Financeiro</span><b>${badge(row.financial)}</b></div>
+                <div class="expense-mobile-card-row"><span>Comprovante</span><b>${receipt}</b></div>
+                <div class="expense-mobile-card-row"><span>AÃ§Ã£o</span><button class="expense-record-button" type="button" onclick="openExpenseRecord('${escapeDashboardText(row.id)}')">Abrir registro</button></div>
+              </article>`;
+            })
+            .join("") ||
+          '<div class="empty"><div class="em-msg">Nenhum registro encontrado</div></div>';
+        const total = tblCache.tbDespesasBase?.length || 0;
+        const shown = rows.length;
+        const limited = shown > maxDesktop
+          ? ` Â· primeiros ${maxDesktop.toLocaleString("pt-BR")} na tabela`
+          : "";
+        set(
+          "metaExpenses",
+          `${shown.toLocaleString("pt-BR")} de ${total.toLocaleString("pt-BR")} lanÃ§amentos${limited}`,
+        );
+      }
+
+      function renderDespesas(dvDisabled) {
+        const allRows = dvDisabled ? [] : buildExpenseRows();
+        populateExpenseFilters(allRows);
+        const rowsBeforeDate = allRows.filter((row) =>
+          expenseMatchesFilters(row, false),
+        );
+        const rows = rowsBeforeDate
+          .filter((row) => expenseMatchesFilters(row, true))
+          .sort((a, b) => b.date.localeCompare(a.date) || b.value - a.value);
+        const start = document.getElementById("fS")?.value || "";
+        const end = document.getElementById("fE")?.value || "";
+        const previousPeriod = getPreviousExpensePeriod(start, end);
+        const previousRows = previousPeriod
+          ? rowsBeforeDate.filter((row) =>
+              expenseMatchesFilters(row, true, previousPeriod),
+            )
+          : [];
+        const currentMetrics = expenseSubsetMetrics(rows);
+        const previousMetrics = previousPeriod
+          ? expenseSubsetMetrics(previousRows)
+          : null;
+
+        set("nbDesp", rows.length.toLocaleString("pt-BR"));
+        set("expenseTotal", dvDisabled ? "â€”" : brlS(currentMetrics.total));
+        set("expenseFood", dvDisabled ? "â€”" : brlS(currentMetrics.food));
+        set("expensePending", dvDisabled ? "â€”" : brlS(currentMetrics.pending));
+        set("expenseTicket", dvDisabled ? "â€”" : brl(currentMetrics.ticket));
+        set("expenseNoReceipt", dvDisabled ? "â€”" : currentMetrics.noReceipt.toLocaleString("pt-BR"));
+        set("expenseNoReservation", dvDisabled ? "â€”" : currentMetrics.noReservation.toLocaleString("pt-BR"));
+
+        html(
+          "expenseTotalDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.total, previousMetrics?.total ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expenseFoodDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.food, previousMetrics?.food ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expensePendingDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.pending, previousMetrics?.pending ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expenseTicketDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.ticket, previousMetrics?.ticket ?? null, {
+                currency: true,
+              }),
+        );
+        html(
+          "expenseNoReceiptDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.noReceipt, previousMetrics?.noReceipt ?? null),
+        );
+        html(
+          "expenseNoReservationDelta",
+          dvDisabled
+            ? ""
+            : expenseDeltaMarkup(currentMetrics.noReservation, previousMetrics?.noReservation ?? null),
+        );
+
+        const monthly = aggregateExpenses(rows, (row) => mK(row.date)).map(
+          (item) => ({
+            ...item,
+            food: rows
+              .filter(
+                (row) =>
+                  mK(row.date) === item.label &&
+                  EXPENSE_FOOD_CATEGORIES.has(normL(row.category)),
+              )
+              .reduce((sum, row) => sum + row.value, 0),
+          }),
+        );
+        monthly.sort((a, b) => a.label.localeCompare(b.label));
+        set(
+          "metaExpenseTrend",
+          dvDisabled
+            ? "â€”"
+            : `${rows.length.toLocaleString("pt-BR")} lanÃ§amentos Â· ${brl(currentMetrics.total)}`,
+        );
+        mkChart("cExpenseMonthly", {
+          type: "line",
+          data: {
+            labels: monthly.map((item) => monthTableLabel(item.label)),
+            datasets: [
+              {
+                label: "Despesa total",
+                data: monthly.map((item) => item.value),
+                borderColor: PAL[0],
+                backgroundColor: "rgba(33, 89, 210, .08)",
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.25,
+                fill: false,
+              },
+              {
+                label: "AlimentaÃ§Ã£o",
+                data: monthly.map((item) => item.food),
+                borderColor: PAL[2],
+                backgroundColor: "rgba(107, 75, 155, .08)",
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.25,
+                fill: false,
+              },
+            ],
+          },
+          options: opts0({ yBrl: true, datalabels: false }),
+        });
+        html(
+          "tblExpenseMonthly",
+          `<table><thead><tr><th>MÃªs</th><th class="r">LanÃ§amentos</th><th class="r">Despesa</th><th class="r">AlimentaÃ§Ã£o</th></tr></thead><tbody>${
+            monthly
+              .map(
+                (item) =>
+                  `<tr><td class="em">${monthTableLabel(item.label)}</td><td class="r">${item.qtd.toLocaleString("pt-BR")}</td><td class="r em">${brl(item.value)}</td><td class="r">${brl(item.food)}</td></tr>`,
+              )
+              .join("") || emptyRow(4)
+          }</tbody></table>`,
+        );
+
+        const categories = aggregateExpenses(rows, (row) => row.category);
+        const topCategories = categories.slice(0, 8);
+        set(
+          "metaExpenseCategories",
+          dvDisabled
+            ? "â€”"
+            : `${categories.length.toLocaleString("pt-BR")} categorias`,
+        );
+        mkChart("cExpenseCategories", {
+          type: "bar",
+          data: {
+            labels: topCategories.map((item) => trunc(item.label, 24)),
+            datasets: [
+              {
+                label: "Despesa",
+                data: topCategories.map((item) => item.value),
+                backgroundColor: topCategories.map(
+                  (_, index) => PAL[index % PAL.length],
+                ),
+                borderRadius: 6,
+                borderSkipped: false,
+              },
+            ],
+          },
+          options: opts0({
+            hBar: true,
+            xBrl: true,
+            noLegend: true,
+            datalabels: false,
+          }),
+        });
+        renderDistributionTable(
+          "tblExpenseCategories",
+          categories,
+          rows.length,
+          {
+            label: "Categoria",
+            countLabel: "LanÃ§amentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+            limit: 8,
+          },
+        );
+
+        const companies = aggregateExpenses(rows, (row) => row.company);
+        const dreGroups = aggregateExpenses(rows, (row) => row.dre);
+        const foodDrivers = aggregateFoodExpensesByDriver(rows);
+        const topFoodDriver = foodDrivers[0];
+        set("metaExpenseCompanies", dvDisabled ? "â€”" : `${companies.length} empresas`);
+        set("metaExpenseDre", dvDisabled ? "â€”" : `${dreGroups.length} grupos`);
+        set(
+          "metaExpenseFoodDrivers",
+          dvDisabled
+            ? "â€”"
+            : topFoodDriver
+              ? `${foodDrivers.length} motoristas Â· maior gasto: ${topFoodDriver.label}`
+              : "Sem gastos de alimentaÃ§Ã£o no perÃ­odo",
+        );
+        renderDistributionTable(
+          "tblExpenseCompanies",
+          companies,
+          rows.length,
+          {
+            label: "Empresa",
+            countLabel: "LanÃ§amentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+          },
+        );
+        renderDistributionTable(
+          "tblExpenseDre",
+          dreGroups,
+          rows.length,
+          {
+            label: "Grupo DRE",
+            countLabel: "LanÃ§amentos",
+            valueLabel: "Valor",
+            moneyValue: true,
+            participationByValue: true,
+          },
+        );
+        html(
+          "tblExpenseFoodDrivers",
+          `<table><thead><tr><th>Motorista</th><th class="r">LanÃ§amentos</th><th class="r">Total</th><th class="r">MÃ©dia/dia</th></tr></thead><tbody>${
+            foodDrivers
+              .map(
+                (item) =>
+                  `<tr><td class="em">${item.label}</td><td class="r">${item.qtd.toLocaleString("pt-BR")}</td><td class="r em">${brl(item.value)}</td><td class="r">${brl(item.dailyAverage)}</td></tr>`,
+              )
+              .join("") || emptyRow(4)
+          }</tbody></table>`,
+        );
+
+        tblCache.tbDespesasBase = rows;
+        const searched = expenseSearchQuery
+          ? rows.filter((row) => row.searchText.includes(normL(expenseSearchQuery)))
+          : rows;
+        const search = document.getElementById("expenseSearch");
+        if (search && search.value !== expenseSearchQuery) {
+          search.value = expenseSearchQuery;
+        }
+        renderExpenseTable(searched);
+      }
+
+      function updateExpenseFilters() {
+        expenseFilters = {
+          company: document.getElementById("expenseCompanyFilter")?.value || "",
+          category: document.getElementById("expenseCategoryFilter")?.value || "",
+          payment: document.getElementById("expensePaymentFilter")?.value || "",
+          financial: document.getElementById("expenseFinancialFilter")?.value || "",
+          operational: document.getElementById("expenseOperationalFilter")?.value || "",
+          attachment: document.getElementById("expenseAttachmentFilter")?.value || "",
+        };
+        renderDespesas(isDataverseDisabled());
+      }
+
+      function clearExpenseFilters() {
+        expenseFilters = {
+          company: "",
+          category: "",
+          payment: "",
+          financial: "",
+          operational: "",
+          attachment: "",
+        };
+        expenseSearchQuery = "";
+        const search = document.getElementById("expenseSearch");
+        if (search) search.value = "";
+        renderDespesas(isDataverseDisabled());
+      }
+
+      function searchExpenseTable(query) {
+        expenseSearchQuery = String(query || "");
+        const base = tblCache.tbDespesasBase || [];
+        const filtered = expenseSearchQuery
+          ? base.filter((row) => row.searchText.includes(normL(expenseSearchQuery)))
+          : base;
+        renderExpenseTable(filtered);
+      }
+
+      function openExpenseRecord(id) {
+        const recordId = expenseId(id);
+        if (!recordId || recordId.startsWith("mock-")) {
+          showAlert(
+            "warn",
+            "Registro fictÃ­cio: nÃ£o existe formulÃ¡rio Dataverse para abrir.",
+          );
+          return;
+        }
+        try {
+          const xrm = window.top?.Xrm || window.Xrm;
+          if (xrm?.Navigation?.openForm) {
+            void xrm.Navigation.openForm({
+              entityName: "cr40f_despesaoperacional",
+              entityId: recordId,
+            }).catch((error) =>
+              reportDashboardError(error, {
+                source: "dashboard-expenses",
+                action: "open-record",
+                phase: "xrm-navigation",
+              }),
+            );
+            return;
+          }
+        } catch (_) {}
+        const origin = BASE || window.location.origin;
+        window.location.assign(
+          `${origin}/main.aspx?pagetype=entityrecord&etn=cr40f_despesaoperacional&id=${encodeURIComponent(recordId)}`,
+        );
+      }
+
+      function renderInfleetTelemetry(dvDisabled, vehicleScopeIds = null) {
+        const start = document.getElementById("fS")?.value || "2026-01-01";
+        const end = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
+        const daily = dvDisabled ? [] : (DB.telemetriaInfleet || []).filter((row) =>
+          inDateRange(row[F.infleetDiaria.data], start, end) &&
+          (!vehicleScopeIds || vehicleScopeIds.has(String(row[F.infleetDiaria.veiculo] || "").toLowerCase())),
+        );
+        const events = dvDisabled ? [] : (DB.eventosInfleet || []).filter((row) =>
+          inDateRange(row[F.infleetEvento.reportadoEm], start, end) &&
+          (!vehicleScopeIds || vehicleScopeIds.has(String(row[F.infleetEvento.veiculo] || "").toLowerCase())),
+        );
+        const trips = dvDisabled ? [] : (DB.viagensInfleet || []).filter((row) =>
+          inDateRange(row[F.infleetViagem.iniciadoEm], start, end) &&
+          (!vehicleScopeIds || vehicleScopeIds.has(String(row[F.infleetViagem.veiculo] || "").toLowerCase())),
+        );
+        const vehicleMap = new Map((DB.veiculos || []).map((row) => [
+          String(row[F.vei.id] || "").toLowerCase(),
+          row[F.vei.placa] || row[F.vei.modelo] || "Veiculo sem placa",
+        ]));
+        const driverMap = new Map((DB.funcionarios || []).map((row) => [
+          String(row.cr40f_funcionariosid || "").toLowerCase(),
+          row[F.fun.apelido] || row[F.fun.nome] || "Motorista sem nome",
+        ]));
+        const numberValue = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+        const totalKm = daily.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.distancia]), 0);
+        const weightedSpeed = daily.reduce((sum, row) => {
+          const weight = Math.max(numberValue(row[F.infleetDiaria.distancia]), 1);
+          return sum + numberValue(row[F.infleetDiaria.velocidadeMedia]) * weight;
+        }, 0);
+        const speedWeight = daily.reduce((sum, row) => sum + Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0);
+        const averageSpeed = speedWeight ? weightedSpeed / speedWeight : 0;
+        const maximumSpeed = daily.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.velocidadeMaxima])), 0);
+        const speedingCount = daily.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.excessos]), 0);
+        const totalFuel = trips.reduce((sum, row) => sum + numberValue(row[F.infleetViagem.combustivelLitros]), 0);
+        const tripDistance = trips.reduce((sum, row) => sum + numberValue(row[F.infleetViagem.distancia]), 0);
+        const infleetAutonomy = (distance, fuel) => {
+          if (distance <= 0 || fuel <= 0) return 0;
+          const value = distance / fuel;
+          return value >= 2 && value <= 30 ? value : 0;
+        };
+        const realAutonomy = infleetAutonomy(tripDistance, totalFuel);
+        const idleMinutes = daily.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.motorOciosoMin]), 0);
+
+        set("infKm", dvDisabled ? "â€”" : `${totalKm.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km`);
+        set("infVelMedia", dvDisabled ? "â€”" : `${averageSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h`);
+        set("infVelMax", dvDisabled ? "â€”" : `${maximumSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h`);
+        set("infExcessos", dvDisabled ? "â€”" : speedingCount.toLocaleString("pt-BR"));
+        set("infAutonomia", dvDisabled || !realAutonomy ? "â€”" : `${realAutonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} km/l`);
+        set("infOciosidade", dvDisabled ? "â€”" : `${idleMinutes.toLocaleString("pt-BR", { maximumFractionDigits: 0 })} min`);
+
+        const allDaily = dvDisabled ? [] : (DB.telemetriaInfleet || []);
+        const latestSyncAt = allDaily.reduce((latest, row) => {
+          const value = Date.parse(row[F.infleetDiaria.sincronizadoEm] || "");
+          return Number.isFinite(value) && value > latest ? value : latest;
+        }, 0);
+        const expectedVehicleIds = vehicleScopeIds || new Set(
+          (DB.veiculos || [])
+            .map((row) => String(row[F.vei.id] || "").toLowerCase())
+            .filter(Boolean),
+        );
+        const telemetryVehicleIds = new Set(
+          daily
+            .map((row) => String(row[F.infleetDiaria.veiculo] || "").toLowerCase())
+            .filter(Boolean),
+        );
+        const staleVehicles = [...expectedVehicleIds].filter((id) => !telemetryVehicleIds.has(id)).length;
+        const mappingStatus = (rows, field) => rows.reduce((counts, row) => {
+          const status = String(row[field] || "SEM_MOTORISTA").toUpperCase();
+          counts[status] = (counts[status] || 0) + 1;
+          return counts;
+        }, {});
+        const eventMapping = mappingStatus(events, F.infleetEvento.statusMotorista);
+        const tripMapping = mappingStatus(trips, F.infleetViagem.statusMotorista);
+        const unmappedEvents = (eventMapping.NAO_ENCONTRADO || 0) + (eventMapping.SEM_MOTORISTA || 0);
+        const unmappedTrips = (tripMapping.NAO_ENCONTRADO || 0) + (tripMapping.SEM_MOTORISTA || 0);
+        const freshnessMinutes = latestSyncAt ? Math.max(0, Math.floor((Date.now() - latestSyncAt) / 60000)) : null;
+        const freshnessLabel = freshnessMinutes === null ? "Sem sincronizacao" : freshnessMinutes < 90 ? `${freshnessMinutes} min atras` : `${Math.floor(freshnessMinutes / 60)} h atras`;
+        set("metaInfleetHealth", dvDisabled ? "â€”" : `Atualizado ${freshnessLabel}`);
+        html("tblInfleetHealth", `<table><thead><tr><th>Controle</th><th class="r">Situacao</th><th class="r">Quantidade</th></tr></thead><tbody>${dvDisabled ? emptyRow(3) : [
+          ["Cobertura da frota", staleVehicles ? "Sem telemetria no periodo" : "Cobertura completa", staleVehicles],
+          ["Eventos sem motorista", unmappedEvents ? "Requer identificador InFleet/CPF" : "Mapeado", unmappedEvents],
+          ["Viagens sem motorista", unmappedTrips ? "Requer identificador InFleet/CPF" : "Mapeado", unmappedTrips],
+          ["Ultima sincronizacao", freshnessLabel, latestSyncAt ? new Date(latestSyncAt).toLocaleString("pt-BR") : "â€”"],
+        ].map(([label, status, quantity]) => `<tr><td class="em">${escapeDashboardText(label)}</td><td class="r">${escapeDashboardText(status)}</td><td class="r">${escapeDashboardText(quantity)}</td></tr>`).join("")}</tbody></table>`);
+
+        const pendingDrivers = new Map();
+        const addPendingDriver = (row, fields, source) => {
+          const status = String(row[fields.status] || "SEM_MOTORISTA").toUpperCase();
+          if (status !== "NAO_ENCONTRADO") return;
+          const driverId = String(row[fields.id] || "").trim();
+          const receivedName = String(row[fields.name] || "Motorista nao informado").trim();
+          const key = driverId || `sem-id:${receivedName.toLowerCase()}`;
+          if (!pendingDrivers.has(key)) {
+            pendingDrivers.set(key, { driverId, receivedName, status, events: 0, trips: 0 });
+          }
+          const item = pendingDrivers.get(key);
+          item[source] += 1;
+          if (status === "NAO_ENCONTRADO") item.status = status;
+        };
+        events.forEach((row) => addPendingDriver(row, {
+          id: F.infleetEvento.infleetDriverId,
+          name: F.infleetEvento.motoristaRecebido,
+          status: F.infleetEvento.statusMotorista,
+        }, "events"));
+        trips.forEach((row) => addPendingDriver(row, {
+          id: F.infleetViagem.infleetDriverId,
+          name: F.infleetViagem.motoristaRecebido,
+          status: F.infleetViagem.statusMotorista,
+        }, "trips"));
+        const pendingDriverRows = [...pendingDrivers.values()]
+          .sort((a, b) => (b.events + b.trips) - (a.events + a.trips));
+        set("metaInfleetMapping", dvDisabled ? "â€”" : `${pendingDriverRows.length} identidades para revisar`);
+        html("tblInfleetMapping", `<table><thead><tr><th>Motorista recebido</th><th>ID InFleet</th><th>Status</th><th class="r">Eventos</th><th class="r">Viagens</th></tr></thead><tbody>${dvDisabled ? emptyRow(5) : pendingDriverRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(row.receivedName)}</td><td class="dim">${escapeDashboardText(row.driverId || "Nao informado")}</td><td>${badge(row.status)}</td><td class="r">${row.events.toLocaleString("pt-BR")}</td><td class="r">${row.trips.toLocaleString("pt-BR")}</td></tr>`)
+          .join("") || emptyRow(5)}</tbody></table>`);
+
+        const kmByDay = new Map();
+        daily.forEach((row) => {
+          const day = String(row[F.infleetDiaria.data] || "").slice(0, 10);
+          if (!day) return;
+          kmByDay.set(day, (kmByDay.get(day) || 0) + numberValue(row[F.infleetDiaria.distancia]));
+        });
+        const kmDailyLabels = [...kmByDay.keys()].sort();
+        set("metaInfleetTrend", dvDisabled ? "â€”" : `${kmDailyLabels.length} dias no periodo`);
+        mkChart("cInfleetKm", {
+          type: "bar",
+          data: {
+            labels: kmDailyLabels.map((day) => new Date(`${day}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })),
+            datasets: [{ label: "Km", data: kmDailyLabels.map((day) => kmByDay.get(day)), backgroundColor: "#2159d2", borderRadius: 5, maxBarThickness: 28 }],
+          },
+          options: opts0({ noLegend: true, datalabels: false }),
+        });
+
+        const tripsByVehicle = new Map();
+        trips.forEach((row) => {
+          const vehicleId = String(row[F.infleetViagem.veiculo] || "").toLowerCase();
+          const key = vehicleId || row[F.infleetViagem.placa] || "sem-veiculo";
+          if (!tripsByVehicle.has(key)) tripsByVehicle.set(key, []);
+          tripsByVehicle.get(key).push(row);
+        });
+
+        const byVehicle = new Map();
+        daily.forEach((row) => {
+          const vehicleId = String(row[F.infleetDiaria.veiculo] || "").toLowerCase();
+          const key = vehicleId || row[F.infleetDiaria.placa] || "sem-veiculo";
+          if (!byVehicle.has(key)) byVehicle.set(key, { vehicleId, plate: row[F.infleetDiaria.placa], rows: [] });
+          byVehicle.get(key).rows.push(row);
+        });
+        const vehicleRows = [...byVehicle.values()].map((group) => {
+          const distance = group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.distancia]), 0);
+          const weight = group.rows.reduce((sum, row) => sum + Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0);
+          const speed = weight ? group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.velocidadeMedia]) * Math.max(numberValue(row[F.infleetDiaria.distancia]), 1), 0) / weight : 0;
+          const vehicleTrips = tripsByVehicle.get(group.vehicleId || group.plate || "sem-veiculo") || [];
+          const vehicleEvents = events.filter((eventRow) => {
+            const eventVehicleId = String(eventRow[F.infleetEvento.veiculo] || "").toLowerCase();
+            const eventPlate = eventRow[F.infleetEvento.placa] || "";
+            return (group.vehicleId && eventVehicleId === group.vehicleId) || (!group.vehicleId && group.plate && eventPlate === group.plate);
+          });
+          const fuel = vehicleTrips.reduce((sum, row) => sum + numberValue(row[F.infleetViagem.combustivelLitros]), 0);
+          const fuelDistance = vehicleTrips.reduce((sum, row) => sum + numberValue(row[F.infleetViagem.distancia]), 0);
+          return {
+            plate: vehicleMap.get(group.vehicleId) || group.plate || "Nao vinculado",
+            distance,
+            distanceShare: totalKm ? (distance / totalKm) * 100 : 0,
+            speed,
+            maximum: group.rows.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.velocidadeMaxima])), 0),
+            speeding: group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.excessos]), 0),
+            events: vehicleEvents.length,
+            eventsRate: distance ? (vehicleEvents.length / distance) * 1000 : 0,
+            autonomy: infleetAutonomy(fuelDistance, fuel),
+            odometer: group.rows.reduce((max, row) => Math.max(max, numberValue(row[F.infleetDiaria.odometroFinal])), 0),
+            idleMinutes: group.rows.reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.motorOciosoMin]), 0),
+          };
+        }).sort((a, b) => b.distance - a.distance);
+
+        set("metaInfleetVeiculos", dvDisabled ? "â€”" : `${vehicleRows.length} veiculos Â· ${daily.length} dias-veiculo`);
+        html("tblInfleetVeiculos", `<table><thead><tr><th>Veiculo</th><th class="r">Km</th><th class="r">Media</th><th class="r">Maxima</th><th class="r">Excessos</th><th class="r">Ocioso</th><th class="r">Odometro</th><th class="r">Km/l real</th></tr></thead><tbody>${vehicleRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(row.plate)}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.maximum.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speeding.toLocaleString("pt-BR")}</td><td class="r">${row.idleMinutes.toLocaleString("pt-BR", { maximumFractionDigits: 0 })} min</td><td class="r">${row.odometer ? row.odometer.toLocaleString("pt-BR", { maximumFractionDigits: 0 }) : "â€”"}</td><td class="r">${row.autonomy ? row.autonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "â€”"}</td></tr>`)
+          .join("") || emptyRow(8)}</tbody></table>`);
+
+        const vehicleAverageKm = vehicleRows.length ? totalKm / vehicleRows.length : 0;
+        set("metaInfleetVeiculos", dvDisabled ? "â€”" : `${vehicleRows.length} veiculos Â· ${daily.length} dias-veiculo Â· media ${vehicleAverageKm.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/veiculo`);
+        html("tblInfleetVeiculos", `<table><thead><tr><th>Veiculo</th><th class="r">Km</th><th class="r">% frota</th><th class="r">vs media</th><th class="r">Media</th><th class="r">Maxima</th><th class="r">Excessos</th><th class="r">Eventos/1.000 km</th><th class="r">Km/l real</th></tr></thead><tbody>${vehicleRows
+          .map((row) => {
+            const vsAverage = vehicleAverageKm ? ((row.distance - vehicleAverageKm) / vehicleAverageKm) * 100 : 0;
+            return `<tr><td class="em">${escapeDashboardText(row.plate)}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.distanceShare.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%</td><td class="r">${metricSplit(`${vsAverage >= 0 ? "+" : ""}${vsAverage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`, `${row.odometer ? `od. ${row.odometer.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}` : "s/odometro"}`, "r")}</td><td class="r">${row.speed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.maximum.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.speeding.toLocaleString("pt-BR")}</td><td class="r">${metricSplit(row.eventsRate.toLocaleString("pt-BR", { maximumFractionDigits: 1 }), `${row.events.toLocaleString("pt-BR")} eventos`, "r")}</td><td class="r">${row.autonomy ? row.autonomy.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "â€”"}</td></tr>`;
+          })
+          .join("") || emptyRow(9)}</tbody></table>`);
+
+        const INFLEET_EVENT_DISPLAY_NAMES = {
+          routeOverspeed: "Excesso de velocidade â€” rota",
+          deviceOverspeed: "Excesso de velocidade â€” dispositivo",
+          hardAcceleration: "AceleraÃ§Ã£o brusca",
+          hardBraking: "Frenagem brusca",
+          hardCornering: "Curva brusca",
+          deviceIdle: "Motor ocioso",
+          geofenceEnter: "Entrada em Ã¡rea monitorada",
+          geofenceExit: "SaÃ­da de Ã¡rea monitorada",
+          driverChanged: "Troca de motorista",
+        };
+        const displayInfleetEventName = (row) => {
+          const type = String(row[F.infleetEvento.tipo] || "").trim();
+          if (INFLEET_EVENT_DISPLAY_NAMES[type]) return INFLEET_EVENT_DISPLAY_NAMES[type];
+          const description = String(row[F.infleetEvento.descricao] || "").trim();
+          if (description && !/^[A-Za-z][A-Za-z0-9_-]*$/.test(description)) return description;
+          const readableType = type
+            .replace(/([a-z])([A-Z])/g, "$1 $2")
+            .replace(/[_-]+/g, " ")
+            .trim();
+          return readableType ? `Evento operacional â€” ${readableType.charAt(0).toUpperCase()}${readableType.slice(1)}` : "Evento operacional";
+        };
+        const eventsByType = grp(events, displayInfleetEventName);
+        const eventRows = Object.keys(eventsByType)
+          .filter((key) => key !== "__null__")
+          .map((key) => {
+            const rows = eventsByType[key];
+            const speeds = rows.map((row) => numberValue(row[F.infleetEvento.velocidade])).filter((value) => value > 0);
+            return {
+              label: key,
+              qtd: rows.length,
+              rate: totalKm ? (rows.length / totalKm) * 1000 : 0,
+              avgSpeed: speeds.length ? speeds.reduce((sum, value) => sum + value, 0) / speeds.length : 0,
+              maxSpeed: speeds.length ? Math.max(...speeds) : 0,
+            };
+          })
+          .sort((a, b) => b.qtd - a.qtd);
+        set("metaInfleetEventos", dvDisabled ? "â€”" : `${events.length} eventos no periodo Â· ${totalKm ? `${((events.length / totalKm) * 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} por 1.000 km` : "sem km para comparar"}`);
+        html("tblInfleetEventos", `<table><thead><tr><th>Evento</th><th class="r">Qtde</th><th class="r">% total</th><th class="r">Por 1.000 km</th><th class="r">Vel. media</th><th class="r">Vel. maxima</th></tr></thead><tbody>${eventRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(row.label)}</td><td class="r">${row.qtd.toLocaleString("pt-BR")}</td><td class="r">${events.length ? ((row.qtd / events.length) * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "0"}%</td><td class="r">${row.rate.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.avgSpeed ? `${row.avgSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h` : "â€”"}</td><td class="r">${row.maxSpeed ? `${row.maxSpeed.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} km/h` : "â€”"}</td></tr>`)
+          .join("") || emptyRow(6)}</tbody></table>`);
+
+        const riskyTypes = new Set(["routeOverspeed", "deviceOverspeed", "hardAcceleration", "hardBraking", "hardCornering", "deviceIdle"]);
+        const driverStats = new Map();
+        trips.forEach((row) => {
+          const driverId = String(row[F.infleetViagem.motorista] || "").toLowerCase();
+          if (!driverId) return;
+          if (!driverStats.has(driverId)) driverStats.set(driverId, { driverId, trips: 0, distance: 0, fuel: 0, risk: 0 });
+          const stats = driverStats.get(driverId);
+          stats.trips += 1;
+          stats.distance += numberValue(row[F.infleetViagem.distancia]);
+          stats.fuel += numberValue(row[F.infleetViagem.combustivelLitros]);
+        });
+        events.forEach((row) => {
+          const driverId = String(row[F.infleetEvento.motorista] || "").toLowerCase();
+          if (!driverId || !riskyTypes.has(row[F.infleetEvento.tipo])) return;
+          if (!driverStats.has(driverId)) driverStats.set(driverId, { driverId, trips: 0, distance: 0, fuel: 0, risk: 0 });
+          driverStats.get(driverId).risk += 1;
+        });
+        const driverRows = [...driverStats.values()].sort((a, b) => b.distance - a.distance || b.risk - a.risk);
+        set("metaInfleetMotoristas", dvDisabled ? "â€”" : `${driverRows.length} motoristas vinculados Â· ${trips.length} viagens`);
+        html("tblInfleetMotoristas", `<table><thead><tr><th>Motorista</th><th class="r">Viagens</th><th class="r">Km</th><th class="r">Km/l real</th><th class="r">Eventos de risco</th></tr></thead><tbody>${driverRows
+          .map((row) => `<tr><td class="em">${escapeDashboardText(driverMap.get(row.driverId) || "Motorista vinculado")}</td><td class="r">${row.trips.toLocaleString("pt-BR")}</td><td class="r">${row.distance.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${infleetAutonomy(row.distance, row.fuel) ? infleetAutonomy(row.distance, row.fuel).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "â€”"}</td><td class="r">${row.risk.toLocaleString("pt-BR")}</td></tr>`)
+          .join("") || emptyRow(5)}</tbody></table>`);
+
+        const eventCategories = [
+          { key: "overspeed", label: "Excesso de velocidade", match: (type, text) => type.includes("overspeed") || text.includes("velocidade"), color: "#C12F45" },
+          { key: "acceleration", label: "AceleraÃ§Ã£o brusca", match: (type, text) => type.includes("acceleration") || text.includes("acelera"), color: "#9A4E12" },
+          { key: "braking", label: "Frenagem brusca", match: (type, text) => type.includes("braking") || text.includes("frenagem") || text.includes("freada"), color: "#B17A00" },
+          { key: "cornering", label: "Curva brusca", match: (type, text) => type.includes("cornering") || text.includes("curva"), color: "#6B4B9B" },
+        ];
+        const classifyEvent = (row) => {
+          const type = String(row[F.infleetEvento.tipo] || "").toLowerCase();
+          const text = String(row[F.infleetEvento.descricao] || "").toLowerCase();
+          return eventCategories.find((category) => category.match(type, text)) || null;
+        };
+        const categoryCounts = new Map(eventCategories.map((category) => [category.key, 0]));
+        const monthRows = new Map();
+        events.forEach((row) => {
+          const category = classifyEvent(row);
+          if (!category) return;
+          categoryCounts.set(category.key, categoryCounts.get(category.key) + 1);
+          const month = String(row[F.infleetEvento.reportadoEm] || "").slice(0, 7);
+          if (!month) return;
+          if (!monthRows.has(month)) monthRows.set(month, new Map(eventCategories.map((item) => [item.key, 0])));
+          const counts = monthRows.get(month);
+          counts.set(category.key, counts.get(category.key) + 1);
+        });
+        const categorizedTotal = [...categoryCounts.values()].reduce((sum, value) => sum + value, 0);
+        set("metaFrotaEventosResumo", dvDisabled ? "â€”" : `${categorizedTotal.toLocaleString("pt-BR")} eventos classificados`);
+        html("tblFrotaEventosResumo", dvDisabled ? `<div class="dim">Sem dados no perÃ­odo</div>` : `<div>${eventCategories.map((category) => `<div class="frota-event-summary-row"><span class="frota-event-summary-label">${category.label}</span><strong class="frota-event-summary-value" style="color:${category.color}">${categoryCounts.get(category.key).toLocaleString("pt-BR")}</strong></div>`).join("")}</div>`);
+        const monthKeys = [...monthRows.keys()].sort();
+        set("metaFrotaEventosMes", dvDisabled ? "â€”" : `${monthKeys.length} meses no perÃ­odo`);
+        const eventTrendOptions = opts0({ noLegend: false, datalabels: false });
+        eventTrendOptions.scales.x.stacked = true;
+        eventTrendOptions.scales.y.stacked = true;
+        mkChart("cFrotaEventosMes", {
+          type: "bar",
+          data: {
+            labels: monthKeys.map((month) => new Date(`${month}-15T12:00:00`).toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")),
+            datasets: eventCategories.map((category) => ({
+              label: category.label,
+              data: monthKeys.map((month) => monthRows.get(month).get(category.key)),
+              backgroundColor: category.color,
+              borderRadius: 3,
+              maxBarThickness: 22,
+            })),
+          },
+          options: eventTrendOptions,
+        });
+        const riskRows = driverRows
+          .filter((row) => row.risk > 0)
+          .map((row) => ({ ...row, riskRate: row.distance ? (row.risk / row.distance) * 1000 : 0 }))
+          .sort((a, b) => b.riskRate - a.riskRate || b.risk - a.risk)
+          .slice(0, 5);
+        set("metaFrotaRisco", dvDisabled ? "â€”" : `${riskRows.length} motoristas com eventos`);
+        html("tblFrotaRisco", `<table><thead><tr><th>Motorista</th><th class="r">Eventos</th><th class="r">/1.000 km</th></tr></thead><tbody>${dvDisabled ? emptyRow(3) : riskRows.map((row) => `<tr><td class="em">${escapeDashboardText(driverMap.get(row.driverId) || "Motorista vinculado")}</td><td class="r">${row.risk.toLocaleString("pt-BR")}</td><td class="r">${row.riskRate.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td></tr>`).join("") || emptyRow(3)}</tbody></table>`);
+      }
+
+      function renderFrota(dvDisabled, rv = []) {
+        const hasFleetFilters = Boolean(
+          document.getElementById("fS")?.value ||
+          document.getElementById("fE")?.value ||
+          msState.St.length ||
+          msState.Cl.length ||
+          msState.Mo.length ||
+          msState.Tp.length
+        );
+        const scopedVehicleIds = new Set(
+          (rv || [])
+            .map((r) => String(r._veiId || "").toLowerCase())
+            .filter(Boolean)
+        );
+        const vehicleScopeIds = hasFleetFilters ? scopedVehicleIds : null;
+        renderInfleetTelemetry(dvDisabled, vehicleScopeIds);
+        const veiBase = dvDisabled ? [] : DB.veiculos;
+        const vei = vehicleScopeIds
+          ? veiBase.filter((r) => vehicleScopeIds.has(String(r[F.vei.id] || "").toLowerCase()))
+          : veiBase;
         const vFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
         const disp = vei.filter(
@@ -3259,50 +8309,80 @@ const monthsLabelsAll = [
         set("vMan", dvDisabled ? "â€”" : vManF.length);
         const manFvInFrota = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
-        const manutPorCategoria = grp(dvDisabled ? [] : VW.manutencoes, (r) =>
-          maintenanceCategory(manFvInFrota(r, F.man.tipo))
-        );
-        set("frPrevProg", dvDisabled ? "â€”" : (manutPorCategoria["Preventiva programada"] || []).length);
-        set("frPrevCond", dvDisabled ? "â€”" : (manutPorCategoria["Preventiva condicao"] || []).length);
-        set("frCorrNaoCrit", dvDisabled ? "â€”" : (manutPorCategoria["Corretiva nao critica"] || []).length);
-        set("frCorrCrit", dvDisabled ? "â€”" : (manutPorCategoria["Corretiva critica"] || []).length);
-        set("frConserv", dvDisabled ? "â€”" : (manutPorCategoria["Conservacao"] || []).length);
-        set("frAvaria", dvDisabled ? "â€”" : (manutPorCategoria["Avaria"] || []).length);
-        const usageStart = document.getElementById("fS")?.value || `${new Date().getFullYear()}-01-01`;
+        const getMaintenanceKpiStats = (rows) => {
+          const categorias = grp(rows, (r) => maintenanceCategory(manFvInFrota(r, F.man.tipo)));
+          const prazos = rows
+            .map((r) => daysBetweenValues(r.createdon, r[F.man.data]))
+            .filter((dias) => dias !== null && dias >= 0);
+          const prazoMedio = prazos.length
+            ? prazos.reduce((total, dias) => total + dias, 0) / prazos.length
+            : null;
+          const percentualAte10Dias = prazos.length
+            ? (prazos.filter((dias) => dias <= 10).length / prazos.length) * 100
+            : null;
+          return { categorias, prazoMedio, percentualAte10Dias };
+        };
+        const maintenanceRowsForPeriod = (period) => period
+          ? DB.manutencoes.filter((r) => inDateRange(r[F.man.data], period.start, period.end))
+          : [];
+        const maintenanceFilterStart = document.getElementById("fS")?.value || "";
+        const maintenanceFilterEnd = document.getElementById("fE")?.value || "";
+        const maintenancePeriodStart = maintenanceFilterStart || `${new Date().getFullYear()}-01-01`;
+        const maintenancePeriodEnd = maintenanceFilterEnd || `${new Date().getFullYear()}-12-31`;
+        const maintenanceShowComparisons = shouldShowLM(maintenanceFilterStart, maintenanceFilterEnd);
+        const lmMaintenancePeriod = samePeriodLastMonth(maintenancePeriodStart, maintenancePeriodEnd);
+        const lyMaintenancePeriod = samePeriodLastYear(maintenancePeriodStart, maintenancePeriodEnd);
+        const maintenanceStats = getMaintenanceKpiStats(dvDisabled ? [] : VW.manutencoes);
+        const lmMaintenanceStats = getMaintenanceKpiStats(dvDisabled ? [] : maintenanceRowsForPeriod(lmMaintenancePeriod));
+        const lyMaintenanceStats = getMaintenanceKpiStats(dvDisabled ? [] : maintenanceRowsForPeriod(lyMaintenancePeriod));
+        const maintenanceCount = (stats, categoria) => (stats.categorias[categoria] || []).length;
+        const maintenanceNoDataChip = (label, cls) =>
+          `<span class="badge-kpi ${cls}" style="opacity:.45;"><span class="bk-label">${label}</span><span class="bk-val">â€”</span><span class="bk-pct" style="letter-spacing:.5px;">s/dado</span></span>`;
+        const maintenanceCountChip = (current, previous, label, cls) => {
+          if (!previous) return maintenanceNoDataChip(label, cls);
+          const pct = ((current - previous) / previous) * 100;
+          const up = pct >= 0;
+          return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${previous.toLocaleString("pt-BR")}</span><span class="bk-pct ${up ? "du" : "dd"}">${up ? "â–²" : "â–¼"}${Math.abs(pct).toFixed(1)}%</span></span>`;
+        };
+        const maintenanceAverageChip = (current, previous, label, cls) => {
+          if (current === null || previous === null) return maintenanceNoDataChip(label, cls);
+          const pct = ((current - previous) / previous) * 100;
+          const up = pct >= 0;
+          return `<span class="badge-kpi ${cls}"><span class="bk-label">${label}</span><span class="bk-val">${previous.toFixed(1)}d</span><span class="bk-pct ${up ? "du" : "dd"}">${up ? "â–²" : "â–¼"}${Math.abs(pct).toFixed(1)}%</span></span>`;
+        };
+        const setMaintenanceComparison = (id, current, lmValue, lyValue, chipBuilder) => {
+          html(id, dvDisabled ? "" :
+            (maintenanceShowComparisons ? chipBuilder(current, lmValue, "LM", "badge-lm") : "") +
+            (maintenanceShowComparisons ? chipBuilder(current, lyValue, "LY", "badge-ly") : ""));
+        };
+        const preventiva = maintenanceCount(maintenanceStats, "Preventiva programada");
+        const corrNaoCrit = maintenanceCount(maintenanceStats, "Corretiva nao critica");
+        const corrCrit = maintenanceCount(maintenanceStats, "Corretiva critica");
+        const conservacao = maintenanceCount(maintenanceStats, "Conservacao");
+        const avaria = maintenanceCount(maintenanceStats, "Avaria");
+        set("frPrevProg", dvDisabled ? "â€”" : preventiva);
+        set("frCorrNaoCrit", dvDisabled ? "â€”" : corrNaoCrit);
+        set("frCorrCrit", dvDisabled ? "â€”" : corrCrit);
+        set("frConserv", dvDisabled ? "â€”" : conservacao);
+        set("frAvaria", dvDisabled ? "â€”" : avaria);
+        setMaintenanceComparison("frPrevProgD", preventiva, maintenanceCount(lmMaintenanceStats, "Preventiva programada"), maintenanceCount(lyMaintenanceStats, "Preventiva programada"), maintenanceCountChip);
+        setMaintenanceComparison("frCorrNaoCritD", corrNaoCrit, maintenanceCount(lmMaintenanceStats, "Corretiva nao critica"), maintenanceCount(lyMaintenanceStats, "Corretiva nao critica"), maintenanceCountChip);
+        setMaintenanceComparison("frCorrCritD", corrCrit, maintenanceCount(lmMaintenanceStats, "Corretiva critica"), maintenanceCount(lyMaintenanceStats, "Corretiva critica"), maintenanceCountChip);
+        setMaintenanceComparison("frConservD", conservacao, maintenanceCount(lmMaintenanceStats, "Conservacao"), maintenanceCount(lyMaintenanceStats, "Conservacao"), maintenanceCountChip);
+        setMaintenanceComparison("frAvariaD", avaria, maintenanceCount(lmMaintenanceStats, "Avaria"), maintenanceCount(lyMaintenanceStats, "Avaria"), maintenanceCountChip);
+        const prazoMedio = maintenanceStats.prazoMedio;
+        const percentualAte10Dias = maintenanceStats.percentualAte10Dias;
+        set("frPrazoMedio", prazoMedio === null ? "s/dado" : `${prazoMedio.toFixed(1)} dias`);
+        set("frPrazoAte10", percentualAte10Dias === null ? "s/dado" : `${percentualAte10Dias.toFixed(1)}%`);
+        setMaintenanceComparison("frPrazoMedioD", prazoMedio, lmMaintenanceStats.prazoMedio, lyMaintenanceStats.prazoMedio, maintenanceAverageChip);
+        const selectedUsageStart = document.getElementById("fS")?.value || `${new Date().getFullYear()}-01-01`;
+        const usageStart = selectedUsageStart > "2026-06-01" ? selectedUsageStart : "2026-06-01";
         const usageEnd = document.getElementById("fE")?.value || `${new Date().getFullYear()}-12-31`;
         const usage = dvDisabled
           ? { totalOwn: 0, rows: [] }
           : buildOwnFleetUsageRows(vei, VW.reservas, usageStart, usageEnd);
-        const avgUsage = (part) => {
-          const valid = usage.rows.map((r) => r[part]).filter((b) => b.days);
-          if (!valid.length) return null;
-          const days = valid.reduce((s, b) => s + b.days, 0);
-          return {
-            pct: valid.reduce((s, b) => s + b.pct * b.days, 0) / days,
-            withAvg: valid.reduce((s, b) => s + b.withAvg * b.days, 0) / days,
-            withoutAvg: valid.reduce((s, b) => s + b.withoutAvg * b.days, 0) / days,
-          };
-        };
-        const weekUse = avgUsage("weekday");
-        const weekendUse = avgUsage("weekend");
-        set("frUsoSemana", dvDisabled || !weekUse ? "â€”" : `${weekUse.pct.toFixed(1)}%`);
-        set("frUsoFim", dvDisabled || !weekendUse ? "â€”" : `${weekendUse.pct.toFixed(1)}%`);
-        html("frUsoSemanaD", dvDisabled || !weekUse ? "" : renderMetricLines([
-          ["Com servico/dia", weekUse.withAvg.toFixed(1)],
-          ["Sem servico/dia", weekUse.withoutAvg.toFixed(1)],
-        ]));
-        html("frUsoFimD", dvDisabled || !weekendUse ? "" : renderMetricLines([
-          ["Com servico/dia", weekendUse.withAvg.toFixed(1)],
-          ["Sem servico/dia", weekendUse.withoutAvg.toFixed(1)],
-        ]));
-        set("metaFrotaUso", dvDisabled ? "â€”" : `${usage.totalOwn} carros proprios Â· media diaria por mes`);
+        set("metaFrotaUso", dvDisabled ? "â€”" : `${usage.totalOwn} proprios ativos Â· ${usage.totalThird} terceiros ativos Â· ${usage.totalRental} aluguel ativos Â· ${hasFleetFilters ? "filtro aplicado" : "base completa"} Â· desde 01/06/2026 Â· media diaria por mes`);
         renderFleetUsageRows(usage.rows);
-        const kpiRows = dvDisabled ? [] : maintenanceKpiRows(VW.manutencoes, manFvInFrota);
-        set("metaFrotaKpis", dvDisabled ? "â€”" : `${VW.manutencoes.length} manutencoes no filtro atual`);
-        html("tblFrotaKpis", kpiRows.map((row) => {
-          const status = row.ok === null ? badge("Sem dado") : badge(row.ok ? "OK" : "Atencao");
-          return `<tr><td class="em">${row.categoria}</td><td class="r">${row.resultado}</td><td>${row.meta}</td><td>${metricSplit(row.cobertura, status)}</td></tr>`;
-        }).join("") || emptyRow(4));
         const byVSt = grp(vei, (r) => String(vFv(r, F.vei.status) || "â€”"));
         const byMarca = grp(vei, (r) => r[F.vei.marca] || "â€”");
         const vsK = Object.keys(byVSt)
@@ -3331,16 +8411,16 @@ const monthsLabelsAll = [
           blindado: r[F.vei.blindado],
           status: String(vFv(r, F.vei.status) || "â€”"),
         }));
-        set("metaFrota", dvDisabled ? "â€”" : `${vei.length} veÃ­culos`);
+        set("metaFrota", dvDisabled ? "â€”" : `${vei.length} veiculos${hasFleetFilters ? ` no filtro Â· ${veiBase.length} no cadastro` : ""}`);
         renderFrotaTable(tblCache.tbFrota);
       }
       function renderMotoristas(dvDisabled, rv, fat, mks, mls, byM, currentYear, yearDataMap) {
-        set("mTot", dvDisabled ? "â€”" : DB.funcionarios.length);
-        const cnhWarn = DB.funcionarios.filter((r) => {
-          if (!r[F.fun.cnh]) return true;
-          return (
-            (new Date(r[F.fun.cnh]) - new Date()) / (1000 * 60 * 60 * 24) < 90
-          );
+        const funcionariosAtivos = DB.funcionarios.filter(isActiveFuncionario);
+        set("mTot", dvDisabled ? "â€”" : funcionariosAtivos.length);
+        const cnhWarn = funcionariosAtivos.filter((r) => {
+          const cnhDate = r[F.fun.cnh] ? new Date(r[F.fun.cnh]).getTime() : NaN;
+          if (!Number.isFinite(cnhDate)) return false;
+          return (cnhDate - Date.now()) / (1000 * 60 * 60 * 24) <= 90;
         });
         set("mCnh", dvDisabled ? "â€”" : cnhWarn.length);
         set("mSrv", dvDisabled ? "â€”" : rv.length);
@@ -3349,51 +8429,8 @@ const monthsLabelsAll = [
           if (r._mot !== "Sem motorista") motMap.set(r._motKey || r._mot, r._mot);
         });
         const mots = [...motMap.entries()].map(([key, label]) => ({ key, label }));
-        const monthsLabelsAll = [
-          "Jan",
-          "Fev",
-          "Mar",
-          "Abr",
-          "Mai",
-          "Jun",
-          "Jul",
-          "Ago",
-          "Set",
-          "Out",
-          "Nov",
-          "Dez",
-        ];
-        const motLabels = mks.length > 0
-          ? mls.map(label => label.split(" ")[0].charAt(0).toUpperCase() + label.split(" ")[0].slice(1))
-          : monthsLabelsAll;
-        const motDatasets =
-          mots.length > 0
-            ? mots.map((m, i) => ({
-                label: trunc(m.label, 16),
-                data: (mks.length > 0 ? mks : monthsLabelsAll).map((k, idx) =>
-                  mks.length > 0
-                    ? (byM[k] || []).filter((r) => (r._motKey || r._mot) === m.key).length
-                    : null,
-                ),
-                backgroundColor: PAL[i % PAL.length],
-                stack: "m",
-              }))
-            : [] || [
-                {
-                  label: "Dados mÃ©dios",
-                  data: monthsLabelsAll.map((m, i) =>
-                    Math.round((yearDataMap[currentYear]?.[i] || 0) / 50000),
-                  ),
-                  backgroundColor: "#2159d2",
-                  stack: "m",
-                },
-              ];
-        mkChart("cMotMes", {
-          type: "bar",
-          data: { labels: motLabels, datasets: motDatasets },
-          options: opts0({ legendRight: true }),
-        });
-        const motRows = DB.funcionarios
+
+        const motRows = funcionariosAtivos
           .map((f) => {
             const funcId = String(f.cr40f_funcionariosid || "").toLowerCase();
             const apelido = f[F.fun.apelido] || "";
@@ -3403,22 +8440,25 @@ const monthsLabelsAll = [
             );
             return {
               nome,
-              funcao: f[F.fun.funcao] || "â€”",
+              funcao: fv(f, F.fun.funcao) || "â€”",
               qtd: srvs.length,
               fat: sumV(srvs),
               ticket: getTicketStats(srvs).ticket,
               cnh: f[F.fun.cnh],
+              months: Math.max(1, mks.length),
             };
           })
           .sort((a, b) => b.qtd - a.qtd);
         tblCache.tbMot = motRows;
         set(
           "metaMot",
-          dvDisabled ? "â€”" : `${DB.funcionarios.length} motoristas`,
+          dvDisabled ? "â€”" : `${funcionariosAtivos.length} motoristas ativos`,
         );
         renderMotTable(motRows, fat);
+        renderMarkpointModule();
       }
       function renderManutencoes(dvDisabled, custoTotal, manByM, manMks, yearDataMap) {
+        const monthsLabelsAll = getDashboardMonthLabels();
         const mans = dvDisabled ? [] : VW.manutencoes;
         const manFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
@@ -3470,8 +8510,7 @@ const monthsLabelsAll = [
           mans.length,
           { label: "Tipo", countLabel: "Registros", valueLabel: "Custo", moneyValue: true, participationByValue: true },
         );
-        set("metaMan", dvDisabled ? "â€”" : `${mans.length} registros`);
-        document.getElementById("tbMan").innerHTML =
+        if (false) document.getElementById("tbMan").innerHTML =
           mans
             .slice(0, 300)
             .map(
@@ -3484,11 +8523,7 @@ const monthsLabelsAll = [
         const muls = dvDisabled ? [] : VW.multas;
         const mulFv = (r, f) =>
           r[`${f}@OData.Community.Display.V1.FormattedValue`] ?? r[f];
-        const mulPen = muls.filter(
-          (r) =>
-            stL(String(mulFv(r, F.mul.status) || "")).includes("pend") ||
-            stL(String(mulFv(r, F.mul.status) || "")).includes("indicad"),
-        );
+        const mulPen = muls.filter(isMultaPendente);
         const mulRes = muls.filter(
           (r) =>
             stL(String(mulFv(r, F.mul.status) || "")).includes("pago") ||
@@ -3499,7 +8534,13 @@ const monthsLabelsAll = [
         set("mulPen", dvDisabled ? "â€”" : mulPen.length);
         set("mulRes", dvDisabled ? "â€”" : mulRes.length);
         const byMulSt = grp(muls, (r) => String(mulFv(r, F.mul.status) || "â€”"));
-        const multaTipo = (r) => String(lookupValue(r, F.mul.tipo) || "Sem tipo");
+        const multaTipo = (r) => {
+          const id = String(r[`_${F.mul.tipo}_value`] || "").toLowerCase();
+          const expanded = r[F.mul.tipo] || r.cr40f_Codigodainfracao;
+          const codigo = String(expanded?.[F.inf.codigo] || lookupValue(r, F.mul.tipo) || "").trim();
+          const descricao = String(expanded?.[F.inf.descricao] || "").trim();
+          return infracaoMapGlobal.get(id) || [codigo, descricao].filter(Boolean).join(" - ") || "Sem tipo";
+        };
         const byMulTipo = grp(muls, multaTipo);
         const byMulMot = grp(muls, (r) => {
           const motId = r[`_${F.mul.mot}_value`];
@@ -3512,14 +8553,14 @@ const monthsLabelsAll = [
         const msK = Object.keys(byMulSt)
           .filter((k) => k !== "__null__")
           .sort((a, b) => byMulSt[b].length - byMulSt[a].length);
-        const mmK = Object.keys(byMulMot)
+        const mmKRanked = Object.keys(byMulMot)
           .filter((k) => k !== "__null__")
-          .sort((a, b) => byMulMot[b].length - byMulMot[a].length)
-          .slice(0, 10);
-        const mtK = Object.keys(byMulTipo)
+          .sort((a, b) => byMulMot[b].length - byMulMot[a].length);
+        const mmK = topByShare(mmKRanked, muls.length, (k) => byMulMot[k].length);
+        const mtKRanked = Object.keys(byMulTipo)
           .filter((k) => k !== "__null__")
-          .sort((a, b) => byMulTipo[b].length - byMulTipo[a].length)
-          .slice(0, 10);
+          .sort((a, b) => byMulTipo[b].length - byMulTipo[a].length);
+        const mtK = topByShare(mtKRanked, muls.length, (k) => byMulTipo[k].length);
         renderDistributionTable(
           "tblMulStatus",
           msK.map((k) => ({ label: k, qtd: byMulSt[k].length })),
@@ -3537,7 +8578,7 @@ const monthsLabelsAll = [
           "tblMulTipo",
           mtK.map((k) => ({ label: k, qtd: byMulTipo[k].length })),
           muls.length,
-          { label: "Tipo", countLabel: "Multas" },
+          { label: "Tipo", countLabel: "Multas", labelMax: 80 },
         );
         set("metaMul", dvDisabled ? "â€”" : `${muls.length} registros`);
         document.getElementById("tbMul").innerHTML =
@@ -3551,7 +8592,7 @@ const monthsLabelsAll = [
                 ] || "â€”";
               const motDisplay =
                 funcMapGlobal.get(String(motId)?.toLowerCase()) || motName;
-              return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "â€”"}</td><td>${trunc(multaTipo(r), 28)}</td><td>${badge(String(mulFv(r, F.mul.status) || "â€”"))}</td></tr>`;
+                return `<tr><td class="dim">${fmtDt(r[F.mul.data])}</td><td>${motDisplay}</td><td class="em">${r[`_${F.mul.placa}_value@OData.Community.Display.V1.FormattedValue`] || "â€”"}</td><td>${trunc(multaTipo(r), 80)}</td><td>${badge(String(mulFv(r, F.mul.status) || "â€”"))}</td></tr>`;
             })
             .join("") || emptyRow(5);
       }
@@ -3757,12 +8798,28 @@ const monthsLabelsAll = [
         const el = document.getElementById(id);
         if (!el) return;
         if (charts[id]) charts[id].destroy();
+        const registeredChart = window.Chart?.getChart?.(el);
+        if (registeredChart) registeredChart.destroy();
+        charts[id] = null;
+        if (!el.parentElement?.classList.contains("chart-fill")) {
+          const wrap = document.createElement("div");
+          wrap.className = "chart-fill";
+          el.parentElement?.insertBefore(wrap, el);
+          wrap.appendChild(el);
+        }
         const mobileHeight = Number(el.dataset.mobileHeight || 0);
         if (mobileHeight && window.matchMedia("(max-width: 540px)").matches) {
           el.height = mobileHeight;
         }
         setChartEmptyState(el, !chartHasData(cfg?.data?.datasets || []));
-        charts[id] = new Chart(el, cfg);
+        charts[id] = createDashboardChart(el, {
+          ...cfg,
+          options: {
+            ...(cfg.options || {}),
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        });
       }
       function chartHasData(datasets) {
         return datasets.some((ds) =>
@@ -3789,7 +8846,7 @@ const monthsLabelsAll = [
         if (!el) return;
         if (charts[id]) charts[id].destroy();
         setChartEmptyState(el, !data.some((v) => v !== null && v !== undefined && Number(v) !== 0));
-        charts[id] = new Chart(el, {
+        charts[id] = createDashboardChart(el, {
           type: "line",
           data: {
             labels,
@@ -3825,6 +8882,306 @@ const monthsLabelsAll = [
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // TABLE RENDERERS
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      function renderPassengerRanking(rows) {
+        const normalizeId = (value) => String(value || "").replace(/[{}]/g, "").toLowerCase();
+        const meaningfulRankingValue = (value) => {
+          const label = String(value || "").trim();
+          const normalized = normL(label);
+          return Boolean(label) && normalized !== "-" && normalized !== "â€”" && !normalized.startsWith("sem ") && !normalized.includes("nao informado");
+        };
+        const serviceMap = new Map(rows.map((row) => [normalizeId(row[F.res.id]), row]));
+        const clientMap = new Map((DB.clientes || []).map((client) => [normalizeId(client[F.cliente.id]), client]));
+        const passengerMap = new Map((DB.passageiros || []).map((passenger) => [normalizeId(passenger[F.passageiro.id]), passenger]));
+        const paymentDaysByOp = new Map();
+        (DB.pagantes || []).filter(isReceivedPayment).forEach((payment) => {
+          const opId = normalizeId(paymentOp(payment));
+          const createdAt = new Date(payment.createdon || "").getTime();
+          const paidAt = new Date(payment[F.pag.dataPrimeiroPagamento] || "").getTime();
+          const days = (paidAt - createdAt) / 86400000;
+          if (!opId || !Number.isFinite(days) || days < 0) return;
+          const entries = paymentDaysByOp.get(opId) || [];
+          entries.push(days);
+          paymentDaysByOp.set(opId, entries);
+        });
+        const ranking = new Map();
+        (DB.servicosPassageiro || []).forEach((link) => {
+          const service = serviceMap.get(normalizeId(link._cr40f_geral_value));
+          const passengerId = normalizeId(link._cr40f_bancodedados_value);
+          const passenger = passengerMap.get(passengerId);
+          if (!service || !passenger) return;
+          const client = clientMap.get(normalizeId(passenger[F.passageiro.cliente]));
+          const item = ranking.get(passengerId) || {
+            name: passenger[F.passageiro.nome] || "Passageiro sem nome",
+            birthday: passenger[F.passageiro.nascimento] || "",
+            client: client?.[F.cliente.nome] || "Cliente nÃ£o informado",
+            count: 0,
+            total: 0,
+            latest: 0,
+            serviceTypes: new Map(),
+            vehicleTypes: new Map(),
+            drivers: new Map(),
+            paymentOps: new Set(),
+          };
+          const serviceType = String(service._tipoL || "N&atilde;o informado").trim() || "N&atilde;o informado";
+          const vehicleType = String(service._veiL || "N&atilde;o informado").trim() || "N&atilde;o informado";
+          const driver = String(service._mot || "N&atilde;o informado").trim() || "N&atilde;o informado";
+          item.count += 1;
+          item.total += service._valor || 0;
+          const paymentOpId = normalizeId(service._opId);
+          if (paymentOpId) item.paymentOps.add(paymentOpId);
+          if (isProducedReservation(service)) {
+            item.latest = Math.max(item.latest, service._ts || 0);
+          }
+          if (meaningfulRankingValue(serviceType)) {
+            item.serviceTypes.set(serviceType, (item.serviceTypes.get(serviceType) || 0) + 1);
+          }
+          if (meaningfulRankingValue(vehicleType)) {
+            item.vehicleTypes.set(vehicleType, (item.vehicleTypes.get(vehicleType) || 0) + 1);
+          }
+          if (meaningfulRankingValue(driver)) {
+            item.drivers.set(driver, (item.drivers.get(driver) || 0) + 1);
+          }
+          ranking.set(passengerId, item);
+        });
+        const totalLinks = [...ranking.values()].reduce((sum, item) => sum + item.count, 0);
+        const totalRankingRevenue = [...ranking.values()].reduce((sum, item) => sum + item.total, 0);
+        const allRanked = [...ranking.values()].map((item) => ({
+          ...item,
+          paymentDays: [...item.paymentOps].reduce((days, opId) => days.concat(paymentDaysByOp.get(opId) || []), []),
+          ticket: item.count ? item.total / item.count : 0,
+          serviceType: [...item.serviceTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
+          vehicleType: [...item.vehicleTypes.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
+          driver: [...item.drivers.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "N&atilde;o informado",
+        })).sort((a, b) => b.count - a.count || b.total - a.total || a.name.localeCompare(b.name));
+        const sortState = srtSt.passengerRanking || { field: "count", asc: false };
+        const numericFields = ["count", "paymentDays", "ticket", "total"];
+        const paymentDaysAverage = (item) => item.paymentDays.length
+          ? item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length
+          : null;
+        const rankingValue = (item, field) => field === "paymentDays"
+          ? paymentDaysAverage(item)
+          : item[field];
+        const compareRanking = (a, b) => {
+          const aValue = rankingValue(a, sortState.field);
+          const bValue = rankingValue(b, sortState.field);
+          if (numericFields.includes(sortState.field)) return sortState.asc ? aValue - bValue : bValue - aValue;
+          return sortState.asc
+            ? String(aValue || "").localeCompare(String(bValue || ""))
+            : String(bValue || "").localeCompare(String(aValue || ""));
+        };
+        allRanked.forEach((item, index) => { item.serviceRank = index + 1; });
+        const ranked = allRanked.slice(0, 50);
+        const isNumericSort = numericFields.includes(sortState.field);
+        const rankingUniverse = sortState.field === "paymentDays"
+          ? allRanked.filter((item) => item.paymentDays.length)
+          : allRanked;
+        const top = (isNumericSort ? rankingUniverse : allRanked.slice(0, 20))
+          .slice()
+          .sort(compareRanking)
+          .slice(0, 20);
+        const rankingTitle = {
+          count: sortState.asc ? "Passageiros que menos viajaram com a Betinhos" : "Passageiros que mais viajaram com a Betinhos",
+          paymentDays: sortState.asc ? "Passageiros com menor tempo de pagamento" : "Passageiros com maior tempo de pagamento",
+          ticket: sortState.asc ? "Passageiros com menor ticket mÃ©dio" : "Passageiros com maior ticket mÃ©dio",
+          total: sortState.asc ? "Passageiros com menor faturamento" : "Passageiros com maior faturamento",
+        }[sortState.field] || "Passageiros que mais viajaram com a Betinhos";
+        const tableTitle = document.getElementById("tbSrv")?.closest(".tc")?.querySelector(".tc-title");
+        if (tableTitle) tableTitle.textContent = rankingTitle;
+        const formatBirthday = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString("pt-BR") : "";
+        const birthdayMarkup = (value) => {
+          const birthday = formatBirthday(value);
+          return birthday ? `<small class="passenger-birthday">${birthday}</small>` : "";
+        };
+        const isBirthdayToday = (value) => {
+          if (!value) return false;
+          const date = new Date(`${String(value).slice(0, 10)}T12:00:00`);
+          const today = new Date();
+          return date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
+        };
+        const birthdayPeople = ranked.filter((item) => isBirthdayToday(item.birthday));
+        const birthdayKey = new Date().toISOString().slice(0, 10);
+        if (birthdayPeople.length && window.__DASHBOARD_BIRTHDAY_TOAST_DATE !== birthdayKey) {
+          const toastArea = document.getElementById("toastArea");
+          if (toastArea) {
+            toastArea.innerHTML = `<div class="toast">Hoje Ã© aniversÃ¡rio de ${birthdayPeople.map((item) => item.name).join(", ")}!<small>Essa pessoa estÃ¡ entre os 50 passageiros que mais viajam com a Betinhos.</small></div>`;
+            window.setTimeout(() => { toastArea.replaceChildren(); }, 9000);
+          }
+          window.__DASHBOARD_BIRTHDAY_TOAST_DATE = birthdayKey;
+        }
+        document.getElementById("tbSrv").innerHTML = top.map((item, index) => `<tr>
+          <td><span class="rn ${index === 0 ? "r1" : index === 1 ? "r2" : index === 2 ? "r3" : ""}">${isNumericSort ? index + 1 : item.serviceRank}</span></td>
+          <td class="em"><div class="passenger-ranking-cell-value">${item.name}</div>${birthdayMarkup(item.birthday)}</td><td class="dim"><span class="passenger-ranking-cell-value">${item.client}</span></td>
+          <td class="r em"><span class="passenger-ranking-cell-value">${item.count.toLocaleString("pt-BR")}</span><span class="passenger-ranking-cell-subvalue">${totalLinks ? ((item.count / totalLinks) * 100).toFixed(1) : "0.0"}%</span></td><td class="r"><span class="passenger-ranking-cell-value">${item.paymentDays.length ? `${(item.paymentDays.reduce((sum, days) => sum + days, 0) / item.paymentDays.length).toFixed(1).replace(".", ",")} d` : "&mdash;"}</span></td>
+          <td class="dim"><span class="passenger-ranking-cell-value">${item.latest ? fmtDt(new Date(item.latest).toISOString()) : "N&atilde;o informado"}</span></td>
+          <td class="dim"><span class="passenger-ranking-cell-value">${item.serviceType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.vehicleType}</span></td><td class="dim"><span class="passenger-ranking-cell-value">${item.driver}</span></td><td class="r"><span class="passenger-ranking-cell-value">${brl(item.ticket)}</span></td><td class="r em"><span class="passenger-ranking-cell-value">${brl(item.total)}</span><span class="passenger-ranking-cell-subvalue">${totalRankingRevenue ? ((item.total / totalRankingRevenue) * 100).toFixed(1) : "0.0"}%</span></td>
+        </tr>`).join("") || emptyRow(11);
+        set("metaSrv", top.length ? `Top ${top.length} de ${rankingUniverse.length} | ${totalLinks.toLocaleString("pt-BR")} vÃ­nculos serviÃ§o-passageiro` : "Nenhum vÃ­nculo serviÃ§o-passageiro no perÃ­odo");
+        const fitColumns = () => fitPassengerRankingColumns();
+        window.requestAnimationFrame ? window.requestAnimationFrame(fitColumns) : fitColumns();
+      }
+
+      function sortPassengerRanking(field, th) {
+        const previous = srtSt.passengerRanking || {};
+        const asc = previous.field === field ? !previous.asc : false;
+        srtSt.passengerRanking = { field, asc };
+        th.closest("thead").querySelectorAll("th").forEach((header) => header.classList.remove("sa", "sd"));
+        th.classList.add(asc ? "sa" : "sd");
+        renderPassengerRanking(tblCache.tbSrv || VW.reservas);
+      }
+
+      const PASSENGER_RANKING_MAX_WIDTHS = [64, 320, 220, 110, 120, 170, 220, 200, 220, 140, 160];
+
+      function fitPassengerRankingColumns() {
+        const rankingTable = document.querySelector(".passenger-ranking-table");
+        const header = rankingTable?.tHead?.rows[0];
+        if (!rankingTable || !header) return;
+        const widths = Array.from(header.cells, () => 0);
+        const context = document.createElement("canvas").getContext("2d");
+        const styles = new Map();
+        rankingTable.querySelectorAll("thead tr, tbody tr").forEach((row) => {
+          const isHeader = row.parentElement === rankingTable.tHead;
+          Array.from(row.cells).forEach((cell, index) => {
+            if (cell.colSpan !== 1 || index >= widths.length) return;
+            const contents = cell.children.length ? Array.from(cell.children) : [cell];
+            const contentWidth = contents.reduce((widest, content) => {
+              const key = `${index}:${content.tagName}`;
+              let style = styles.get(key);
+              if (!style) {
+                const contentStyle = getComputedStyle(content);
+                style = { font: contentStyle.font, letterSpacing: parseFloat(contentStyle.letterSpacing) || 0 };
+                styles.set(key, style);
+              }
+              context.font = style.font;
+              const text = content.textContent.trim();
+              const textWidth = context.measureText(text).width + Math.max(0, text.length - 1) * style.letterSpacing;
+              return Math.max(widest, textWidth);
+            }, 0);
+            const paddingKey = `${index}:padding`;
+            let padding = styles.get(paddingKey);
+            if (padding === undefined) {
+              const cellStyle = getComputedStyle(cell);
+              padding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
+              styles.set(paddingKey, padding);
+            }
+            const width = contentWidth + padding + 4;
+            widths[index] = Math.max(widths[index], Math.ceil(width));
+          });
+        });
+        const manualWidths = (() => {
+          try { return JSON.parse(rankingTable.dataset.passengerRankingWidths || "[]"); }
+          catch { return []; }
+        })();
+        applyPassengerRankingColumnWidths(rankingTable, widths);
+        const overflowWidths = Array.from(widths, () => 0);
+        rankingTable.querySelectorAll("tbody tr").forEach((row) => {
+          Array.from(row.cells).forEach((cell, index) => {
+            if (cell.colSpan !== 1 || index >= widths.length) return;
+            Array.from(cell.children).forEach((content) => {
+              const overflow = content.scrollWidth - content.clientWidth;
+              if (overflow > 0) overflowWidths[index] = Math.max(overflowWidths[index], Math.ceil(overflow) + 1);
+            });
+          });
+        });
+        widths.forEach((width, index) => { widths[index] = width + overflowWidths[index]; });
+        const autoWidths = widths.map((width, index) => Math.min(width, PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity));
+        rankingTable.dataset.passengerRankingAutoWidths = JSON.stringify(autoWidths);
+        applyPassengerRankingColumnWidths(rankingTable, autoWidths.map((width, index) => Math.max(width, Number(manualWidths[index]) || 0)));
+        rankingTable.querySelectorAll("tbody .passenger-ranking-cell-value").forEach((content) => {
+          if (content.scrollWidth > content.clientWidth + 1) content.title = content.textContent.trim();
+          else content.removeAttribute("title");
+        });
+        installPassengerRankingColumnResize(rankingTable);
+        observePassengerRankingWidth(rankingTable);
+      }
+
+      function applyPassengerRankingColumnWidths(rankingTable, widths) {
+        const adjustedWidths = widths.map((width, index) => Math.min(width, PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity));
+        const minimumWidth = Math.ceil(rankingTable.closest(".tc-wrap")?.clientWidth || 0);
+        let missingWidth = minimumWidth - adjustedWidths.reduce((total, width) => total + width, 0);
+        while (missingWidth > 0) {
+          const expandable = adjustedWidths.map((width, index) => width < (PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity) ? index : -1).filter((index) => index >= 0);
+          if (!expandable.length) break;
+          const share = Math.ceil(missingWidth / expandable.length);
+          expandable.forEach((index) => {
+            const addition = Math.min(share, missingWidth, PASSENGER_RANKING_MAX_WIDTHS[index] - adjustedWidths[index]);
+            adjustedWidths[index] += addition;
+            missingWidth -= addition;
+          });
+        }
+        let colgroup = rankingTable.querySelector("colgroup");
+        if (!colgroup) {
+          colgroup = document.createElement("colgroup");
+          rankingTable.prepend(colgroup);
+        }
+        colgroup.replaceChildren(...adjustedWidths.map((width) => {
+          const col = document.createElement("col");
+          col.style.width = `${width}px`;
+          return col;
+        }));
+        const tableWidth = adjustedWidths.reduce((total, width) => total + width, 0);
+        rankingTable.style.width = `${tableWidth}px`;
+        rankingTable.style.minWidth = `${tableWidth}px`;
+        return adjustedWidths;
+      }
+
+      function installPassengerRankingColumnResize(rankingTable) {
+        if (rankingTable.dataset.passengerRankingResizable === "1") return;
+        const headers = Array.from(rankingTable.tHead?.rows[0]?.cells || []);
+        headers.forEach((header, index) => {
+          if (index === headers.length - 1) return;
+          const resizer = document.createElement("span");
+          resizer.className = "passenger-ranking-resizer";
+          resizer.setAttribute("aria-hidden", "true");
+          resizer.addEventListener("click", (event) => event.stopPropagation());
+          resizer.addEventListener("pointerdown", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const colgroup = rankingTable.querySelector("colgroup");
+            let widths = Array.from(colgroup?.children || [], (column) => column.getBoundingClientRect().width);
+            const baseWidths = [...widths];
+            const autoWidths = (() => {
+              try { return JSON.parse(rankingTable.dataset.passengerRankingAutoWidths || "[]"); }
+              catch { return []; }
+            })();
+            const minimumWidth = Math.ceil(rankingTable.closest(".tc-wrap")?.clientWidth || 0);
+            const startX = event.clientX;
+            const startWidth = baseWidths[index];
+            const resize = (moveEvent) => {
+              const resizedWidths = [...baseWidths];
+              const maximumWidth = PASSENGER_RANKING_MAX_WIDTHS[index] || Infinity;
+              resizedWidths[index] = Math.min(maximumWidth, Math.max(Math.min(autoWidths[index] || 64, maximumWidth), Math.round(startWidth + moveEvent.clientX - startX)));
+              const missingWidth = minimumWidth - resizedWidths.reduce((total, width) => total + width, 0);
+              if (missingWidth > 0) resizedWidths[index + 1] += missingWidth;
+              widths = applyPassengerRankingColumnWidths(rankingTable, resizedWidths);
+            };
+            const stopResize = () => {
+              rankingTable.dataset.passengerRankingWidths = JSON.stringify(widths);
+              document.removeEventListener("pointermove", resize);
+              document.removeEventListener("pointerup", stopResize);
+            };
+            document.addEventListener("pointermove", resize);
+            document.addEventListener("pointerup", stopResize, { once: true });
+          });
+          header.append(resizer);
+        });
+        rankingTable.dataset.passengerRankingResizable = "1";
+      }
+
+      function observePassengerRankingWidth(rankingTable) {
+        if (rankingTable.dataset.passengerRankingObserved === "1" || !window.ResizeObserver) return;
+        const wrapper = rankingTable.closest(".tc-wrap");
+        if (!wrapper) return;
+        let previousWidth = wrapper.clientWidth;
+        const observer = new ResizeObserver(() => {
+          const currentWidth = wrapper.clientWidth;
+          if (currentWidth === previousWidth) return;
+          previousWidth = currentWidth;
+          window.requestAnimationFrame(() => fitPassengerRankingColumns());
+        });
+        observer.observe(wrapper);
+        rankingTable.dataset.passengerRankingObserved = "1";
+      }
+
       function renderSrvTable(rows) {
         document.getElementById("tbSrv").innerHTML =
           rows
@@ -3861,31 +9218,33 @@ const monthsLabelsAll = [
             .map(
               (r) => `<tr>
     <td class="em">${r.placa}</td><td>${r.marca}</td><td>${r.modelo}</td><td class="dim">${r.ano}</td>
-    <td class="c">${r.blindado === true || r.blindado === "true" || r.blindado === 1 ? "ðŸ›¡ï¸ Sim" : "â€”"}</td><td>${badge(r.status)}</td>
+    <td class="c">${r.blindado === true || r.blindado === "true" || r.blindado === 1 ? '<svg class="table-status-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6l-7-3Z"></path><path d="m9 12 2 2 4-4"></path></svg>Sim' : "â€”"}</td><td>${badge(r.status)}</td>
   </tr>`,
             )
             .join("") || emptyRow(6);
       }
       function renderMotTable(rows, totalFat) {
-        const hoje = new Date();
         document.getElementById("tbMot").innerHTML =
           rows
             .map((r, i) => {
-              let cnhCls = "dim",
-                cnhTxt = "â€”";
-              if (r.cnh) {
-                const d = new Date(r.cnh);
-                const diff = (d - hoje) / (1000 * 60 * 60 * 24);
-                cnhTxt = fmtD(r.cnh);
-                if (diff < 0) cnhCls = 'em" style="color:var(--red)';
-                else if (diff < 90) cnhCls = 'em" style="color:var(--yellow)';
-              }
-              const part = totalFat ? (r.fat / totalFat) * 100 : 0;
+              const cnhDate = r.cnh ? new Date(r.cnh).getTime() : NaN;
+              const cnhDiff = Number.isFinite(cnhDate)
+                ? (cnhDate - Date.now()) / (1000 * 60 * 60 * 24)
+                : NaN;
+              const cnhCls = !Number.isFinite(cnhDate)
+                ? "dim"
+                : cnhDiff < 0
+                  ? "em cnh-expired"
+                  : cnhDiff <= 90
+                    ? "em cnh-warning"
+                    : "dim";
+              const cnhTxt = Number.isFinite(cnhDate) ? fmtD(r.cnh) : "NÃ£o informado";
+              const jornada = markpointDriverMetrics.get(markpointNormalizeName(r.nome)) || { totalWorked: 0, totalRest: 0 };
               return `<tr>
       <td><span class="rn ${i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : ""}">${i + 1}</span></td>
-      <td class="em">${r.nome}</td><td class="dim">${r.funcao}</td><td class="r">${r.qtd.toLocaleString("pt-BR")}</td>
-      <td class="r em">${brl(r.fat)}</td><td class="r dim">${brl(r.ticket)}</td><td class="${cnhCls}">${cnhTxt}</td>
-      <td>${progressCell(part, brlS(r.fat), "var(--blue)")}</td>
+      <td class="em">${r.nome}</td><td class="r">${metricSplit(r.qtd.toLocaleString("pt-BR"), `${(r.qtd / r.months).toFixed(1)}/mÃªs`, "r")}</td>
+      <td class="r em">${metricSplit(brl(r.fat), brlS(r.fat / r.months), "r")}</td><td class="r dim">${brl(r.ticket)}</td><td class="${cnhCls}">${cnhTxt}</td>
+      <td class="r">${metricSplit(markpointFmtMinutes(jornada.totalWorked), markpointFmtMinutes(jornada.totalWorked / r.months), "r")}</td><td class="r">${metricSplit(markpointFmtMinutes(jornada.totalRest), markpointFmtMinutes(jornada.totalRest / r.months), "r")}</td>
     </tr>`;
             })
             .join("") || emptyRow(8);
@@ -3949,6 +9308,13 @@ const monthsLabelsAll = [
           let r = [...(tblCache.tbFrota || [])];
           r.sort((a, b) => sortFn(a, b, field));
           renderFrotaTable(r);
+        }
+        if (tbId === "tbDespesas") {
+          const rows = [
+            ...(tblCache.tbDespesasView || tblCache.tbDespesasBase || []),
+          ];
+          rows.sort((a, b) => sortFn(a, b, field));
+          renderExpenseTable(rows);
         }
       }
       function srchReg(q) {
@@ -4054,7 +9420,126 @@ const monthsLabelsAll = [
         trigger?.setAttribute("aria-expanded", String(open));
       }
 
-      function nav(id, el) {
+      const TV_NAV_LABELS = {
+        resumo: "Resumo",
+        servicos: "ServiÃ§os",
+        faturamento: "Faturamento",
+        pagantes: "Pagamentos",
+        despesas: "Despesas",
+        frota: "Frota",
+        motoristas: "Motoristas",
+        manutencoes: "ManutenÃ§Ãµes",
+        multas: "Multas",
+        trocas: "Trocas",
+        marketing: "Marketing",
+        tvdiagnostico: "Controle da TV",
+      };
+
+      const TAB_QUERY_ALIASES = {
+        resumo: "resumo",
+        servicos: "servicos",
+        financeiro: "faturamento",
+        faturamento: "faturamento",
+        pagantes: "pagantes",
+        despesas: "despesas",
+        gastos: "despesas",
+        frota: "frota",
+        motoristas: "motoristas",
+        manutencoes: "manutencoes",
+        multas: "multas",
+        trocas: "trocas",
+        marketing: "marketing",
+        tvdiagnostico: "tvdiagnostico",
+      };
+
+      function getTabFromUrl() {
+        const value = new URLSearchParams(window.location.search).get("tab");
+        return TAB_QUERY_ALIASES[String(value || "").toLowerCase()] || "resumo";
+      }
+
+      function updateTabUrl(tabId) {
+        if (!window.history?.replaceState) return;
+        const publicTab = tabId === "faturamento" ? "financeiro" : tabId;
+        const url = new URL(window.location.href);
+        url.searchParams.set("tab", publicTab);
+        window.history.replaceState({ ...window.history.state, tab: publicTab }, "", url);
+      }
+
+      function updateTvCurrentMenu(id) {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        const label = document.getElementById("tvCurrentMenuLabel");
+        const icon = document.getElementById("tvCurrentMenuIcon");
+        const sourceIcon = document.querySelector(
+          `.sidebar .sb-item[data-nav="${id}"] .sb-icon`,
+        );
+        if (label) label.textContent = TV_NAV_LABELS[id] || id;
+        if (icon && sourceIcon) icon.innerHTML = sourceIcon.innerHTML;
+      }
+
+      let tvViewportLayoutFrame = 0;
+      let tvViewportResizeTimer = 0;
+      function markTvTableLimits() {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        const detailedLimit = window.innerWidth <= 1600 ? "3" : "5";
+        document.querySelectorAll(".metric-table-wrap").forEach((wrap) => {
+          wrap.dataset.tvLimit = "3";
+        });
+        document.querySelectorAll(".tc-wrap").forEach((wrap) => {
+          wrap.dataset.tvLimit = detailedLimit;
+        });
+        ["tblFrotaUso"].forEach((id) => {
+          const tableBody = document.getElementById(id);
+          const wrap = tableBody?.closest(".tc-wrap, .metric-table-wrap");
+          if (wrap) wrap.dataset.tvLimit = "3";
+        });
+        document.querySelectorAll("[data-tv-limit]").forEach((wrap) => {
+          const card = wrap.closest(".cc, .tc");
+          const header = card?.querySelector(".cc-hdr, .cc-hdr2, .tc-bar");
+          if (!header) return;
+          let note = header.querySelector(".tv-limit-note");
+          if (!note) {
+            note = document.createElement("span");
+            note.className = "tv-limit-note";
+            header.appendChild(note);
+          }
+          note.textContent = `TOP ${wrap.dataset.tvLimit} NA TV`;
+        });
+      }
+      function resizeActiveTvCharts() {
+        if (!window.__DASHBOARD_TV_MODE || typeof charts !== "object") return;
+        Object.keys(charts).forEach((key) => {
+          const chart = charts[key];
+          if (!chart?.canvas?.closest(".page.on")) return;
+          if (typeof chart.resize === "function") chart.resize();
+        });
+      }
+      function applyTvViewportLayout() {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        window.cancelAnimationFrame(tvViewportLayoutFrame);
+        tvViewportLayoutFrame = window.requestAnimationFrame(() => {
+          const root = document.documentElement;
+          const activePage = document.querySelector(".page.on");
+          root.style.setProperty("--tv-viewport-height", `${window.innerHeight}px`);
+          markTvTableLimits();
+          if (!activePage) return;
+          const pageTop = Math.max(0, Math.ceil(activePage.getBoundingClientRect().top));
+          const pageHeight = Math.max(160, Math.floor(window.innerHeight - pageTop - 14));
+          root.style.setProperty("--tv-page-height", `${pageHeight}px`);
+          window.requestAnimationFrame(resizeActiveTvCharts);
+        });
+      }
+      function installTvViewportLayout() {
+        if (!window.__DASHBOARD_TV_MODE || window.__DASHBOARD_TV_VIEWPORT_INSTALLED) return;
+        window.__DASHBOARD_TV_VIEWPORT_INSTALLED = true;
+        window.addEventListener("resize", () => {
+          window.clearTimeout(tvViewportResizeTimer);
+          tvViewportResizeTimer = window.setTimeout(applyTvViewportLayout, 100);
+        });
+        applyTvViewportLayout();
+      }
+
+      function nav(id, el, options = {}) {
+        if (window.__DASHBOARD_TV_MODE) clearTvMagneticTarget();
         document
           .querySelectorAll(".sb-item, .mobile-nav-item, .mobile-more-item")
           .forEach((n) => n.classList.remove("act"));
@@ -4077,9 +9562,516 @@ const monthsLabelsAll = [
             "act",
             !["resumo", "servicos", "faturamento", "frota"].includes(id),
           );
-        document.getElementById("page-" + id).classList.add("on");
-        document.querySelector(".content")?.scrollTo({ top: 0, behavior: "auto" });
+        const nextPage = document.getElementById("page-" + id);
+        nextPage.classList.add("on");
+        document.getElementById("markpointHeaderUpload")?.toggleAttribute("hidden", id !== "motoristas");
+        updateTvCurrentMenu(id);
+        if (window.__DASHBOARD_TV_MODE && options.automatic === true) {
+          nextPage.classList.remove("tv-auto-page-enter");
+          void nextPage.offsetWidth;
+          nextPage.classList.add("tv-auto-page-enter");
+          window.setTimeout(() => nextPage.classList.remove("tv-auto-page-enter"), 320);
+        }
+        document.body.classList.toggle("tv-diagnostic-active", id === "tvdiagnostico");
+        document.documentElement.classList.toggle("tv-cursor-visible", id === "tvdiagnostico");
+        const content = document.querySelector(".content");
+        if (content) {
+          if (typeof content.scrollTo === "function") content.scrollTo({ top: 0, behavior: "auto" });
+          else content.scrollTop = 0;
+        }
+        applyTvViewportLayout();
+        if (window.__DASHBOARD_TV_MODE && id !== "tvdiagnostico") {
+          window.requestAnimationFrame(ensureTvDirectionalTarget);
+        }
         toggleMobileMore(false);
+        if (options.fromUrl !== true) updateTabUrl(id);
+        void ensureTabData(id).catch((error) => {
+          reportDashboardError(error, { source: "dashboard", action: "load-tab", phase: id });
+          showAlert("err", `<strong>Erro ao carregar ${TV_NAV_LABELS[id] || id}:</strong> ${error.message}`);
+        });
+      }
+      const TV_NAV_IDS = [
+        "resumo", "servicos", "faturamento", "pagantes", "despesas", "frota",
+        "motoristas", "manutencoes", "multas", "trocas", "marketing", "tvdiagnostico",
+      ];
+      const TV_ROTATION_IDS = [
+        "resumo", "servicos", "faturamento", "pagantes", "despesas", "frota",
+        "motoristas", "manutencoes", "multas", "trocas", "marketing",
+      ];
+      const TV_NUMERIC_NAV = {
+        "1": "resumo",
+        "2": "servicos",
+        "3": "faturamento",
+        "4": "pagantes",
+        "5": "frota",
+        "6": "motoristas",
+        "7": "manutencoes",
+        "8": "multas",
+        "9": "trocas",
+        "0": "marketing",
+      };
+      const tvNavigationKeyDownAt = {};
+      const TV_DIRECTIONAL_MOVE_THRESHOLD = 4;
+      const TV_DIRECTIONAL_IDLE_MS = 120;
+      const TV_DIRECTIONAL_REPEAT_MS = 80;
+      const TV_DIRECTIONAL_AXIS_DOMINANCE = 1.15;
+      const TV_DIRECTIONAL_PERPENDICULAR_WEIGHT = 4;
+      const TV_DIRECTIONAL_PRESS_MS = 110;
+      const TV_POINTER_DUPLICATE_EVENT_MS = 24;
+      const TV_MAGNETIC_TARGET_SELECTOR = "button:not(.tv-nav-edge):not([disabled]), a[href], .ms-btn, .sb-item, .kpi, .cc, .tc, .exec-alert, [role='button'], [tabindex]:not([tabindex='-1']):not(input):not(select):not(textarea)";
+      let tvPointerLastX = null;
+      let tvPointerLastY = null;
+      let tvPointerAccumX = 0;
+      let tvPointerAccumY = 0;
+      let tvPointerIdleTimer = 0;
+      let tvPointerUnlockTimer = 0;
+      let tvPointerDirectionLocked = false;
+      let tvPointerLastEventType = "";
+      let tvPointerLastEventX = null;
+      let tvPointerLastEventY = null;
+      let tvPointerLastEventAt = 0;
+      let tvMagneticTarget = null;
+      let tvMagneticFocusOwned = false;
+      let tvMagneticClickForwarding = false;
+      let tvMagneticClickPending = false;
+      function clearTvMagneticTarget() {
+        if (!tvMagneticTarget) return;
+        const previousTarget = tvMagneticTarget;
+        tvMagneticTarget.classList.remove(
+          "tv-cursor-magnet", "tv-control-pressed",
+          "tv-direction-blocked-left", "tv-direction-blocked-right",
+          "tv-direction-blocked-up", "tv-direction-blocked-down",
+        );
+        tvMagneticTarget = null;
+        if (tvMagneticFocusOwned && document.activeElement === previousTarget) previousTarget.blur();
+        tvMagneticFocusOwned = false;
+      }
+      function isTvMagneticTargetVisible(target) {
+        if (!target || !target.isConnected || target.disabled || target.getAttribute("aria-hidden") === "true") return false;
+        const page = target.closest(".page");
+        if (page && !page.classList.contains("on")) return false;
+        const sidebar = target.closest(".sidebar");
+        if (sidebar && !document.documentElement.classList.contains("tv-sidebar-revealed")) return false;
+        const openDialog = document.querySelector("dialog[open]");
+        if (openDialog && !openDialog.contains(target)) return false;
+        const style = window.getComputedStyle(target);
+        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
+        const rect = target.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && rect.right >= 0 && rect.bottom >= 0
+          && rect.left <= window.innerWidth && rect.top <= window.innerHeight;
+      }
+      function getTvMagneticTargets() {
+        return Array.from(document.querySelectorAll(TV_MAGNETIC_TARGET_SELECTOR)).filter(isTvMagneticTargetVisible);
+      }
+      function setTvMagneticTarget(target) {
+        if (!target || !isTvMagneticTargetVisible(target) || target === tvMagneticTarget) return Boolean(target);
+        clearTvMagneticTarget();
+        tvMagneticTarget = target;
+        if (!target.matches("button, a[href], input, select, textarea, [tabindex]")) {
+          target.setAttribute("tabindex", "-1");
+          target.setAttribute("role", "button");
+        }
+        tvMagneticTarget.classList.add("tv-cursor-magnet");
+        const scrollX = window.pageXOffset;
+        const scrollY = window.pageYOffset;
+        tvMagneticTarget.focus();
+        tvMagneticFocusOwned = document.activeElement === tvMagneticTarget;
+        if (window.pageXOffset !== scrollX || window.pageYOffset !== scrollY) window.scrollTo(scrollX, scrollY);
+        return true;
+      }
+      function ensureTvDirectionalTarget() {
+        if (!window.__DASHBOARD_TV_MODE || document.body.classList.contains("tv-diagnostic-active")) {
+          clearTvMagneticTarget();
+          return null;
+        }
+        if (isTvMagneticTargetVisible(tvMagneticTarget)) return tvMagneticTarget;
+        const targets = getTvMagneticTargets();
+        const preferred = targets.find((target) => target.id === "filterToggle")
+          || targets.find((target) => target.closest(".page.on"))
+          || targets[0];
+        setTvMagneticTarget(preferred);
+        return tvMagneticTarget;
+      }
+      function tvDirectionalMetrics(originRect, targetRect, direction) {
+        const originCenter = { x: originRect.left + originRect.width / 2, y: originRect.top + originRect.height / 2 };
+        const targetCenter = { x: targetRect.left + targetRect.width / 2, y: targetRect.top + targetRect.height / 2 };
+        const dx = targetCenter.x - originCenter.x;
+        const dy = targetCenter.y - originCenter.y;
+        const horizontal = direction === "right" || direction === "left";
+        const primary = direction === "right" ? dx : direction === "left" ? -dx : direction === "down" ? dy : -dy;
+        const overlap = horizontal
+          ? Math.max(0, Math.min(originRect.bottom, targetRect.bottom) - Math.max(originRect.top, targetRect.top))
+          : Math.max(0, Math.min(originRect.right, targetRect.right) - Math.max(originRect.left, targetRect.left));
+        const minimumSize = horizontal
+          ? Math.min(originRect.height, targetRect.height)
+          : Math.min(originRect.width, targetRect.width);
+        const perpendicularGap = horizontal
+          ? Math.max(0, originRect.top - targetRect.bottom, targetRect.top - originRect.bottom)
+          : Math.max(0, originRect.left - targetRect.right, targetRect.left - originRect.right);
+        return {
+          primary,
+          aligned: overlap >= minimumSize * 0.25,
+          score: primary + perpendicularGap * TV_DIRECTIONAL_PERPENDICULAR_WEIGHT,
+        };
+      }
+      function showTvDirectionalBoundary(target, direction) {
+        if (!target) return;
+        const className = `tv-direction-blocked-${direction}`;
+        target.classList.remove(className);
+        void target.offsetWidth;
+        target.classList.add(className);
+        window.setTimeout(() => target.classList.remove(className), 150);
+      }
+      function moveTvDirectionalTarget(direction) {
+        const current = ensureTvDirectionalTarget();
+        if (!current) return false;
+        const originRect = current.getBoundingClientRect();
+        const candidates = [];
+        getTvMagneticTargets().forEach((target) => {
+          if (target === current) return;
+          const metrics = tvDirectionalMetrics(originRect, target.getBoundingClientRect(), direction);
+          if (metrics.primary <= 6) return;
+          candidates.push({ target, ...metrics });
+        });
+        const alignedCandidates = candidates.filter((candidate) => candidate.aligned);
+        const pool = alignedCandidates.length ? alignedCandidates : candidates;
+        pool.sort((a, b) => a.score - b.score);
+        if (!pool.length) {
+          showTvDirectionalBoundary(current, direction);
+          return false;
+        }
+        return setTvMagneticTarget(pool[0].target);
+      }
+      function activateTvDirectionalTarget() {
+        const target = ensureTvDirectionalTarget();
+        if (!target || tvMagneticClickPending) return false;
+        tvMagneticClickPending = true;
+        target.classList.add("tv-control-pressed");
+        window.requestAnimationFrame(() => {
+          tvMagneticClickForwarding = true;
+          try {
+            target.click();
+          } finally {
+            tvMagneticClickForwarding = false;
+          }
+          window.setTimeout(() => {
+            target.classList.remove("tv-control-pressed");
+            tvMagneticClickPending = false;
+            ensureTvDirectionalTarget();
+          }, TV_DIRECTIONAL_PRESS_MS);
+        });
+        return true;
+      }
+      function handleTvMagneticClick(event) {
+        if (!window.__DASHBOARD_TV_MODE || tvMagneticClickForwarding || event.defaultPrevented || event.detail === 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (tvMagneticClickPending) return;
+        activateTvDirectionalTarget();
+      }
+      function navigateTv(direction) {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        const active = document.querySelector(".sidebar .sb-item.act");
+        const currentId = active?.dataset.nav || "resumo";
+        const currentIndex = Math.max(0, TV_NAV_IDS.indexOf(currentId));
+        const nextIndex = (currentIndex + direction + TV_NAV_IDS.length) % TV_NAV_IDS.length;
+        const nextId = TV_NAV_IDS[nextIndex];
+        const nextItem = document.querySelector(`.sidebar .sb-item[data-nav="${nextId}"]`);
+        nav(nextId, nextItem);
+      }
+      function navigateTvTo(id) {
+        if (!window.__DASHBOARD_TV_MODE || !id) return;
+        const item = document.querySelector(`.sidebar .sb-item[data-nav="${id}"]`);
+        nav(id, item);
+      }
+      function rotateTvPage() {
+        if (!window.__DASHBOARD_TV_MODE || document.body.classList.contains("tv-diagnostic-active")) return;
+        const active = document.querySelector(".sidebar .sb-item.act");
+        const currentId = active?.dataset.nav || "resumo";
+        const currentIndex = Math.max(0, TV_ROTATION_IDS.indexOf(currentId));
+        const nextId = TV_ROTATION_IDS[(currentIndex + 1) % TV_ROTATION_IDS.length];
+        const nextItem = document.querySelector(`.sidebar .sb-item[data-nav="${nextId}"]`);
+        nav(nextId, nextItem, { automatic: true });
+      }
+      function resetTvPointerGesture() {
+        window.clearTimeout(tvPointerIdleTimer);
+        window.clearTimeout(tvPointerUnlockTimer);
+        tvPointerLastX = null;
+        tvPointerLastY = null;
+        releaseTvPointerDirection();
+      }
+      function releaseTvPointerDirection() {
+        tvPointerAccumX = 0;
+        tvPointerAccumY = 0;
+        tvPointerDirectionLocked = false;
+      }
+      function trackTvPointerBaseline(event) {
+        if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
+        tvPointerLastX = Number(event.clientX || 0);
+        tvPointerLastY = Number(event.clientY || 0);
+      }
+      function handleTvPointerNavigation(event) {
+        if (!window.__DASHBOARD_TV_MODE || event.isPrimary === false) return;
+        if (isTvNavigationBlocked(event)) {
+          resetTvPointerGesture();
+          return;
+        }
+        const now = Date.now();
+        const x = Number(event.clientX || 0);
+        const y = Number(event.clientY || 0);
+        const isDuplicate = event.type !== tvPointerLastEventType
+          && x === tvPointerLastEventX
+          && y === tvPointerLastEventY
+          && now - tvPointerLastEventAt <= TV_POINTER_DUPLICATE_EVENT_MS;
+        tvPointerLastEventType = event.type;
+        tvPointerLastEventX = x;
+        tvPointerLastEventY = y;
+        tvPointerLastEventAt = now;
+        if (isDuplicate) return;
+        let deltaX = Number(event.movementX || 0);
+        let deltaY = Number(event.movementY || 0);
+        if (tvPointerLastX !== null) {
+          deltaX = x - tvPointerLastX;
+          deltaY = y - tvPointerLastY;
+        }
+        tvPointerLastX = x;
+        tvPointerLastY = y;
+        ensureTvDirectionalTarget();
+        window.clearTimeout(tvPointerIdleTimer);
+        tvPointerIdleTimer = window.setTimeout(releaseTvPointerDirection, TV_DIRECTIONAL_IDLE_MS);
+        if (tvPointerDirectionLocked) return;
+        tvPointerAccumX += deltaX;
+        tvPointerAccumY += deltaY;
+        const horizontal = Math.abs(tvPointerAccumX);
+        const vertical = Math.abs(tvPointerAccumY);
+        if (Math.max(horizontal, vertical) < TV_DIRECTIONAL_MOVE_THRESHOLD) return;
+        const horizontalMove = horizontal >= vertical * TV_DIRECTIONAL_AXIS_DOMINANCE;
+        const direction = horizontalMove
+          ? (tvPointerAccumX > 0 ? "right" : "left")
+          : (tvPointerAccumY > 0 ? "down" : "up");
+        moveTvDirectionalTarget(direction);
+        tvPointerAccumX = 0;
+        tvPointerAccumY = 0;
+        tvPointerDirectionLocked = true;
+        window.clearTimeout(tvPointerUnlockTimer);
+        tvPointerUnlockTimer = window.setTimeout(releaseTvPointerDirection, TV_DIRECTIONAL_REPEAT_MS);
+      }
+      function isTvNavigationBlocked(event) {
+        const target = event.target;
+        const tagName = String(target?.tagName || "").toLowerCase();
+        if (["input", "select", "textarea"].includes(tagName) || target?.isContentEditable) return true;
+        if (document.body.classList.contains("tv-diagnostic-active")) return true;
+        const errorPanel = document.getElementById("dashboardLoadError");
+        return Boolean(errorPanel && !errorPanel.hidden);
+      }
+      function installTvNavigation() {
+        if (!window.__DASHBOARD_TV_MODE) return;
+        document.documentElement.classList.add("tv-cursor-hidden");
+        document.removeEventListener("mousemove", trackTvPointerBaseline, true);
+        if (window.PointerEvent) document.removeEventListener("pointermove", trackTvPointerBaseline, true);
+        document.addEventListener("keydown", (event) => {
+          if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
+          const key = event.key || ({ 13: "Enter", 37: "ArrowLeft", 38: "ArrowUp", 39: "ArrowRight", 40: "ArrowDown" })[event.keyCode];
+          const directionalKeys = {
+            ArrowLeft: "left",
+            ArrowRight: "right",
+            ArrowUp: "up",
+            ArrowDown: "down",
+          };
+          if (directionalKeys[key]) {
+            event.preventDefault();
+            event.stopPropagation();
+            moveTvDirectionalTarget(directionalKeys[key]);
+            return;
+          }
+          if (key === "Enter" || Number(event.keyCode || 0) === 13) {
+            event.preventDefault();
+            event.stopPropagation();
+            activateTvDirectionalTarget();
+            return;
+          }
+          if (TV_NUMERIC_NAV[key]) {
+            tvNavigationKeyDownAt[key] = Date.now();
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTvTo(TV_NUMERIC_NAV[key]);
+          }
+        }, true);
+        document.addEventListener("keyup", (event) => {
+          if (event.defaultPrevented || isTvNavigationBlocked(event)) return;
+          const key = event.key || String.fromCharCode(event.keyCode || 0);
+          if (TV_NUMERIC_NAV[key]) {
+            const handledAt = tvNavigationKeyDownAt[key] || 0;
+            delete tvNavigationKeyDownAt[key];
+            if (Date.now() - handledAt < 1200) return;
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTvTo(TV_NUMERIC_NAV[key]);
+            return;
+          }
+          if (key === "XF86PlayBack") {
+            event.preventDefault();
+            event.stopPropagation();
+            navigateTv(1);
+          }
+        }, true);
+        document.addEventListener("mousemove", handleTvPointerNavigation, true);
+        document.addEventListener("click", handleTvMagneticClick, true);
+        window.requestAnimationFrame(ensureTvDirectionalTarget);
+        if (window.PointerEvent) {
+          document.addEventListener("pointermove", handleTvPointerNavigation, true);
+        }
+      }
+
+      const TV_DIAGNOSTIC_EVENT_LIMIT = 40;
+      const tvDiagnosticEvents = [];
+      let tvDiagnosticLastMoveAt = 0;
+
+      function isTvDiagnosticOpen() {
+        return Boolean(window.__DASHBOARD_TV_MODE && document.body.classList.contains("tv-diagnostic-active"));
+      }
+
+      function tvDiagnosticEventData(event) {
+        const data = {
+          type: event.type || "unknown",
+          key: event.key || "",
+          code: event.code || "",
+          keyCode: Number(event.keyCode || 0),
+          which: Number(event.which || 0),
+          button: Number(event.button || 0),
+          buttons: Number(event.buttons || 0),
+          clientX: Number(event.clientX || 0),
+          clientY: Number(event.clientY || 0),
+          movementX: Number(event.movementX || 0),
+          movementY: Number(event.movementY || 0),
+          deltaX: Number(event.deltaX || 0),
+          deltaY: Number(event.deltaY || 0),
+          detail: Number(event.detail || 0),
+          repeat: Boolean(event.repeat),
+          target: String(event.target?.id || event.target?.tagName || ""),
+          occurredAt: new Date().toISOString(),
+        };
+        if (event.touches) data.touches = event.touches.length;
+        if (event.changedTouches) data.changedTouches = event.changedTouches.length;
+        if (event.keyName) data.keyName = String(event.keyName);
+        return data;
+      }
+
+      function tvDiagnosticSummary(data) {
+        const identity = data.key || data.code || data.keyName || (data.type === "wheel" ? `deltaY ${data.deltaY}` : "sem codigo");
+        return `${data.type}: ${identity}`;
+      }
+
+      function renderTvInputDiagnostic(data) {
+        const last = document.getElementById("tvDiagLastEvent");
+        const detail = document.getElementById("tvDiagLastDetail");
+        const log = document.getElementById("tvDiagEventLog");
+        if (last) last.textContent = tvDiagnosticSummary(data);
+        if (detail) detail.textContent = [
+          `key=${data.key || "-"} | code=${data.code || "-"}`,
+          `keyCode=${data.keyCode} | which=${data.which} | button=${data.button} | buttons=${data.buttons}`,
+          `x=${data.clientX} y=${data.clientY} | move=${data.movementX},${data.movementY} | wheel=${data.deltaX},${data.deltaY}`,
+          `alvo=${data.target || "-"} | ${data.occurredAt}`,
+        ].join("\n");
+        if (!log) return;
+        log.innerHTML = "";
+        tvDiagnosticEvents.forEach((item) => {
+          const row = document.createElement("li");
+          row.textContent = `${item.occurredAt.slice(11, 23)} | ${tvDiagnosticSummary(item)} | keyCode=${item.keyCode} | alvo=${item.target || "-"}`;
+          log.appendChild(row);
+        });
+      }
+
+      function sendTvDiagnosticToAppLog(data) {
+        reportDashboardError(new Error(`Evento detectado: ${tvDiagnosticSummary(data)}`), {
+          severity: "info",
+          source: "tv-input-diagnostic",
+          action: data.type,
+          phase: data.key || data.code || data.keyName || "input",
+          payload: data,
+        });
+        const status = document.getElementById("tvDiagLogStatus");
+        if (status) status.textContent = "Evento enviado ao App Log ou guardado na fila local.";
+      }
+
+      function captureTvDiagnosticEvent(event) {
+        if (!isTvDiagnosticOpen()) return;
+        if (event.type === "mousemove" || event.type === "pointermove") {
+          const now = Date.now();
+          if (now - tvDiagnosticLastMoveAt < 750) return;
+          tvDiagnosticLastMoveAt = now;
+        }
+        if (event.type === "keydown") event.preventDefault();
+        const data = tvDiagnosticEventData(event);
+        tvDiagnosticEvents.unshift(data);
+        if (tvDiagnosticEvents.length > TV_DIAGNOSTIC_EVENT_LIMIT) tvDiagnosticEvents.length = TV_DIAGNOSTIC_EVENT_LIMIT;
+        renderTvInputDiagnostic(data);
+        sendTvDiagnosticToAppLog(data);
+      }
+
+      function clearTvInputDiagnostic() {
+        tvDiagnosticEvents.length = 0;
+        const last = document.getElementById("tvDiagLastEvent");
+        const detail = document.getElementById("tvDiagLastDetail");
+        const log = document.getElementById("tvDiagEventLog");
+        if (last) last.textContent = "Aguardando...";
+        if (detail) detail.textContent = "Nenhum comando detectado.";
+        if (log) log.innerHTML = "<li>Aguardando comandos do controle...</li>";
+      }
+
+      function registerTizenDiagnosticKeys() {
+        const inputDevice = window.tizen?.tvinputdevice;
+        if (!inputDevice) return "API tizen.tvinputdevice indisponivel no navegador.";
+        const keys = [
+          "ColorF0Red", "ColorF1Green", "ColorF2Yellow", "ColorF3Blue",
+          "MediaPlay", "MediaPause", "MediaStop", "MediaRewind", "MediaFastForward",
+          "ChannelUp", "ChannelDown", "VolumeUp", "VolumeDown", "VolumeMute",
+        ];
+        try {
+          if (typeof inputDevice.registerKeyBatch === "function") inputDevice.registerKeyBatch(keys);
+          else keys.forEach((key) => inputDevice.registerKey(key));
+          return `${keys.length} teclas extras registradas pela API Tizen.`;
+        } catch (error) {
+          reportDashboardError(error, {
+            severity: "warn",
+            source: "tv-input-diagnostic",
+            action: "registerTizenKeys",
+            phase: "capability",
+            payload: { keys },
+          });
+          return `API Tizen encontrada, mas o registro falhou: ${errorMessage(error)}`;
+        }
+      }
+
+      function installTvInputDiagnostic() {
+        if (!window.__DASHBOARD_TV_MODE || window.__TV_INPUT_DIAGNOSTIC_INSTALLED) return;
+        window.__TV_INPUT_DIAGNOSTIC_INSTALLED = true;
+        const tizenStatus = registerTizenDiagnosticKeys();
+        const device = document.getElementById("tvDiagDevice");
+        if (device) device.textContent = [
+          `TV detectada: sim`,
+          `viewport: ${window.innerWidth}x${window.innerHeight}@${window.devicePixelRatio || 1}`,
+          `plataforma: ${navigator.platform || "indisponivel"}`,
+          `versao Tizen: ${window.__DASHBOARD_TIZEN_VERSION || "nao identificada"}`,
+          `user agent: ${navigator.userAgent}`,
+          `Tizen: ${tizenStatus}`,
+        ].join("\n");
+        ["keydown", "keyup", "keypress", "click", "mousedown", "mouseup", "mousemove", "wheel", "contextmenu", "touchstart", "touchend", "pointerdown", "pointerup", "pointermove", "tizenhwkey"].forEach((type) => {
+          document.addEventListener(type, captureTvDiagnosticEvent, true);
+        });
+        reportDashboardError(new Error("Diagnostico do controle inicializado."), {
+          severity: "info",
+          source: "tv-input-diagnostic",
+          action: "install",
+          phase: "capability",
+          payload: { tizenStatus, userAgent: navigator.userAgent, viewport: `${window.innerWidth}x${window.innerHeight}` },
+        });
+      }
+
+      function openRequestedTvDiagnostic() {
+        if (!window.__DASHBOARD_TV_MODE || location.hash !== "#tvdiagnostico") return;
+        const item = document.querySelector('.sidebar .sb-item[data-nav="tvdiagnostico"]');
+        nav("tvdiagnostico", item);
       }
       function set(id, v) {
         const el = document.getElementById(id);
@@ -4090,8 +10082,24 @@ const monthsLabelsAll = [
         if (el) el.innerHTML = v;
       }
       function setLoading(on, msg) {
+        if (on && dashboardSilentLoad) return;
         document.getElementById("ov").classList.toggle("on", on);
         if (msg) document.getElementById("ovLbl").textContent = msg;
+      }
+      function errorMessage(error) {
+        if (error instanceof Error) return error.message || "Erro desconhecido.";
+        return String(error || "Erro desconhecido.");
+      }
+      function showDashboardLoadError(error) {
+        const panel = document.getElementById("dashboardLoadError");
+        const detail = document.getElementById("dashboardLoadErrorDetail");
+        if (!panel || !detail) return;
+        detail.textContent = errorMessage(error);
+        panel.hidden = false;
+      }
+      function hideDashboardLoadError() {
+        const panel = document.getElementById("dashboardLoadError");
+        if (panel) panel.hidden = true;
       }
       function showAlert(type, html) {
         const icon = type === "err"
@@ -4104,7 +10112,7 @@ const monthsLabelsAll = [
         document.getElementById("alertArea").innerHTML = "";
       }
       function emptyRow(n) {
-        return `<tr><td colspan="${n}"><div class="empty"><div class="ei">ðŸ“­</div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;
+        return `<tr><td colspan="${n}"><div class="empty"><div class="ei"><svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z"></path><path d="M4 8h16"></path><path d="m8 13 2.5 2.5L16 10"></path></svg></div><div class="em-msg">Nenhum registro encontrado</div></div></td></tr>`;
       }
 
       // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -4120,8 +10128,224 @@ const monthsLabelsAll = [
           toggleFilterPanel(false);
         }
       });
-      updateFilterSummary();
-      detectEnv();
-      installDashboardErrorLogger();
-      loadAll();
+
+      let tvPinValue = "";
+      let tvPinBusy = false;
+      const tvPinKeyDownAt = {};
+
+      function tvPinFingerprint(value) {
+        let hash = 7;
+        for (let index = 0; index < value.length; index += 1) {
+          hash = (hash * 31 + value.charCodeAt(index)) % 1000003;
+        }
+        return hash;
+      }
+
+      function tvPinDigitFromEvent(event) {
+        if (/^[0-9]$/.test(event.key || "")) return event.key;
+        const code = Number(event.keyCode || event.which || 0);
+        if (code >= 48 && code <= 57) return String.fromCharCode(code);
+        if (code >= 96 && code <= 105) return String(code - 96);
+        return "";
+      }
+
+      function renderTvPin() {
+        const dots = document.querySelectorAll("#tvPinDots .tv-pin-dot");
+        dots.forEach((dot, index) => dot.classList.toggle("is-filled", index < tvPinValue.length));
+        const group = document.getElementById("tvPinDots");
+        if (group) group.setAttribute("aria-label", `${tvPinValue.length} de 4 digitos informados`);
+      }
+
+      function clearTvPin() {
+        tvPinValue = "";
+        renderTvPin();
+      }
+
+      function unlockTvDashboard() {
+        const gate = document.getElementById("tvPinGate");
+        const card = document.getElementById("tvPinCard");
+        const message = document.getElementById("tvPinMessage");
+        tvPinBusy = true;
+        card?.classList.remove("is-error");
+        card?.classList.add("is-success");
+        if (message) message.textContent = "Acesso liberado";
+        document.removeEventListener("keydown", handleTvPinKeydown, true);
+        document.removeEventListener("keyup", handleTvPinKeyup, true);
+        window.setTimeout(() => gate?.classList.add("is-unlocking"), 80);
+        window.setTimeout(() => {
+          document.documentElement.classList.remove("tv-pin-pending");
+          initializeDashboardAfterAccess();
+        }, 270);
+      }
+
+      function validateTvPin() {
+        if (tvPinValue.length !== 4 || tvPinBusy) return;
+        if (tvPinFingerprint(tvPinValue) === 7790) {
+          unlockTvDashboard();
+          return;
+        }
+        tvPinBusy = true;
+        const card = document.getElementById("tvPinCard");
+        const message = document.getElementById("tvPinMessage");
+        card?.classList.remove("is-error");
+        void card?.offsetWidth;
+        card?.classList.add("is-error");
+        if (message) message.textContent = "PIN incorreto. Tente novamente.";
+        window.setTimeout(() => {
+          clearTvPin();
+          card?.classList.remove("is-error");
+          if (message) message.textContent = "Aguardando PIN";
+          tvPinBusy = false;
+          focusTvPinKey(0);
+        }, 650);
+      }
+
+      function addTvPinDigit(digit) {
+        if (tvPinBusy || tvPinValue.length >= 4 || !/^[0-9]$/.test(digit)) return;
+        tvPinValue += digit;
+        renderTvPin();
+        if (tvPinValue.length === 4) validateTvPin();
+      }
+
+      function deleteTvPinDigit() {
+        if (tvPinBusy || !tvPinValue.length) return;
+        tvPinValue = tvPinValue.slice(0, -1);
+        renderTvPin();
+      }
+
+      function focusTvPinKey(index) {
+        const keys = Array.from(document.querySelectorAll("#tvPinGate [data-tv-pin-index]"));
+        if (!keys.length) return;
+        const safeIndex = Math.max(0, Math.min(keys.length - 1, Number(index) || 0));
+        keys[safeIndex].focus();
+      }
+
+      function handleTvPinKeydown(event) {
+        const digit = tvPinDigitFromEvent(event);
+        const isDelete = event.key === "Backspace" || event.key === "Delete" || event.keyCode === 8 || event.keyCode === 46;
+        const key = event.key || ({ 13: "Enter", 37: "ArrowLeft", 38: "ArrowUp", 39: "ArrowRight", 40: "ArrowDown" })[event.keyCode];
+        const directions = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 };
+        if (!digit && !isDelete && key !== "Enter" && !directions[key]) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (directions[key]) {
+          const activeIndex = Number(document.activeElement?.dataset?.tvPinIndex || 0);
+          focusTvPinKey(activeIndex + directions[key]);
+        } else if (digit) {
+          tvPinKeyDownAt[digit] = Date.now();
+          addTvPinDigit(digit);
+        } else if (isDelete) deleteTvPinDigit();
+        else if (document.activeElement?.dataset?.tvPinIndex) document.activeElement.click();
+        else validateTvPin();
+      }
+
+      function handleTvPinKeyup(event) {
+        const digit = tvPinDigitFromEvent(event);
+        if (!digit) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const handledAt = tvPinKeyDownAt[digit] || 0;
+        delete tvPinKeyDownAt[digit];
+        if (Date.now() - handledAt >= 1200) addTvPinDigit(digit);
+      }
+
+      function openTabFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.has("tab")) return;
+        const tabId = getTabFromUrl();
+        const item = document.querySelector(`[data-nav="${tabId}"]`);
+        if (item) nav(tabId, item, { fromUrl: true });
+      }
+
+      function installTvPinGate() {
+        if (!window.__DASHBOARD_TV_MODE) {
+          document.documentElement.classList.remove("tv-pin-pending");
+          return false;
+        }
+        document.querySelectorAll("[data-tv-pin-digit]").forEach((button) => {
+          button.addEventListener("click", () => addTvPinDigit(button.dataset.tvPinDigit));
+        });
+        document.getElementById("tvPinDelete")?.addEventListener("click", deleteTvPinDigit);
+        document.addEventListener("keydown", handleTvPinKeydown, true);
+        document.addEventListener("keyup", handleTvPinKeyup, true);
+        document.addEventListener("mousemove", trackTvPointerBaseline, true);
+        if (window.PointerEvent) document.addEventListener("pointermove", trackTvPointerBaseline, true);
+        renderTvPin();
+        window.setTimeout(() => focusTvPinKey(0), 0);
+        return true;
+      }
+
+      function ensurePassengerRankingLayout() {
+        const table = document.getElementById("tbSrv")?.closest(".tc");
+        if (!table || table.dataset.passengerRanking === "1") return;
+        const title = table.querySelector(".tc-title");
+        const search = table.querySelector(".tc-search");
+        const head = table.querySelector("thead");
+        const rankingTable = table.querySelector("table");
+        if (title) title.textContent = "Passageiros que mais viajaram com a Betinhos";
+        search?.remove();
+        rankingTable?.classList.add("passenger-ranking-table");
+        if (head) head.innerHTML = `<tr><th><span class="passenger-ranking-header-title" title="Posi&ccedil;&atilde;o">Pos.</span></th><th onclick="sortPassengerRanking('name',this)"><span class="passenger-ranking-header-title" title="Passageiro">Passageiro</span></th><th onclick="sortPassengerRanking('client',this)"><span class="passenger-ranking-header-title" title="Cliente">Cliente</span></th><th class="sd" onclick="sortPassengerRanking('count',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Servi&ccedil;os">Servi&ccedil;os</span></th><th onclick="sortPassengerRanking('paymentDays',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Dias para pagamento">Dias p/ pgto</span></th><th onclick="sortPassengerRanking('latest',this)"><span class="passenger-ranking-header-title" title="&Uacute;ltimo servi&ccedil;o">&Uacute;ltimo servi&ccedil;o</span></th><th onclick="sortPassengerRanking('serviceType',this)"><span class="passenger-ranking-header-title" title="Tipo de servi&ccedil;o mais frequente">Tipo de servi&ccedil;o + freq</span></th><th onclick="sortPassengerRanking('vehicleType',this)"><span class="passenger-ranking-header-title" title="Tipo de ve&iacute;culo mais frequente">Tipo de ve&iacute;culo + freq</span></th><th onclick="sortPassengerRanking('driver',this)"><span class="passenger-ranking-header-title" title="Motorista mais frequente">Motorista + freq</span></th><th onclick="sortPassengerRanking('ticket',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Ticket m&eacute;dio">Ticket m&eacute;dio</span></th><th onclick="sortPassengerRanking('total',this)" style="text-align:right"><span class="passenger-ranking-header-title" title="Faturamento">Faturamento</span></th></tr>`;
+        table.dataset.passengerRanking = "1";
+      }
+
+      function initializeDashboardAfterAccess() {
+        if (window.__DASHBOARD_AFTER_ACCESS_STARTED) return;
+        window.__DASHBOARD_AFTER_ACCESS_STARTED = true;
+        try {
+          initializeDashboardCharts();
+          initMarkpointImport();
+          updateFilterSummary();
+          detectEnv();
+          setBrandLogo();
+          setAppVersion();
+          installDashboardErrorLogger();
+          ensurePassengerRankingLayout();
+          addKpiGoalDirections();
+          installCardDetailDialog();
+          installTvNavigation();
+          installTvViewportLayout();
+          installTvInputDiagnostic();
+          window.addEventListener("popstate", openTabFromUrl);
+          openRequestedTvDiagnostic();
+          openTabFromUrl();
+          void loadAll();
+          startDashboardAutoRefresh();
+        } catch (error) {
+          setLoading(false);
+          showDashboardLoadError(error);
+          window.__DASHBOARD_REPORT_ERROR?.(error, { source: "dashboard", action: "startDashboard", phase: "bootstrap" });
+        }
+      }
+      function startDashboard() {
+        try {
+          if (window.DashboardTvCompat) window.DashboardTvCompat.install(window);
+          if (isLocalTvPreview()) {
+            document.documentElement.classList.add("tv-browser");
+            window.__DASHBOARD_TV_MODE = true;
+          }
+          if (installTvPinGate()) return;
+          initializeDashboardAfterAccess();
+        } catch (error) {
+          document.documentElement.classList.remove("tv-pin-pending");
+          showDashboardLoadError(error);
+        }
+      }
+      function isLocalTvPreview() {
+        return /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(location.hostname || "")
+          && /(?:^|[?&])tv=1(?:&|$)/i.test(location.search || "");
+      }
+      function startDashboardAutoRefresh() {
+        if (shouldUseSnapshot()) return;
+        if (dashboardAutoRefreshTimer) window.clearInterval(dashboardAutoRefreshTimer);
+        dashboardAutoRefreshTimer = window.setInterval(() => {
+          if (window.__DASHBOARD_TV_MODE) {
+            void loadAll({ silent: true });
+            rotateTvPage();
+            return;
+          }
+          if (!document.hidden) void loadAll();
+        }, DASHBOARD_AUTO_REFRESH_INTERVAL_MS);
+      }
+      startDashboard();
 

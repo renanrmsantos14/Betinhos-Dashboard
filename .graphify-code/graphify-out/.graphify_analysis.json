@@ -1,153 +1,322 @@
 {
   "communities": {
     "0": [
-      "dashboard_inline_badge",
-      "dashboard_inline_brl",
-      "dashboard_inline_brls",
-      "dashboard_inline_emptyrow",
-      "dashboard_inline_fmtd",
-      "dashboard_inline_fmtdt",
-      "dashboard_inline_getfilteredmonthlydata",
-      "dashboard_inline_grp",
-      "dashboard_inline_html",
-      "dashboard_inline_isdataversedisabled",
-      "dashboard_inline_isreceivedpayment",
-      "dashboard_inline_metricmobileprogress",
-      "dashboard_inline_metricsplit",
-      "dashboard_inline_mk",
-      "dashboard_inline_mkeys",
-      "dashboard_inline_ml",
-      "dashboard_inline_opts0",
-      "dashboard_inline_paymentop",
-      "dashboard_inline_paymentvalue",
-      "dashboard_inline_pct",
-      "dashboard_inline_progresscell",
-      "dashboard_inline_renderall",
-      "dashboard_inline_renderdistributiontable",
-      "dashboard_inline_renderfaturamento",
-      "dashboard_inline_renderfleetusagerows",
-      "dashboard_inline_renderfrota",
-      "dashboard_inline_renderfrotatable",
-      "dashboard_inline_rendermanutencoes",
-      "dashboard_inline_rendermarketing",
-      "dashboard_inline_rendermetriclines",
-      "dashboard_inline_rendermottable",
-      "dashboard_inline_rendermultas",
-      "dashboard_inline_renderpagamentos",
-      "dashboard_inline_rendersharetable",
-      "dashboard_inline_rendersrvtable",
-      "dashboard_inline_rendersumtable",
-      "dashboard_inline_rendertrocas",
-      "dashboard_inline_setexecalert",
-      "dashboard_inline_sharesortclass",
-      "dashboard_inline_sharesortvalue",
-      "dashboard_inline_srchtbl",
-      "dashboard_inline_srt",
-      "dashboard_inline_srtshare",
-      "dashboard_inline_stl",
-      "dashboard_inline_takeuntilshare",
-      "dashboard_inline_trunc"
-    ],
-    "1": [
       "dashboard_inline",
       "dashboard_inline_charts",
+      "dashboard_inline_cleartvinputdiagnostic",
       "dashboard_inline_compactstandalonekpis",
+      "dashboard_inline_dataloadpromises",
+      "dashboard_inline_datasetloaders",
+      "dashboard_inline_daysbetweenvalues",
       "dashboard_inline_db",
-      "dashboard_inline_detectenv",
+      "dashboard_inline_detailcharts",
       "dashboard_inline_ensureexecutivelayout",
       "dashboard_inline_envs",
+      "dashboard_inline_expense_status",
+      "dashboard_inline_expensefilters",
       "dashboard_inline_f",
       "dashboard_inline_fat2023",
       "dashboard_inline_fat2024",
       "dashboard_inline_fat2025",
+      "dashboard_inline_fat2026",
       "dashboard_inline_font",
       "dashboard_inline_funcmapglobal",
+      "dashboard_inline_getfilteredmonthlydata",
+      "dashboard_inline_getlmvalueandcount",
+      "dashboard_inline_getrecebimentostats",
+      "dashboard_inline_infracaomapglobal",
+      "dashboard_inline_isticketeligiblereservation",
+      "dashboard_inline_legacy2026rows",
+      "dashboard_inline_loadeddatasets",
       "dashboard_inline_lookupvalue",
-      "dashboard_inline_monthslabelsall",
+      "dashboard_inline_markpointdrivermetrics",
+      "dashboard_inline_markpointhash",
+      "dashboard_inline_markpointstate",
+      "dashboard_inline_mkeys",
       "dashboard_inline_msstate",
       "dashboard_inline_pal",
+      "dashboard_inline_passenger_ranking_max_widths",
+      "dashboard_inline_paymentvalue",
+      "dashboard_inline_rendermetriclines",
       "dashboard_inline_set",
+      "dashboard_inline_setexecalert",
+      "dashboard_inline_sharesortclass",
+      "dashboard_inline_sharesortvalue",
       "dashboard_inline_sparks",
       "dashboard_inline_srchreg",
+      "dashboard_inline_srtshare",
       "dashboard_inline_srtst",
       "dashboard_inline_t",
+      "dashboard_inline_tab_query_aliases",
+      "dashboard_inline_tabdatadependencies",
       "dashboard_inline_tablesortdefaults",
+      "dashboard_inline_takeuntilshare",
       "dashboard_inline_tblcache",
       "dashboard_inline_togglems",
+      "dashboard_inline_tv_nav_labels",
+      "dashboard_inline_tv_numeric_nav",
+      "dashboard_inline_tvdiagnosticevents",
+      "dashboard_inline_tvnavigationkeydownat",
+      "dashboard_inline_tvpinkeydownat",
       "dashboard_inline_vw"
     ],
+    "1": [
+      "dashboard_inline_badge",
+      "dashboard_inline_brl",
+      "dashboard_inline_brls",
+      "dashboard_inline_emptyrow",
+      "dashboard_inline_escapedashboardtext",
+      "dashboard_inline_fmtd",
+      "dashboard_inline_fmtdt",
+      "dashboard_inline_getdashboardmonthlabels",
+      "dashboard_inline_getlyvalueandcount",
+      "dashboard_inline_getmonthlydatafromdataverse",
+      "dashboard_inline_getperiodvalueandcount",
+      "dashboard_inline_getticketstats",
+      "dashboard_inline_getticketstatsforperiod",
+      "dashboard_inline_grp",
+      "dashboard_inline_html",
+      "dashboard_inline_indaterange",
+      "dashboard_inline_isactivefuncionario",
+      "dashboard_inline_ismultapendente",
+      "dashboard_inline_isproducedreservation",
+      "dashboard_inline_isreceivedpayment",
+      "dashboard_inline_metricmobileprogress",
+      "dashboard_inline_metricsplit",
+      "dashboard_inline_ml",
+      "dashboard_inline_monthtablelabel",
+      "dashboard_inline_opts0",
+      "dashboard_inline_passesactivefilters",
+      "dashboard_inline_paymentop",
+      "dashboard_inline_pct",
+      "dashboard_inline_progresscell",
+      "dashboard_inline_renderall",
+      "dashboard_inline_renderdistributiontable",
+      "dashboard_inline_renderexpensetable",
+      "dashboard_inline_renderfaturamento",
+      "dashboard_inline_renderfleetusagerows",
+      "dashboard_inline_renderfrota",
+      "dashboard_inline_renderfrotatable",
+      "dashboard_inline_renderinfleettelemetry",
+      "dashboard_inline_rendermanutencoes",
+      "dashboard_inline_rendermarketing",
+      "dashboard_inline_rendermotoristas",
+      "dashboard_inline_rendermottable",
+      "dashboard_inline_rendermultas",
+      "dashboard_inline_renderpagamentos",
+      "dashboard_inline_renderpassengerranking",
+      "dashboard_inline_rendersharetable",
+      "dashboard_inline_rendersrvtable",
+      "dashboard_inline_rendersumtable",
+      "dashboard_inline_rendertrocas",
+      "dashboard_inline_shouldshowlm",
+      "dashboard_inline_sortpassengerranking",
+      "dashboard_inline_srchtbl",
+      "dashboard_inline_srt",
+      "dashboard_inline_stl",
+      "dashboard_inline_sumv",
+      "dashboard_inline_topbyshare",
+      "dashboard_inline_trunc"
+    ],
     "2": [
-      "dashboard_inline_api",
+      "dashboard_inline_addkpigoaldirections",
+      "dashboard_inline_applyf",
       "dashboard_inline_buildfuncmap",
+      "dashboard_inline_buildinfracaomap",
+      "dashboard_inline_buildlegacy2026reservation",
       "dashboard_inline_clearalerts",
-      "dashboard_inline_fetchall",
+      "dashboard_inline_copytoclipboard",
+      "dashboard_inline_detectenv",
+      "dashboard_inline_enrichreservas",
+      "dashboard_inline_ensurepassengerrankinglayout",
+      "dashboard_inline_ensuretabdata",
+      "dashboard_inline_errormessage",
       "dashboard_inline_generatemockdata",
+      "dashboard_inline_getsnapshotenvironment",
+      "dashboard_inline_hidedashboardloaderror",
+      "dashboard_inline_initializedashboardafteraccess",
+      "dashboard_inline_initializedashboardcharts",
+      "dashboard_inline_islocaltvpreview",
       "dashboard_inline_loadall",
+      "dashboard_inline_loaddatasets",
+      "dashboard_inline_loadsnapshot",
+      "dashboard_inline_markalldatasetsloaded",
+      "dashboard_inline_msselectall",
+      "dashboard_inline_mstoggle",
+      "dashboard_inline_openexpenserecord",
+      "dashboard_inline_populatefilters",
+      "dashboard_inline_quickfilter",
+      "dashboard_inline_setappversion",
+      "dashboard_inline_setbrandlogo",
+      "dashboard_inline_setdashboardlastupdated",
+      "dashboard_inline_setloading",
+      "dashboard_inline_settabloading",
+      "dashboard_inline_shouldusemockdata",
+      "dashboard_inline_shouldusesnapshot",
+      "dashboard_inline_showalert",
+      "dashboard_inline_showdashboardloaderror",
+      "dashboard_inline_startdashboard",
+      "dashboard_inline_startdashboardautorefresh",
+      "dashboard_inline_updatefiltersummary",
+      "dashboard_inline_updatemsbutton"
+    ],
+    "3": [
+      "dashboard_inline_api",
+      "dashboard_inline_createerrorlogrecord",
+      "dashboard_inline_dashboard_transient_http_statuses",
+      "dashboard_inline_fetchall",
+      "dashboard_inline_fetchdashboarddata",
+      "dashboard_inline_getdashboardxrm",
+      "dashboard_inline_geterrorlogentityset",
+      "dashboard_inline_loadanexosdespesas",
+      "dashboard_inline_loadcategoriasdespesas",
+      "dashboard_inline_loadclientes",
+      "dashboard_inline_loaddespesas",
+      "dashboard_inline_loaderrosoperacionais",
+      "dashboard_inline_loadeventosinfleet",
+      "dashboard_inline_loadformaspagamentodespesas",
       "dashboard_inline_loadfuncionarios",
+      "dashboard_inline_loadinfracoes",
       "dashboard_inline_loadmanutencoes",
       "dashboard_inline_loadmarketing",
       "dashboard_inline_loadmultas",
       "dashboard_inline_loadpagantes",
+      "dashboard_inline_loadpassageiros",
       "dashboard_inline_loadprecos",
       "dashboard_inline_loadreservas",
+      "dashboard_inline_loadservicospassageiro",
+      "dashboard_inline_loadtelemetriainfleet",
       "dashboard_inline_loadtrocas",
       "dashboard_inline_loadveiculos",
-      "dashboard_inline_populatefilters",
-      "dashboard_inline_setloading",
-      "dashboard_inline_shouldusemockdata"
+      "dashboard_inline_loadviagensinfleet",
+      "dashboard_inline_makeheaders",
+      "dashboard_inline_markpointexistingrecords",
+      "dashboard_inline_markpointpersistrecords",
+      "dashboard_inline_waitfordashboardretry"
     ],
-    "3": [
+    "4": [
+      "dashboard_inline_aggregateexpenses",
+      "dashboard_inline_aggregatefoodexpensesbydriver",
+      "dashboard_inline_buildexpenserows",
+      "dashboard_inline_buildownfleetusagerows",
+      "dashboard_inline_clearexpensefilters",
+      "dashboard_inline_expense_food_categories",
+      "dashboard_inline_expensecompanylabel",
+      "dashboard_inline_expensedeltamarkup",
+      "dashboard_inline_expenseid",
+      "dashboard_inline_expensematchesfilters",
+      "dashboard_inline_expensestatuslabel",
+      "dashboard_inline_expensesubsetmetrics",
+      "dashboard_inline_fv",
+      "dashboard_inline_isactivevehicle",
+      "dashboard_inline_iscardpayment",
+      "dashboard_inline_isdataversedisabled",
+      "dashboard_inline_isownvehicle",
+      "dashboard_inline_isrentalvehicle",
+      "dashboard_inline_isreservableservice",
+      "dashboard_inline_isthirdpartyvehicle",
+      "dashboard_inline_istravelreservation",
+      "dashboard_inline_maintenancecategory",
+      "dashboard_inline_mk",
+      "dashboard_inline_norml",
+      "dashboard_inline_populateexpensefilters",
+      "dashboard_inline_renderdespesas",
+      "dashboard_inline_safeexpenseurl",
+      "dashboard_inline_searchexpensetable",
+      "dashboard_inline_setexpenseselectoptions",
+      "dashboard_inline_updateexpensefilters"
+    ],
+    "5": [
+      "dashboard_inline_activatetvdirectionaltarget",
+      "dashboard_inline_cleartvmagnetictarget",
+      "dashboard_inline_ensuretvdirectionaltarget",
+      "dashboard_inline_gettabfromurl",
+      "dashboard_inline_gettvmagnetictargets",
+      "dashboard_inline_handletvmagneticclick",
+      "dashboard_inline_handletvpointernavigation",
+      "dashboard_inline_installtvnavigation",
+      "dashboard_inline_istvmagnetictargetvisible",
+      "dashboard_inline_istvnavigationblocked",
+      "dashboard_inline_movetvdirectionaltarget",
+      "dashboard_inline_nav",
+      "dashboard_inline_navigatetv",
+      "dashboard_inline_navigatetvto",
+      "dashboard_inline_openrequestedtvdiagnostic",
+      "dashboard_inline_opentabfromurl",
+      "dashboard_inline_releasetvpointerdirection",
+      "dashboard_inline_resettvpointergesture",
+      "dashboard_inline_rotatetvpage",
+      "dashboard_inline_settvmagnetictarget",
+      "dashboard_inline_showtvdirectionalboundary",
+      "dashboard_inline_togglemobilemore",
+      "dashboard_inline_tracktvpointerbaseline",
+      "dashboard_inline_tv_nav_ids",
+      "dashboard_inline_tv_rotation_ids",
+      "dashboard_inline_tvdirectionalmetrics",
+      "dashboard_inline_updatetaburl",
+      "dashboard_inline_updatetvcurrentmenu"
+    ],
+    "6": [
+      "dashboard_inline_addcarddetailstat",
+      "dashboard_inline_appendlogicsection",
+      "dashboard_inline_buildcarddetail",
+      "dashboard_inline_buildcardlogic",
+      "dashboard_inline_charthasdata",
+      "dashboard_inline_clonecardtable",
+      "dashboard_inline_createcarddetailelement",
+      "dashboard_inline_createchartdatatable",
+      "dashboard_inline_createdashboardchart",
+      "dashboard_inline_destroydetailcharts",
+      "dashboard_inline_getcarddetailnotes",
+      "dashboard_inline_getcarddetailtitle",
+      "dashboard_inline_getcardlogic",
+      "dashboard_inline_getcardprimaryvalue",
+      "dashboard_inline_getchartvalue",
+      "dashboard_inline_installcarddetaildialog",
+      "dashboard_inline_mkchart",
+      "dashboard_inline_mkspark",
+      "dashboard_inline_repaircarddetailtext",
+      "dashboard_inline_setchartemptystate"
+    ],
+    "7": [
+      "dashboard_inline_clearmarkpointimport",
+      "dashboard_inline_initmarkpointimport",
+      "dashboard_inline_markpointassignconsecutiverests",
+      "dashboard_inline_markpointdismissfeedback",
+      "dashboard_inline_markpointfilteredrecords",
+      "dashboard_inline_markpointfmtminutes",
+      "dashboard_inline_markpointfuncionario",
+      "dashboard_inline_markpointimportfile",
+      "dashboard_inline_markpointloadfromdataverse",
+      "dashboard_inline_markpointnormalizename",
+      "dashboard_inline_markpointparsedate",
+      "dashboard_inline_markpointparseminutes",
+      "dashboard_inline_markpointparseworkbook",
+      "dashboard_inline_markpointpayload",
+      "dashboard_inline_markpointrecordkey",
+      "dashboard_inline_markpointsetstatus",
+      "dashboard_inline_markpointsetuploadbusy",
+      "dashboard_inline_markpointshowfiles",
+      "dashboard_inline_markpointvalidsignature",
+      "dashboard_inline_rendermarkpointmodule"
+    ],
+    "8": [
       "dashboard_inline_calcularmetamensal",
       "dashboard_inline_clampdate",
-      "dashboard_inline_daysbetween",
       "dashboard_inline_daysinmonth",
       "dashboard_inline_eachdatebetween",
       "dashboard_inline_gethistoricalfat",
-      "dashboard_inline_getlyvalueandcount",
       "dashboard_inline_getmetaparaperiodo",
       "dashboard_inline_getmetaparaperiodoproporcional",
+      "dashboard_inline_getpreviousexpenseperiod",
       "dashboard_inline_gettotalforperiod",
       "dashboard_inline_pad2",
       "dashboard_inline_parsebrdate",
       "dashboard_inline_sameperiodlastmonth",
       "dashboard_inline_sameperiodlastyear",
-      "dashboard_inline_shouldshowlm",
       "dashboard_inline_ymd"
     ],
-    "4": [
-      "dashboard_inline_builderrorlogrecord",
-      "dashboard_inline_createerrorlogrecord",
-      "dashboard_inline_flusherrorlogqueue",
-      "dashboard_inline_getdashboardxrm",
-      "dashboard_inline_geterrorlogentityset",
-      "dashboard_inline_installdashboarderrorlogger",
-      "dashboard_inline_makeheaders",
-      "dashboard_inline_normalizedashboarderror",
-      "dashboard_inline_readerrorlogqueue",
-      "dashboard_inline_redactlogtext",
-      "dashboard_inline_redactlogvalue",
-      "dashboard_inline_reportdashboarderror",
-      "dashboard_inline_safelogjson",
-      "dashboard_inline_truncatelog",
-      "dashboard_inline_writeerrorlogqueue"
-    ],
-    "5": [
-      "dashboard_inline_charthasdata",
-      "dashboard_inline_getlmvalueandcount",
-      "dashboard_inline_getmonthlydatafromdataverse",
-      "dashboard_inline_getperiodvalueandcount",
-      "dashboard_inline_getticketstats",
-      "dashboard_inline_getticketstatsforperiod",
-      "dashboard_inline_indaterange",
-      "dashboard_inline_isticketeligiblereservation",
-      "dashboard_inline_mkchart",
-      "dashboard_inline_mkspark",
-      "dashboard_inline_passesactivefilters",
-      "dashboard_inline_rendermotoristas",
-      "dashboard_inline_setchartemptystate",
-      "dashboard_inline_sumv"
-    ],
-    "6": [
+    "9": [
       "dataverse_export_metadata_console",
       "dataverse_export_metadata_console_exportmetadata",
       "dataverse_export_metadata_console_getall",
@@ -163,223 +332,242 @@
       "dataverse_export_metadata_console_pick",
       "dataverse_export_metadata_console_request"
     ],
-    "7": [
-      "dashboard_inline_buildownfleetusagerows",
-      "dashboard_inline_daysbetweenvalues",
-      "dashboard_inline_enrichreservas",
-      "dashboard_inline_fv",
-      "dashboard_inline_iscardpayment",
-      "dashboard_inline_isownvehicle",
-      "dashboard_inline_ispendingscheduledreservation",
-      "dashboard_inline_isproducedreservation",
-      "dashboard_inline_isreservableservice",
-      "dashboard_inline_istravelreservation",
-      "dashboard_inline_maintenancecategory",
-      "dashboard_inline_maintenancekpirows",
-      "dashboard_inline_norml"
+    "10": [
+      "dashboard_inline_builderrorlogrecord",
+      "dashboard_inline_flusherrorlogqueue",
+      "dashboard_inline_installdashboarderrorlogger",
+      "dashboard_inline_installtvinputdiagnostic",
+      "dashboard_inline_normalizedashboarderror",
+      "dashboard_inline_readerrorlogqueue",
+      "dashboard_inline_redactlogtext",
+      "dashboard_inline_redactlogvalue",
+      "dashboard_inline_registertizendiagnostickeys",
+      "dashboard_inline_reportdashboarderror",
+      "dashboard_inline_safelogjson",
+      "dashboard_inline_truncatelog",
+      "dashboard_inline_writeerrorlogqueue"
     ],
-    "8": [
-      "dashboard_inline_applyf",
+    "11": [
+      "dashboard_inline_addtvpindigit",
+      "dashboard_inline_cleartvpin",
+      "dashboard_inline_deletetvpindigit",
+      "dashboard_inline_focustvpinkey",
+      "dashboard_inline_handletvpinkeydown",
+      "dashboard_inline_handletvpinkeyup",
+      "dashboard_inline_installtvpingate",
+      "dashboard_inline_rendertvpin",
+      "dashboard_inline_tvpindigitfromevent",
+      "dashboard_inline_tvpinfingerprint",
+      "dashboard_inline_unlocktvdashboard",
+      "dashboard_inline_validatetvpin"
+    ],
+    "12": [
+      "dashboard_inline_animatefilteractions",
+      "dashboard_inline_applytvviewportlayout",
+      "dashboard_inline_cancelfilteractionsanimation",
       "dashboard_inline_clearf",
       "dashboard_inline_closemultiselects",
       "dashboard_inline_filtermsoptions",
-      "dashboard_inline_msselectall",
-      "dashboard_inline_mstoggle",
-      "dashboard_inline_quickfilter",
-      "dashboard_inline_updatefiltersummary",
-      "dashboard_inline_updatemsbutton"
+      "dashboard_inline_installtvviewportlayout",
+      "dashboard_inline_marktvtablelimits",
+      "dashboard_inline_resizeactivetvcharts",
+      "dashboard_inline_togglefilterpanel"
     ],
-    "9": [
+    "13": [
+      "dashboard_inline_capturetvdiagnosticevent",
+      "dashboard_inline_istvdiagnosticopen",
+      "dashboard_inline_rendertvinputdiagnostic",
+      "dashboard_inline_sendtvdiagnostictoapplog",
+      "dashboard_inline_tvdiagnosticeventdata",
+      "dashboard_inline_tvdiagnosticsummary"
+    ],
+    "14": [
       "dashboard_inline_enhancesortabletables",
       "dashboard_inline_marktablesort",
       "dashboard_inline_parsetablevalue",
       "dashboard_inline_sortdomtable",
       "dashboard_inline_tablesortkey"
     ],
-    "10": [
-      "dashboard_inline_animatefilteractions",
-      "dashboard_inline_cancelfilteractionsanimation",
-      "dashboard_inline_togglefilterpanel"
+    "15": [
+      "dashboard_inline_applypassengerrankingcolumnwidths",
+      "dashboard_inline_fitpassengerrankingcolumns",
+      "dashboard_inline_installpassengerrankingcolumnresize",
+      "dashboard_inline_observepassengerrankingwidth"
     ],
-    "11": [
+    "16": [
       "scripts_deploy_webresource",
       "scripts_deploy_webresource_escape_odatastring",
       "scripts_deploy_webresource_write_step"
     ],
-    "12": [
-      "dashboard_inline_copytoclipboard",
-      "dashboard_inline_showalert"
-    ],
-    "13": [
+    "17": [
       "dashboard_inline_ensurereviewlayouts",
       "dashboard_inline_replacecanvaswithtable"
-    ],
-    "14": [
-      "dashboard_inline_nav",
-      "dashboard_inline_togglemobilemore"
     ]
   },
   "cohesion": {
-    "0": 0.12753623188405797,
-    "1": 0.07692307692307693,
-    "2": 0.2222222222222222,
-    "3": 0.16666666666666666,
-    "4": 0.23809523809523808,
-    "5": 0.17582417582417584,
-    "6": 0.38461538461538464,
-    "7": 0.1794871794871795,
-    "8": 0.3055555555555556,
-    "9": 0.5,
-    "10": 0.6666666666666666,
-    "11": 0.6666666666666666,
-    "12": 1.0,
-    "13": 1.0,
-    "14": 1.0
+    "0": 0.034482758620689655,
+    "1": 0.11818181818181818,
+    "2": 0.07435897435897436,
+    "3": 0.11895161290322581,
+    "4": 0.11724137931034483,
+    "5": 0.1111111111111111,
+    "6": 0.15263157894736842,
+    "7": 0.15263157894736842,
+    "8": 0.1978021978021978,
+    "9": 0.38461538461538464,
+    "10": 0.2692307692307692,
+    "11": 0.3484848484848485,
+    "12": 0.2,
+    "13": 0.4,
+    "14": 0.5,
+    "15": 0.6666666666666666,
+    "16": 0.6666666666666666,
+    "17": 1.0
   },
   "gods": [
     {
       "id": "dashboard_inline_renderall",
       "label": "renderAll()",
-      "degree": 55
-    },
-    {
-      "id": "dashboard_inline_loadall",
-      "label": "loadAll()",
-      "degree": 19
-    },
-    {
-      "id": "dashboard_inline_renderdistributiontable",
-      "label": "renderDistributionTable()",
-      "degree": 16
-    },
-    {
-      "id": "dashboard_inline_renderfrota",
-      "label": "renderFrota()",
-      "degree": 15
-    },
-    {
-      "id": "dashboard_inline_emptyrow",
-      "label": "emptyRow()",
-      "degree": 15
-    },
-    {
-      "id": "dashboard_inline_rendermanutencoes",
-      "label": "renderManutencoes()",
-      "degree": 13
+      "degree": 61
     },
     {
       "id": "dashboard_inline_api",
       "label": "API()",
-      "degree": 12
+      "degree": 27
     },
     {
-      "id": "dashboard_inline_renderpagamentos",
-      "label": "renderPagamentos()",
-      "degree": 12
+      "id": "dashboard_inline_renderdespesas",
+      "label": "renderDespesas()",
+      "degree": 25
     },
     {
-      "id": "dashboard_inline_brls",
-      "label": "brlS()",
-      "degree": 11
+      "id": "dashboard_inline_fetchall",
+      "label": "fetchAll()",
+      "degree": 23
     },
     {
-      "id": "dashboard_inline_sumv",
-      "label": "sumV()",
-      "degree": 11
+      "id": "dashboard_inline_norml",
+      "label": "normL()",
+      "degree": 22
+    },
+    {
+      "id": "dashboard_inline_loadall",
+      "label": "loadAll()",
+      "degree": 22
+    },
+    {
+      "id": "dashboard_inline_initializedashboardafteraccess",
+      "label": "initializeDashboardAfterAccess()",
+      "degree": 22
+    },
+    {
+      "id": "dashboard_inline_renderdistributiontable",
+      "label": "renderDistributionTable()",
+      "degree": 19
+    },
+    {
+      "id": "dashboard_inline_emptyrow",
+      "label": "emptyRow()",
+      "degree": 18
+    },
+    {
+      "id": "dashboard_inline_renderfrota",
+      "label": "renderFrota()",
+      "degree": 17
     }
   ],
   "surprises": [
     {
-      "source": "renderAll()",
-      "target": "isProducedReservation()",
+      "source": "renderMarkpointModule()",
+      "target": "isActiveFuncionario()",
       "source_files": [
         "dashboard-inline.js",
         "dashboard-inline.js"
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 7 → community 0"
-    },
-    {
-      "source": "createErrorLogRecord()",
-      "target": "API()",
-      "source_files": [
-        "dashboard-inline.js",
-        "dashboard-inline.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 2 → community 4"
-    },
-    {
-      "source": "updateFilterSummary()",
-      "target": "fmtD()",
-      "source_files": [
-        "dashboard-inline.js",
-        "dashboard-inline.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 0 → community 8"
-    },
-    {
-      "source": "getLYValueAndCount()",
-      "target": "sumV()",
-      "source_files": [
-        "dashboard-inline.js",
-        "dashboard-inline.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 5 → community 3"
+      "note": "Bridges community 1 → community 7"
     },
     {
       "source": "renderAll()",
-      "target": "sumV()",
+      "target": "isTravelReservation()",
       "source_files": [
         "dashboard-inline.js",
         "dashboard-inline.js"
       ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 5 → community 0"
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "note": "Bridges community 4 → community 1"
+    },
+    {
+      "source": "getTicketStats()",
+      "target": "isTicketEligibleReservation()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "note": "Bridges community 0 → community 1"
+    },
+    {
+      "source": "installTvPinGate()",
+      "target": "trackTvPointerBaseline()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "note": "Bridges community 5 → community 11"
+    },
+    {
+      "source": "installTvInputDiagnostic()",
+      "target": "captureTvDiagnosticEvent()",
+      "source_files": [
+        "dashboard-inline.js",
+        "dashboard-inline.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "note": "Bridges community 13 → community 10"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `renderAll()` connect `renderAll` to `dashboard-inline.js`, `parseBRDate`, `sumV`, `normL`, `applyF`, `enhanceSortableTables`?",
-      "why": "High betweenness centrality (0.036) - this node is a cross-community bridge."
+      "question": "Why does `renderAll()` connect `renderAll` to `dashboard-inline.js`, `initializeDashboardAfterAccess`, `renderDespesas`, `buildCardDetail`, `parseBRDate`, `applyTvViewportLayout`, `enhanceSortableTables`?",
+      "why": "High betweenness centrality (0.011) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `loadAll()` connect `loadAll` to `applyF`, `dashboard-inline.js`, `showAlert`, `normL`?",
-      "why": "High betweenness centrality (0.004) - this node is a cross-community bridge."
+      "question": "Why does `API()` connect `API` to `dashboard-inline.js`, `renderMarkpointModule`?",
+      "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `renderFrota()` connect `renderAll` to `dashboard-inline.js`, `normL`?",
+      "question": "Why does `renderDespesas()` connect `renderDespesas` to `dashboard-inline.js`, `renderAll`, `parseBRDate`, `buildCardDetail`?",
       "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
     },
     {
       "type": "verify_inferred",
-      "question": "Are the 6 inferred relationships involving `renderAll()` (e.g. with `isPendingScheduledReservation()` and `isProducedReservation()`) actually correct?",
+      "question": "Are the 6 inferred relationships involving `renderAll()` (e.g. with `isMultaPendente()` and `isReceivedPayment()`) actually correct?",
       "why": "`renderAll()` has 6 INFERRED edges - model-reasoned connections that need verification."
     },
     {
       "type": "isolated_nodes",
       "question": "What connects `fat2023`, `fat2024`, `fat2025` to the rest of the system?",
-      "why": "18 weakly-connected nodes found - possible documentation gaps or missing edges."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `renderAll` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.12753623188405797 - nodes in this community are weakly interconnected."
+      "why": "36 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
       "question": "Should `dashboard-inline.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.034482758620689655 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `renderAll` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11818181818181818 - nodes in this community are weakly interconnected."
     }
   ]
 }

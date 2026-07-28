@@ -6,7 +6,7 @@ param(
 
   [string] $SearchText = "dashboard",
 
-  [string] $FilePath = "Dashboard.html",
+  [string] $FilePath = "dist/Dashboard.html",
 
   [string] $TenantId = "organizations",
 
