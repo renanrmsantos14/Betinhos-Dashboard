@@ -38,6 +38,11 @@ assert.match(
   /fileName:\s*item\.cr40f_nomedoarquivo\s*\|\|\s*""/,
   "Nome do arquivo não é restaurado do Dataverse.",
 );
+assert.match(
+  html,
+  /async function markpointLoadFromDataverse\(\)[\s\S]*xrm\.WebApi\.retrieveMultipleRecords\(MARKPOINT_TABLE,\s*query\)/,
+  "Leitura de jornadas deve usar Xrm.WebApi no web resource.",
+);
 
 assert.match(
   html,

@@ -10968,13 +10968,24 @@ function setAppVersion() {
         if (IS_LOCAL || window.__DASHBOARD_TV_MODE) return;
         try {
           const items = [];
-          let nextUrl = `${API()}/${MARKPOINT_ENTITY_SET}?$select=cr40f_data,cr40f_colaborador,cr40f_horastrabalhadasminutos,cr40f_iniciojornada,cr40f_fimjornada,cr40f_descansoanteriorminutos,cr40f_qualidaderegistro,cr40f_nomedoarquivo,cr40f_pontosdodia&$orderby=cr40f_data asc`;
-          while (nextUrl) {
-            const response = await fetchDashboardData(nextUrl, { wantAnnotations: false });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const page = await response.json();
-            items.push(...(page.value || []));
-            nextUrl = page["@odata.nextLink"] || "";
+          const select = "?$select=cr40f_data,cr40f_colaborador,cr40f_horastrabalhadasminutos,cr40f_iniciojornada,cr40f_fimjornada,cr40f_descansoanteriorminutos,cr40f_qualidaderegistro,cr40f_nomedoarquivo,cr40f_pontosdodia&$orderby=cr40f_data asc";
+          const xrm = getDashboardXrm();
+          if (xrm?.WebApi?.retrieveMultipleRecords) {
+            let query = select;
+            do {
+              const page = await xrm.WebApi.retrieveMultipleRecords(MARKPOINT_TABLE, query);
+              items.push(...(page.entities || []));
+              query = page.nextLink ? page.nextLink.replace(/^.*\/api\/data\/v[\d.]+\/cr40f_jornadacolaboradors/i, "") : "";
+            } while (query);
+          } else {
+            let nextUrl = `${API()}/${MARKPOINT_ENTITY_SET}${select}`;
+            while (nextUrl) {
+              const response = await fetchDashboardData(nextUrl, { wantAnnotations: false });
+              if (!response.ok) throw new Error(`HTTP ${response.status}`);
+              const page = await response.json();
+              items.push(...(page.value || []));
+              nextUrl = page["@odata.nextLink"] || "";
+            }
           }
           const records = items.map((item, index) => ({
             row: index + 1,
