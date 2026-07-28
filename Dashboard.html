@@ -10871,12 +10871,12 @@ function setAppVersion() {
       async function markpointHash(buffer) { if (window.crypto?.subtle) { const digest = await window.crypto.subtle.digest("SHA-256", buffer); return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join(""); } return `${buffer.byteLength}-${Date.now()}`; }
       function markpointFuncionario(employeeKey) {
         const normalized = markpointNormalizeName(employeeKey);
-        const matches = (DB.funcionarios || []).filter((record) => [record[F.fun.nome], record[F.fun.apelido]].some((value) => markpointNormalizeName(value) === normalized));
+        const matches = (DB.funcionarios || []).filter((record) => markpointNormalizeName(record[F.fun.nome]) === normalized);
         return matches.length === 1 ? matches[0] : null;
       }
       function markpointDriverMetricKey(employee) {
         const funcionario = markpointFuncionario(employee);
-        return markpointNormalizeName(funcionario?.[F.fun.apelido] || funcionario?.[F.fun.nome] || employee);
+        return markpointNormalizeName(funcionario?.[F.fun.nome] || employee);
       }
       function markpointRecordKey(record) {
         const date = record.date;
@@ -11098,7 +11098,7 @@ function setAppVersion() {
         markpointAssignConsecutiveRests(records);
         return { records, fileName, importedAt: new Date(), meta: { total: records.length, employees: new Set(records.map((record) => record.employeeKey)).size, incomplete: records.filter((record) => !record.validPoints).length, minDate: new Date(Math.min(...records.map((record) => record.date))), maxDate: new Date(Math.max(...records.map((record) => record.date))) } };
       }
-      function markpointFilteredRecords() { const start = document.getElementById("fS")?.value ? new Date(`${document.getElementById("fS").value}T00:00:00`) : null; const end = document.getElementById("fE")?.value ? new Date(`${document.getElementById("fE").value}T23:59:59`) : null; return markpointState.records.filter((record) => (!start || record.date >= start) && (!end || record.date <= end) && (!msState.Mo.length || msState.Mo.some((name) => markpointNormalizeName(name) === record.employeeKey))); }
+      function markpointFilteredRecords() { const start = document.getElementById("fS")?.value ? new Date(`${document.getElementById("fS").value}T00:00:00`) : null; const end = document.getElementById("fE")?.value ? new Date(`${document.getElementById("fE").value}T23:59:59`) : null; const selectedEmployeeKeys = new Set((msState.Mo || []).map((name) => { const normalized = markpointNormalizeName(name); const matches = (DB.funcionarios || []).filter((record) => markpointNormalizeName(record[F.fun.nome]) === normalized || markpointNormalizeName(record[F.fun.apelido]) === normalized); return matches.length === 1 ? markpointNormalizeName(matches[0][F.fun.nome]) : normalized; })); return markpointState.records.filter((record) => (!start || record.date >= start) && (!end || record.date <= end) && (!selectedEmployeeKeys.size || selectedEmployeeKeys.has(record.employeeKey))); }
       function renderMarkpointModule() {
         const records = markpointFilteredRecords();
         const hasData = markpointState.records.length > 0;
@@ -15479,6 +15479,7 @@ function setAppVersion() {
             );
             return {
               nome,
+              fullName: f[F.fun.nome] || nome,
               funcao: fv(f, F.fun.funcao) || "—",
               qtd: srvs.length,
               fat: sumV(srvs),
@@ -16278,7 +16279,7 @@ function setAppVersion() {
                     ? "em cnh-warning"
                     : "dim";
               const cnhTxt = Number.isFinite(cnhDate) ? fmtD(r.cnh) : "Não informado";
-              const jornada = markpointDriverMetrics.get(markpointNormalizeName(r.nome)) || { totalWorked: 0, totalRest: 0 };
+              const jornada = markpointDriverMetrics.get(markpointNormalizeName(r.fullName || r.nome)) || { totalWorked: 0, totalRest: 0 };
               return `<tr>
       <td><span class="rn ${i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : ""}">${i + 1}</span></td>
       <td class="em">${r.nome}</td><td class="r">${metricSplit(r.qtd.toLocaleString("pt-BR"), `${(r.qtd / r.months).toFixed(1)}/mês`, "r")}</td>

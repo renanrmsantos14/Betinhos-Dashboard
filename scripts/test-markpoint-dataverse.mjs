@@ -45,8 +45,8 @@ assert.match(
 );
 assert.match(
   html,
-  /function markpointDriverMetricKey\(employee\)[\s\S]*funcionario\?\.\[F\.fun\.apelido\][\s\S]*records\.filter\(\(record\) => markpointDriverMetricKey\(record\.employee\) === employeeKey\)/,
-  "Ranking deve vincular o nome completo MarQ ao apelido do motorista.",
+  /function markpointDriverMetricKey\(employee\)[\s\S]*funcionario\?\.\[F\.fun\.nome\][\s\S]*fullName:\s*f\[F\.fun\.nome\][\s\S]*markpointNormalizeName\(r\.fullName \|\| r\.nome\)/,
+  "Ranking deve vincular o nome completo MarQ ao nome completo do motorista.",
 );
 
 assert.match(
