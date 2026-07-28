@@ -10869,7 +10869,15 @@ function setAppVersion() {
         if (markpointState.busy && uploadButton) uploadButton.lastChild.textContent = stage === "reading" ? "Lendo arquivo" : stage === "validating" ? "Validando" : stage === "syncing" ? "Salvando" : "Upload MarQ";
       }
       async function markpointHash(buffer) { if (window.crypto?.subtle) { const digest = await window.crypto.subtle.digest("SHA-256", buffer); return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join(""); } return `${buffer.byteLength}-${Date.now()}`; }
-      function markpointFuncionario(employeeKey) { return (DB.funcionarios || []).find((record) => markpointNormalizeName(record[F.fun.nome] || record[F.fun.apelido]) === employeeKey); }
+      function markpointFuncionario(employeeKey) {
+        const normalized = markpointNormalizeName(employeeKey);
+        const matches = (DB.funcionarios || []).filter((record) => [record[F.fun.nome], record[F.fun.apelido]].some((value) => markpointNormalizeName(value) === normalized));
+        return matches.length === 1 ? matches[0] : null;
+      }
+      function markpointDriverMetricKey(employee) {
+        const funcionario = markpointFuncionario(employee);
+        return markpointNormalizeName(funcionario?.[F.fun.apelido] || funcionario?.[F.fun.nome] || employee);
+      }
       function markpointRecordKey(record) {
         const date = record.date;
         const day = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -11103,8 +11111,8 @@ function setAppVersion() {
         const rests = records.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
         const avg = records.length ? total / records.length : null;
         const restAvg = rests.length ? rests.reduce((sum, record) => sum + record.rest, 0) / rests.length : null;
-        const ranking = [...new Map(records.map((record) => [record.employeeKey, record])).entries()].map(([employeeKey, sample]) => {
-          const employeeRecords = records.filter((record) => record.employeeKey === employeeKey);
+        const ranking = [...new Map(records.map((record) => [markpointDriverMetricKey(record.employee), record])).entries()].map(([employeeKey, sample]) => {
+          const employeeRecords = records.filter((record) => markpointDriverMetricKey(record.employee) === employeeKey);
           const employeeRests = employeeRecords.filter((record) => Number.isFinite(record.rest) && record.rest >= 0);
           return {
             employee: sample.employee,

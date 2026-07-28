@@ -43,6 +43,11 @@ assert.match(
   /async function markpointLoadFromDataverse\(\)[\s\S]*xrm\.WebApi\.retrieveMultipleRecords\(MARKPOINT_TABLE,\s*query\)/,
   "Leitura de jornadas deve usar Xrm.WebApi no web resource.",
 );
+assert.match(
+  html,
+  /function markpointDriverMetricKey\(employee\)[\s\S]*funcionario\?\.\[F\.fun\.apelido\][\s\S]*records\.filter\(\(record\) => markpointDriverMetricKey\(record\.employee\) === employeeKey\)/,
+  "Ranking deve vincular o nome completo MarQ ao apelido do motorista.",
+);
 
 assert.match(
   html,
