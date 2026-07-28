@@ -5052,6 +5052,9 @@
       .frota-risk-table table {
         min-width: 360px;
       }
+      #page-frota > section.dashboard-section--analysis:last-of-type {
+        display: none;
+      }
       @media (max-width: 980px) {
         .frota-insights {
           grid-template-columns: 1fr 1fr;
@@ -6410,7 +6413,7 @@
             </div>
             <div class="cc">
               <div class="cc-hdr"><div><div class="cc-title">Risco por mês</div><div class="tc-meta" id="metaFrotaEventosMes"></div></div></div>
-              <canvas id="cFrotaEventosMes" height="120" data-mobile-height="170"></canvas>
+              <div id="tblFrotaEventosMes" class="metric-table-wrap"></div>
             </div>
             <div class="cc">
               <div class="cc-hdr"><div><div class="cc-title">Ranking de risco</div><div class="tc-meta" id="metaFrotaRisco"></div></div></div>
@@ -6430,14 +6433,6 @@
               <div class="cc">
                 <div class="cc-hdr"><div><div class="cc-title">Condu&ccedil;&atilde;o por motorista</div><div class="tc-meta" id="metaInfleetMotoristas"></div></div></div>
                 <div id="tblInfleetMotoristas" class="metric-table-wrap"></div>
-              </div>
-              <div class="cc">
-                <div class="cc-hdr"><div><div class="cc-title">Sa&uacute;de da integra&ccedil;&atilde;o</div><div class="tc-meta" id="metaInfleetHealth"></div></div></div>
-                <div id="tblInfleetHealth" class="metric-table-wrap"></div>
-              </div>
-              <div class="cc">
-                <div class="cc-hdr"><div><div class="cc-title">Motoristas pendentes de v&iacute;nculo</div><div class="tc-meta" id="metaInfleetMapping"></div></div></div>
-                <div id="tblInfleetMapping" class="metric-table-wrap"></div>
               </div>
               <div class="cc">
                 <div class="cc-hdr"><div><div class="cc-title">Quilometragem di&aacute;ria</div><div class="tc-meta" id="metaInfleetTrend"></div></div></div>
@@ -6483,16 +6478,6 @@
           </section>
           <section class="dashboard-section dashboard-section--analysis" aria-label="An&aacute;lises de frota">
           <div class="cgrid g2">
-            <div class="cc">
-              <div class="cc-hdr">
-                <div class="cc-title">Status da frota</div>
-              </div>
-              <div id="tblFrotaStatus" class="metric-table-wrap"></div>
-            </div>
-            <div class="cc">
-              <div class="cc-hdr"><div class="cc-title">Por marca</div></div>
-              <div id="tblFrotaMarca" class="metric-table-wrap"></div>
-            </div>
           </div>
           <div class="tc">
             <div class="tc-bar">
@@ -15217,23 +15202,19 @@ function setAppVersion() {
         html("tblFrotaEventosResumo", dvDisabled ? `<div class="dim">Sem dados no período</div>` : `<div>${eventCategories.map((category) => `<div class="frota-event-summary-row"><span class="frota-event-summary-label">${category.label}</span><strong class="frota-event-summary-value" style="color:${category.color}">${categoryCounts.get(category.key).toLocaleString("pt-BR")}</strong></div>`).join("")}</div>`);
         const monthKeys = [...monthRows.keys()].sort();
         set("metaFrotaEventosMes", dvDisabled ? "—" : `${monthKeys.length} meses no período`);
-        const eventTrendOptions = opts0({ noLegend: false, datalabels: false });
-        eventTrendOptions.scales.x.stacked = true;
-        eventTrendOptions.scales.y.stacked = true;
-        mkChart("cFrotaEventosMes", {
-          type: "bar",
-          data: {
-            labels: monthKeys.map((month) => new Date(`${month}-15T12:00:00`).toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")),
-            datasets: eventCategories.map((category) => ({
-              label: category.label,
-              data: monthKeys.map((month) => monthRows.get(month).get(category.key)),
-              backgroundColor: category.color,
-              borderRadius: 3,
-              maxBarThickness: 22,
-            })),
-          },
-          options: eventTrendOptions,
+        const monthlyRiskRows = monthKeys.map((month, index) => {
+          const counts = monthRows.get(month);
+          const eventsCount = [...counts.values()].reduce((sum, value) => sum + value, 0);
+          const monthKm = daily
+            .filter((row) => String(row[F.infleetDiaria.data] || "").slice(0, 7) === month)
+            .reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.distancia]), 0);
+          const previous = index ? monthRows.get(monthKeys[index - 1]) : null;
+          const previousCount = previous ? [...previous.values()].reduce((sum, value) => sum + value, 0) : 0;
+          const variation = previousCount ? ((eventsCount - previousCount) / previousCount) * 100 : null;
+          return { month, eventsCount, monthKm, rate: monthKm ? (eventsCount / monthKm) * 1000 : 0, share: events.length ? (eventsCount / events.length) * 100 : 0, variation };
         });
+        set("metaFrotaEventosMes", dvDisabled ? "—" : `${monthlyRiskRows.length} meses · ${events.length} eventos classificados`);
+        html("tblFrotaEventosMes", `<table><thead><tr><th>Mês</th><th class="r">Eventos</th><th class="r">Km</th><th class="r">/1.000 km</th><th class="r">% total</th><th class="r">vs. mês anterior</th></tr></thead><tbody>${dvDisabled ? emptyRow(6) : monthlyRiskRows.map((row) => `<tr><td class="em">${new Date(`${row.month}-15T12:00:00`).toLocaleDateString("pt-BR", { month: "short", year: "numeric" }).replace(".", "")}</td><td class="r">${row.eventsCount.toLocaleString("pt-BR")}</td><td class="r">${row.monthKm.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.rate.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.share.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%</td><td class="r">${row.variation === null ? "—" : `${row.variation >= 0 ? "+" : ""}${row.variation.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`}</td></tr>`).join("") || emptyRow(6)}</tbody></table>`);
         const riskRows = driverRows
           .filter((row) => row.risk > 0)
           .map((row) => ({ ...row, riskRate: row.distance ? (row.risk / row.distance) * 1000 : 0 }))

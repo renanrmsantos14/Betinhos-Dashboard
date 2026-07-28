@@ -8240,23 +8240,19 @@ function setAppVersion() {
         html("tblFrotaEventosResumo", dvDisabled ? `<div class="dim">Sem dados no perÃ­odo</div>` : `<div>${eventCategories.map((category) => `<div class="frota-event-summary-row"><span class="frota-event-summary-label">${category.label}</span><strong class="frota-event-summary-value" style="color:${category.color}">${categoryCounts.get(category.key).toLocaleString("pt-BR")}</strong></div>`).join("")}</div>`);
         const monthKeys = [...monthRows.keys()].sort();
         set("metaFrotaEventosMes", dvDisabled ? "â€”" : `${monthKeys.length} meses no perÃ­odo`);
-        const eventTrendOptions = opts0({ noLegend: false, datalabels: false });
-        eventTrendOptions.scales.x.stacked = true;
-        eventTrendOptions.scales.y.stacked = true;
-        mkChart("cFrotaEventosMes", {
-          type: "bar",
-          data: {
-            labels: monthKeys.map((month) => new Date(`${month}-15T12:00:00`).toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")),
-            datasets: eventCategories.map((category) => ({
-              label: category.label,
-              data: monthKeys.map((month) => monthRows.get(month).get(category.key)),
-              backgroundColor: category.color,
-              borderRadius: 3,
-              maxBarThickness: 22,
-            })),
-          },
-          options: eventTrendOptions,
+        const monthlyRiskRows = monthKeys.map((month, index) => {
+          const counts = monthRows.get(month);
+          const eventsCount = [...counts.values()].reduce((sum, value) => sum + value, 0);
+          const monthKm = daily
+            .filter((row) => String(row[F.infleetDiaria.data] || "").slice(0, 7) === month)
+            .reduce((sum, row) => sum + numberValue(row[F.infleetDiaria.distancia]), 0);
+          const previous = index ? monthRows.get(monthKeys[index - 1]) : null;
+          const previousCount = previous ? [...previous.values()].reduce((sum, value) => sum + value, 0) : 0;
+          const variation = previousCount ? ((eventsCount - previousCount) / previousCount) * 100 : null;
+          return { month, eventsCount, monthKm, rate: monthKm ? (eventsCount / monthKm) * 1000 : 0, share: events.length ? (eventsCount / events.length) * 100 : 0, variation };
         });
+        set("metaFrotaEventosMes", dvDisabled ? "â€”" : `${monthlyRiskRows.length} meses Â· ${events.length} eventos classificados`);
+        html("tblFrotaEventosMes", `<table><thead><tr><th>MÃªs</th><th class="r">Eventos</th><th class="r">Km</th><th class="r">/1.000 km</th><th class="r">% total</th><th class="r">vs. mÃªs anterior</th></tr></thead><tbody>${dvDisabled ? emptyRow(6) : monthlyRiskRows.map((row) => `<tr><td class="em">${new Date(`${row.month}-15T12:00:00`).toLocaleDateString("pt-BR", { month: "short", year: "numeric" }).replace(".", "")}</td><td class="r">${row.eventsCount.toLocaleString("pt-BR")}</td><td class="r">${row.monthKm.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.rate.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}</td><td class="r">${row.share.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%</td><td class="r">${row.variation === null ? "â€”" : `${row.variation >= 0 ? "+" : ""}${row.variation.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`}</td></tr>`).join("") || emptyRow(6)}</tbody></table>`);
         const riskRows = driverRows
           .filter((row) => row.risk > 0)
           .map((row) => ({ ...row, riskRate: row.distance ? (row.risk / row.distance) * 1000 : 0 }))

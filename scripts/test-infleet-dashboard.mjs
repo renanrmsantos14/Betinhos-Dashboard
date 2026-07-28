@@ -19,12 +19,9 @@ for (const expected of [
   'id="tblInfleetVeiculos"',
   'id="tblInfleetEventos"',
   'id="tblInfleetMotoristas"',
-  'id="tblInfleetHealth"',
-  'id="tblInfleetMapping"',
   'id="cInfleetKm"',
-  'id="metaInfleetHealth"',
-  'id="metaInfleetMapping"',
   'id="metaInfleetTrend"',
+  'id="tblFrotaEventosMes"',
   'infleetDriverId: "new_infleetdriverid"',
   'id="infAutonomia"',
   'id="infOciosidade"',
@@ -46,6 +43,13 @@ assert.doesNotMatch(html, /Bearer\s+[A-Za-z0-9._-]{20,}/, "Dashboard nao pode co
 assert.match(html, /value >= 2 && value <= 30/, "Autonomia Infleet deve rejeitar valores implausiveis");
 assert.match(html, /infleetAutonomy\(tripDistance, totalFuel\)/);
 assert.match(html, /infleetAutonomy\(row\.distance, row\.fuel\)/);
+assert.doesNotMatch(html, /Status da frota/);
+assert.doesNotMatch(html, /Por marca/);
+assert.doesNotMatch(html, /VeÃ­culos/);
+assert.doesNotMatch(html, /Motoristas pendentes de v[ií]nculo/);
+assert.doesNotMatch(html, /Sa&uacute;de da integra&ccedil;&atilde;o/);
+assert.doesNotMatch(html, /id="cFrotaEventosMes"/);
+assert.match(html, /vs\. (?:m&ecirc;s|mês) anterior/);
 
 for (const expected of [
   'telemetriaInfleet = "$api/new_telemetriadiariainfleets?',
