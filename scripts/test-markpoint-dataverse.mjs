@@ -39,4 +39,15 @@ assert.match(
   "Nome do arquivo não é restaurado do Dataverse.",
 );
 
+assert.match(
+  html,
+  /async function markpointLatestUploadedDate\(\)[\s\S]*\$orderby=cr40f_data desc[\s\S]*\$top=1/,
+  "Consulta da ultima jornada enviada ausente.",
+);
+assert.match(
+  html,
+  /function markpointOpenMarq\(\)[\s\S]*latest\.getDate\(\) \+ 1[\s\S]*relatorio-de-jornada\?p=1&i=/,
+  "Atalho MarQ deve iniciar no dia seguinte a ultima jornada.",
+);
+
 console.log("MarQPonto Dataverse: idempotência, lote e paginação OK");

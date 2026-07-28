@@ -5386,6 +5386,11 @@
       .tb-upload-marq svg { width:14px; height:14px; }
       .tb-upload-marq:active { transform:scale(.97); }
       .tb-upload-marq:disabled { cursor:wait; opacity:.72; }
+      .tb-open-marq { display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 11px; background:var(--surf); border-color:var(--b2); color:var(--navy); font-size:12px; font-weight:700; }
+      .tb-open-marq:hover { background:var(--surf2); border-color:var(--blue); }
+      .tb-open-marq svg { width:14px; height:14px; }
+      .tb-open-marq:active { transform:scale(.97); }
+      .tb-open-marq:disabled { cursor:wait; opacity:.72; }
       .tb-upload-marq.is-loading::before { content:""; width:13px; height:13px; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; border-radius:50%; animation:markpoint-spin .7s linear infinite; }
       .tb-upload-marq.is-loading svg { display:none; }
       .markpoint-feedback { position:fixed; top:calc(var(--topbar-h) + 12px); right:26px; z-index:2147483647; display:flex; align-items:flex-start; gap:10px; width:min(390px,calc(100vw - 28px)); padding:12px 14px; border:1px solid var(--b1); border-radius:var(--radius-md); background:var(--surf); box-shadow:var(--s2); color:var(--navy); cursor:pointer; opacity:0; transform:translateY(-8px) scale(.98); transition:opacity 180ms var(--ease-out),transform 180ms var(--ease-out); pointer-events:none; }
@@ -5491,6 +5496,7 @@
         <span class="ts" id="ts"></span>
         <span class="env-pill" id="envPill">—</span>
         <button id="markpointHeaderUpload" class="btn tb-upload-marq" type="button" title="Importar relatório MarQPonto" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 8 5-5 5 5"></path><path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"></path></svg>Upload MarQ</button>
+        <button id="markpointOpenMarq" class="btn tb-open-marq" type="button" title="Abrir relatório de jornada no MarQPonto" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"></path><path d="M10 14 21 3"></path><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path></svg>Acessar MarQ</button>
         <button class="btn-ic" id="btnRef" type="button" aria-label="Atualizar dados" title="Atualizar dados" onclick="loadAll()">
           <svg
             width="15"
@@ -10833,6 +10839,7 @@ function setAppVersion() {
       let markpointFeedbackTimer;
       function markpointDismissFeedback() { const feedback = document.getElementById("markpointFeedback"); if (!feedback) return; clearTimeout(markpointFeedbackTimer); feedback.classList.remove("is-visible"); setTimeout(() => { feedback.hidden = true; }, 180); }
       function markpointSetUploadBusy(busy) { const button = document.getElementById("markpointHeaderUpload"); if (!button) return; button.disabled = busy; button.classList.toggle("is-loading", busy); button.setAttribute("aria-busy", String(busy)); button.lastChild.textContent = busy ? "Carregando" : "Upload MarQ"; }
+      function markpointSetOpenBusy(busy) { const button = document.getElementById("markpointOpenMarq"); if (!button) return; button.disabled = busy; button.setAttribute("aria-busy", String(busy)); button.lastChild.textContent = busy ? "Consultando" : "Acessar MarQ"; }
       function markpointSetStatus(message, tone = "") {
         const text = String(message).replace(/<[^>]*>/g, "");
         const title = tone === "error" ? "Não foi possível importar" : /Lendo/.test(text) ? "Lendo arquivo" : /Validando/.test(text) ? "Validando relatório" : /Sincronizando/.test(text) ? "Salvando dados" : /sincronizado|carregado|Prévia pronta/.test(text) ? "Relatório pronto" : "MarQPonto";
@@ -10988,6 +10995,45 @@ function setAppVersion() {
           console.warn("MarQPonto: leitura Dataverse indisponível", error);
         }
       }
+      function markpointFormatMarqDate(date) { return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`; }
+      async function markpointLatestUploadedDate() {
+        const xrm = getDashboardXrm();
+        const query = "?$select=cr40f_data&$orderby=cr40f_data desc&$top=1";
+        if (xrm?.WebApi?.retrieveMultipleRecords) {
+          const page = await xrm.WebApi.retrieveMultipleRecords(MARKPOINT_TABLE, query);
+          return markpointParseDate(page.entities?.[0]?.cr40f_data);
+        }
+        const response = await fetchDashboardData(`${API()}/${MARKPOINT_ENTITY_SET}${query}`, { wantAnnotations: false });
+        if (!response.ok) throw new Error(`Falha ao consultar última jornada enviada (HTTP ${response.status}).`);
+        const page = await response.json();
+        return markpointParseDate(page.value?.[0]?.cr40f_data);
+      }
+      async function markpointOpenMarq() {
+        if (markpointState.busy) return;
+        const marqWindow = window.open("", "_blank");
+        if (marqWindow) marqWindow.opener = null;
+        markpointSetOpenBusy(true);
+        try {
+          const latest = IS_LOCAL || window.__DASHBOARD_TV_MODE ? null : await markpointLatestUploadedDate();
+          const yesterday = new Date();
+          yesterday.setHours(0, 0, 0, 0);
+          yesterday.setDate(yesterday.getDate() - 1);
+          const firstDate = latest ? new Date(latest.getFullYear(), latest.getMonth(), latest.getDate() + 1) : new Date(yesterday);
+          if (firstDate > yesterday) {
+            marqWindow?.close();
+            markpointSetStatus(`Jornadas já enviadas até ${fmtD(latest)}. Não há período pendente para extrair.`);
+            return;
+          }
+          const url = `https://app.marqponto.com.br/relatorio-de-jornada?p=1&i=${markpointFormatMarqDate(firstDate)}&e=${markpointFormatMarqDate(yesterday)}`;
+          if (!marqWindow) throw new Error("Permita pop-ups para abrir o MarQPonto.");
+          marqWindow.location.replace(url);
+        } catch (error) {
+          marqWindow?.close();
+          markpointSetStatus(error?.message || "Não foi possível consultar a última jornada enviada.", "error");
+        } finally {
+          markpointSetOpenBusy(false);
+        }
+      }
       function markpointAssignConsecutiveRests(records) {
         records.sort((a, b) => a.employeeKey.localeCompare(b.employeeKey) || a.date - b.date || (a.start ?? Infinity) - (b.start ?? Infinity));
         const previous = new Map();
@@ -11064,7 +11110,7 @@ function setAppVersion() {
       function markpointShowFiles(files) { const valid = [...files].filter((file) => /\.xlsx$/i.test(file.name)); if (!valid.length) return markpointSetStatus("Arquivo recusado. Selecione um .xlsx do Markpoint.", "error"); if (valid.length > 1) return markpointSetStatus(`Foram encontrados ${valid.length} arquivos. Selecione apenas um relatório .xlsx.`, "error"); markpointImportFile(valid[0]); }
       async function markpointImportFile(file) { if (!file || markpointState.busy) return; markpointState.busy = true; markpointSetUploadBusy(true); markpointSetStatus(`Lendo <strong>${file.name}</strong>…`); try { const buffer = await file.arrayBuffer(); markpointSetStatus("Validando estrutura do relatório…"); await new Promise((resolve) => setTimeout(resolve, 0)); const parsed = markpointParseWorkbook(buffer, file.name); markpointSetStatus(IS_LOCAL ? "Prévia pronta (ambiente local)." : "Sincronizando registros no Dataverse…"); const persistence = await markpointPersistRecords(parsed.records, file.name); Object.assign(markpointState, parsed); markpointSetStatus(persistence.saved ? `<strong>${file.name}</strong> sincronizado · ${persistence.created} criados · ${persistence.updated} atualizados · ${persistence.duplicatesSkipped ? `${persistence.duplicatesSkipped} repetidos ignorados · ` : ""}${parsed.meta.incomplete} incompletos` : `<strong>${file.name}</strong> carregado · ${parsed.meta.total} registros · sessão local`); renderMarkpointModule(); nav("motoristas", document.querySelector('.sb-item[data-nav="motoristas"]')); } catch (error) { markpointSetStatus(error?.message || "Não foi possível importar o relatório.", "error"); } finally { markpointState.busy = false; markpointSetUploadBusy(false); } }
       function clearMarkpointImport() { markpointState.records = []; markpointState.meta = null; markpointState.fileName = ""; markpointState.importedAt = null; markpointSetStatus("Nenhum relatório importado."); renderMarkpointModule(); }
-      function initMarkpointImport() { const input = document.getElementById("markpointFileInput"); const choose = document.getElementById("markpointChooseFile"); const headerChoose = document.getElementById("markpointHeaderUpload"); const clear = document.getElementById("markpointClear"); const zone = document.getElementById("markpointUploadZone"); const overlay = document.getElementById("markpointDropOverlay"); let depth = 0; choose?.addEventListener("click", () => input?.click()); headerChoose?.addEventListener("click", () => input?.click()); input?.addEventListener("change", () => markpointShowFiles(input.files || [])); clear?.addEventListener("click", clearMarkpointImport); document.addEventListener("dragenter", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.types?.includes("Files")) return; depth += 1; overlay?.classList.add("is-visible"); zone?.classList.add("is-active"); }); document.addEventListener("dragover", (event) => { if (event.dataTransfer?.types?.includes("Files")) event.preventDefault(); }); document.addEventListener("dragleave", () => { depth = Math.max(0, depth - 1); if (!depth) { overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); document.addEventListener("drop", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.files?.length) return; event.preventDefault(); depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); markpointShowFiles(event.dataTransfer.files); }); document.addEventListener("paste", (event) => { if (event.clipboardData?.files?.length) { event.preventDefault(); markpointShowFiles(event.clipboardData.files); } }); document.addEventListener("keydown", (event) => { if (event.key === "Escape") { depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); void markpointLoadFromDataverse(); }
+      function initMarkpointImport() { const input = document.getElementById("markpointFileInput"); const choose = document.getElementById("markpointChooseFile"); const headerChoose = document.getElementById("markpointHeaderUpload"); const openMarq = document.getElementById("markpointOpenMarq"); const clear = document.getElementById("markpointClear"); const zone = document.getElementById("markpointUploadZone"); const overlay = document.getElementById("markpointDropOverlay"); let depth = 0; choose?.addEventListener("click", () => input?.click()); headerChoose?.addEventListener("click", () => input?.click()); openMarq?.addEventListener("click", markpointOpenMarq); input?.addEventListener("change", () => markpointShowFiles(input.files || [])); clear?.addEventListener("click", clearMarkpointImport); document.addEventListener("dragenter", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.types?.includes("Files")) return; depth += 1; overlay?.classList.add("is-visible"); zone?.classList.add("is-active"); }); document.addEventListener("dragover", (event) => { if (event.dataTransfer?.types?.includes("Files")) event.preventDefault(); }); document.addEventListener("dragleave", () => { depth = Math.max(0, depth - 1); if (!depth) { overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); document.addEventListener("drop", (event) => { if (document.documentElement.classList.contains("tv-browser") || !event.dataTransfer?.files?.length) return; event.preventDefault(); depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); markpointShowFiles(event.dataTransfer.files); }); document.addEventListener("paste", (event) => { if (event.clipboardData?.files?.length) { event.preventDefault(); markpointShowFiles(event.clipboardData.files); } }); document.addEventListener("keydown", (event) => { if (event.key === "Escape") { depth = 0; overlay?.classList.remove("is-visible"); zone?.classList.remove("is-active"); } }); void markpointLoadFromDataverse(); }
       const DASHBOARD_AUTO_REFRESH_INTERVAL_MS = 60 * 1000;
       let dashboardLoadInProgress = false;
       let dashboardSilentLoad = false;
@@ -16523,6 +16569,7 @@ function setAppVersion() {
         const nextPage = document.getElementById("page-" + id);
         nextPage.classList.add("on");
         document.getElementById("markpointHeaderUpload")?.toggleAttribute("hidden", id !== "motoristas");
+        document.getElementById("markpointOpenMarq")?.toggleAttribute("hidden", id !== "motoristas");
         updateTvCurrentMenu(id);
         if (window.__DASHBOARD_TV_MODE && options.automatic === true) {
           nextPage.classList.remove("tv-auto-page-enter");
