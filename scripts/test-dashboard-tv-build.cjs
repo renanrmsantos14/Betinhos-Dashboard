@@ -1,6 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const { TextDecoder } = require("util");
 const vm = require("vm");
 
 const root = path.resolve(__dirname, "..");
@@ -52,4 +53,24 @@ assert.strictEqual(typeof context.ResizeObserver, "function", "ResizeObserver na
 assert.strictEqual(typeof context.Chart, "function", "Chart nao foi exposto globalmente.");
 assert(context.ChartDataLabels, "ChartDataLabels nao foi exposto globalmente.");
 
-console.log("Dashboard TV: runtime de graficos incorporado e executavel.");
+const xlsxRuntimeMatch = html.match(/<script id="dashboard-xlsx-loader">([\s\S]*?)<\/script>/i);
+assert(xlsxRuntimeMatch, "Loader local do XLSX ausente no HTML final.");
+
+const xlsxContext = {
+  console,
+  TextDecoder,
+  Uint8Array,
+  atob: (value) => Buffer.from(value, "base64").toString("binary"),
+};
+xlsxContext.window = xlsxContext;
+xlsxContext.self = xlsxContext;
+xlsxContext.globalThis = xlsxContext;
+xlsxContext.document = {
+  createElement() { return {}; },
+  head: { appendChild(script) { vm.runInContext(script.text, xlsxContext, { timeout: 10000 }); } },
+};
+vm.createContext(xlsxContext);
+vm.runInContext(xlsxRuntimeMatch[1], xlsxContext, { timeout: 10000 });
+assert.strictEqual(typeof xlsxContext.XLSX?.read, "function", "Leitor XLSX nao foi exposto globalmente.");
+
+console.log("Dashboard TV: runtimes locais de graficos e XLSX incorporados e executaveis.");

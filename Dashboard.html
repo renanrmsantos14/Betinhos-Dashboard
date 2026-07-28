@@ -5399,6 +5399,10 @@
       .markpoint-feedback-icon svg { width:16px; height:16px; }
       .markpoint-feedback-title { display:block; font-size:13px; font-weight:800; }
       .markpoint-feedback-detail { display:block; margin-top:2px; color:var(--t2); font-size:12px; line-height:1.4; }
+      .markpoint-feedback-progress { display:none; gap:5px; margin-top:9px; }
+      .markpoint-feedback.is-loading .markpoint-feedback-progress { display:grid; grid-template-columns:repeat(3,1fr); }
+      .markpoint-feedback-progress span { height:3px; border-radius:999px; background:var(--b1); transition:background-color 160ms var(--ease-out), transform 160ms var(--ease-out); }
+      .markpoint-feedback[data-markpoint-stage="reading"] .markpoint-feedback-progress span:nth-child(1), .markpoint-feedback[data-markpoint-stage="validating"] .markpoint-feedback-progress span:nth-child(-n+2), .markpoint-feedback[data-markpoint-stage="syncing"] .markpoint-feedback-progress span { background:var(--blue); transform:scaleY(1.35); }
       .markpoint-feedback.success .markpoint-feedback-icon { background:var(--green-l); color:var(--green); }
       .markpoint-feedback.error .markpoint-feedback-icon { background:var(--red-l); color:var(--red); }
       .markpoint-feedback-close { margin-left:auto; padding:2px; border:0; background:transparent; color:var(--t3); cursor:pointer; }
@@ -5516,7 +5520,7 @@
 
     <div id="markpointFeedback" class="markpoint-feedback" role="button" aria-live="polite" aria-label="Aviso do upload. Clique para fechar." tabindex="0" onclick="markpointDismissFeedback()" onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); markpointDismissFeedback(); }" hidden>
       <span id="markpointFeedbackIcon" class="markpoint-feedback-icon" aria-hidden="true"></span>
-      <div><strong id="markpointFeedbackTitle" class="markpoint-feedback-title"></strong><span id="markpointFeedbackDetail" class="markpoint-feedback-detail"></span></div>
+      <div><strong id="markpointFeedbackTitle" class="markpoint-feedback-title"></strong><span id="markpointFeedbackDetail" class="markpoint-feedback-detail"></span><span class="markpoint-feedback-progress" aria-hidden="true"><span></span><span></span><span></span></span></div>
     </div>
 
     <div class="shell">
@@ -10843,14 +10847,17 @@ function setAppVersion() {
       function markpointSetOpenBusy(busy) { const button = document.getElementById("markpointOpenMarq"); if (!button) return; button.disabled = busy; button.setAttribute("aria-busy", String(busy)); button.lastChild.textContent = busy ? "Consultando" : "Acessar MarQ"; }
       function markpointSetStatus(message, tone = "") {
         const text = String(message).replace(/<[^>]*>/g, "");
-        const title = tone === "error" ? "Não foi possível importar" : /Lendo/.test(text) ? "Lendo arquivo" : /Validando/.test(text) ? "Validando relatório" : /Sincronizando/.test(text) ? "Salvando dados" : /sincronizado|carregado|Prévia pronta/.test(text) ? "Relatório pronto" : "MarQPonto";
+        const stage = /Lendo/.test(text) ? "reading" : /Validando/.test(text) ? "validating" : /Sincronizando/.test(text) ? "syncing" : "";
+        const title = tone === "error" ? "Não foi possível importar" : stage === "reading" ? "Lendo arquivo" : stage === "validating" ? "Validando relatório" : stage === "syncing" ? "Salvando dados" : /sincronizado|carregado|Prévia pronta/.test(text) ? "Relatório pronto" : "MarQPonto";
         const feedback = document.getElementById("markpointFeedback");
         const detail = document.getElementById("markpointFeedbackDetail");
         const heading = document.getElementById("markpointFeedbackTitle");
         const icon = document.getElementById("markpointFeedbackIcon");
         if (feedback && detail && heading && icon) {
           clearTimeout(markpointFeedbackTimer);
-          feedback.className = `markpoint-feedback ${tone || (/sincronizado|carregado|Prévia pronta/.test(text) ? "success" : "")}`;
+          feedback.className = `markpoint-feedback ${tone || (/sincronizado|carregado|Prévia pronta/.test(text) ? "success" : "")} ${stage ? "is-loading" : ""}`;
+          feedback.dataset.markpointStage = stage;
+          feedback.setAttribute("aria-busy", String(Boolean(stage)));
           heading.textContent = title;
           detail.textContent = text;
           icon.innerHTML = tone === "error" ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5m0 4h.01M10 3.8 2.6 17a2 2 0 0 0 1.74 3h15.32A2 2 0 0 0 21.4 17L14 3.8a2.3 2.3 0 0 0-4 0Z"/></svg>' : /sincronizado|carregado|Prévia pronta/.test(text) ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 4.2 4.2L19 6.5"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="8.5"/></svg>';
@@ -10858,6 +10865,8 @@ function setAppVersion() {
           requestAnimationFrame(() => feedback.classList.add("is-visible"));
           if (tone !== "error" && /sincronizado|carregado|Prévia pronta/.test(text)) markpointFeedbackTimer = setTimeout(markpointDismissFeedback, 6500);
         }
+        const uploadButton = document.getElementById("markpointHeaderUpload");
+        if (markpointState.busy && uploadButton) uploadButton.lastChild.textContent = stage === "reading" ? "Lendo arquivo" : stage === "validating" ? "Validando" : stage === "syncing" ? "Salvando" : "Upload MarQ";
       }
       async function markpointHash(buffer) { if (window.crypto?.subtle) { const digest = await window.crypto.subtle.digest("SHA-256", buffer); return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join(""); } return `${buffer.byteLength}-${Date.now()}`; }
       function markpointFuncionario(employeeKey) { return (DB.funcionarios || []).find((record) => markpointNormalizeName(record[F.fun.nome] || record[F.fun.apelido]) === employeeKey); }
