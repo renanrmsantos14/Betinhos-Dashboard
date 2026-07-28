@@ -45,6 +45,11 @@ assert.match(
 );
 assert.match(
   html,
+  /await loadDataSets\([\s\S]*await markpointLoadFromDataverse\(\)/,
+  "Jornadas devem carregar depois dos dados de funcionarios.",
+);
+assert.match(
+  html,
   /function markpointDriverMetricKey\(employee\)[\s\S]*funcionario\?\.\[F\.fun\.nome\][\s\S]*fullName:\s*f\[F\.fun\.nome\][\s\S]*markpointNormalizeName\(r\.fullName \|\| r\.nome\)/,
   "Ranking deve vincular o nome completo MarQ ao nome completo do motorista.",
 );
